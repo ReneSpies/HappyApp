@@ -1,0 +1,68 @@
+<resources>
+	<string name="app_name">HappyApp</string>
+	<!-- Strings related to login -->
+	<string name="prompt_email">Email</string>
+	<string name="prompt_password">Password</string>
+	<string name="action_sign_in">Sign in or register</string>
+	<string name="action_sign_in_short">Sign in</string>
+	<string name="error_invalid_email">This email address is invalid</string>
+	<string name="error_invalid_password">This password is too short</string>
+	<string name="error_incorrect_password">This password is incorrect</string>
+	<string name="error_field_required">This field is required</string>
+	<string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+	<string name="title_activity_main">MainActivity</string>
+	<string name="title_section1">Section 1</string>
+	<string name="title_section2">Section 2</string>
+	<string name="title_section3">Section 3</string>
+
+	<string name="navigation_drawer_open">Open navigation drawer</string>
+	<string name="navigation_drawer_close">Close navigation drawer</string>
+
+	<string name="action_example">Example action</string>
+
+	<string name="action_settings">Settings</string>
+	<string name="title_activity_main2">Main2Activity</string>
+	<string name="nav_header_title">Android Studio</string>
+	<string name="nav_header_subtitle">android.studio@android.com</string>
+	<string name="nav_header_desc">Navigation header</string>
+	<string name="contact">Contact us</string>
+	<string name="search">Search</string>
+	<string name="favorites">Favorites</string>
+	<string name="place_ad">Place an Ad</string>
+	<string name="escort_service">Escort service</string>
+	<string name="my_account">My Account</string>
+
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name="todo_update_fragment">TODO: Update fragment</string>
+
+	<!--Advertisement Fragment-->
+	<string name="offer">I offer</string>
+	<string name="looking">I am looking</string>
+	<string name="mode">Mode: %1s</string>
+	<string name="email">E-Mail: %1s</string>
+	<string name="name">Name: %1s</string>
+	<string name="home">Home</string>
+	<string name="close_to_you">Close to you:</string>
+	<string name="distance">Distance: %1s</string>
+	<string name="i_want_to_offer">I want to offer:</string>
+	<string name="i_am_looking_for">I am looking for:</string>
+	<string name="sign_me_up">Sign me up</string>
+	<string name="sign_me_in">Log in</string>
+	<string name="or">or</string>
+	<string name="auth_fail">Authentication failed!</string>
+	<string name="password_min_chars">Password must have more than six characters</string>
+	<string name="check_email">Check Email</string>
+	<string name="verification_email_fail">Sending Verification Email failed</string>
+	<string name="no_account">no account yet?</string>
+	<string name="first_name">First Name</string>
+	<string name="surname">Surname</string>
+	<string name="sign_up_now">Sign up now</string>
+	<string name="google">google</string>
+	<string name="or_sign_in_using">or sign in using</string>
+	<string name="loggin_in">Logging in&#8230;</string>
+	<string name="privacy_policy"><![CDATA[I confirm that I\'ve read the privacy policy and T&C and I agree with it.]]></string>
+	<string name="age_confirmation"><![CDATA[I confirm that I am >= 18 years old.]]></string>
+</resources>

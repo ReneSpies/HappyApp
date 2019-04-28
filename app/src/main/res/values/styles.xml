@@ -1,0 +1,74 @@
+<resources>
+
+	<!-- Base application theme. -->
+	<style name="Theme.HappyApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+		<!-- Customize your theme here. -->
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+		<item name="android:fontFamily">@font/font</item>
+	</style>
+
+	<style name="Theme.HappyApp.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+		<item name="windowActionBar">false</item>
+		<item name="windowNoTitle">true</item>
+	</style>
+
+	<style name="Theme.HappyApp.Launcher">
+		<item name="android:windowBackground">@drawable/launch_screen</item>
+	</style>
+
+	<style name="Widget.HappyApp.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+		<item name="android:paddingBottom">6dp</item>
+		<item name="boxCornerRadiusBottomEnd">0.3dp</item>
+		<item name="boxCornerRadiusTopStart">0.3dp</item>
+	</style>
+
+	<style name="Widget.HappyApp.ContainedButton" parent="Widget.MaterialComponents.Button">
+		<item name="cornerRadius">4dp</item>
+		<item name="backgroundTint">@color/colorPrimary</item>
+		<item name="rippleColor">@color/rippleColor</item>
+		<item name="android:layout_marginTop">4dp</item>
+		<item name="android:layout_marginBottom">4dp</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:elevation">6dp</item>
+		<item name="android:textColor">@color/textColorWhite</item>
+		<item name="android:textAllCaps">true</item>
+	</style>
+
+	<style name="Widget.HappyApp.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+		<item name="cornerRadius">4dp</item>
+		<item name="rippleColor">@color/colorPrimary</item>
+		<item name="android:layout_marginTop">4dp</item>
+		<item name="android:layout_marginBottom">4dp</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textColor">@color/rippleColor</item>
+		<item name="android:textAllCaps">true</item>
+	</style>
+
+	<style name="Widget.HappyApp.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+		<item name="cornerRadius">4dp</item>
+		<item name="rippleColor">@color/colorPrimary</item>
+		<item name="android:textSize">15sp</item>
+		<item name="android:textAllCaps">true</item>
+		<item name="android:textColor">@color/rippleColor</item>
+	</style>
+
+	<style name="Theme.HappyApp.Fragment">
+		<item name="android:background">@color/fragmentBackgroundColor</item>
+		<item name="android:elevation">4dp</item>
+	</style>
+
+	<style name="Theme.HappyApp.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+
+	<style name="Theme.HappyApp.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
+
+	<style name="Theme.HappyApp.LinearLayoutBox">
+		<item name="android:padding">8dp</item>
+		<item name="android:background">@drawable/box</item>
+		<item name="android:orientation">vertical</item>
+		<item name="android:layout_marginTop">4dp</item>
+		<item name="android:layout_marginBottom">4dp</item>
+	</style>
+
+</resources>

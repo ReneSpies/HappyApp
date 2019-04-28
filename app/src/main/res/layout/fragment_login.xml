@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:gravity="center_horizontal"
+	android:padding="@dimen/fragment_padding_medium"
+	tools:context=".LoginActivity">
+
+	<ProgressBar
+		android:id="@+id/progress_bar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		android:visibility="invisible"
+		app:layout_constraintBottom_toTopOf="@+id/google_linear_layout"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="@+id/login_linear_layout" />
+
+	<TextView
+		android:id="@+id/login_text_view"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="8dp"
+		android:layout_marginEnd="8dp"
+		android:layout_marginBottom="8dp"
+		android:text="@string/loggin_in"
+		android:visibility="invisible"
+		app:layout_constraintBottom_toTopOf="@+id/google_linear_layout"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
+
+	<LinearLayout
+		android:id="@+id/login_linear_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
+
+		<com.google.android.material.textfield.TextInputLayout
+			style="@style/Widget.HappyApp.TextInputLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/login_email_field"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/prompt_email"
+				android:inputType="textEmailAddress"
+				android:maxLines="1"
+				android:singleLine="true" />
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<com.google.android.material.textfield.TextInputLayout
+			style="@style/Widget.HappyApp.TextInputLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/login_password_field"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/prompt_password"
+				android:imeActionId="6"
+				android:imeActionLabel="@string/common_signin_button_text"
+				android:imeOptions="actionUnspecified"
+				android:inputType="textPassword"
+				android:maxLines="1"
+				android:singleLine="true" />
+		</com.google.android.material.textfield.TextInputLayout>
+	</LinearLayout>
+
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/login_login_button"
+		style="@style/Widget.HappyApp.ContainedButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/sign_me_in"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/login_linear_layout" />
+
+	<LinearLayout
+		android:id="@+id/google_linear_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginTop="100dp"
+		android:orientation="vertical"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/login_login_button">
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="0.8dp"
+			android:background="#808080" />
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/or_sign_in_using"
+			android:textAlignment="center"
+			android:textAllCaps="true" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/login_google_button"
+			style="@style/Widget.HappyApp.ContainedButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/google" />
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/sign_up_linear_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:orientation="vertical"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/google_linear_layout">
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="0.8dp"
+			android:background="#808080" />
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/no_account"
+			android:textAlignment="center"
+			android:textAllCaps="true" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/login_sign_up_button"
+			style="@style/Widget.HappyApp.ContainedButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/sign_me_up" />
+	</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

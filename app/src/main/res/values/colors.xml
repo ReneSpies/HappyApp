@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="colorPrimary">#DB2323</color>
+	<color name="colorPrimaryDark">#991818</color>
+	<color name="colorAccent">#E97B7B</color>
+	<color name="hintTextColor">#DB2323</color>
+	<color name="rippleColor">#000</color>
+	<color name="textColorBlack">#000</color>
+	<color name="textColorWhite">#fff</color>
+	<color name="fragmentBackgroundColor">#fff</color>
+</resources>
