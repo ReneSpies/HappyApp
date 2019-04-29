@@ -35,7 +35,11 @@ public class LoginActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		displayLoginFragment();
+		StandardLoadingDialog sld = new StandardLoadingDialog();
+		sld.isCancelable();
+		sld.show(getSupportFragmentManager(), "henlo");
+
+		//displayLoginFragment();
 	}
 
 	@Override

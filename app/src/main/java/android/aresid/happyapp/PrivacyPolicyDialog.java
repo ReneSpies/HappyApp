@@ -73,7 +73,7 @@ public class PrivacyPolicyDialog
 	@Override
 	public Dialog onCreateDialog(@Nullable Bundle savedInstanceState)
 	{
-		Log.d(TAG, "displayPrivacyPolicyDialog:true");
+		Log.d(TAG, "onCreateDialog:true");
 
 		// Get an AlertDialog builder
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
