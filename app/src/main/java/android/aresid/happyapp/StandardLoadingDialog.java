@@ -40,6 +40,8 @@ public class StandardLoadingDialog
 		// Apply the view to the builder
 		builder.setView(dialogView);
 
+		builder.setCancelable(false);
+
 		// Finally show the dialog
 		return builder.create();
 	}

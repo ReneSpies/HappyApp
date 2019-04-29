@@ -36,7 +36,6 @@ public class LoginActivity
 		setContentView(R.layout.activity_login);
 
 		StandardLoadingDialog sld = new StandardLoadingDialog();
-		sld.isCancelable();
 		sld.show(getSupportFragmentManager(), "henlo");
 
 
