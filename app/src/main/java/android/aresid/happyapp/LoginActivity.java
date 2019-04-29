@@ -39,6 +39,7 @@ public class LoginActivity
 		sld.isCancelable();
 		sld.show(getSupportFragmentManager(), "henlo");
 
+
 		//displayLoginFragment();
 	}
 
