@@ -38,7 +38,6 @@ public class LoginActivity
 		StandardLoadingDialog sld = new StandardLoadingDialog();
 		sld.show(getSupportFragmentManager(), "henlo");
 
-
 		//displayLoginFragment();
 	}
 
