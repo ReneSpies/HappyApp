@@ -121,24 +121,19 @@ public class LegalFragment
 	@Override
 	public void onClick(View v)
 	{
-		switch (v.getId())
+		if (v.getId() == R.id.legal_confirm_button)
 		{
-			case R.id.legal_confirm_button:
+			if (getArguments() != null)
 			{
-				if (getArguments() != null)
-				{
-					FirebaseUser user = getArguments().getParcelable(ARG_USER);
-					GoogleSignInAccount account = getArguments().getParcelable(ARG_ACCOUNT);
-					String userID = getArguments().getString(ARG_USER_ID);
+				FirebaseUser user = getArguments().getParcelable(ARG_USER);
+				GoogleSignInAccount account = getArguments().getParcelable(ARG_ACCOUNT);
+				String userID = getArguments().getString(ARG_USER_ID);
 
-					mFragmentInteractionListener.startMainActivity(user, account, userID);
-				}
-				else
-				{
-					Log.d(TAG, "onClick:getArguments() == null");
-				}
-
-				break;
+				mFragmentInteractionListener.startMainActivity(user, account, userID);
+			}
+			else
+			{
+				Log.d(TAG, "onClick:getArguments() == null");
 			}
 		}
 	}

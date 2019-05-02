@@ -3,4 +3,4 @@
 	android:id="@+id/sign_up_container"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:padding="8dp"></FrameLayout>
+	android:padding="8dp" />

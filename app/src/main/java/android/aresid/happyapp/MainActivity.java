@@ -127,7 +127,6 @@ public class MainActivity
 		closeDrawer();
 	}
 
-	@SuppressWarnings ("StatementWithEmptyBody")
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item)
 	{

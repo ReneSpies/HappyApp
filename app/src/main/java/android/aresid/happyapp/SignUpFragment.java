@@ -158,29 +158,22 @@ public class SignUpFragment
 		                                .toString();
 
 		// Handles all the button clicks in this Fragment
-		switch (view.getId())
+		if (view.getId() == R.id.sign_up_sign_up_button)
 		{
-			case R.id.sign_up_sign_up_button:
+			Log.d(TAG, "onClick:sign_up_sign_up_button");
+			if (!isEmailCorrect(email))
 			{
-				Log.d(TAG, "onClick:sign_up_sign_up_button");
-
-				if (!isEmailCorrect(email))
-				{
-					Snackbar.make(view, "Check Email", Snackbar.LENGTH_LONG)
-					        .show();
-					return;
-				}
-				else if (!isPasswordCorrect(password))
-				{
-					Snackbar.make(view, "Password must be larger than 6 characters", Snackbar.LENGTH_LONG)
-					        .show();
-					return;
-				}
-
-				displayPrivacyPolicyDialog();
-
-				break;
+				Snackbar.make(view, "Check Email", Snackbar.LENGTH_LONG)
+				        .show();
+				return;
 			}
+			else if (!isPasswordCorrect(password))
+			{
+				Snackbar.make(view, "Password must be larger than 6 characters", Snackbar.LENGTH_LONG)
+				        .show();
+				return;
+			}
+			displayPrivacyPolicyDialog();
 		}
 	}
 

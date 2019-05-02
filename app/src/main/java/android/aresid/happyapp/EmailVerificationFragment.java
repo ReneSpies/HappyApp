@@ -9,15 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EmailVerificationFragment
@@ -127,24 +121,20 @@ public class EmailVerificationFragment
 			final FirebaseUser fUser = user;
 			// Reload the user's information
 			user.reload()
-			    .addOnCompleteListener(new OnCompleteListener<Void>()
-			    {
-				    @Override
-				    public void onComplete(@NonNull Task<Void> task)
-				    {
-					    Log.d(TAG, "onComplete:true");
-					    Log.e(TAG, "onComplete: ", task.getException());
+			    .addOnCompleteListener(task ->
+			                           {
+				                           Log.d(TAG, "onComplete:true");
+				                           Log.e(TAG, "onComplete: ", task.getException());
 
-					    if (fUser.isEmailVerified())
-					    {
-						    mFragmentInteractionListener.displayLoginFragment();
-					    }
-					    else
-					    {
-						    sendEmailVerification();
-					    }
-				    }
-			    });
+				                           if (fUser.isEmailVerified())
+				                           {
+					                           mFragmentInteractionListener.displayLoginFragment();
+				                           }
+				                           else
+				                           {
+					                           sendEmailVerification();
+				                           }
+			                           });
 		}
 		else
 		{
@@ -163,38 +153,30 @@ public class EmailVerificationFragment
 		Log.d(TAG, "sendEmailVerification: " + user.getEmail());
 
 		user.sendEmailVerification()
-		    .addOnSuccessListener(new OnSuccessListener<Void>()
-		    {
-			    @Override
-			    public void onSuccess(Void aVoid)
-			    {
-				    Log.d(TAG, "onSuccess:true");
+		    .addOnSuccessListener(aVoid ->
+		                          {
+			                          Log.d(TAG, "onSuccess:true");
 
-				    Toast.makeText(mContext, "Verification Email sent to " + user.getEmail(), Toast.LENGTH_SHORT)
-				         .show();
-			    }
-		    })
-		    .addOnFailureListener(new OnFailureListener()
-		    {
-			    @Override
-			    public void onFailure(@NonNull Exception e)
-			    {
-				    // TODO: onFailure handling!
-				    Log.e(TAG, "onFailure:true", e);
+			                          Toast.makeText(mContext, "Verification Email sent to " + user.getEmail(), Toast.LENGTH_SHORT)
+			                               .show();
+		                          })
+		    .addOnFailureListener(e ->
+		                          {
+			                          // TODO: onFailure handling!
+			                          Log.e(TAG, "onFailure:true", e);
 
-				    if (e instanceof com.google.firebase.FirebaseTooManyRequestsException)
-				    {
-					    Toast.makeText(mContext, "Hey Flash, not so fast. Try again in a minute.", Toast.LENGTH_SHORT)
-					         .show();
-					    return;
-				    }
-				    else
-				    {
-					    Toast.makeText(getContext(), getString(R.string.verification_email_fail), Toast.LENGTH_LONG)
-					         .show();
-				    }
-			    }
-		    });
+			                          if (e instanceof com.google.firebase.FirebaseTooManyRequestsException)
+			                          {
+				                          Toast.makeText(mContext, "Hey Flash, not so fast. Try again in a minute.", Toast.LENGTH_SHORT)
+				                               .show();
+				                          return;
+			                          }
+			                          else
+			                          {
+				                          Toast.makeText(getContext(), getString(R.string.verification_email_fail), Toast.LENGTH_LONG)
+				                               .show();
+			                          }
+		                          });
 	}
 
 	@Override
@@ -238,22 +220,18 @@ public class EmailVerificationFragment
 		db.collection("users")
 		  .document(firestoreID)
 		  .get()
-		  .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>()
-		  {
-			  @Override
-			  public void onComplete(@NonNull Task<DocumentSnapshot> task)
-			  {
-				  Log.d(TAG, "isSuccessful:" + task.isSuccessful());
-				  String firstName = task.getResult()
-				                         .getString(FIRESTORE_FIRST_NAME);
-				  String surname = task.getResult()
-				                       .getString(FIRESTORE_SURNAME);
-				  String email = task.getResult()
-				                     .getString(FIRESTORE_EMAIL);
+		  .addOnCompleteListener(task ->
+		                         {
+			                         Log.d(TAG, "isSuccessful:" + task.isSuccessful());
+			                         String firstName = task.getResult()
+			                                                .getString(FIRESTORE_FIRST_NAME);
+			                         String surname = task.getResult()
+			                                              .getString(FIRESTORE_SURNAME);
+			                         String email = task.getResult()
+			                                            .getString(FIRESTORE_EMAIL);
 
-				  mFragmentInteractionListener.displaySignUpFragment(firstName, surname, email);
-			  }
-		  });
+			                         mFragmentInteractionListener.displaySignUpFragment(firstName, surname, email);
+		                         });
 	}
 
 	private String getIDFromSharedPreferences()
