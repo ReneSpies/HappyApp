@@ -5,10 +5,13 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import com.bumptech.glide.Glide;
 
 
 /**
@@ -37,8 +40,17 @@ public class StandardLoadingDialog
 		View dialogView = getActivity().getLayoutInflater()
 		                               .inflate(R.layout.item_standard_loading_dialog, null);
 
+		// Accessing my views in the layout
+		ImageView gif = dialogView.findViewById(R.id.progress_spinner);
+
+		Glide.with(this)
+		     .load(R.drawable.progress_spinner_test)
+		     .into(gif);
+
 		// Apply the view to the builder
 		builder.setView(dialogView);
+
+		builder.setCancelable(false);
 
 		// Finally show the dialog
 		return builder.create();
