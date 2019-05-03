@@ -29,16 +29,15 @@ public class LoginActivity
 	{
 		Log.d(TAG, "onCreate:true");
 
-		// Make sure this is before super.onCreate() and setContentView()
+		// Make sure this is before super.onCreate() and setContentView().
+		// This is my startup theme that gets launched before the app is loaded.
 		setTheme(R.style.Theme_HappyApp);
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		StandardLoadingDialog sld = new StandardLoadingDialog();
-		sld.show(getSupportFragmentManager(), "henlo");
-
-		//displayLoginFragment();
+		// Instantly display the LoginFragment which deals with the further login process.
+		displayLoginFragment();
 	}
 
 	@Override
@@ -49,41 +48,8 @@ public class LoginActivity
 	}
 
 	/**
-	 * This method displays an AlertDialog that shows the privacy policy
-	 */
-	//	@Override
-	//	public void displayPrivacyPolicyDialog()
-	//	{
-	//		Log.d(TAG, "displayPrivacyPolicyDialog:true");
-	//
-	//		// Get an AlertDialog builder
-	//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	//
-	//		// Get the view object from the dialogs layout
-	//		View dialogView = getLayoutInflater().inflate(R.layout.item_privacy_policy_dialog_view, findViewById(R.id.sign_up_fragment));
-	//
-	//		// Apply the view to the builder
-	//		builder.setView(dialogView);
-	//
-	//		// Get the button from within the view and create the dialog
-	//		Button alertDialogAcceptButton = dialogView.findViewById(R.id.privacy_policy_dialog_accept_button);
-	//		final Dialog dialog = builder.create();
-	//
-	//		// Register a listener to the accept button in the dialog and let it cancel the dialog
-	//		alertDialogAcceptButton.setOnClickListener((view) ->
-	//		                                           {
-	//			                                           Log.d(TAG, "onClick:true");
-	//
-	//			                                           dialog.cancel();
-	//		                                           });
-	//
-	//		// Finally show the dialog
-	//		dialog.show();
-	//	}
-
-	/**
-	 * This method displays the login fragment
-	 * I don't need to transfer information to the fragment so I don't take any params
+	 * Loads the LoginFragment into the activities container.
+	 * The Fragment handles the further login process.
 	 */
 	@Override
 	public void displayLoginFragment()
@@ -95,6 +61,10 @@ public class LoginActivity
 		                           .commit();
 	}
 
+	/**
+	 * Shows a Dialog with important legalities such as terms and conditions and privacy policy.
+	 * Furthermore there is the confirmation that the user is older than 18 years.
+	 */
 	@Override
 	public void displayPrivacyPolicyDialog()
 	{
@@ -102,16 +72,17 @@ public class LoginActivity
 	}
 
 	/**
-	 * This method displays the sign up fragment with the given params
+	 * Loads the SignUpFragment into the activities container.
 	 *
-	 * @param firstName
-	 * @param surname
-	 * @param email
+	 * @param firstName The user's first name which he stated.
+	 * @param surname   The user's surname which he stated.
+	 * @param email     The user's email which he stated.
 	 */
 	@Override
 	public void displaySignUpFragment(String firstName, String surname, String email)
 	{
 		Log.d(TAG, "displaySignUpFragment:true");
+
 		getSupportFragmentManager().beginTransaction()
 		                           .replace(R.id.login_container, SignUpFragment.newInstance(firstName, surname, email))
 		                           .addToBackStack(null)
@@ -122,21 +93,35 @@ public class LoginActivity
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
 
 	/**
-	 * This method displays the email verification fragment with the given param
+	 * Loads the EmailVerificationFragment into the activities container.
+	 * The user is not allowed to step any further into the app without having his email verified.
 	 *
-	 * @param user
+	 * @param user Pass the FirebaseUser to the fragment because there is a button that allows him to kick off the email verification again.
 	 */
 	@Override
 	public void displayEmailVerificationFragment(FirebaseUser user)
 	{
 		Log.d(TAG, "displayEmailVerificationFragment:true");
+
 		getSupportFragmentManager().beginTransaction()
 		                           .replace(R.id.login_container, EmailVerificationFragment.newInstance(user))
 		                           .commit();
 	}
 
 	/**
-	 * This method displays the legal fragment with the given params
+	 * Loads the SignUpFragment into the activities container.
+	 *
+	 * @param email Passes the email to the fragment if the user has accidently typed one in.
+	 */
+	@Override
+	public void displaySignUpFragment(String email)
+	{
+
+	}
+
+	/**
+	 * Loads the LegalFragment into the activities container.
+	 * I plan to replace this with a simple dialog.
 	 *
 	 * @param user
 	 * @param account
@@ -146,6 +131,7 @@ public class LoginActivity
 	public void displayLegalFragment(FirebaseUser user, GoogleSignInAccount account, String userID)
 	{
 		Log.d(TAG, "displayLegalFragment:true");
+		// TODO: Replace with dialog.
 
 		ViewGroup logoAndFragmentContainer = findViewById(R.id.scroll_view);
 
@@ -157,31 +143,17 @@ public class LoginActivity
 	}
 
 	/**
-	 * This method displays the sign up fragment with the given param
+	 * Kicks off an Intent and starts the MainActivity via it.
 	 *
-	 * @param email
-	 */
-	@Override
-	public void displaySignUpFragment(String email)
-	{
-		Log.d(TAG, "displaySignUpFragment:true");
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.login_container, SignUpFragment.newInstance(null, null, email))
-		                           .addToBackStack(null)
-		                           .commit();
-	}
-
-	/**
-	 * This method starts the main activity with the given params
-	 *
-	 * @param user
-	 * @param account
-	 * @param userID
+	 * @param user    Pass the FirebaseUser over to the MainActivity so it's usable there.
+	 * @param account Pass the GoogleAccount to the MainActivity so it's usable there.
+	 * @param userID  I plan to replace this with SharedPrefs
 	 */
 	@Override
 	public void startMainActivity(FirebaseUser user, GoogleSignInAccount account, String userID)
 	{
 		Log.d(TAG, "startMainActivity:true");
+		// TODO: Replace String userID with SharedPrefs.
 
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra("firebaseUser", user);
@@ -189,17 +161,6 @@ public class LoginActivity
 		intent.putExtra("googleSignInAccount", account);
 
 		startActivity(intent);
-	}
-
-	@Override
-	public void onBackPressed()
-	{
-		Log.d(TAG, "onBackPressed:true");
-
-
-		// TODO: Handle back pressing in MainActivity!
-
-		super.onBackPressed();
 	}
 
 
