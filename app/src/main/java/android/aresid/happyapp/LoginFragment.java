@@ -73,6 +73,7 @@ public class LoginFragment
 				String password = mPasswordField.getText()
 				                                .toString();
 
+				// Check password and email validity.
 				if (!isEmailCorrect(email))
 				{
 					Snackbar.make(v, getString(R.string.check_email), Snackbar.LENGTH_SHORT)
@@ -86,7 +87,7 @@ public class LoginFragment
 					return;
 				}
 
-				// In this method I handle the signInWithEmailAndPassword from the mFirebaseAuth object
+				// This method handles the signInWithEmailAndPassword.
 				handleSignIn(email, password);
 
 				break;
@@ -95,7 +96,7 @@ public class LoginFragment
 			{
 				Log.d(TAG, "onClick:login_google_button");
 
-				// Login using Google
+				// This method handles the login with Google account.
 				handleGoogleLogin();
 
 				break;
@@ -114,18 +115,36 @@ public class LoginFragment
 		}
 	}
 
+	/**
+	 * Method validates the email correctness.
+	 *
+	 * @param email The email to obtain.
+	 * @return Boolean if email is valid or not.
+	 */
 	private boolean isEmailCorrect(String email)
 	{
 		Log.d(TAG, "isEmailCorrect:true");
 		return (email.length() != 0 && email.indexOf('@') != -1);
 	}
 
+	/**
+	 * Method validates the password correctness.
+	 *
+	 * @param password The password to obtain.
+	 * @return Boolean if password is fulfills the password requirements.
+	 */
 	private boolean isPasswordCorrect(String password)
 	{
 		Log.d(TAG, "isPasswordCorrect:" + (password.length() > 6));
 		return password.length() > 6;
 	}
 
+	/**
+	 * Method handles the signInWithEmailAndPassword.
+	 *
+	 * @param email    The email to sign in with.
+	 * @param password The password to sign in with.
+	 */
 	private void handleSignIn(String email, String password)
 	{
 		Log.d(TAG, "handleSignIn:true");
@@ -134,6 +153,8 @@ public class LoginFragment
 		             .addOnSuccessListener(authResult ->
 		                                   {
 			                                   Log.d(TAG, "onSuccess:true");
+
+			                                   // updateUI handles login procedures.
 			                                   updateUI(authResult.getUser(), null);
 		                                   })
 		             .addOnFailureListener(e ->
@@ -149,6 +170,9 @@ public class LoginFragment
 		                                   });
 	}
 
+	/**
+	 * Method handles the sign in with an existing Google account.
+	 */
 	private void handleGoogleLogin()
 	{
 		Log.d(TAG, "handleGoogleLogin:true");
@@ -157,6 +181,13 @@ public class LoginFragment
 		startActivityForResult(loginIntent, RC_LOGIN);
 	}
 
+	/**
+	 * Method handles all the login and sign up procedures that needs UI updates.
+	 * Only one param cannot be null.
+	 *
+	 * @param user    FirebaseUser if the user logs in with this.
+	 * @param account Google account if the user logs in with this.
+	 */
 	private void updateUI(FirebaseUser user, GoogleSignInAccount account)
 	{
 		Log.d(TAG, "updateUI:true");
@@ -164,23 +195,29 @@ public class LoginFragment
 		if (user != null)
 		{
 			Log.d(TAG, "updateUI:user != null");
+
+			// Final because it's accessed within inner class.
 			final FirebaseUser USER = user;
 
+			// Method displays the loading screen.
 			displayProgressBar();
 
+			// Reload the user before because the account info is cached offline.
 			user.reload()
 			    .addOnCompleteListener(task ->
 			                           {
-				                           // If the users email is verified, log him in
+				                           // If email is verified, login.
 				                           if (USER.isEmailVerified())
 				                           {
 					                           Log.d(TAG, "isEmailVerified:" + USER.isEmailVerified());
-					                           //					                           mFragmentInteractionListener.displayLegalFragment
-					                           //					                           (USER, null, getUserIDFromSharedPreferences());
+
+					                           mFragmentInteractionListener.displayLegalFragment(USER, null, getUserIDFromSharedPreferences());
 				                           }
 				                           else
 				                           {
 					                           Log.d(TAG, "isEmailVerified:" + USER.isEmailVerified());
+
+					                           // Email is not yet verified, email verification screen.
 					                           mFragmentInteractionListener.displayEmailVerificationFragment(USER);
 				                           }
 			                           });
@@ -189,9 +226,6 @@ public class LoginFragment
 		{
 			// TODO: Handle Google login
 			Log.d(TAG, "updateUI:account != null");
-
-			// TODO: Logik für LegalFragment
-			mFragmentInteractionListener.displayLegalFragment(null, account, getUserIDFromSharedPreferences());
 		}
 		else
 		{
@@ -199,34 +233,45 @@ public class LoginFragment
 		}
 	}
 
+	/**
+	 * Method shows the progress bar and makes the rest content invisible.
+	 */
 	private void displayProgressBar()
 	{
 		Log.d(TAG, "displayProgressBar:true");
+		// TODO: Move this to activity level.
 
-		// Getting instances
+		// Getting instances.
 		Activity activity = getActivity();
 		LinearLayout loginLayout, googleLayout, signUpLayout;
-		ProgressBar progressBar = activity.findViewById(R.id.progress_bar);
-		TextView statusInfoTextView = activity.findViewById(R.id.login_text_view);
-		Button loginButton = activity.findViewById(R.id.login_login_button);
 		loginLayout = activity.findViewById(R.id.login_linear_layout);
 		googleLayout = activity.findViewById(R.id.google_linear_layout);
 		signUpLayout = activity.findViewById(R.id.sign_up_linear_layout);
+		ProgressBar progressBar = activity.findViewById(R.id.progress_bar);
+		TextView statusInfoTextView = activity.findViewById(R.id.login_text_view);
+		Button loginButton = activity.findViewById(R.id.login_login_button);
 
-		// Setting visible
-		progressBar.setVisibility(View.VISIBLE);
-		statusInfoTextView.setVisibility(View.VISIBLE);
-
-		// Setting invisible
+		// Setting invisible first so in case of long loading times there are no views overlapping.
+		// Setting invisible.
 		loginLayout.setVisibility(View.INVISIBLE);
 		googleLayout.setVisibility(View.INVISIBLE);
 		signUpLayout.setVisibility(View.INVISIBLE);
 		loginButton.setVisibility(View.INVISIBLE);
+
+		// Setting visible.
+		progressBar.setVisibility(View.VISIBLE);
+		statusInfoTextView.setVisibility(View.VISIBLE);
 	}
 
+	/**
+	 * Method fetches user's Firestore ID from SharedPrefs.
+	 *
+	 * @return String containing user's Firestore ID.
+	 */
 	private String getUserIDFromSharedPreferences()
 	{
 		Log.d(TAG, "getUserIDFromSharedPreferences:true");
+		// TODO: Move to activity level.
 
 		SharedPreferences userIDPrefs = getActivity().getSharedPreferences("android.aresid.happyapp", Context.MODE_PRIVATE);
 		return userIDPrefs.getString(PREFERENCES_ID, null);
@@ -239,15 +284,22 @@ public class LoginFragment
 
 		super.onActivityResult(requestCode, resultCode, data);
 
-		// Result returned from launching then Intent from GoogleSignInIntent.getSignInIntent(...);
+		// Result returned from launching then Intent from GoogleSignInIntent.getSignInIntent().
 		if (requestCode == RC_LOGIN)
 		{
-			// The task returned by this is always completed, no need to register a listener
+			// The task returned by this is always completed, no need to register a listener.
 			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+			// Method handles the sign in with Google account.
 			handleSignInResult(task);
 		}
 	}
 
+	/**
+	 * Method handles the sign in with Google account.
+	 *
+	 * @param task The task that emerged from the Google sign in procedure.
+	 */
 	private void handleSignInResult(Task<GoogleSignInAccount> task)
 	{
 		Log.d(TAG, "handleSignInResult:true");
@@ -256,7 +308,7 @@ public class LoginFragment
 		{
 			GoogleSignInAccount account = task.getResult(ApiException.class);
 
-			// Signed in successfully, show authenticated UI
+			// Signed in successfully, show authenticated UI.
 			updateUI(null, account);
 		}
 		catch (ApiException e)
@@ -264,6 +316,8 @@ public class LoginFragment
 			// The ApiException status code indicates the detailed failure reason.
 			Log.e(TAG, "handleSignInResult: ", e);
 			Log.w(TAG, "handleSignInResult:error code:" + e.getStatusCode());
+
+			// Call this with null params to handle exceptions there.
 			updateUI(null, null);
 		}
 	}
@@ -298,6 +352,7 @@ public class LoginFragment
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
 		                                                                                              .build();
 
+		// TODO: Move to activity level.
 		// Build a GoogleSignInClient with the options specified by gso.
 		mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 	}
@@ -334,6 +389,7 @@ public class LoginFragment
 		// Get current user instance
 		FirebaseUser user = mFirebaseAuth.getCurrentUser();
 
+		// TODO: Move to activity level.
 		// Check for existing Google Sign In account, if the user is already signed in
 		// the GoogleSignInAccount will be non-null.
 		GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
@@ -375,9 +431,9 @@ public class LoginFragment
 	{
 		void displayEmailVerificationFragment(FirebaseUser user);
 
-		void displayLegalFragment(FirebaseUser user, GoogleSignInAccount account, String userID);
-
 		void displaySignUpFragment(String email);
+
+		void displayLegalFragment(FirebaseUser user, GoogleSignInAccount account, String userID);
 
 		void startMainActivity(FirebaseUser user, GoogleSignInAccount account, String userID);
 
