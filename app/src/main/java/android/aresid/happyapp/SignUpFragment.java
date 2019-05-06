@@ -161,6 +161,7 @@ public class SignUpFragment
 		if (view.getId() == R.id.sign_up_sign_up_button)
 		{
 			Log.d(TAG, "onClick:sign_up_sign_up_button");
+
 			if (!isEmailCorrect(email))
 			{
 				Snackbar.make(view, "Check Email", Snackbar.LENGTH_LONG)
@@ -173,20 +174,36 @@ public class SignUpFragment
 				        .show();
 				return;
 			}
+
 			displayPrivacyPolicyDialog();
 		}
 	}
 
+	/**
+	 * Method varifies that the email is valid.
+	 *
+	 * @param email The email to check.
+	 * @return Boolean if email is valid or not.
+	 */
 	private boolean isEmailCorrect(String email)
 	{
 		return (email.length() != 0 && email.indexOf('@') != -1);
 	}
 
+	/**
+	 * Method varifies that the password is valid.
+	 *
+	 * @param password The password to check.
+	 * @return Boolean if password is valid or not.
+	 */
 	private boolean isPasswordCorrect(String password)
 	{
 		return password.length() > 6;
 	}
 
+	/**
+	 * Method loads the privacy policy & legalities dialog and shows it to the user.
+	 */
 	private void displayPrivacyPolicyDialog()
 	{
 		Log.d(TAG, "displayPrivacyPolicyDialog:true");
@@ -195,6 +212,14 @@ public class SignUpFragment
 		dialog.show(getFragmentManager(), "PrivacyPolicyDialog");
 	}
 
+	/**
+	 * Method handles the event when user accepts the legalities.
+	 *
+	 * @param firstName User's first name to save to Firestore.
+	 * @param surname   User's surname to save to Firestore.
+	 * @param email     User's email to save to Firestore.
+	 * @param password  User's password ???????????
+	 */
 	@Override
 	public void handlePrivacyPolicyAccept(String firstName, String surname, String email, String password)
 	{
@@ -203,6 +228,15 @@ public class SignUpFragment
 		saveUserInFirestore(firstName, surname, email, password);
 	}
 
+	/**
+	 * Method to save userdata to firestore.
+	 * I plan to refactor this in coop with SharedPrefs.
+	 *
+	 * @param firstName User's first name to save.
+	 * @param surname   User's surname name to save.
+	 * @param email     User's email name to save.
+	 * @param password  I don't know why this is here.
+	 */
 	private void saveUserInFirestore(String firstName, String surname, String email, String password)
 	{
 		Log.d(TAG, "saveUserInFirestore:true");
@@ -236,8 +270,9 @@ public class SignUpFragment
 			                        // Save the users ID in a member variable so I can easily access it in this fragment
 			                        mUserFirestoreID = documentReference.getId();
 
+			                        // TODO: Update because of new method saveUserInfoInSharedPreferences.
 			                        // Saving the users ID in the SharedPreferences so I can access the document from other activities as well
-			                        saveIDInSharedPreferences(documentReference.getId());
+			                        saveUserInfoInSharedPreferences(documentReference.getId(), null, null, null, null, false, 0);
 
 			                        handleSignUp(PASSWORD, EMAIL);
 		                        })
@@ -248,26 +283,46 @@ public class SignUpFragment
 		                        });
 	}
 
-	private void saveIDInSharedPreferences(String id)
+	/**
+	 * This method saves and caches the user's information to SharedPreferences so it is accessible over the whole app and can be synced to the
+	 * servers at any given time.
+	 *
+	 * @param firestoreID        The user's firestore ID which he gets when he creates a new account. This info is needed over the whole app.
+	 * @param firstName          User's first name. This info is needed over the whole app.
+	 * @param surname            User's surname. This info is needed over the whole app.
+	 * @param birthdate          User's birthdate. User needs to confirm that he is older than 18 years. Not needed over the whole app.
+	 * @param email              User's email. This info is needed over the whole app.
+	 * @param acceptedLegalities Boolean that tells if the user has accepted the legalities already or not.
+	 * @param legalitiesVersion  Tells which version of the legalities the user has accepted or not.
+	 */
+	private void saveUserInfoInSharedPreferences(String firestoreID, String firstName, String surname, String birthdate, String email,
+	                                             boolean acceptedLegalities, float legalitiesVersion)
 	{
-		Log.d(TAG, "saveIDInSharedPreferences:true");
+		Log.d(TAG, "saveUserInfoInSharedPreferences:true");
+		// TODO: Access shared prefs from activity level.
 
-		// Saving the users ID in the SharedPreferences so I can access the document from other activities as well
-		SharedPreferences userIDPrefs = getActivity().getSharedPreferences("android.aresid.happyapp", Context.MODE_PRIVATE);
+		// Creating the SharedPref's file and initializing a SharedPref object.
+		SharedPreferences userIDPrefs = getActivity().getSharedPreferences("User information", Context.MODE_PRIVATE);
 
 		try
 		{
-			Log.d(TAG, "saveIDInSharedPreferences: id " + id);
+			Log.d(TAG, "saveUserInfoInSharedPreferences: firestoreID " + firestoreID);
 			userIDPrefs.edit()
-			           .putString("userID", id)
+			           .putString("userID", firestoreID)
 			           .apply();
 		}
 		catch (NullPointerException ex)
 		{
-			Log.e(TAG, "saveIDInSharedPreferences: ", ex);
+			Log.e(TAG, "saveUserInfoInSharedPreferences: ", ex);
 		}
 	}
 
+	/**
+	 * Method handles the sign up and registers a new user in my Firebase console.
+	 *
+	 * @param email    The email to create a new user with.
+	 * @param password The password to create a new user with.
+	 */
 	private void handleSignUp(String email, String password)
 	{
 		Log.d(TAG, "handleSignUp:true");
@@ -292,6 +347,11 @@ public class SignUpFragment
 		                                   });
 	}
 
+	/**
+	 * Method updates the UI after sign up got handled with.
+	 *
+	 * @param user Passes this to the next fragment.
+	 */
 	private void updateUI(FirebaseUser user)
 	{
 		Log.d(TAG, "updateUI:true");
