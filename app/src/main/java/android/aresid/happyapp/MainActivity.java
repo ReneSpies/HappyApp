@@ -53,6 +53,7 @@ public class MainActivity
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 
+		// TODO: Refactor this and move it to own methods.
 		HomeFragment home = HomeFragment.newInstance();
 		mFragmentTransaction().replace(R.id.fragment_container, home)
 		                      .commit();
@@ -62,6 +63,10 @@ public class MainActivity
 		navigationView.setNavigationItemSelectedListener(this);
 	}
 
+	/**
+	 * Planned to be replaced by displayXXX() methods.
+	 * @return FragmentTransaction object.
+	 */
 	private FragmentTransaction mFragmentTransaction()
 	{
 		FragmentManager manager = getSupportFragmentManager();
@@ -82,6 +87,9 @@ public class MainActivity
 		}
 	}
 
+	/**
+	 * Method simply closes the drawer.
+	 */
 	private void closeDrawer()
 	{
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -113,12 +121,18 @@ public class MainActivity
 		return super.onOptionsItemSelected(item);
 	}
 
+	/**
+	 * Method gets called when the NavigationDrawer's header is clicked.
+	 * Planned to be replaced by onClick method.
+	 * @param view The view which called this method.
+	 */
 	public void onNavHeaderClick(View view)
 	{
 		NavigationView navigationView = findViewById(R.id.nav_view);
 		navigationView.getCheckedItem()
 		              .setChecked(false);
 
+		// TODO: Replace by displayXXX method.
 		MyAccountFragment account = MyAccountFragment.newInstance();
 		mFragmentTransaction().replace(R.id.fragment_container, account)
 		                      .addToBackStack(null)
@@ -135,6 +149,7 @@ public class MainActivity
 		switch (id)
 		{
 			case R.id.nav_home:
+				// TODO: Replace by displayHomeFragment method.
 				HomeFragment home = HomeFragment.newInstance();
 				mFragmentTransaction().replace(R.id.fragment_container, home)
 				                      .addToBackStack(null)
@@ -142,18 +157,21 @@ public class MainActivity
 				item.setChecked(true);
 				break;
 			case R.id.nav_search:
+				// TODO: Replace by displaySearchFragment method.
 				SearchFragment search = SearchFragment.newInstance();
 				mFragmentTransaction().replace(R.id.fragment_container, search)
 				                      .addToBackStack(null)
 				                      .commit();
 				break;
 			case R.id.nav_favorites:
+				// TODO: Replace by displayFavoritesFragment method.
 				FavoritesFragment favorites = FavoritesFragment.newInstance();
 				mFragmentTransaction().replace(R.id.fragment_container, favorites)
 				                      .addToBackStack(null)
 				                      .commit();
 				break;
 			case R.id.nav_place_ad:
+				// TODO: Replace by displayAdvertisementFragment method.
 				AdvertisementFragment ad = AdvertisementFragment.newInstance();
 				mFragmentTransaction().replace(R.id.fragment_container, ad)
 				                      .addToBackStack(null)
@@ -167,22 +185,33 @@ public class MainActivity
 		return true;
 	}
 
+	// TODO: Delete method in all fragment interfaces.
 	@Override
 	public void onFragmentInteraction(Uri uri)
 	{
 
 	}
 
+	/**
+	 * Method is called when the appropriate item in the NavigationDrawer was clicked.
+	 * @param view View which called the method.
+	 */
 	public void onLookingClick(View view)
 	{
+		// TODO: Replace with displayLookFragment method.
 		LookFragment look = LookFragment.newInstance();
 		mFragmentTransaction().replace(R.id.fragment_container, look)
 		                      .addToBackStack(null)
 		                      .commit();
 	}
+	/**
+	 * Method is called when the appropriate item in the NavigationDrawer was clicked.
+	 * @param view View which called the method.
+	 */
 
 	public void onOfferingClick(View view)
 	{
+		// TODO: Replace with displayOfferFragment method.
 		OfferFragment offer = OfferFragment.newInstance();
 		mFragmentTransaction().replace(R.id.fragment_container, offer)
 		                      .addToBackStack(null)
