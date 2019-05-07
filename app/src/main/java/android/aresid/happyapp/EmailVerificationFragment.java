@@ -169,7 +169,6 @@ public class EmailVerificationFragment
 			                          {
 				                          Toast.makeText(mContext, "Hey Flash, not so fast. Try again in a minute.", Toast.LENGTH_SHORT)
 				                               .show();
-				                          return;
 			                          }
 			                          else
 			                          {

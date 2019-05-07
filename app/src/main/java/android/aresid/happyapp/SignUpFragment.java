@@ -271,8 +271,10 @@ public class SignUpFragment
 			                        mUserFirestoreID = documentReference.getId();
 
 			                        // TODO: Update because of new method saveUserInfoInSharedPreferences.
+			                        // TODO: Request brithdate and move this method to the dialog.
 			                        // Saving the users ID in the SharedPreferences so I can access the document from other activities as well
-			                        saveUserInfoInSharedPreferences(documentReference.getId(), null, null, null, null, false, 0);
+			                        saveUserInfoInSharedPreferences(documentReference.getId(), user.get("firstName"), user.get("surname"), null,
+			                                                        user.get("email"), false, 0);
 
 			                        handleSignUp(PASSWORD, EMAIL);
 		                        })

@@ -116,7 +116,7 @@ public class LoginActivity
 	@Override
 	public void displaySignUpFragment(String email)
 	{
-
+		Log.d(TAG, "displaySignUpFragment:true");
 	}
 
 	/**
