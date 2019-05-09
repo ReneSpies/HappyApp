@@ -1,7 +1,6 @@
 package android.aresid.happyapp;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -218,14 +217,17 @@ public class SignUpFragment
 	 * @param firstName User's first name to save to Firestore.
 	 * @param surname   User's surname to save to Firestore.
 	 * @param email     User's email to save to Firestore.
-	 * @param password  User's password ???????????
+	 * @param password  User's password to handle sign up.
 	 */
 	@Override
-	public void handlePrivacyPolicyAccept(String firstName, String surname, String email, String password)
+	public void handlePrivacyPolicyAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                      float legalitiesVersion, String password)
 	{
 		Log.d(TAG, "handlePrivacyPolicyAccept:true");
 
-		saveUserInFirestore(firstName, surname, email, password);
+		mFragmentInteractionListener.saveUserInfoInSharedPreferences(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion);
+
+		saveUserInFirestore(email, password);
 	}
 
 	/**
@@ -270,11 +272,10 @@ public class SignUpFragment
 			                        // Save the users ID in a member variable so I can easily access it in this fragment
 			                        mUserFirestoreID = documentReference.getId();
 
-			                        // TODO: Update because of new method saveUserInfoInSharedPreferences.
 			                        // TODO: Request brithdate and move this method to the dialog.
 			                        // Saving the users ID in the SharedPreferences so I can access the document from other activities as well
-			                        saveUserInfoInSharedPreferences(documentReference.getId(), user.get("firstName"), user.get("surname"), null,
-			                                                        user.get("email"), false, 0);
+			                        mFragmentInteractionListener.saveUserInfoInSharedPreferences(user.get("firstName"), user.get("surname"), null,
+			                                                                                     user.get("email"), false, 0);
 
 			                        handleSignUp(PASSWORD, EMAIL);
 		                        })
@@ -283,40 +284,6 @@ public class SignUpFragment
 			                        Log.d(TAG, "onFailure:true");
 			                        Log.e(TAG, "saveUserInFirestore:failure", e);
 		                        });
-	}
-
-	/**
-	 * This method saves and caches the user's information to SharedPreferences so it is accessible over the whole app and can be synced to the
-	 * servers at any given time.
-	 *
-	 * @param firestoreID        The user's firestore ID which he gets when he creates a new account. This info is needed over the whole app.
-	 * @param firstName          User's first name. This info is needed over the whole app.
-	 * @param surname            User's surname. This info is needed over the whole app.
-	 * @param birthdate          User's birthdate. User needs to confirm that he is older than 18 years. Not needed over the whole app.
-	 * @param email              User's email. This info is needed over the whole app.
-	 * @param acceptedLegalities Boolean that tells if the user has accepted the legalities already or not.
-	 * @param legalitiesVersion  Tells which version of the legalities the user has accepted or not.
-	 */
-	private void saveUserInfoInSharedPreferences(String firestoreID, String firstName, String surname, String birthdate, String email,
-	                                             boolean acceptedLegalities, float legalitiesVersion)
-	{
-		Log.d(TAG, "saveUserInfoInSharedPreferences:true");
-		// TODO: Access shared prefs from activity level.
-
-		// Creating the SharedPref's file and initializing a SharedPref object.
-		SharedPreferences userIDPrefs = getActivity().getSharedPreferences("User information", Context.MODE_PRIVATE);
-
-		try
-		{
-			Log.d(TAG, "saveUserInfoInSharedPreferences: firestoreID " + firestoreID);
-			userIDPrefs.edit()
-			           .putString("userID", firestoreID)
-			           .apply();
-		}
-		catch (NullPointerException ex)
-		{
-			Log.e(TAG, "saveUserInfoInSharedPreferences: ", ex);
-		}
 	}
 
 	/**
@@ -366,6 +333,11 @@ public class SignUpFragment
 		void displayEmailVerificationFragment(FirebaseUser user);
 
 		void displayLoginFragment();
+
+		void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+		                                     float legalitiesVersion);
+
+		void saveFirestoreUserIDInSharedPreferences(String firestoreID);
 
 
 
