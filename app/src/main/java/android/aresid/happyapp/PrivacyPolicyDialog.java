@@ -26,6 +26,7 @@ public class PrivacyPolicyDialog
 {
 	private final String TAG = getClass().getSimpleName();
 	private OnPrivacyPolicyDialogInteractionListener mDialogInteractionListener;
+	private final static float LEGALITIES_VERSION = 1.0f;
 
 	public static PrivacyPolicyDialog newInstance(String firstName, String surname, String email, String password)
 	{
@@ -87,31 +88,34 @@ public class PrivacyPolicyDialog
 
 		// Get the button from within the view and create the dialog
 		Button alertDialogAcceptButton = dialogView.findViewById(R.id.privacy_policy_dialog_accept_button);
-		final Dialog dialog = builder.create();
+		Dialog dialog = builder.create();
 
-		final String FIRSTNAME, SURNAME, EMAIL, PASSWORD;
+		String firstName, surname, email, password;
 
 		if (getArguments() != null)
 		{
-			FIRSTNAME = getArguments().getString("firstName");
-			SURNAME = getArguments().getString("surname");
-			EMAIL = getArguments().getString("email");
-			PASSWORD = getArguments().getString("password");
+			firstName = getArguments().getString("firstName");
+			surname = getArguments().getString("surname");
+			email = getArguments().getString("email");
+			password = getArguments().getString("password");
 		}
 		else
 		{
-			FIRSTNAME = null;
-			SURNAME = null;
-			EMAIL = null;
-			PASSWORD = null;
+			firstName = null;
+			surname = null;
+			email = null;
+			password = null;
 		}
+
+		String birthdate = "01.10.1999";
 
 		// Register a listener to the accept button in the dialog and let it cancel the dialog
 		alertDialogAcceptButton.setOnClickListener((view) ->
 		                                           {
 			                                           Log.d(TAG, "onClick:true");
 
-			                                           mDialogInteractionListener.handlePrivacyPolicyAccept(FIRSTNAME, SURNAME, EMAIL, PASSWORD);
+			                                           mDialogInteractionListener.handlePrivacyPolicyAccept(firstName, surname, birthdate, email,
+			                                                                                                true, LEGALITIES_VERSION, password);
 
 			                                           dialog.cancel();
 		                                           });
@@ -122,7 +126,8 @@ public class PrivacyPolicyDialog
 
 	public interface OnPrivacyPolicyDialogInteractionListener
 	{
-		void handlePrivacyPolicyAccept(String firstName, String surname, String email, String password);
+		void handlePrivacyPolicyAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+		                               float legalitiesVersion, String password);
 
 
 

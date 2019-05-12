@@ -19,19 +19,19 @@
 	</style>
 
 	<style name="Widget.HappyApp.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-		<item name="android:paddingBottom">6dp</item>
-		<item name="boxCornerRadiusBottomEnd">0.3dp</item>
-		<item name="boxCornerRadiusTopStart">0.3dp</item>
+		<!--<item name="android:paddingBottom">6dp</item>-->
+		<item name="android:layout_margin">13dp</item>
+		<item name="boxCornerRadiusBottomEnd">1.3dp</item>
+		<item name="boxCornerRadiusTopStart">1.3dp</item>
 	</style>
 
 	<style name="Widget.HappyApp.ContainedButton" parent="Widget.MaterialComponents.Button">
 		<item name="cornerRadius">4dp</item>
 		<item name="backgroundTint">@color/colorPrimary</item>
 		<item name="rippleColor">@color/rippleColor</item>
-		<item name="android:layout_marginTop">4dp</item>
-		<item name="android:layout_marginBottom">4dp</item>
-		<item name="android:textSize">15sp</item>
-		<item name="android:elevation">6dp</item>
+		<item name="android:layout_margin">13dp</item>
+		<item name="android:textSize">13sp</item>
+		<item name="android:elevation">13dp</item>
 		<item name="android:textColor">@color/textColorWhite</item>
 		<item name="android:textAllCaps">true</item>
 	</style>
@@ -39,9 +39,8 @@
 	<style name="Widget.HappyApp.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
 		<item name="cornerRadius">4dp</item>
 		<item name="rippleColor">@color/colorPrimary</item>
-		<item name="android:layout_marginTop">4dp</item>
-		<item name="android:layout_marginBottom">4dp</item>
-		<item name="android:textSize">15sp</item>
+		<item name="android:layout_margin">13dp</item>
+		<item name="android:textSize">13sp</item>
 		<item name="android:textColor">@color/rippleColor</item>
 		<item name="android:textAllCaps">true</item>
 	</style>
@@ -49,7 +48,8 @@
 	<style name="Widget.HappyApp.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
 		<item name="cornerRadius">4dp</item>
 		<item name="rippleColor">@color/colorPrimary</item>
-		<item name="android:textSize">15sp</item>
+		<item name="android:textSize">13sp</item>
+		<item name="android:layout_margin">13dp</item>
 		<item name="android:textAllCaps">true</item>
 		<item name="android:textColor">@color/rippleColor</item>
 	</style>

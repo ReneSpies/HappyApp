@@ -176,6 +176,8 @@ public class LoginActivity
 	public void displaySignUpFragment(String email)
 	{
 		Log.d(TAG, "displaySignUpFragment:true");
+
+
 	}
 
 	/**

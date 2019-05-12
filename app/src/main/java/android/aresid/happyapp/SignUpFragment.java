@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -17,7 +18,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class SignUpFragment
@@ -40,6 +44,9 @@ public class SignUpFragment
 	private EditText mFirstNameField;
 	private EditText mSurnameField;
 	private EditText mPasswordField;
+	private Spinner mBirthdateDaySpinner;
+	private Spinner mBirthdateMonthSpinner;
+	private Spinner mBirthdateYearSpinner;
 
 	public SignUpFragment()
 	{
@@ -96,6 +103,9 @@ public class SignUpFragment
 		mFirstNameField = rootView.findViewById(R.id.sign_up_first_name_field);
 		mSurnameField = rootView.findViewById(R.id.sign_up_surname_field);
 		mPasswordField = rootView.findViewById(R.id.sign_up_password_field);
+		mBirthdateDaySpinner = rootView.findViewById(R.id.birthdate_day);
+		mBirthdateMonthSpinner = rootView.findViewById(R.id.birthdate_month);
+		mBirthdateYearSpinner = rootView.findViewById(R.id.birthdate_year);
 		Button signUpSignUpButton = rootView.findViewById(R.id.sign_up_sign_up_button);
 
 		signUpSignUpButton.setOnClickListener(this);
@@ -142,6 +152,21 @@ public class SignUpFragment
 		mFragmentInteractionListener = null;
 	}
 
+	/**
+	 * Method converts the birthdate from the spinners into a String.
+	 *
+	 * @param dayDD    The date in DD format.
+	 * @param monthMM  The month in MM format.
+	 * @param yearYYYY The year in YYYY format.
+	 * @return String that represents the birthdate in DD.MM.YYYY format.
+	 */
+	private String convertBirthdateIntoString(int dayDD, int monthMM, int yearYYYY)
+	{
+		Log.d(TAG, "convertBirthdateIntoString:true");
+
+		return dayDD + "." + monthMM + "." + yearYYYY;
+	}
+
 	@Override
 	public void onClick(View view)
 	{
@@ -179,7 +204,7 @@ public class SignUpFragment
 	}
 
 	/**
-	 * Method varifies that the email is valid.
+	 * Method verifies that the email is valid.
 	 *
 	 * @param email The email to check.
 	 * @return Boolean if email is valid or not.
@@ -205,10 +230,30 @@ public class SignUpFragment
 	 */
 	private void displayPrivacyPolicyDialog()
 	{
+		// TODO: Move to activity level.
 		Log.d(TAG, "displayPrivacyPolicyDialog:true");
 
 		PrivacyPolicyDialog dialog = new PrivacyPolicyDialog();
 		dialog.show(getFragmentManager(), "PrivacyPolicyDialog");
+	}
+
+	/**
+	 * Method checks if birthdate is valid (30.02 == invalid) and if the user's age > 18.
+	 *
+	 * @param dayDD    Day in DD format.
+	 * @param monthMM  Month in MM format.
+	 * @param yearYYYY Year in YYYY format.
+	 * @return Boolean if birthdate is valid.
+	 */
+	private boolean isBirthdateValid(int dayDD, int monthMM, int yearYYYY)
+	{
+		Log.d(TAG, "isBirthdateValid:true");
+
+		if (dayDD > 29 && monthMM == 02) return false;
+
+		String currentDate = new SimpleDateFormat("ddmmyyyy", Locale.GERMANY).format(new Date());
+		Log.d(TAG, "isBirthdateValid: current date " + currentDate);
+		return true;
 	}
 
 	/**
@@ -227,7 +272,7 @@ public class SignUpFragment
 
 		mFragmentInteractionListener.saveUserInfoInSharedPreferences(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion);
 
-		saveUserInFirestore(email, password);
+		//		saveUserInFirestore(email, password);
 	}
 
 	/**
