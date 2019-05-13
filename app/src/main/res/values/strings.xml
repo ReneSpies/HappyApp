@@ -65,4 +65,5 @@
 	<string name="loggin_in">Logging in&#8230;</string>
 	<string name="privacy_policy"><![CDATA[I confirm that I\'ve read the privacy policy and T&C and I agree with it.]]></string>
 	<string name="age_confirmation"><![CDATA[I confirm that I am >= 18 years old.]]></string>
+
 </resources>

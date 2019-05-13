@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -19,8 +20,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -98,7 +102,7 @@ public class SignUpFragment
 		Log.d(TAG, "onCreateView:true");
 		View rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
-		// Init all views
+		// Init all views.
 		mEmailField = rootView.findViewById(R.id.sign_up_email_field);
 		mFirstNameField = rootView.findViewById(R.id.sign_up_first_name_field);
 		mSurnameField = rootView.findViewById(R.id.sign_up_surname_field);
@@ -107,6 +111,19 @@ public class SignUpFragment
 		mBirthdateMonthSpinner = rootView.findViewById(R.id.birthdate_month);
 		mBirthdateYearSpinner = rootView.findViewById(R.id.birthdate_year);
 		Button signUpSignUpButton = rootView.findViewById(R.id.sign_up_sign_up_button);
+
+		// Create and populate the lists for the birthdate input.
+		// The years list dates back to 1903 because thats when the oldest human alive was born.
+		// TODO: Move this to activity level.
+		ArrayAdapter daysAdapter = mFragmentInteractionListener.createDaysAdapter();
+		daysAdapter.setDropDownViewResource(R.layout.birthdate_spinner_dropdown_item);
+		mBirthdateDaySpinner.setAdapter(daysAdapter);
+		ArrayAdapter monthsAdapter = mFragmentInteractionListener.createMonthsAdapter();
+		monthsAdapter.setDropDownViewResource(R.layout.birthdate_spinner_dropdown_item);
+		mBirthdateMonthSpinner.setAdapter(monthsAdapter);
+		ArrayAdapter yearsAdapter = mFragmentInteractionListener.createYearsAdapter();
+		yearsAdapter.setDropDownViewResource(R.layout.birthdate_spinner_dropdown_item);
+		mBirthdateYearSpinner.setAdapter(yearsAdapter);
 
 		signUpSignUpButton.setOnClickListener(this);
 
@@ -150,6 +167,27 @@ public class SignUpFragment
 		super.onDetach();
 		Log.d(TAG, "onDetach:true");
 		mFragmentInteractionListener = null;
+	}
+
+	/**
+	 * Creates a list of 1903 - today for the years the customers could've been born in.
+	 *
+	 * @return List of 1903 - today.
+	 */
+	private List<String> createYearsList()
+	{
+		Log.d(TAG, "createYearsList:true");
+		List<String> listOfYears = new ArrayList<>();
+
+		for (int year = Calendar.getInstance()
+		                        .get(Calendar.YEAR);
+		     year >= 1903;
+		     year--)
+		{
+			listOfYears.add(String.valueOf(year));
+		}
+
+		return listOfYears;
 	}
 
 	/**
@@ -383,6 +421,12 @@ public class SignUpFragment
 		                                     float legalitiesVersion);
 
 		void saveFirestoreUserIDInSharedPreferences(String firestoreID);
+
+		ArrayAdapter createDaysAdapter();
+
+		ArrayAdapter createMonthsAdapter();
+
+		ArrayAdapter createYearsAdapter();
 
 
 

@@ -108,6 +108,7 @@ public class LoginFragment
 				// All the SignUp things will be handled in the SignUpFragment
 				String email = mEmailField.getText()
 				                          .toString();
+
 				mFragmentInteractionListener.displaySignUpFragment(email);
 
 				break;

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -120,6 +121,27 @@ public class LoginActivity
 		}
 	}
 
+	@Override
+	public ArrayAdapter createDaysAdapter()
+	{
+		Log.d(TAG, "createDaysAdapter:true");
+		return ArrayAdapter.createFromResource(this, R.array.days_of_month_array, R.layout.birthdate_spinner_item);
+	}
+
+	@Override
+	public ArrayAdapter createMonthsAdapter()
+	{
+		Log.d(TAG, "createMonthsAdapter:true");
+		return ArrayAdapter.createFromResource(this, R.array.months_of_year_array, R.layout.birthdate_spinner_item);
+	}
+
+	@Override
+	public ArrayAdapter createYearsAdapter()
+	{
+		Log.d(TAG, "createYearsAdapter:true");
+		return ArrayAdapter.createFromResource(this, R.array.years_since_1903_array, R.layout.birthdate_spinner_item);
+	}
+
 	/**
 	 * Shows a Dialog with important legalities such as terms and conditions and privacy policy.
 	 * Furthermore there is the confirmation that the user is older than 18 years.
@@ -177,7 +199,9 @@ public class LoginActivity
 	{
 		Log.d(TAG, "displaySignUpFragment:true");
 
-
+		getSupportFragmentManager().beginTransaction()
+		                           .replace(R.id.login_container, SignUpFragment.newInstance(null, null, email))
+		                           .commit();
 	}
 
 	/**
