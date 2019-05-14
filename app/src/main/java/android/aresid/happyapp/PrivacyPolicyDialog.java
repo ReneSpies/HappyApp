@@ -50,9 +50,9 @@ public class PrivacyPolicyDialog
 
 		super.onAttach(context);
 
-		if (context instanceof SignUpFragment.OnFragmentInteractionListener)
+		if (context instanceof PrivacyPolicyDialog.OnPrivacyPolicyDialogInteractionListener)
 		{
-			mDialogInteractionListener = (PrivacyPolicyDialog.OnPrivacyPolicyDialogInteractionListener) context;
+			mDialogInteractionListener = (OnPrivacyPolicyDialogInteractionListener) context;
 		}
 		else
 		{

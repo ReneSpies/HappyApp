@@ -112,15 +112,15 @@ public class SignUpFragment
 		mBirthdateYearSpinner = rootView.findViewById(R.id.birthdate_year);
 		Button signUpSignUpButton = rootView.findViewById(R.id.sign_up_sign_up_button);
 
-		// Create and populate the lists for the birthdate input.
-		// The years list dates back to 1903 because thats when the oldest human alive was born.
-		// TODO: Move this to activity level.
+		// Create the adapters on acitivity level and apply them to the spinners.
 		ArrayAdapter daysAdapter = mFragmentInteractionListener.createDaysAdapter();
 		daysAdapter.setDropDownViewResource(R.layout.birthdate_spinner_dropdown_item);
 		mBirthdateDaySpinner.setAdapter(daysAdapter);
+
 		ArrayAdapter monthsAdapter = mFragmentInteractionListener.createMonthsAdapter();
 		monthsAdapter.setDropDownViewResource(R.layout.birthdate_spinner_dropdown_item);
 		mBirthdateMonthSpinner.setAdapter(monthsAdapter);
+
 		ArrayAdapter yearsAdapter = mFragmentInteractionListener.createYearsAdapter();
 		yearsAdapter.setDropDownViewResource(R.layout.birthdate_spinner_dropdown_item);
 		mBirthdateYearSpinner.setAdapter(yearsAdapter);

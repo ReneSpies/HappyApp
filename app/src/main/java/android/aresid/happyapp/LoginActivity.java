@@ -17,13 +17,18 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 public class LoginActivity
 		extends AppCompatActivity
 		implements GoogleApiClient.OnConnectionFailedListener,
 		           LoginFragment.OnFragmentInteractionListener,
 		           SignUpFragment.OnFragmentInteractionListener,
 		           EmailVerificationFragment.OnFragmentInteractionListener,
-		           LegalFragment.OnFragmentInteractionListener
+		           LegalFragment.OnFragmentInteractionListener,
+		           PrivacyPolicyDialog.OnPrivacyPolicyDialogInteractionListener
 {
 	private final String TAG = getClass().getSimpleName();
 
@@ -121,6 +126,12 @@ public class LoginActivity
 		}
 	}
 
+	/**
+	 * Method creates and populates an adapter for the spinner that's handling the days.
+	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
+	 *
+	 * @return ArrayAdapter with content from 1 to 31.
+	 */
 	@Override
 	public ArrayAdapter createDaysAdapter()
 	{
@@ -128,6 +139,12 @@ public class LoginActivity
 		return ArrayAdapter.createFromResource(this, R.array.days_of_month_array, R.layout.birthdate_spinner_item);
 	}
 
+	/**
+	 * Method creates and populates an adapter for the spinner that's handling the months.
+	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
+	 *
+	 * @return ArrayAdapter with content January to December as Strings.
+	 */
 	@Override
 	public ArrayAdapter createMonthsAdapter()
 	{
@@ -135,11 +152,29 @@ public class LoginActivity
 		return ArrayAdapter.createFromResource(this, R.array.months_of_year_array, R.layout.birthdate_spinner_item);
 	}
 
+	/**
+	 * Method creates and populates an adapter for the spinner that's handling the years.
+	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
+	 *
+	 * @return ArrayAdapter with content now to 1903 as Strings.
+	 */
 	@Override
 	public ArrayAdapter createYearsAdapter()
 	{
 		Log.d(TAG, "createYearsAdapter:true");
-		return ArrayAdapter.createFromResource(this, R.array.years_since_1903_array, R.layout.birthdate_spinner_item);
+
+		List<String> listOfYearsSince1903 = new ArrayList<>();
+
+		// Iterate through the years from now to 1903 and add them to the list.
+		for (int year = Calendar.getInstance()
+		                        .get(Calendar.YEAR);
+		     year >= 1903;
+		     year--)
+		{
+			listOfYearsSince1903.add(String.valueOf(year));
+		}
+
+		return new ArrayAdapter<>(this, R.layout.birthdate_spinner_item, listOfYearsSince1903);
 	}
 
 	/**
@@ -246,6 +281,14 @@ public class LoginActivity
 		intent.putExtra("googleSignInAccount", account);
 
 		startActivity(intent);
+	}
+
+
+	@Override
+	public void handlePrivacyPolicyAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                      float legalitiesVersion, String password)
+	{
+		Log.d(TAG, "handlePrivacyPolicyAccept:true");
 	}
 
 

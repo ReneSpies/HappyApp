@@ -4,4 +4,5 @@
 	android:layout_height="wrap_content"
 	android:gravity="start"
 	android:padding="4dp"
+	android:paddingStart="13dp"
 	android:textAppearance="?attr/textAppearanceHeadline5" />
