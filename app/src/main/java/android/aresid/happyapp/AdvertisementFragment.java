@@ -32,15 +32,24 @@ public class AdvertisementFragment
 
 	private OnFragmentInteractionListener mListener;
 
+
+
+
 	public AdvertisementFragment()
 	{
 		// Required empty public constructor
 	}
 
+
+
+
 	public static AdvertisementFragment newInstance()
 	{
 		return new AdvertisementFragment();
 	}
+
+
+
 
 	// TODO: Rename method, update argument and hook method into UI event
 	public void onButtonPressed(Uri uri)
@@ -50,6 +59,9 @@ public class AdvertisementFragment
 			mListener.onFragmentInteraction(uri);
 		}
 	}
+
+
+
 
 	@Override
 	public void onAttach(Context context)
@@ -65,6 +77,9 @@ public class AdvertisementFragment
 		}
 	}
 
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -76,6 +91,9 @@ public class AdvertisementFragment
 		}
 	}
 
+
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -83,12 +101,18 @@ public class AdvertisementFragment
 		return inflater.inflate(R.layout.fragment_advertisement, container, false);
 	}
 
+
+
+
 	@Override
 	public void onDetach()
 	{
 		super.onDetach();
 		mListener = null;
 	}
+
+
+
 
 	/**
 	 * This interface must be implemented by activities that contain this

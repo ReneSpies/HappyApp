@@ -31,6 +31,9 @@ public class MainActivity
 {
 	private FirebaseUser mFirebaseUser;
 
+
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -63,15 +66,32 @@ public class MainActivity
 		navigationView.setNavigationItemSelectedListener(this);
 	}
 
+
+
+
 	/**
-	 * Planned to be replaced by displayXXX() methods.
-	 * @return FragmentTransaction object.
+	 * Method gets called when the NavigationDrawer's header is clicked.
+	 * Planned to be replaced by onClick method.
+	 *
+	 * @param view The view which called this method.
 	 */
-	private FragmentTransaction mFragmentTransaction()
+	public void onNavHeaderClick(View view)
 	{
-		FragmentManager manager = getSupportFragmentManager();
-		return manager.beginTransaction();
+		NavigationView navigationView = findViewById(R.id.nav_view);
+		navigationView.getCheckedItem()
+		              .setChecked(false);
+
+		// TODO: Replace by displayXXX method.
+		MyAccountFragment account = MyAccountFragment.newInstance();
+		mFragmentTransaction().replace(R.id.fragment_container, account)
+		                      .addToBackStack(null)
+		                      .commit();
+
+		closeDrawer();
 	}
+
+
+
 
 	@Override
 	public void onBackPressed()
@@ -87,6 +107,9 @@ public class MainActivity
 		}
 	}
 
+
+
+
 	/**
 	 * Method simply closes the drawer.
 	 */
@@ -96,6 +119,9 @@ public class MainActivity
 		drawer.closeDrawer(GravityCompat.START);
 	}
 
+
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -103,6 +129,9 @@ public class MainActivity
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+
+
+
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
@@ -121,25 +150,22 @@ public class MainActivity
 		return super.onOptionsItemSelected(item);
 	}
 
+
+
+
 	/**
-	 * Method gets called when the NavigationDrawer's header is clicked.
-	 * Planned to be replaced by onClick method.
-	 * @param view The view which called this method.
+	 * Planned to be replaced by displayXXX() methods.
+	 *
+	 * @return FragmentTransaction object.
 	 */
-	public void onNavHeaderClick(View view)
+	private FragmentTransaction mFragmentTransaction()
 	{
-		NavigationView navigationView = findViewById(R.id.nav_view);
-		navigationView.getCheckedItem()
-		              .setChecked(false);
-
-		// TODO: Replace by displayXXX method.
-		MyAccountFragment account = MyAccountFragment.newInstance();
-		mFragmentTransaction().replace(R.id.fragment_container, account)
-		                      .addToBackStack(null)
-		                      .commit();
-
-		closeDrawer();
+		FragmentManager manager = getSupportFragmentManager();
+		return manager.beginTransaction();
 	}
+
+
+
 
 	@Override
 	public boolean onNavigationItemSelected(MenuItem item)
@@ -185,6 +211,9 @@ public class MainActivity
 		return true;
 	}
 
+
+
+
 	// TODO: Delete method in all fragment interfaces.
 	@Override
 	public void onFragmentInteraction(Uri uri)
@@ -192,8 +221,12 @@ public class MainActivity
 
 	}
 
+
+
+
 	/**
 	 * Method is called when the appropriate item in the NavigationDrawer was clicked.
+	 *
 	 * @param view View which called the method.
 	 */
 	public void onLookingClick(View view)
@@ -204,8 +237,13 @@ public class MainActivity
 		                      .addToBackStack(null)
 		                      .commit();
 	}
+
+
+
+
 	/**
 	 * Method is called when the appropriate item in the NavigationDrawer was clicked.
+	 *
 	 * @param view View which called the method.
 	 */
 
@@ -217,6 +255,7 @@ public class MainActivity
 		                      .addToBackStack(null)
 		                      .commit();
 	}
+
 
 
 

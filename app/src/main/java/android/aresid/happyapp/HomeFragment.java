@@ -34,15 +34,24 @@ public class HomeFragment
 
 	private OnFragmentInteractionListener mListener;
 
+
+
+
 	public HomeFragment()
 	{
 		// Required empty public constructor
 	}
 
+
+
+
 	public static HomeFragment newInstance()
 	{
 		return new HomeFragment();
 	}
+
+
+
 
 	// TODO: Rename method, update argument and hook method into UI event
 	public void onButtonPressed(Uri uri)
@@ -52,6 +61,9 @@ public class HomeFragment
 			mListener.onFragmentInteraction(uri);
 		}
 	}
+
+
+
 
 	@Override
 	public void onAttach(Context context)
@@ -67,6 +79,9 @@ public class HomeFragment
 		}
 	}
 
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -78,12 +93,18 @@ public class HomeFragment
 		}
 	}
 
+
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_home, container, false);
 	}
+
+
+
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
@@ -97,12 +118,18 @@ public class HomeFragment
 		listView.setAdapter(adapter);
 	}
 
+
+
+
 	@Override
 	public void onDetach()
 	{
 		super.onDetach();
 		mListener = null;
 	}
+
+
+
 
 	/**
 	 * This interface must be implemented by activities that contain this

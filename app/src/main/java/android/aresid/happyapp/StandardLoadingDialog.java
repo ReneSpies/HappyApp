@@ -27,6 +27,9 @@ class StandardLoadingDialog
 {
 	private final String TAG = getClass().getSimpleName();
 
+
+
+
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(@Nullable Bundle savedInstanceState)

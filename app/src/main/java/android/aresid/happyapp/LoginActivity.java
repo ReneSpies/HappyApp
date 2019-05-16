@@ -32,6 +32,9 @@ public class LoginActivity
 {
 	private final String TAG = getClass().getSimpleName();
 
+
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -48,12 +51,18 @@ public class LoginActivity
 		displayLoginFragment();
 	}
 
+
+
+
 	@Override
 	public void onStart()
 	{
 		Log.d(TAG, "onStart:true");
 		super.onStart();
 	}
+
+
+
 
 	/**
 	 * Loads the LoginFragment into the activities container.
@@ -68,6 +77,9 @@ public class LoginActivity
 		                           .replace(R.id.login_container, LoginFragment.newInstance())
 		                           .commit();
 	}
+
+
+
 
 	/**
 	 * This method saves and caches the user's information to SharedPreferences so it is accessible over the whole app and can be synced to the
@@ -109,6 +121,9 @@ public class LoginActivity
 		}
 	}
 
+
+
+
 	@Override
 	public void saveFirestoreUserIDInSharedPreferences(String firestoreID)
 	{
@@ -126,6 +141,9 @@ public class LoginActivity
 		}
 	}
 
+
+
+
 	/**
 	 * Method creates and populates an adapter for the spinner that's handling the days.
 	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
@@ -139,6 +157,9 @@ public class LoginActivity
 		return ArrayAdapter.createFromResource(this, R.array.days_of_month_array, R.layout.birthdate_spinner_item);
 	}
 
+
+
+
 	/**
 	 * Method creates and populates an adapter for the spinner that's handling the months.
 	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
@@ -151,6 +172,9 @@ public class LoginActivity
 		Log.d(TAG, "createMonthsAdapter:true");
 		return ArrayAdapter.createFromResource(this, R.array.months_of_year_array, R.layout.birthdate_spinner_item);
 	}
+
+
+
 
 	/**
 	 * Method creates and populates an adapter for the spinner that's handling the years.
@@ -177,6 +201,9 @@ public class LoginActivity
 		return new ArrayAdapter<>(this, R.layout.birthdate_spinner_item, listOfYearsSince1903);
 	}
 
+
+
+
 	/**
 	 * Shows a Dialog with important legalities such as terms and conditions and privacy policy.
 	 * Furthermore there is the confirmation that the user is older than 18 years.
@@ -186,6 +213,9 @@ public class LoginActivity
 	{
 
 	}
+
+
+
 
 	/**
 	 * Loads the SignUpFragment into the activities container.
@@ -205,8 +235,14 @@ public class LoginActivity
 		                           .commit();
 	}
 
+
+
+
 	@Override
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
+
+
+
 
 	/**
 	 * Loads the EmailVerificationFragment into the activities container.
@@ -224,6 +260,9 @@ public class LoginActivity
 		                           .commit();
 	}
 
+
+
+
 	/**
 	 * Loads the SignUpFragment into the activities container.
 	 *
@@ -238,6 +277,9 @@ public class LoginActivity
 		                           .replace(R.id.login_container, SignUpFragment.newInstance(null, null, email))
 		                           .commit();
 	}
+
+
+
 
 	/**
 	 * Loads the LegalFragment into the activities container.
@@ -262,6 +304,9 @@ public class LoginActivity
 		                           .commit();
 	}
 
+
+
+
 	/**
 	 * Kicks off an Intent and starts the MainActivity via it.
 	 *
@@ -282,6 +327,8 @@ public class LoginActivity
 
 		startActivity(intent);
 	}
+
+
 
 
 	@Override

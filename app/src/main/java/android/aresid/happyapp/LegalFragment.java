@@ -28,11 +28,17 @@ public class LegalFragment
 	private ListView mTermsAndConditionsListView;
 	private ViewGroup mContainer;
 
+
+
+
 	public LegalFragment()
 	{
 		Log.d(TAG, "LegalFragment:empty");
 		// Required empty public constructor
 	}
+
+
+
 
 	public static LegalFragment newInstance(FirebaseUser user, GoogleSignInAccount account, String userID)
 	{
@@ -45,6 +51,9 @@ public class LegalFragment
 		fragment.setArguments(args);
 		return fragment;
 	}
+
+
+
 
 	@Override
 	public void onAttach(Context context)
@@ -62,6 +71,9 @@ public class LegalFragment
 		}
 	}
 
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -72,6 +84,9 @@ public class LegalFragment
 			mFirebaseUser = getArguments().getParcelable(ARG_USER);
 		}
 	}
+
+
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -92,6 +107,9 @@ public class LegalFragment
 		return rootView;
 	}
 
+
+
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState)
 	{
@@ -110,6 +128,9 @@ public class LegalFragment
 		//		mTermsAndConditionsListView.setAdapter(legalListViewAdapter);
 	}
 
+
+
+
 	@Override
 	public void onDetach()
 	{
@@ -117,6 +138,9 @@ public class LegalFragment
 		super.onDetach();
 		mFragmentInteractionListener = null;
 	}
+
+
+
 
 	@Override
 	public void onClick(View v)
@@ -138,10 +162,14 @@ public class LegalFragment
 		}
 	}
 
+
+
+
 	public interface OnFragmentInteractionListener
 	{
 
 		void startMainActivity(FirebaseUser user, GoogleSignInAccount account, String userID);
+
 
 		void displayPrivacyPolicyDialog();
 

@@ -32,15 +32,24 @@ public class MyAccountFragment
 
 	private OnFragmentInteractionListener mListener;
 
+
+
+
 	public MyAccountFragment()
 	{
 		// Required empty public constructor
 	}
 
+
+
+
 	public static MyAccountFragment newInstance()
 	{
 		return new MyAccountFragment();
 	}
+
+
+
 
 	// TODO: Rename method, update argument and hook method into UI event
 	public void onButtonPressed(Uri uri)
@@ -50,6 +59,9 @@ public class MyAccountFragment
 			mListener.onFragmentInteraction(uri);
 		}
 	}
+
+
+
 
 	@Override
 	public void onAttach(Context context)
@@ -65,11 +77,17 @@ public class MyAccountFragment
 		}
 	}
 
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 	}
+
+
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -78,12 +96,18 @@ public class MyAccountFragment
 		return inflater.inflate(R.layout.fragment_my_account, container, false);
 	}
 
+
+
+
 	@Override
 	public void onDetach()
 	{
 		super.onDetach();
 		mListener = null;
 	}
+
+
+
 
 	/**
 	 * This interface must be implemented by activities that contain this

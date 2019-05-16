@@ -31,10 +31,16 @@ public class EmailVerificationFragment
 	private Button mSendEmailAgainButton;
 	private OnFragmentInteractionListener mFragmentInteractionListener;
 
+
+
+
 	public EmailVerificationFragment()
 	{
 		// Required empty public constructor
 	}
+
+
+
 
 	public static EmailVerificationFragment newInstance(FirebaseUser user)
 	{
@@ -46,6 +52,9 @@ public class EmailVerificationFragment
 
 		return emailFragment;
 	}
+
+
+
 
 	@Override
 	public void onAttach(Context context)
@@ -65,6 +74,9 @@ public class EmailVerificationFragment
 		this.mContext = context;
 	}
 
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -76,6 +88,9 @@ public class EmailVerificationFragment
 			mFirebaseUser = getArguments().getParcelable(ARG_FIREBASE_USER);
 		}
 	}
+
+
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -96,6 +111,9 @@ public class EmailVerificationFragment
 		return rootView;
 	}
 
+
+
+
 	@Override
 	public void onStart()
 	{
@@ -105,6 +123,9 @@ public class EmailVerificationFragment
 		updateUI(mFirebaseUser);
 	}
 
+
+
+
 	@Override
 	public void onDetach()
 	{
@@ -112,6 +133,9 @@ public class EmailVerificationFragment
 		super.onDetach();
 		mFragmentInteractionListener = null;
 	}
+
+
+
 
 	private void updateUI(FirebaseUser user)
 	{
@@ -141,6 +165,8 @@ public class EmailVerificationFragment
 			// TODO: Implement user = null handling!
 		}
 	}
+
+
 
 
 	private void sendEmailVerification()
@@ -178,6 +204,9 @@ public class EmailVerificationFragment
 		                          });
 	}
 
+
+
+
 	@Override
 	public void onClick(View v)
 	{
@@ -201,11 +230,17 @@ public class EmailVerificationFragment
 		}
 	}
 
+
+
+
 	private void onBackButtonClick()
 	{
 		Log.d(TAG, "onBackButtonClick:true");
 		fetchUserIncredentialsFromFirestore();
 	}
+
+
+
 
 	private void fetchUserIncredentialsFromFirestore()
 	{
@@ -233,6 +268,9 @@ public class EmailVerificationFragment
 		                         });
 	}
 
+
+
+
 	private String getIDFromSharedPreferences()
 	{
 		return getActivity().getSharedPreferences("android.aresid.happyapp", Context.MODE_PRIVATE)
@@ -240,9 +278,12 @@ public class EmailVerificationFragment
 	}
 
 
+
+
 	public interface OnFragmentInteractionListener
 	{
 		void displayLoginFragment();
+
 
 		void displaySignUpFragment(String firstName, String surname, String email);
 

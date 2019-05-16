@@ -52,11 +52,17 @@ public class SignUpFragment
 	private Spinner mBirthdateMonthSpinner;
 	private Spinner mBirthdateYearSpinner;
 
+
+
+
 	public SignUpFragment()
 	{
 		Log.d(TAG, "SignUpFragment:emptyConstructor");
 		// Required empty public constructor
 	}
+
+
+
 
 	public static SignUpFragment newInstance(String firstName, String surname, String email)
 	{
@@ -68,6 +74,9 @@ public class SignUpFragment
 		signUpFragment.setArguments(args);
 		return signUpFragment;
 	}
+
+
+
 
 	@Override
 	public void onAttach(Context context)
@@ -86,6 +95,9 @@ public class SignUpFragment
 		}
 	}
 
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -95,6 +107,9 @@ public class SignUpFragment
 		// Get FirebaseAuth instance
 		mFirebaseAuth = FirebaseAuth.getInstance();
 	}
+
+
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -137,6 +152,9 @@ public class SignUpFragment
 		return rootView;
 	}
 
+
+
+
 	@Override
 	public void onStart()
 	{
@@ -161,6 +179,9 @@ public class SignUpFragment
 		}
 	}
 
+
+
+
 	@Override
 	public void onDetach()
 	{
@@ -168,6 +189,9 @@ public class SignUpFragment
 		Log.d(TAG, "onDetach:true");
 		mFragmentInteractionListener = null;
 	}
+
+
+
 
 	/**
 	 * Creates a list of 1903 - today for the years the customers could've been born in.
@@ -190,20 +214,8 @@ public class SignUpFragment
 		return listOfYears;
 	}
 
-	/**
-	 * Method converts the birthdate from the spinners into a String.
-	 *
-	 * @param dayDD    The date in DD format.
-	 * @param monthMM  The month in MM format.
-	 * @param yearYYYY The year in YYYY format.
-	 * @return String that represents the birthdate in DD.MM.YYYY format.
-	 */
-	private String convertBirthdateIntoString(int dayDD, int monthMM, int yearYYYY)
-	{
-		Log.d(TAG, "convertBirthdateIntoString:true");
 
-		return dayDD + "." + monthMM + "." + yearYYYY;
-	}
+
 
 	@Override
 	public void onClick(View view)
@@ -218,13 +230,28 @@ public class SignUpFragment
 		                          .toString();
 		String password = mPasswordField.getText()
 		                                .toString();
-
+		String age = convertBirthdateIntoString(mBirthdateDaySpinner.getSelectedItem()
+		                                                            .toString(), mBirthdateMonthSpinner.getSelectedItem()
+		                                                                                               .toString(),
+		                                        mBirthdateYearSpinner.getSelectedItem()
+		                                                             .toString());
+		Log.d(TAG, "onClick: age = " + age);
 		// Handles all the button clicks in this Fragment
 		if (view.getId() == R.id.sign_up_sign_up_button)
 		{
 			Log.d(TAG, "onClick:sign_up_sign_up_button");
 
-			if (!isEmailCorrect(email))
+			if (firstName.length() == 0)
+			{
+				Snackbar.make(view, "You must enter your first name first", Snackbar.LENGTH_LONG)
+				        .show();
+			}
+			else if (surname.length() == 0)
+			{
+				Snackbar.make(view, "You must enter your surname first", Snackbar.LENGTH_LONG)
+				        .show();
+			}
+			else if (!isEmailCorrect(email))
 			{
 				Snackbar.make(view, "Check Email", Snackbar.LENGTH_LONG)
 				        .show();
@@ -236,10 +263,40 @@ public class SignUpFragment
 				        .show();
 				return;
 			}
+			else if (!isAgeCorrect(mBirthdateDaySpinner.getSelectedItem()
+			                                           .toString(), mBirthdateMonthSpinner.getSelectedItem()
+			                                                                              .toString(), mBirthdateYearSpinner.getSelectedItem()
+			                                                                                                                .toString()))
+			{
+				Snackbar.make(view, "You must be older than 18 years to register", Snackbar.LENGTH_LONG)
+				        .show();
+				return;
+			}
 
 			displayPrivacyPolicyDialog();
 		}
 	}
+
+
+
+
+	/**
+	 * Method converts the birthdate from the spinners into a String.
+	 *
+	 * @param dayDD     The date in DD format.
+	 * @param monthName The months name e. g. January.
+	 * @param yearYYYY  The year in YYYY format.
+	 * @return String that represents the birthdate in DD.MM.YYYY format.
+	 */
+	private String convertBirthdateIntoString(String dayDD, String monthName, String yearYYYY)
+	{
+		Log.d(TAG, "convertBirthdateIntoString:true");
+
+		return dayDD + ". " + monthName + " " + yearYYYY;
+	}
+
+
+
 
 	/**
 	 * Method verifies that the email is valid.
@@ -252,6 +309,9 @@ public class SignUpFragment
 		return (email.length() != 0 && email.indexOf('@') != -1);
 	}
 
+
+
+
 	/**
 	 * Method varifies that the password is valid.
 	 *
@@ -262,6 +322,64 @@ public class SignUpFragment
 	{
 		return password.length() > 6;
 	}
+
+
+
+
+	/**
+	 * Method verifies if the user's date of birth > 6573 days (> 18 years).
+	 *
+	 * @param dayDD     The dob day in DD format.
+	 * @param monthName The dob month in MM format.
+	 * @param yearYYYY  The dob year in YYYY format.
+	 * @return Boolean if user dob > 6573 days (> 18 years).
+	 */
+	private boolean isAgeCorrect(String dayDD, String monthName, String yearYYYY)
+	{
+		Log.d(TAG, "isAgeCorrect:true");
+
+		int day = Integer.parseInt(dayDD);
+		int month = getMonthFromName(monthName);
+		int year = Integer.parseInt(yearYYYY);
+
+		int today = Calendar.getInstance()
+		                    .get(Calendar.DATE);
+		int thisMonth = Calendar.getInstance()
+		                        .get(Calendar.MONTH);
+		int thisYear = Calendar.getInstance()
+		                       .get(Calendar.YEAR);
+
+		Calendar calendarNow = Calendar.getInstance();
+		Calendar calendarDob = Calendar.getInstance();
+
+		// Convert the two given dates into two different Calendar instances.
+		calendarNow.set(thisYear, thisMonth, today);
+		calendarDob.set(year, month, day);
+
+		Log.d(TAG, "isAgeCorrect: calendarDob = " + calendarDob.toString());
+		Log.d(TAG, "isAgeCorrect: calendarNow = " + calendarNow.toString());
+
+		// Convert the two given Calendar instances into milliseconds.
+		long millisecondsNow = calendarNow.getTimeInMillis();
+		long millisecondsDob = calendarDob.getTimeInMillis();
+
+		// Calculate the difference in milliseconds.
+		long dateDifference = millisecondsNow - millisecondsDob;
+
+		long secondInMillis = 1000;
+		long minuteInMillis = 60 * secondInMillis;
+		long hourInMillis = 60 * minuteInMillis;
+		long dayInMillis = 24 * hourInMillis;
+
+		// Calculate the difference in days.
+		long differenceInDays = dateDifference / dayInMillis;
+
+		Log.d(TAG, "isAgeCorrect: differenceInDays = " + differenceInDays);
+		return differenceInDays > 6573;
+	}
+
+
+
 
 	/**
 	 * Method loads the privacy policy & legalities dialog and shows it to the user.
@@ -274,6 +392,40 @@ public class SignUpFragment
 		PrivacyPolicyDialog dialog = new PrivacyPolicyDialog();
 		dialog.show(getFragmentManager(), "PrivacyPolicyDialog");
 	}
+
+
+
+
+	/**
+	 * Method converts a month name like January into its number like 01.
+	 *
+	 * @param monthName Name of month.
+	 * @return Integer number of month in year.
+	 */
+	private int getMonthFromName(String monthName)
+	{
+		Log.d(TAG, "getMonthFromName:true");
+
+		// A HashMap with the months as keys and their numbers as values.
+		HashMap<String, Integer> months = new HashMap<>(11);
+
+		// String array to iterate through the available month names.
+		String[] monthNames = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+		                                    "November", "December"};
+
+		int i = 0;
+		for (String month : monthNames)
+		{
+			months.put(month, i);
+			i++;
+		}
+
+		// Return the value of the given month name.
+		return months.get(monthName);
+	}
+
+
+
 
 	/**
 	 * Method checks if birthdate is valid (30.02 == invalid) and if the user's age > 18.
@@ -294,6 +446,9 @@ public class SignUpFragment
 		return true;
 	}
 
+
+
+
 	/**
 	 * Method handles the event when user accepts the legalities.
 	 *
@@ -312,6 +467,9 @@ public class SignUpFragment
 
 		//		saveUserInFirestore(email, password);
 	}
+
+
+
 
 	/**
 	 * Method to save userdata to firestore.
@@ -369,6 +527,9 @@ public class SignUpFragment
 		                        });
 	}
 
+
+
+
 	/**
 	 * Method handles the sign up and registers a new user in my Firebase console.
 	 *
@@ -399,6 +560,9 @@ public class SignUpFragment
 		                                   });
 	}
 
+
+
+
 	/**
 	 * Method updates the UI after sign up got handled with.
 	 *
@@ -411,20 +575,29 @@ public class SignUpFragment
 		mFragmentInteractionListener.displayEmailVerificationFragment(user);
 	}
 
+
+
+
 	public interface OnFragmentInteractionListener
 	{
 		void displayEmailVerificationFragment(FirebaseUser user);
 
+
 		void displayLoginFragment();
+
 
 		void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
 		                                     float legalitiesVersion);
 
+
 		void saveFirestoreUserIDInSharedPreferences(String firestoreID);
+
 
 		ArrayAdapter createDaysAdapter();
 
+
 		ArrayAdapter createMonthsAdapter();
+
 
 		ArrayAdapter createYearsAdapter();
 

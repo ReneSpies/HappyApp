@@ -37,15 +37,24 @@ public class FavoritesFragment
 
 	private OnFragmentInteractionListener mListener;
 
+
+
+
 	public FavoritesFragment()
 	{
 		// Required empty public constructor
 	}
 
+
+
+
 	public static FavoritesFragment newInstance()
 	{
 		return new FavoritesFragment();
 	}
+
+
+
 
 	// TODO: Rename method, update argument and hook method into UI event
 	public void onButtonPressed(Uri uri)
@@ -55,6 +64,9 @@ public class FavoritesFragment
 			mListener.onFragmentInteraction(uri);
 		}
 	}
+
+
+
 
 	@Override
 	public void onAttach(Context context)
@@ -70,11 +82,17 @@ public class FavoritesFragment
 		}
 	}
 
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 	}
+
+
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -82,6 +100,9 @@ public class FavoritesFragment
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_favorites, container, false);
 	}
+
+
+
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
@@ -105,12 +126,18 @@ public class FavoritesFragment
 		listView.setAdapter(adapter);
 	}
 
+
+
+
 	@Override
 	public void onDetach()
 	{
 		super.onDetach();
 		mListener = null;
 	}
+
+
+
 
 	/**
 	 * This interface must be implemented by activities that contain this

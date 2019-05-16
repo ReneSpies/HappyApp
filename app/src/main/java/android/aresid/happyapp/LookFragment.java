@@ -32,15 +32,24 @@ public class LookFragment
 
 	private OnFragmentInteractionListener mListener;
 
+
+
+
 	public LookFragment()
 	{
 		// Required empty public constructor
 	}
 
+
+
+
 	public static LookFragment newInstance()
 	{
 		return new LookFragment();
 	}
+
+
+
 
 	// TODO: Rename method, update argument and hook method into UI event
 	public void onButtonPressed(Uri uri)
@@ -50,6 +59,9 @@ public class LookFragment
 			mListener.onFragmentInteraction(uri);
 		}
 	}
+
+
+
 
 	@Override
 	public void onAttach(Context context)
@@ -65,6 +77,9 @@ public class LookFragment
 		}
 	}
 
+
+
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -76,6 +91,9 @@ public class LookFragment
 		}
 	}
 
+
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
@@ -83,12 +101,18 @@ public class LookFragment
 		return inflater.inflate(R.layout.fragment_look, container, false);
 	}
 
+
+
+
 	@Override
 	public void onDetach()
 	{
 		super.onDetach();
 		mListener = null;
 	}
+
+
+
 
 	/**
 	 * This interface must be implemented by activities that contain this

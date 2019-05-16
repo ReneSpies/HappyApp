@@ -44,11 +44,17 @@ public class LoginFragment
 	private FirebaseAuth mFirebaseAuth;
 	private GoogleSignInClient mGoogleSignInClient;
 
+
+
+
 	public LoginFragment()
 	{
 		Log.d(TAG, "LoginFragment:true, empty constructor");
 		// Required empty public constructor
 	}
+
+
+
 
 	public static LoginFragment newInstance()
 	{
@@ -56,6 +62,9 @@ public class LoginFragment
 
 		return new LoginFragment();
 	}
+
+
+
 
 	@Override
 	public void onClick(View v)
@@ -116,6 +125,9 @@ public class LoginFragment
 		}
 	}
 
+
+
+
 	/**
 	 * Method validates the email correctness.
 	 *
@@ -128,6 +140,9 @@ public class LoginFragment
 		return (email.length() != 0 && email.indexOf('@') != -1);
 	}
 
+
+
+
 	/**
 	 * Method validates the password correctness.
 	 *
@@ -139,6 +154,9 @@ public class LoginFragment
 		Log.d(TAG, "isPasswordCorrect:" + (password.length() > 6));
 		return password.length() > 6;
 	}
+
+
+
 
 	/**
 	 * Method handles the signInWithEmailAndPassword.
@@ -171,6 +189,9 @@ public class LoginFragment
 		                                   });
 	}
 
+
+
+
 	/**
 	 * Method handles the sign in with an existing Google account.
 	 */
@@ -181,6 +202,9 @@ public class LoginFragment
 		Intent loginIntent = mGoogleSignInClient.getSignInIntent();
 		startActivityForResult(loginIntent, RC_LOGIN);
 	}
+
+
+
 
 	/**
 	 * Method handles all the login and sign up procedures that needs UI updates.
@@ -234,6 +258,9 @@ public class LoginFragment
 		}
 	}
 
+
+
+
 	/**
 	 * Method shows the progress bar and makes the rest content invisible.
 	 */
@@ -264,6 +291,9 @@ public class LoginFragment
 		statusInfoTextView.setVisibility(View.VISIBLE);
 	}
 
+
+
+
 	/**
 	 * Method fetches user's Firestore ID from SharedPrefs.
 	 *
@@ -277,6 +307,9 @@ public class LoginFragment
 		SharedPreferences userIDPrefs = getActivity().getSharedPreferences("android.aresid.happyapp", Context.MODE_PRIVATE);
 		return userIDPrefs.getString(PREFERENCES_ID, null);
 	}
+
+
+
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -295,6 +328,9 @@ public class LoginFragment
 			handleSignInResult(task);
 		}
 	}
+
+
+
 
 	/**
 	 * Method handles the sign in with Google account.
@@ -323,6 +359,9 @@ public class LoginFragment
 		}
 	}
 
+
+
+
 	@Override
 	public void onAttach(Context context)
 	{
@@ -338,6 +377,9 @@ public class LoginFragment
 			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
 		}
 	}
+
+
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -357,6 +399,9 @@ public class LoginFragment
 		// Build a GoogleSignInClient with the options specified by gso.
 		mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 	}
+
+
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -381,6 +426,9 @@ public class LoginFragment
 		return rootView;
 	}
 
+
+
+
 	@Override
 	public void onStart()
 	{
@@ -398,12 +446,18 @@ public class LoginFragment
 		updateUI(user, account);
 	}
 
+
+
+
 	@Override
 	public void onResume()
 	{
 		Log.d(TAG, "onResume:true");
 		super.onResume();
 	}
+
+
+
 
 	@Override
 	public void onPause()
@@ -412,12 +466,18 @@ public class LoginFragment
 		super.onPause();
 	}
 
+
+
+
 	@Override
 	public void onStop()
 	{
 		Log.d(TAG, "onStop:true");
 		super.onStop();
 	}
+
+
+
 
 	@Override
 	public void onDetach()
@@ -428,13 +488,19 @@ public class LoginFragment
 		mFragmentInteractionListener = null;
 	}
 
+
+
+
 	public interface OnFragmentInteractionListener
 	{
 		void displayEmailVerificationFragment(FirebaseUser user);
 
+
 		void displaySignUpFragment(String email);
 
+
 		void displayLegalFragment(FirebaseUser user, GoogleSignInAccount account, String userID);
+
 
 		void startMainActivity(FirebaseUser user, GoogleSignInAccount account, String userID);
 

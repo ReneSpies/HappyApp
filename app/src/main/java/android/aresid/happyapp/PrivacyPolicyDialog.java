@@ -24,9 +24,12 @@ import androidx.fragment.app.DialogFragment;
 public class PrivacyPolicyDialog
 		extends DialogFragment
 {
+	private final static float LEGALITIES_VERSION = 1.0f;
 	private final String TAG = getClass().getSimpleName();
 	private OnPrivacyPolicyDialogInteractionListener mDialogInteractionListener;
-	private final static float LEGALITIES_VERSION = 1.0f;
+
+
+
 
 	public static PrivacyPolicyDialog newInstance(String firstName, String surname, String email, String password)
 	{
@@ -42,6 +45,9 @@ public class PrivacyPolicyDialog
 		fragment.setArguments(args);
 		return fragment;
 	}
+
+
+
 
 	@Override
 	public void onAttach(@NonNull Context context)
@@ -60,6 +66,9 @@ public class PrivacyPolicyDialog
 		}
 	}
 
+
+
+
 	@Override
 	public void onDetach()
 	{
@@ -69,6 +78,9 @@ public class PrivacyPolicyDialog
 
 		mDialogInteractionListener = null;
 	}
+
+
+
 
 	@NonNull
 	@Override
@@ -123,6 +135,9 @@ public class PrivacyPolicyDialog
 		// Finally show the dialog
 		return dialog;
 	}
+
+
+
 
 	public interface OnPrivacyPolicyDialogInteractionListener
 	{
