@@ -70,6 +70,20 @@ public class MainActivity
 
 
 	/**
+	 * Planned to be replaced by displayXXX() methods.
+	 *
+	 * @return FragmentTransaction object.
+	 */
+	private FragmentTransaction mFragmentTransaction()
+	{
+		FragmentManager manager = getSupportFragmentManager();
+		return manager.beginTransaction();
+	}
+
+
+
+
+	/**
 	 * Method gets called when the NavigationDrawer's header is clicked.
 	 * Planned to be replaced by onClick method.
 	 *
@@ -93,6 +107,18 @@ public class MainActivity
 
 
 
+	/**
+	 * Method simply closes the drawer.
+	 */
+	private void closeDrawer()
+	{
+		DrawerLayout drawer = findViewById(R.id.drawer_layout);
+		drawer.closeDrawer(GravityCompat.START);
+	}
+
+
+
+
 	@Override
 	public void onBackPressed()
 	{
@@ -105,18 +131,6 @@ public class MainActivity
 		{
 			super.onBackPressed();
 		}
-	}
-
-
-
-
-	/**
-	 * Method simply closes the drawer.
-	 */
-	private void closeDrawer()
-	{
-		DrawerLayout drawer = findViewById(R.id.drawer_layout);
-		drawer.closeDrawer(GravityCompat.START);
 	}
 
 
@@ -148,20 +162,6 @@ public class MainActivity
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-
-
-
-	/**
-	 * Planned to be replaced by displayXXX() methods.
-	 *
-	 * @return FragmentTransaction object.
-	 */
-	private FragmentTransaction mFragmentTransaction()
-	{
-		FragmentManager manager = getSupportFragmentManager();
-		return manager.beginTransaction();
 	}
 
 

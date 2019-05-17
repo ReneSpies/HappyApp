@@ -417,9 +417,6 @@ public class SignUpFragment
 
 
 
-
-
-
 	/**
 	 * Method to save userdata to firestore.
 	 * I plan to refactor this in coop with SharedPrefs.

@@ -30,8 +30,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class PrivacyPolicyDialog
 		extends DialogFragment
 {
-	private double legalitiesVersion;
 	private final String TAG = getClass().getSimpleName();
+	private double legalitiesVersion;
 	private OnPrivacyPolicyDialogInteractionListener mDialogInteractionListener;
 
 
@@ -54,6 +54,39 @@ public class PrivacyPolicyDialog
 
 		fragment.setArguments(args);
 		return fragment;
+	}
+
+
+
+
+	@Override
+	public void onAttach(@NonNull Context context)
+	{
+		Log.d(TAG, "onAttach:true");
+
+		super.onAttach(context);
+
+		if (context instanceof PrivacyPolicyDialog.OnPrivacyPolicyDialogInteractionListener)
+		{
+			mDialogInteractionListener = (OnPrivacyPolicyDialogInteractionListener) context;
+		}
+		else
+		{
+			throw new RuntimeException(context.toString() + " must implement OnPrivacyPolicyDialogInteractionListener");
+		}
+	}
+
+
+
+
+	@Override
+	public void onDetach()
+	{
+		Log.d(TAG, "onDetach:true");
+
+		super.onDetach();
+
+		mDialogInteractionListener = null;
 	}
 
 
@@ -163,39 +196,6 @@ public class PrivacyPolicyDialog
 	{
 		Log.d(TAG, "getLegalitiesVersion:true");
 		return this.legalitiesVersion;
-	}
-
-
-
-
-	@Override
-	public void onAttach(@NonNull Context context)
-	{
-		Log.d(TAG, "onAttach:true");
-
-		super.onAttach(context);
-
-		if (context instanceof PrivacyPolicyDialog.OnPrivacyPolicyDialogInteractionListener)
-		{
-			mDialogInteractionListener = (OnPrivacyPolicyDialogInteractionListener) context;
-		}
-		else
-		{
-			throw new RuntimeException(context.toString() + " must implement OnPrivacyPolicyDialogInteractionListener");
-		}
-	}
-
-
-
-
-	@Override
-	public void onDetach()
-	{
-		Log.d(TAG, "onDetach:true");
-
-		super.onDetach();
-
-		mDialogInteractionListener = null;
 	}
 
 

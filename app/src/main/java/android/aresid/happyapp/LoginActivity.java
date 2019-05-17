@@ -184,6 +184,45 @@ public class LoginActivity
 
 
 
+	@Override
+	public void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                            double legalitiesVersion)
+	{
+		Log.d(TAG, "saveUserInfoInSharedPreferences: wrong");
+	}
+
+
+
+
+	/**
+	 * Shows a Dialog with important legalities such as terms and conditions and privacy policy.
+	 * Furthermore there is the confirmation that the user is older than 18 years.
+	 */
+	@Override
+	public void displayPrivacyPolicyDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                       double legalitiesVersion, String password)
+	{
+		Log.d(TAG, "displayPrivacyPolicyDialog:true");
+
+		PrivacyPolicyDialog dialog = PrivacyPolicyDialog.newInstance(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion,
+		                                                             password);
+		dialog.show(getSupportFragmentManager(), "PrivacyPolicyDialog");
+	}
+
+
+
+
+	@Override
+	public LayoutInflater getLayoutInflaterForDialog()
+	{
+		Log.d(TAG, "getLayoutInflater:true");
+
+		return getLayoutInflater();
+	}
+
+
+
+
 	/**
 	 * Loads the SignUpFragment into the activities container.
 	 *
@@ -293,45 +332,6 @@ public class LoginActivity
 		intent.putExtra("googleSignInAccount", account);
 
 		startActivity(intent);
-	}
-
-
-
-
-	@Override
-	public void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                            double legalitiesVersion)
-	{
-		Log.d(TAG, "saveUserInfoInSharedPreferences: wrong");
-	}
-
-
-
-
-	/**
-	 * Shows a Dialog with important legalities such as terms and conditions and privacy policy.
-	 * Furthermore there is the confirmation that the user is older than 18 years.
-	 */
-	@Override
-	public void displayPrivacyPolicyDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                       double legalitiesVersion, String password)
-	{
-		Log.d(TAG, "displayPrivacyPolicyDialog:true");
-
-		PrivacyPolicyDialog dialog = PrivacyPolicyDialog.newInstance(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion,
-		                                                             password);
-		dialog.show(getSupportFragmentManager(), "PrivacyPolicyDialog");
-	}
-
-
-
-
-	@Override
-	public LayoutInflater getLayoutInflaterForDialog()
-	{
-		Log.d(TAG, "getLayoutInflater:true");
-
-		return getLayoutInflater();
 	}
 
 
