@@ -20,18 +20,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class SignUpFragment
 		extends Fragment
-		implements View.OnClickListener,
-		           PrivacyPolicyDialog.OnPrivacyPolicyDialogInteractionListener
+		implements View.OnClickListener
 {
 	// Static final String for key value pair for the Bundle
 	private static final String ARG_EMAIL = "email";
@@ -163,6 +160,7 @@ public class SignUpFragment
 
 		if (mFirebaseAuth.getCurrentUser() != null)
 		{
+			// TODO: Move all the hardcoded Strings into strings.xml.
 			Toast.makeText(getContext(), "Reloading user information...", Toast.LENGTH_LONG)
 			     .show();
 
@@ -193,30 +191,6 @@ public class SignUpFragment
 
 
 
-	/**
-	 * Creates a list of 1903 - today for the years the customers could've been born in.
-	 *
-	 * @return List of 1903 - today.
-	 */
-	private List<String> createYearsList()
-	{
-		Log.d(TAG, "createYearsList:true");
-		List<String> listOfYears = new ArrayList<>();
-
-		for (int year = Calendar.getInstance()
-		                        .get(Calendar.YEAR);
-		     year >= 1903;
-		     year--)
-		{
-			listOfYears.add(String.valueOf(year));
-		}
-
-		return listOfYears;
-	}
-
-
-
-
 	@Override
 	public void onClick(View view)
 	{
@@ -236,20 +210,24 @@ public class SignUpFragment
 		                                        mBirthdateYearSpinner.getSelectedItem()
 		                                                             .toString());
 		Log.d(TAG, "onClick: age = " + age);
+
 		// Handles all the button clicks in this Fragment
 		if (view.getId() == R.id.sign_up_sign_up_button)
 		{
+			// TODO: Move all the hardcoded Strings into strings.xml.
 			Log.d(TAG, "onClick:sign_up_sign_up_button");
 
 			if (firstName.length() == 0)
 			{
 				Snackbar.make(view, "You must enter your first name first", Snackbar.LENGTH_LONG)
 				        .show();
+				return;
 			}
 			else if (surname.length() == 0)
 			{
 				Snackbar.make(view, "You must enter your surname first", Snackbar.LENGTH_LONG)
 				        .show();
+				return;
 			}
 			else if (!isEmailCorrect(email))
 			{
@@ -273,7 +251,12 @@ public class SignUpFragment
 				return;
 			}
 
-			displayPrivacyPolicyDialog();
+			mFragmentInteractionListener.displayPrivacyPolicyDialog(firstName, surname, convertBirthdateIntoString(
+					mBirthdateDaySpinner.getSelectedItem()
+					                    .toString(), mBirthdateMonthSpinner.getSelectedItem()
+					                                                       .toString(), mBirthdateYearSpinner.getSelectedItem()
+					                                                                                         .toString()), email, false, 1.0,
+			                                                        password);
 		}
 	}
 
@@ -382,21 +365,6 @@ public class SignUpFragment
 
 
 	/**
-	 * Method loads the privacy policy & legalities dialog and shows it to the user.
-	 */
-	private void displayPrivacyPolicyDialog()
-	{
-		// TODO: Move to activity level.
-		Log.d(TAG, "displayPrivacyPolicyDialog:true");
-
-		PrivacyPolicyDialog dialog = new PrivacyPolicyDialog();
-		dialog.show(getFragmentManager(), "PrivacyPolicyDialog");
-	}
-
-
-
-
-	/**
 	 * Method converts a month name like January into its number like 01.
 	 *
 	 * @param monthName Name of month.
@@ -448,25 +416,6 @@ public class SignUpFragment
 
 
 
-
-	/**
-	 * Method handles the event when user accepts the legalities.
-	 *
-	 * @param firstName User's first name to save to Firestore.
-	 * @param surname   User's surname to save to Firestore.
-	 * @param email     User's email to save to Firestore.
-	 * @param password  User's password to handle sign up.
-	 */
-	@Override
-	public void handlePrivacyPolicyAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                      float legalitiesVersion, String password)
-	{
-		Log.d(TAG, "handlePrivacyPolicyAccept:true");
-
-		mFragmentInteractionListener.saveUserInfoInSharedPreferences(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion);
-
-		//		saveUserInFirestore(email, password);
-	}
 
 
 
@@ -587,10 +536,14 @@ public class SignUpFragment
 
 
 		void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-		                                     float legalitiesVersion);
+		                                     double legalitiesVersion);
 
 
 		void saveFirestoreUserIDInSharedPreferences(String firestoreID);
+
+
+		void displayPrivacyPolicyDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+		                                double legalitiesVersion, String password);
 
 
 		ArrayAdapter createDaysAdapter();

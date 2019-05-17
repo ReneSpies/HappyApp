@@ -6,19 +6,30 @@
 	android:padding="@dimen/fragment_padding_large">
 
 	<TextView
-		android:id="@+id/privacy_policy_dialog_title"
+		android:id="@+id/privacy_policy_dialog_title1"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="@dimen/fragment_padding_large"
-		android:text="Please accept our privacy policy and T and C"
 		android:textAppearance="?attr/textAppearanceHeadline5" />
 
 	<TextView
-		android:id="@+id/privacy_policy_dialog_content"
+		android:id="@+id/privacy_policy_dialog_content1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/fragment_padding_large" />
+
+	<TextView
+		android:id="@+id/privacy_policy_dialog_title2"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="@dimen/fragment_padding_large"
-		android:text="fdsajilköasdjfklöasdjfklsadöjfeklsa" />
+		android:textAppearance="?attr/textAppearanceHeadline5" />
+
+	<TextView
+		android:id="@+id/privacy_policy_dialog_content2"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="@dimen/fragment_padding_large" />
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/privacy_policy_dialog_accept_button"
@@ -27,4 +38,11 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="end"
 		android:text="accept" />
+
+	<ProgressBar
+		android:id="@+id/progressBar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:progressDrawable="@drawable/progress_spinner_test" />
+
 </LinearLayout>

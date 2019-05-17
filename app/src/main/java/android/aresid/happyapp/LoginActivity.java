@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -81,44 +82,10 @@ public class LoginActivity
 
 
 
-	/**
-	 * This method saves and caches the user's information to SharedPreferences so it is accessible over the whole app and can be synced to the
-	 * servers at any given time.
-	 *
-	 * @param firestoreID        The user's firestore ID which he gets when he creates a new account. This info is needed over the whole app.
-	 * @param firstName          User's first name. This info is needed over the whole app.
-	 * @param surname            User's surname. This info is needed over the whole app.
-	 * @param birthdate          User's birthdate. User needs to confirm that he is older than 18 years. Not needed over the whole app.
-	 * @param email              User's email. This info is needed over the whole app.
-	 * @param acceptedLegalities Boolean that tells if the user has accepted the legalities already or not.
-	 * @param legalitiesVersion  Tells which version of the legalities the user has accepted or not.
-	 */
 	@Override
-	public void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                            float legalitiesVersion)
+	public void displayPrivacyPolicyDialog()
 	{
-		Log.d(TAG, "saveUserInfoInSharedPreferences:true");
-
-		// Creating the SharedPref's file and initializing a SharedPref object.
-		SharedPreferences preferences = getSharedPreferences("user_data", Context.MODE_PRIVATE);
-
-		try
-		{
-			Log.d(TAG,
-			      "saveUserInfoInSharedPreferences:\nfirstName " + firstName + "\nsurname " + surname + "\nbirthdate" + " " + birthdate + "\nemail " + email + "\nacceptedLegalities " + acceptedLegalities + "\nlegalitiesVersion " + legalitiesVersion);
-			preferences.edit()
-			           .putString("first_name", firstName)
-			           .putString("surname", surname)
-			           .putString("birthdate", birthdate)
-			           .putString("email", email)
-			           .putBoolean("accepted_legalities", acceptedLegalities)
-			           .putFloat("legalities_version", legalitiesVersion)
-			           .apply();
-		}
-		catch (Exception ex)
-		{
-			Log.e(TAG, "saveUserInfoInSharedPreferences: ", ex);
-		}
+		Log.d(TAG, "displayPrivacyPolicyDialog: wrong");
 	}
 
 
@@ -139,6 +106,19 @@ public class LoginActivity
 		{
 			e.printStackTrace();
 		}
+	}
+
+
+
+
+	@Override
+	public void handlePrivacyPolicyAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                      double legalitiesVersion, String password)
+	{
+		Log.d(TAG, "handlePrivacyPolicyAccept:true");
+		// TODO: Save user info in shared preferences.
+
+		saveUserInfoInSharedPreferences(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion);
 	}
 
 
@@ -199,19 +179,6 @@ public class LoginActivity
 		}
 
 		return new ArrayAdapter<>(this, R.layout.birthdate_spinner_item, listOfYearsSince1903);
-	}
-
-
-
-
-	/**
-	 * Shows a Dialog with important legalities such as terms and conditions and privacy policy.
-	 * Furthermore there is the confirmation that the user is older than 18 years.
-	 */
-	@Override
-	public void displayPrivacyPolicyDialog()
-	{
-
 	}
 
 
@@ -332,10 +299,81 @@ public class LoginActivity
 
 
 	@Override
-	public void handlePrivacyPolicyAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                      float legalitiesVersion, String password)
+	public void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                            double legalitiesVersion)
 	{
-		Log.d(TAG, "handlePrivacyPolicyAccept:true");
+		Log.d(TAG, "saveUserInfoInSharedPreferences: wrong");
+	}
+
+
+
+
+	/**
+	 * Shows a Dialog with important legalities such as terms and conditions and privacy policy.
+	 * Furthermore there is the confirmation that the user is older than 18 years.
+	 */
+	@Override
+	public void displayPrivacyPolicyDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                       double legalitiesVersion, String password)
+	{
+		Log.d(TAG, "displayPrivacyPolicyDialog:true");
+
+		PrivacyPolicyDialog dialog = PrivacyPolicyDialog.newInstance(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion,
+		                                                             password);
+		dialog.show(getSupportFragmentManager(), "PrivacyPolicyDialog");
+	}
+
+
+
+
+	@Override
+	public LayoutInflater getLayoutInflaterForDialog()
+	{
+		Log.d(TAG, "getLayoutInflater:true");
+
+		return getLayoutInflater();
+	}
+
+
+
+
+	/**
+	 * This method saves and caches the user's information to SharedPreferences so it is accessible over the whole app and can be synced to the
+	 * servers at any given time.
+	 *
+	 * @param firestoreID        The user's firestore ID which he gets when he creates a new account. This info is needed over the whole app.
+	 * @param firstName          User's first name. This info is needed over the whole app.
+	 * @param surname            User's surname. This info is needed over the whole app.
+	 * @param birthdate          User's birthdate. User needs to confirm that he is older than 18 years. Not needed over the whole app.
+	 * @param email              User's email. This info is needed over the whole app.
+	 * @param acceptedLegalities Boolean that tells if the user has accepted the legalities already or not.
+	 * @param legalitiesVersion  Tells which version of the legalities the user has accepted or not.
+	 */
+	public void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                            float legalitiesVersion)
+	{
+		Log.d(TAG, "saveUserInfoInSharedPreferences:true");
+
+		// Creating the SharedPref's file and initializing a SharedPref object.
+		SharedPreferences preferences = getSharedPreferences("user_data", Context.MODE_PRIVATE);
+
+		try
+		{
+			Log.d(TAG,
+			      "saveUserInfoInSharedPreferences:\nfirstName " + firstName + "\nsurname " + surname + "\nbirthdate" + " " + birthdate + "\nemail " + email + "\nacceptedLegalities " + acceptedLegalities + "\nlegalitiesVersion " + legalitiesVersion);
+			preferences.edit()
+			           .putString("first_name", firstName)
+			           .putString("surname", surname)
+			           .putString("birthdate", birthdate)
+			           .putString("email", email)
+			           .putBoolean("accepted_legalities", acceptedLegalities)
+			           .putFloat("legalities_version", legalitiesVersion)
+			           .apply();
+		}
+		catch (Exception ex)
+		{
+			Log.e(TAG, "saveUserInfoInSharedPreferences: ", ex);
+		}
 	}
 
 
