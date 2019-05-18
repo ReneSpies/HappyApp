@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:orientation="vertical"
 	android:padding="@dimen/fragment_padding_large">
+
+	<ListView
+		android:id="@+id/privacy_policy_list_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="8dp"
+		android:layout_marginBottom="8dp"
+		app:layout_constraintBottom_toTopOf="@+id/privacy_policy_dialog_accept_button"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:layout_editor_absoluteX="8dp">
+
+	</ListView>
 
 	<TextView
 		android:id="@+id/privacy_policy_dialog_title1"
@@ -37,11 +51,19 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="end"
-		android:text="accept" />
+		android:layout_marginTop="8dp"
+		android:layout_marginEnd="8dp"
+		android:text="accept"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/privacy_policy_list_view" />
 
 	<ProgressBar
 		android:id="@+id/progressBar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:progressDrawable="@drawable/progress_spinner_test" />
-</LinearLayout>
+		android:layout_marginTop="16dp"
+		android:progressDrawable="@drawable/ic_app_logo"
+		app:layout_constraintTop_toTopOf="parent"
+		tools:layout_editor_absoluteX="8dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
