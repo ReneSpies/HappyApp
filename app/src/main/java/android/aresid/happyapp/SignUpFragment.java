@@ -20,9 +20,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,6 +36,7 @@ public class SignUpFragment
 	private static final String ARG_EMAIL = "email";
 	private static final String ARG_FIRST_NAME = "firstName";
 	private static final String ARG_SURNAME = "surname";
+	private static final String ARG_BIRTHDATE = "birthdate";
 
 	private final String TAG = getClass().getSimpleName();
 	private OnFragmentInteractionListener mFragmentInteractionListener;
@@ -61,12 +64,13 @@ public class SignUpFragment
 
 
 
-	public static SignUpFragment newInstance(String firstName, String surname, String email)
+	public static SignUpFragment newInstance(String firstName, String surname, String birthdate, String email)
 	{
 		SignUpFragment signUpFragment = new SignUpFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_FIRST_NAME, firstName);
 		args.putString(ARG_SURNAME, surname);
+		args.putString(ARG_BIRTHDATE, birthdate);
 		args.putString(ARG_EMAIL, email);
 		signUpFragment.setArguments(args);
 		return signUpFragment;
@@ -144,9 +148,93 @@ public class SignUpFragment
 			mFirstNameField.setText(getArguments().getString(ARG_FIRST_NAME));
 			mSurnameField.setText(getArguments().getString(ARG_SURNAME));
 			mEmailField.setText(getArguments().getString(ARG_EMAIL));
+
+			if (getArguments().getString(ARG_BIRTHDATE) != null)
+			{
+				List<Integer> listOfBirthdate = convertBirthdateFromString(getArguments().getString(ARG_BIRTHDATE));
+				mBirthdateDaySpinner.setSelection(listOfBirthdate.get(0));
+				mBirthdateMonthSpinner.setSelection(listOfBirthdate.get(1));
+				mBirthdateYearSpinner.setSelection(listOfBirthdate.get(2));
+			}
 		}
 
 		return rootView;
+	}
+
+
+
+
+	private List<Integer> convertBirthdateFromString(String birthdate)
+	{
+		Log.d(TAG, "convertBirthdateFromString:true");
+		Log.d(TAG, "convertBirthdateFromString: birthdate = " + birthdate);
+		List<Integer> listOfBirthdate = new ArrayList<>();
+		String[] arrayOfMonthsInYear = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September",
+		                                             "October",
+		                                             "November", "December"};
+		List<Integer> listOfDaysInMonth = new ArrayList<>();
+		List<Integer> listOfYears = new ArrayList<>();
+		int yearsHelper = 0;
+
+		for (int i = 0;
+		     i <= 30;
+		     i++)
+		{
+			listOfDaysInMonth.add(i);
+		}
+
+		for (int i = Calendar.getInstance()
+		                     .get(Calendar.YEAR);
+		     i >= 1903;
+		     i--)
+		{
+			listOfYears.add(i);
+		}
+
+		for (int day : listOfDaysInMonth)
+		{
+			Log.d(TAG, "convertBirthdateFromString: day = " + day);
+			Log.d(TAG, "convertBirthdateFromString: contains day = " + birthdate.contains(String.valueOf(day)));
+			if (birthdate.contains(String.valueOf(day)))
+			{
+				listOfBirthdate.add(day);
+				break;
+			}
+		}
+
+		for (String month : arrayOfMonthsInYear)
+		{
+			Log.d(TAG, "convertBirthdateFromString: month = " + month);
+			Log.d(TAG, "convertBirthdateFromString: contains month = " + birthdate.contains(month));
+			if (birthdate.contains(month))
+			{
+				for (int i = 0;
+				     i <= arrayOfMonthsInYear.length;
+				     i++)
+				{
+					if (arrayOfMonthsInYear[i].equals(month))
+					{
+						listOfBirthdate.add(i);
+						break;
+					}
+				}
+				break;
+			}
+		}
+		Log.d(TAG, "convertBirthdateFromString: listOfYears = " + listOfYears);
+		for (int year : listOfYears)
+		{
+			Log.d(TAG, "convertBirthdateFromString: year = " + year);
+			Log.d(TAG, "convertBirthdateFromString: birthdate contains " + year + " = " + birthdate.contains(String.valueOf(year)));
+			if (birthdate.contains(String.valueOf(year)))
+			{
+				listOfBirthdate.add(yearsHelper);
+				break;
+			}
+			yearsHelper++;
+		}
+		Log.d(TAG, "convertBirthdateFromString: listOfBirthdate = " + listOfBirthdate);
+		return listOfBirthdate;
 	}
 
 

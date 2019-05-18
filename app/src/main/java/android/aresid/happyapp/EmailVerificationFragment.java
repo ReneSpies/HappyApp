@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EmailVerificationFragment
 		extends Fragment
@@ -236,37 +235,17 @@ public class EmailVerificationFragment
 	private void onBackButtonClick()
 	{
 		Log.d(TAG, "onBackButtonClick:true");
-		fetchUserIncredentialsFromFirestore();
+		fetchUserIncredentialsFromSharedPreferences();
 	}
 
 
 
 
-	private void fetchUserIncredentialsFromFirestore()
+	private void fetchUserIncredentialsFromSharedPreferences()
 	{
-		Log.d(TAG, "fetchUserIncredentialsFromFirestore:true");
+		Log.d(TAG, "fetchUserIncredentialsFromSharedPreferences:true");
 
-		String firestoreID = mFragmentInteractionListener.getUserIDFromSharedPreferences();
-		FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-		Log.d(TAG, "fetchUserIncredentialsFromFirestore: id " + firestoreID);
-
-		db.collection("users")
-		  .document(firestoreID)
-		  .get()
-		  .addOnCompleteListener(task ->
-		                         {
-			                         Log.d(TAG, "isSuccessful:" + task.isSuccessful());
-			                         String firstName = task.getResult()
-			                                                .getString(FIRESTORE_FIRST_NAME);
-			                         String surname = task.getResult()
-			                                              .getString(FIRESTORE_SURNAME);
-			                         String email = task.getResult()
-			                                            .getString(FIRESTORE_EMAIL);
-			                         // TODO: Use shared preferences instead of firestore and move it to activity level.
-			                         // TODO: Return the birhtdate too.
-			                         mFragmentInteractionListener.displaySignUpFragment(firstName, surname, email);
-		                         });
+		mFragmentInteractionListener.fetchUserIncredentialsFromSharedPreferences();
 	}
 
 
@@ -281,11 +260,13 @@ public class EmailVerificationFragment
 		void displayLoginFragment();
 
 
-		void displaySignUpFragment(String firstName, String surname, String email);
+		void displaySignUpFragment(String firstName, String surname, String birthdate, String email);
 
 
 		String getUserIDFromSharedPreferences();
 
+
+		void fetchUserIncredentialsFromSharedPreferences();
 
 
 

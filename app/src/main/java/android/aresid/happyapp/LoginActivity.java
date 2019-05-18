@@ -136,6 +136,7 @@ public class LoginActivity
 		            .addOnFailureListener(e ->
 		                                  {
 			                                  // TODO: exception handling!
+			                                  // TODO: Move hardcoded strings to strings.xml.
 			                                  Log.d(TAG, "onFailure:true");
 			                                  Log.e(TAG, "onFailure: ", e);
 			                                  if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException)
@@ -357,7 +358,7 @@ public class LoginActivity
 		Log.d(TAG, "displaySignUpFragment:true");
 
 		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.login_container, SignUpFragment.newInstance(null, null, email))
+		                           .replace(R.id.login_container, SignUpFragment.newInstance(null, null, null, email))
 		                           .commit();
 	}
 
@@ -416,12 +417,12 @@ public class LoginActivity
 	 * @param email     The user's email which he stated.
 	 */
 	@Override
-	public void displaySignUpFragment(String firstName, String surname, String email)
+	public void displaySignUpFragment(String firstName, String surname, String birthdate, String email)
 	{
 		Log.d(TAG, "displaySignUpFragment:true");
 
 		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.login_container, SignUpFragment.newInstance(firstName, surname, email))
+		                           .replace(R.id.login_container, SignUpFragment.newInstance(firstName, surname, birthdate, email))
 		                           .addToBackStack(null)
 		                           .commit();
 	}
@@ -433,6 +434,24 @@ public class LoginActivity
 	public String getUserIDFromSharedPreferences()
 	{
 		return getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE).getString(FIRESTORE_ID_KEY, null);
+	}
+
+
+
+
+	@Override
+	public void fetchUserIncredentialsFromSharedPreferences()
+	{
+		Log.d(TAG, "fetchUserIncredentialsFromSharedPreferences:true");
+
+		SharedPreferences preferences = getSharedPreferences(NAME_PREFS_FIRESTORE_USER_DATA, Context.MODE_PRIVATE);
+
+		String firstName = preferences.getString(FIRST_NAME_KEY, null);
+		String surname = preferences.getString(SURNAME_KEY, null);
+		String birthdate = preferences.getString(BIRTHDATE_KEY, null);
+		String email = preferences.getString(EMAIL_KEY, null);
+
+		displaySignUpFragment(firstName, surname, birthdate, email);
 	}
 
 
