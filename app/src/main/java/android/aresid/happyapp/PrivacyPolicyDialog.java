@@ -133,12 +133,48 @@ public class PrivacyPolicyDialog
 				                             DocumentSnapshot document = task.getResult();
 				                             if (document.exists())
 				                             {
+					                             // Set the texts for the views with the content from the server.
 					                             title1.setText("AGB");
 					                             content1.setText(document.getString("AGB"));
 					                             title2.setText("Datenschutzerklärung");
 					                             content2.setText(document.getString("Datenschutzerklärung"));
 					                             setLegalitiesVersion(document.getDouble("version"));
+
 					                             Log.d(TAG, "onCreateDialog: document = " + document.getData());
+
+					                             String firstName, surname, birthdate, email, password;
+					                             double legalitiesVersion = getLegalitiesVersion();
+					                             Log.d(TAG, "onCreateDialog: legalitiesVersion = " + legalitiesVersion);
+
+					                             if (getArguments() != null)
+					                             {
+						                             firstName = getArguments().getString("firstName");
+						                             surname = getArguments().getString("surname");
+						                             birthdate = getArguments().getString("birthdate");
+						                             email = getArguments().getString("email");
+						                             password = getArguments().getString("password");
+					                             }
+					                             else
+					                             {
+						                             firstName = null;
+						                             surname = null;
+						                             birthdate = null;
+						                             email = null;
+						                             password = null;
+					                             }
+
+					                             // Register a listener to the accept button in the dialog and let it cancel the dialog
+					                             alertDialogAcceptButton.setOnClickListener((view) ->
+					                                                                        {
+						                                                                        Log.d(TAG, "onClick:true");
+
+						                                                                        mDialogInteractionListener.handlePrivacyPolicyAccept(
+								                                                                        firstName, surname, birthdate, email, true,
+								                                                                        legalitiesVersion, password);
+
+						                                                                        dialog.cancel();
+					                                                                        });
+
 				                             }
 				                             else
 				                             {
@@ -152,38 +188,6 @@ public class PrivacyPolicyDialog
 			                             }
 		                             });
 
-		String firstName, surname, birthdate, email, password;
-		double legalitiesVersion = getLegalitiesVersion();
-		Log.d(TAG, "onCreateDialog: legalitiesVersion = " + legalitiesVersion);
-
-		if (getArguments() != null)
-		{
-			firstName = getArguments().getString("firstName");
-			surname = getArguments().getString("surname");
-			birthdate = getArguments().getString("birthdate");
-			email = getArguments().getString("email");
-			password = getArguments().getString("password");
-		}
-		else
-		{
-			firstName = null;
-			surname = null;
-			birthdate = null;
-			email = null;
-			password = null;
-		}
-
-		// Register a listener to the accept button in the dialog and let it cancel the dialog
-		alertDialogAcceptButton.setOnClickListener((view) ->
-		                                           {
-			                                           Log.d(TAG, "onClick:true");
-
-			                                           mDialogInteractionListener.handlePrivacyPolicyAccept(firstName, surname, birthdate, email,
-			                                                                                                true, legalitiesVersion, password);
-
-			                                           dialog.cancel();
-		                                           });
-
 		// Finally show the dialog
 		dialog.setCancelable(false);
 		return dialog;
@@ -192,6 +196,11 @@ public class PrivacyPolicyDialog
 
 
 
+	/**
+	 * Getter for legalities version. This is needed because I have to set the legalities version inside a lambda.
+	 *
+	 * @return The current legalities version.
+	 */
 	private double getLegalitiesVersion()
 	{
 		Log.d(TAG, "getLegalitiesVersion:true");
@@ -201,6 +210,10 @@ public class PrivacyPolicyDialog
 
 
 
+	/**
+	 * Setter for the legalities version. This is needed because I have to set the legalities verison inside a lambda.
+	 * @param legalitiesVersion The legalities version that needs to be set as double.
+	 */
 	private void setLegalitiesVersion(double legalitiesVersion)
 	{
 		Log.d(TAG, "setLegalitiesVersion:true");

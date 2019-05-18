@@ -246,7 +246,7 @@ public class EmailVerificationFragment
 	{
 		Log.d(TAG, "fetchUserIncredentialsFromFirestore:true");
 
-		String firestoreID = getIDFromSharedPreferences();
+		String firestoreID = mFragmentInteractionListener.getUserIDFromSharedPreferences();
 		FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 		Log.d(TAG, "fetchUserIncredentialsFromFirestore: id " + firestoreID);
@@ -263,7 +263,8 @@ public class EmailVerificationFragment
 			                                              .getString(FIRESTORE_SURNAME);
 			                         String email = task.getResult()
 			                                            .getString(FIRESTORE_EMAIL);
-
+			                         // TODO: Use shared preferences instead of firestore and move it to activity level.
+			                         // TODO: Return the birhtdate too.
 			                         mFragmentInteractionListener.displaySignUpFragment(firstName, surname, email);
 		                         });
 	}
@@ -271,11 +272,6 @@ public class EmailVerificationFragment
 
 
 
-	private String getIDFromSharedPreferences()
-	{
-		return getActivity().getSharedPreferences("android.aresid.happyapp", Context.MODE_PRIVATE)
-		                    .getString(PREFERENCES_ID, null);
-	}
 
 
 
@@ -288,7 +284,7 @@ public class EmailVerificationFragment
 		void displaySignUpFragment(String firstName, String surname, String email);
 
 
-
+		String getUserIDFromSharedPreferences();
 
 
 
