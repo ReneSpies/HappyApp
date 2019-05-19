@@ -8,15 +8,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -30,6 +36,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class PrivacyPolicyDialog
 		extends DialogFragment
 {
+	// TODO: Move to strings.xml for translation.
+	private static final String TERMS_AND_CONDITIONS_TITLE = "Terms and conditions";
+	private static final String TERMS_AND_CONDITIONS_CONTENT_KEY = "terms_and_conditions";
+	private static final String PRIVACY_POLICY_TITLE = "Privacy policy";
+	private static final String PRIVACY_POLICY_CONTENT_KEY = "privacy_policy";
 	private final String TAG = getClass().getSimpleName();
 	private double legalitiesVersion;
 	private OnPrivacyPolicyDialogInteractionListener mDialogInteractionListener;
@@ -106,7 +117,7 @@ public class PrivacyPolicyDialog
 
 		// Get the view object from the dialogs layout
 		View dialogView = mDialogInteractionListener.getLayoutInflaterForDialog()
-		                                            .inflate(R.layout.item_privacy_policy_dialog_view, null);
+		                                            .inflate(R.layout.legalities_dialog_view, null);
 
 		// Apply the view to the builder
 		builder.setView(dialogView);
@@ -116,8 +127,18 @@ public class PrivacyPolicyDialog
 		TextView title2 = dialogView.findViewById(R.id.privacy_policy_dialog_title2);
 		TextView content1 = dialogView.findViewById(R.id.privacy_policy_dialog_content1);
 		TextView content2 = dialogView.findViewById(R.id.privacy_policy_dialog_content2);
+		ListView legalitiesContent = dialogView.findViewById(R.id.legalities_list_view);
+		ImageView waitingAssistant = dialogView.findViewById(R.id.privacy_policy_image_view_waiting_assistant);
 		Button alertDialogAcceptButton = dialogView.findViewById(R.id.privacy_policy_dialog_accept_button);
+		TextView waitingAssistantText = dialogView.findViewById(R.id.privacy_policy_text_view_waiting_assistant_text);
 		Dialog dialog = builder.create();
+
+		Glide.with(this)
+		     .load(R.drawable.waiting_assistant_content)
+		     .into(waitingAssistant);
+
+		// Setting the visibilty of the views.
+		alertDialogAcceptButton.setVisibility(View.INVISIBLE);
 
 		// Get Firestore instance
 		FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -133,11 +154,30 @@ public class PrivacyPolicyDialog
 				                             DocumentSnapshot document = task.getResult();
 				                             if (document.exists())
 				                             {
-					                             // Set the texts for the views with the content from the server.
-					                             title1.setText("AGB");
-					                             content1.setText(document.getString("AGB"));
-					                             title2.setText("Datenschutzerklärung");
-					                             content2.setText(document.getString("Datenschutzerklärung"));
+
+					                             TermsAndConditions termsAndConditions = new TermsAndConditions(TERMS_AND_CONDITIONS_TITLE,
+					                                                                                            document.getString(
+							                                                                                            TERMS_AND_CONDITIONS_CONTENT_KEY));
+					                             PrivacyPolicy privacyPolicy = new PrivacyPolicy(PRIVACY_POLICY_TITLE,
+					                                                                             document.getString(PRIVACY_POLICY_CONTENT_KEY));
+					                             List<Legalities> listOfLegalities = new ArrayList<>();
+					                             listOfLegalities.add(termsAndConditions);
+					                             listOfLegalities.add(privacyPolicy);
+					                             // Create an Adapter and load the List from above in it.
+					                             LegalitiesAdapter adapterOfList = new LegalitiesAdapter(getActivity(),
+					                                                                                     R.layout.legalities_list_view_content,
+					                                                                                     listOfLegalities);
+					                             legalitiesContent.setAdapter(adapterOfList);
+					                             //					                             // Set the texts for the views with the content
+					                             //					                             from the server.
+					                             //					                             title1.setText("AGB");
+					                             //					                             content1.setText(document.getString("AGB"));
+					                             //					                             title2.setText("Datenschutzerklärung");
+					                             //					                             content2.setText(document.getString
+					                             //					                             ("Datenschutzerklärung"));
+					                             waitingAssistant.setVisibility(View.INVISIBLE);
+					                             alertDialogAcceptButton.setVisibility(View.VISIBLE);
+					                             waitingAssistantText.setVisibility(View.INVISIBLE);
 					                             setLegalitiesVersion(document.getDouble("version"));
 
 					                             Log.d(TAG, "onCreateDialog: document = " + document.getData());
@@ -212,6 +252,7 @@ public class PrivacyPolicyDialog
 
 	/**
 	 * Setter for the legalities version. This is needed because I have to set the legalities verison inside a lambda.
+	 *
 	 * @param legalitiesVersion The legalities version that needs to be set as double.
 	 */
 	private void setLegalitiesVersion(double legalitiesVersion)

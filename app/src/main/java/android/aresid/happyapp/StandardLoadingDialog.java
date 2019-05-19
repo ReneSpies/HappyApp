@@ -47,7 +47,7 @@ class StandardLoadingDialog
 		ImageView gif = dialogView.findViewById(R.id.progress_spinner);
 
 		Glide.with(this)
-		     .load(R.drawable.progress_spinner_test)
+		     .load(R.drawable.waiting_assistant_content)
 		     .into(gif);
 
 		// Apply the view to the builder
