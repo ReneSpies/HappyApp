@@ -97,7 +97,7 @@ public class LoginFragment
 				}
 
 				// This method handles the signInWithEmailAndPassword.
-				handleSignIn(email, password);
+				handleLogin(email, password);
 
 				break;
 			}
@@ -164,9 +164,9 @@ public class LoginFragment
 	 * @param email    The email to sign in with.
 	 * @param password The password to sign in with.
 	 */
-	private void handleSignIn(String email, String password)
+	private void handleLogin(String email, String password)
 	{
-		Log.d(TAG, "handleSignIn:true");
+		Log.d(TAG, "handleLogin:true");
 
 		mFirebaseAuth.signInWithEmailAndPassword(email, password)
 		             .addOnSuccessListener(authResult ->
@@ -236,7 +236,6 @@ public class LoginFragment
 				                           {
 					                           Log.d(TAG, "isEmailVerified:" + USER.isEmailVerified());
 
-					                           mFragmentInteractionListener.displayLegalFragment(USER, null, getUserIDFromSharedPreferences());
 				                           }
 				                           else
 				                           {
@@ -325,7 +324,7 @@ public class LoginFragment
 			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
 			// Method handles the sign in with Google account.
-			handleSignInResult(task);
+			handleLoginResult(task);
 		}
 	}
 
@@ -337,9 +336,9 @@ public class LoginFragment
 	 *
 	 * @param task The task that emerged from the Google sign in procedure.
 	 */
-	private void handleSignInResult(Task<GoogleSignInAccount> task)
+	private void handleLoginResult(Task<GoogleSignInAccount> task)
 	{
-		Log.d(TAG, "handleSignInResult:true");
+		Log.d(TAG, "handleLoginResult:true");
 
 		try
 		{
@@ -351,8 +350,8 @@ public class LoginFragment
 		catch (ApiException e)
 		{
 			// The ApiException status code indicates the detailed failure reason.
-			Log.e(TAG, "handleSignInResult: ", e);
-			Log.w(TAG, "handleSignInResult:error code:" + e.getStatusCode());
+			Log.e(TAG, "handleLoginResult: ", e);
+			Log.w(TAG, "handleLoginResult:error code:" + e.getStatusCode());
 
 			// Call this with null params to handle exceptions there.
 			updateUI(null, null);
@@ -498,8 +497,6 @@ public class LoginFragment
 
 		void displaySignUpFragment(String email);
 
-
-		void displayLegalFragment(FirebaseUser user, GoogleSignInAccount account, String userID);
 
 
 		void startMainActivity(FirebaseUser user, GoogleSignInAccount account, String userID);

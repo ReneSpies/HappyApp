@@ -31,8 +31,7 @@ public class LoginActivity
 		           LoginFragment.OnFragmentInteractionListener,
 		           SignUpFragment.OnFragmentInteractionListener,
 		           EmailVerificationFragment.OnFragmentInteractionListener,
-		           LegalFragment.OnFragmentInteractionListener,
-		           PrivacyPolicyDialog.OnPrivacyPolicyDialogInteractionListener
+		           LegalitiesDialog.OnPrivacyPolicyDialogInteractionListener
 {
 	private final static String FIRST_NAME_KEY = "first_name";
 	private final static String SURNAME_KEY = "surname";
@@ -43,7 +42,7 @@ public class LoginActivity
 	private final static String FIRESTORE_ID_KEY = "firestore_id";
 	private final static String NAME_PREFS_FIRESTORE_ID = "user_firestore_id";
 	private final static String NAME_PREFS_FIRESTORE_USER_DATA = "user_data";
-	private final String TAG = getClass().getSimpleName();
+	private final static String TAG = "LoginActivity";
 
 
 
@@ -89,127 +88,6 @@ public class LoginActivity
 		getSupportFragmentManager().beginTransaction()
 		                           .replace(R.id.login_container, LoginFragment.newInstance())
 		                           .commit();
-	}
-
-
-
-
-	@Override
-	public void displayPrivacyPolicyDialog()
-	{
-		Log.d(TAG, "displayPrivacyPolicyDialog: wrong");
-	}
-
-
-
-
-	@Override
-	public void handlePrivacyPolicyAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                      double legalitiesVersion, String password)
-	{
-		Log.d(TAG, "handlePrivacyPolicyAccept:true");
-
-		handleSignUp(email, password);
-		saveUserInfoInSharedPreferences(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion);
-	}
-
-
-
-
-	/**
-	 * Method handles the sign up and registers a new user in my Firebase console.
-	 *
-	 * @param email    The email to create a new user with.
-	 * @param password The password to create a new user with.
-	 */
-	private void handleSignUp(String email, String password)
-	{
-		Log.d(TAG, "handleSignUp:true");
-		FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-		firebaseAuth.createUserWithEmailAndPassword(email, password)
-		            .addOnSuccessListener(authResult ->
-		                                  {
-			                                  Log.d(TAG, "onSuccess:true");
-
-			                                  displayEmailVerificationFragment(authResult.getUser());
-		                                  })
-		            .addOnFailureListener(e ->
-		                                  {
-			                                  // TODO: exception handling!
-			                                  // TODO: Move hardcoded strings to strings.xml.
-			                                  Log.d(TAG, "onFailure:true");
-			                                  Log.e(TAG, "onFailure: ", e);
-			                                  if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException)
-			                                  {
-				                                  Toast.makeText(this, "The email address is already in use by another account.", Toast.LENGTH_LONG)
-				                                       .show();
-			                                  }
-			                                  if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException)
-			                                  {
-				                                  Toast.makeText(this, "Your email adress does not seem to fit. Please check it", Toast.LENGTH_LONG)
-				                                       .show();
-			                                  }
-		                                  });
-	}
-
-
-
-
-	/**
-	 * Method creates and populates an adapter for the spinner that's handling the days.
-	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
-	 *
-	 * @return ArrayAdapter with content from 1 to 31.
-	 */
-	@Override
-	public ArrayAdapter createDaysAdapter()
-	{
-		Log.d(TAG, "createDaysAdapter:true");
-		return ArrayAdapter.createFromResource(this, R.array.days_of_month_array, R.layout.birthdate_spinner_item);
-	}
-
-
-
-
-	/**
-	 * Method creates and populates an adapter for the spinner that's handling the months.
-	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
-	 *
-	 * @return ArrayAdapter with content January to December as Strings.
-	 */
-	@Override
-	public ArrayAdapter createMonthsAdapter()
-	{
-		Log.d(TAG, "createMonthsAdapter:true");
-		return ArrayAdapter.createFromResource(this, R.array.months_of_year_array, R.layout.birthdate_spinner_item);
-	}
-
-
-
-
-	/**
-	 * Method creates and populates an adapter for the spinner that's handling the years.
-	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
-	 *
-	 * @return ArrayAdapter with content now to 1903 as Strings.
-	 */
-	@Override
-	public ArrayAdapter createYearsAdapter()
-	{
-		Log.d(TAG, "createYearsAdapter:true");
-
-		List<String> listOfYearsSince1903 = new ArrayList<>();
-
-		// Iterate through the years from now to 1903 and add them to the list.
-		for (int year = Calendar.getInstance()
-		                        .get(Calendar.YEAR);
-		     year >= 1903;
-		     year--)
-		{
-			listOfYearsSince1903.add(String.valueOf(year));
-		}
-
-		return new ArrayAdapter<>(this, R.layout.birthdate_spinner_item, listOfYearsSince1903);
 	}
 
 
@@ -275,14 +153,134 @@ public class LoginActivity
 	 * Furthermore there is the confirmation that the user is older than 18 years.
 	 */
 	@Override
-	public void displayPrivacyPolicyDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                       double legalitiesVersion, String password)
+	public void displayLegalitiesDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                    double legalitiesVersion, String password)
 	{
-		Log.d(TAG, "displayPrivacyPolicyDialog:true");
+		Log.d(TAG, "displayLegalitiesDialog:true");
 
-		PrivacyPolicyDialog dialog = PrivacyPolicyDialog.newInstance(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion,
-		                                                             password);
-		dialog.show(getSupportFragmentManager(), "PrivacyPolicyDialog");
+		LegalitiesDialog dialog = LegalitiesDialog.newInstance(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion,
+		                                                       password);
+		dialog.show(getSupportFragmentManager(), "LegalitiesDialog");
+	}
+
+
+
+
+	/**
+	 * Method creates and populates an adapter for the spinner that's handling the days.
+	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
+	 *
+	 * @return ArrayAdapter with content from 1 to 31.
+	 */
+	@Override
+	public ArrayAdapter createDaysAdapter()
+	{
+		Log.d(TAG, "createDaysAdapter:true");
+		return ArrayAdapter.createFromResource(this, R.array.days_of_month_array, R.layout.birthdate_spinner_item);
+	}
+
+
+
+
+	/**
+	 * Method creates and populates an adapter for the spinner that's handling the months.
+	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
+	 *
+	 * @return ArrayAdapter with content January to December as Strings.
+	 */
+	@Override
+	public ArrayAdapter createMonthsAdapter()
+	{
+		Log.d(TAG, "createMonthsAdapter:true");
+		return ArrayAdapter.createFromResource(this, R.array.months_of_year_array, R.layout.birthdate_spinner_item);
+	}
+
+
+
+
+	/**
+	 * Method creates and populates an adapter for the spinner that's handling the years.
+	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
+	 *
+	 * @return ArrayAdapter with content now to 1903 as Strings.
+	 */
+	@Override
+	public ArrayAdapter createYearsAdapter()
+	{
+		Log.d(TAG, "createYearsAdapter:true");
+
+		List<String> listOfYearsSince1903 = new ArrayList<>();
+
+		// Iterate through the years from now to 1903 and add them to the list.
+		for (int year = Calendar.getInstance()
+		                        .get(Calendar.YEAR);
+		     year >= 1903;
+		     year--)
+		{
+			listOfYearsSince1903.add(String.valueOf(year));
+		}
+
+		return new ArrayAdapter<>(this, R.layout.birthdate_spinner_item, listOfYearsSince1903);
+	}
+
+
+
+
+	public void displayLegalitiesDialog()
+	{
+		Log.d(TAG, "displayLegalitiesDialog: wrong");
+	}
+
+
+
+
+	@Override
+	public void handleLegalitiesAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                   double legalitiesVersion, String password)
+	{
+		Log.d(TAG, "handleLegalitiesAccept:true");
+
+		handleSignUp(email, password);
+		saveUserInfoInSharedPreferences(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion);
+	}
+
+
+
+
+	/**
+	 * Method handles the sign up and registers a new user in my Firebase console.
+	 *
+	 * @param email    The email to create a new user with.
+	 * @param password The password to create a new user with.
+	 */
+	private void handleSignUp(String email, String password)
+	{
+		Log.d(TAG, "handleSignUp:true");
+		FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+		firebaseAuth.createUserWithEmailAndPassword(email, password)
+		            .addOnSuccessListener(authResult ->
+		                                  {
+			                                  Log.d(TAG, "onSuccess:true");
+
+			                                  displayEmailVerificationFragment(authResult.getUser());
+		                                  })
+		            .addOnFailureListener(e ->
+		                                  {
+			                                  // TODO: exception handling!
+			                                  // TODO: Move hardcoded strings to strings.xml.
+			                                  Log.d(TAG, "onFailure:true");
+			                                  Log.e(TAG, "onFailure: ", e);
+			                                  if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException)
+			                                  {
+				                                  Toast.makeText(this, "The email address is already in use by another account.", Toast.LENGTH_LONG)
+				                                       .show();
+			                                  }
+			                                  if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException)
+			                                  {
+				                                  Toast.makeText(this, "Your email adress does not seem to fit. Please check it", Toast.LENGTH_LONG)
+				                                       .show();
+			                                  }
+		                                  });
 	}
 
 
@@ -365,15 +363,6 @@ public class LoginActivity
 
 
 
-	@Override
-	public void displayLegalFragment(FirebaseUser user, GoogleSignInAccount account, String userID)
-	{
-
-	}
-
-
-
-
 	/**
 	 * Kicks off an Intent and starts the MainActivity via it.
 	 *
@@ -409,7 +398,8 @@ public class LoginActivity
 
 
 
-	/**
+	@Override
+	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}	/**
 	 * Loads the SignUpFragment into the activities container.
 	 *
 	 * @param firstName The user's first name which he stated.
@@ -453,12 +443,6 @@ public class LoginActivity
 
 		displaySignUpFragment(firstName, surname, birthdate, email);
 	}
-
-
-
-
-	@Override
-	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
 
 
 

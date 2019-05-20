@@ -33,7 +33,7 @@ import java.util.List;
  */
 
 
-public class PrivacyPolicyDialog
+public class LegalitiesDialog
 		extends DialogFragment
 {
 	// TODO: Move to strings.xml for translation.
@@ -48,11 +48,11 @@ public class PrivacyPolicyDialog
 
 
 
-	public static PrivacyPolicyDialog newInstance(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                              double legalitiesVersion, String password)
+	public static LegalitiesDialog newInstance(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+	                                           double legalitiesVersion, String password)
 	{
 		Bundle args = new Bundle();
-		PrivacyPolicyDialog fragment = new PrivacyPolicyDialog();
+		LegalitiesDialog fragment = new LegalitiesDialog();
 
 		// Putting the parameters into the arguments bundle
 		args.putString("firstName", firstName);
@@ -77,7 +77,7 @@ public class PrivacyPolicyDialog
 
 		super.onAttach(context);
 
-		if (context instanceof PrivacyPolicyDialog.OnPrivacyPolicyDialogInteractionListener)
+		if (context instanceof LegalitiesDialog.OnPrivacyPolicyDialogInteractionListener)
 		{
 			mDialogInteractionListener = (OnPrivacyPolicyDialogInteractionListener) context;
 		}
@@ -208,7 +208,7 @@ public class PrivacyPolicyDialog
 					                                                                        {
 						                                                                        Log.d(TAG, "onClick:true");
 
-						                                                                        mDialogInteractionListener.handlePrivacyPolicyAccept(
+						                                                                        mDialogInteractionListener.handleLegalitiesAccept(
 								                                                                        firstName, surname, birthdate, email, true,
 								                                                                        legalitiesVersion, password);
 
@@ -266,8 +266,8 @@ public class PrivacyPolicyDialog
 
 	public interface OnPrivacyPolicyDialogInteractionListener
 	{
-		void handlePrivacyPolicyAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-		                               double legalitiesVersion, String password);
+		void handleLegalitiesAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+		                            double legalitiesVersion, String password);
 
 
 		LayoutInflater getLayoutInflaterForDialog();

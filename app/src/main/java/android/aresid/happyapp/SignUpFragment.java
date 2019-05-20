@@ -339,12 +339,12 @@ public class SignUpFragment
 				return;
 			}
 
-			mFragmentInteractionListener.displayPrivacyPolicyDialog(firstName, surname, convertBirthdateIntoString(
+			mFragmentInteractionListener.displayLegalitiesDialog(firstName, surname, convertBirthdateIntoString(
 					mBirthdateDaySpinner.getSelectedItem()
 					                    .toString(), mBirthdateMonthSpinner.getSelectedItem()
 					                                                       .toString(), mBirthdateYearSpinner.getSelectedItem()
 					                                                                                         .toString()), email, false, 1.0,
-			                                                        password);
+			                                                     password);
 		}
 	}
 
@@ -627,8 +627,8 @@ public class SignUpFragment
 		void saveFirestoreUserIDInSharedPreferences(String firestoreID);
 
 
-		void displayPrivacyPolicyDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-		                                double legalitiesVersion, String password);
+		void displayLegalitiesDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
+		                             double legalitiesVersion, String password);
 
 
 		ArrayAdapter createDaysAdapter();

@@ -97,7 +97,7 @@ public class LegalFragment
 		View rootView = inflater.inflate(R.layout.fragment_legal, container, false);
 		mContainer = rootView.findViewById(R.id.sign_up_fragment);
 
-		//		displayPrivacyPolicyDialog();
+		//		displayLegalitiesDialog();
 
 		// Init all the views for this fragment
 		Button confirmButton = rootView.findViewById(R.id.legal_confirm_button);

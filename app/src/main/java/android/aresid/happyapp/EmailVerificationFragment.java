@@ -251,10 +251,6 @@ public class EmailVerificationFragment
 
 
 
-
-
-
-
 	public interface OnFragmentInteractionListener
 	{
 		void displayLoginFragment();
@@ -267,6 +263,10 @@ public class EmailVerificationFragment
 
 
 		void fetchUserIncredentialsFromSharedPreferences();
+
+
+
+
 
 
 
