@@ -1,5 +1,6 @@
 package android.aresid.happyapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -18,7 +19,6 @@ import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -110,7 +110,6 @@ public class LegalitiesDialog
 		Log.d(TAG, "onCreateDialog:true");
 
 		// TODO: Move all hardcoded String into strings.xml.
-		// TODO: Change layout and use ListView or RecyclerView.
 
 		// Get an AlertDialog builder
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -123,10 +122,6 @@ public class LegalitiesDialog
 		builder.setView(dialogView);
 
 		// Access all view I'll need to perform this action.
-		TextView title1 = dialogView.findViewById(R.id.privacy_policy_dialog_title1);
-		TextView title2 = dialogView.findViewById(R.id.privacy_policy_dialog_title2);
-		TextView content1 = dialogView.findViewById(R.id.privacy_policy_dialog_content1);
-		TextView content2 = dialogView.findViewById(R.id.privacy_policy_dialog_content2);
 		ListView legalitiesContent = dialogView.findViewById(R.id.legalities_list_view);
 		ImageView waitingAssistant = dialogView.findViewById(R.id.privacy_policy_image_view_waiting_assistant);
 		Button alertDialogAcceptButton = dialogView.findViewById(R.id.privacy_policy_dialog_accept_button);
@@ -147,86 +142,68 @@ public class LegalitiesDialog
 		                             .document("legalities v1.0");
 
 		docRef.get()
-		      .addOnCompleteListener(task ->
-		                             {
-			                             if (task.isSuccessful())
-			                             {
-				                             DocumentSnapshot document = task.getResult();
-				                             if (document.exists())
-				                             {
+		      .
+				      addOnSuccessListener(command ->
+				                           {
+					                           TermsAndConditions termsAndConditions = new TermsAndConditions(TERMS_AND_CONDITIONS_TITLE,
+					                                                                                          command.getString(
+							                                                                                          TERMS_AND_CONDITIONS_CONTENT_KEY));
+					                           PrivacyPolicy privacyPolicy = new PrivacyPolicy(PRIVACY_POLICY_TITLE,
+					                                                                           command.getString(PRIVACY_POLICY_CONTENT_KEY));
+					                           List<Legalities> listOfLegalities = new ArrayList<>();
+					                           listOfLegalities.add(termsAndConditions);
+					                           listOfLegalities.add(privacyPolicy);
 
-					                             TermsAndConditions termsAndConditions = new TermsAndConditions(TERMS_AND_CONDITIONS_TITLE,
-					                                                                                            document.getString(
-							                                                                                            TERMS_AND_CONDITIONS_CONTENT_KEY));
-					                             PrivacyPolicy privacyPolicy = new PrivacyPolicy(PRIVACY_POLICY_TITLE,
-					                                                                             document.getString(PRIVACY_POLICY_CONTENT_KEY));
-					                             List<Legalities> listOfLegalities = new ArrayList<>();
-					                             listOfLegalities.add(termsAndConditions);
-					                             listOfLegalities.add(privacyPolicy);
-					                             // Create an Adapter and load the List from above in it.
-					                             LegalitiesAdapter adapterOfList = new LegalitiesAdapter(getActivity(),
-					                                                                                     R.layout.legalities_list_view_content,
-					                                                                                     listOfLegalities);
-					                             legalitiesContent.setAdapter(adapterOfList);
-					                             //					                             // Set the texts for the views with the content
-					                             //					                             from the server.
-					                             //					                             title1.setText("AGB");
-					                             //					                             content1.setText(document.getString("AGB"));
-					                             //					                             title2.setText("Datenschutzerklärung");
-					                             //					                             content2.setText(document.getString
-					                             //					                             ("Datenschutzerklärung"));
-					                             waitingAssistant.setVisibility(View.INVISIBLE);
-					                             alertDialogAcceptButton.setVisibility(View.VISIBLE);
-					                             waitingAssistantText.setVisibility(View.INVISIBLE);
-					                             setLegalitiesVersion(document.getDouble("version"));
+					                           // Create an Adapter and load the List from above in it.
+					                           LegalitiesAdapter adapterOfList = new LegalitiesAdapter(
+							                           mDialogInteractionListener.getActivitiesContext(), R.layout.legalities_list_view_content,
+							                           listOfLegalities);
 
-					                             Log.d(TAG, "onCreateDialog: document = " + document.getData());
+					                           legalitiesContent.setAdapter(adapterOfList);
 
-					                             String firstName, surname, birthdate, email, password;
-					                             double legalitiesVersion = getLegalitiesVersion();
-					                             Log.d(TAG, "onCreateDialog: legalitiesVersion = " + legalitiesVersion);
+					                           // Set the waiting feedback invisible and show the actual content
+					                           waitingAssistant.setVisibility(View.INVISIBLE);
+					                           alertDialogAcceptButton.setVisibility(View.VISIBLE);
+					                           waitingAssistantText.setVisibility(View.INVISIBLE);
 
-					                             if (getArguments() != null)
-					                             {
-						                             firstName = getArguments().getString("firstName");
-						                             surname = getArguments().getString("surname");
-						                             birthdate = getArguments().getString("birthdate");
-						                             email = getArguments().getString("email");
-						                             password = getArguments().getString("password");
-					                             }
-					                             else
-					                             {
-						                             firstName = null;
-						                             surname = null;
-						                             birthdate = null;
-						                             email = null;
-						                             password = null;
-					                             }
+					                           setLegalitiesVersion(command.getDouble("version"));
 
-					                             // Register a listener to the accept button in the dialog and let it cancel the dialog
-					                             alertDialogAcceptButton.setOnClickListener((view) ->
-					                                                                        {
-						                                                                        Log.d(TAG, "onClick:true");
+					                           Log.d(TAG, "onCreateDialog: document = " + command.getData());
 
-						                                                                        mDialogInteractionListener.handleLegalitiesAccept(
-								                                                                        firstName, surname, birthdate, email, true,
-								                                                                        legalitiesVersion, password);
+					                           String firstName, surname, birthdate, email, password;
+					                           double legalitiesVersion = getLegalitiesVersion();
+					                           Log.d(TAG, "onCreateDialog: legalitiesVersion = " + legalitiesVersion);
 
-						                                                                        dialog.cancel();
-					                                                                        });
+					                           if (getArguments() != null)
+					                           {
+						                           firstName = getArguments().getString("firstName");
+						                           surname = getArguments().getString("surname");
+						                           birthdate = getArguments().getString("birthdate");
+						                           email = getArguments().getString("email");
+						                           password = getArguments().getString("password");
+					                           }
+					                           else
+					                           {
+						                           firstName = null;
+						                           surname = null;
+						                           birthdate = null;
+						                           email = null;
+						                           password = null;
+					                           }
 
-				                             }
-				                             else
-				                             {
-					                             Log.d(TAG, "onCreateDialog: no such document");
-				                             }
-			                             }
-			                             else
-			                             {
-				                             Log.d(TAG, "onCreateDialog: get failed with " + task.getException());
-				                             setLegalitiesVersion(0.9);
-			                             }
-		                             });
+					                           // Register a listener to the accept button in the dialog and let it cancel the dialog
+					                           alertDialogAcceptButton.setOnClickListener((view) ->
+					                                                                      {
+						                                                                      Log.d(TAG, "onClick:true");
+
+						                                                                      mDialogInteractionListener.handleLegalitiesAccept(
+								                                                                      firstName, surname, birthdate, email, true,
+								                                                                      legalitiesVersion, password);
+
+						                                                                      dialog.cancel();
+					                                                                      });
+				                           })
+		      .addOnFailureListener(command -> Log.e(TAG, "onCreateDialog: failure", command));
 
 		// Finally show the dialog
 		dialog.setCancelable(false);
@@ -271,6 +248,9 @@ public class LegalitiesDialog
 
 
 		LayoutInflater getLayoutInflaterForDialog();
+
+
+		Activity getActivitiesContext();
 
 
 

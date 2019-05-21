@@ -1,17 +1,24 @@
 package android.aresid.happyapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -226,14 +233,6 @@ public class LoginActivity
 
 
 
-	public void displayLegalitiesDialog()
-	{
-		Log.d(TAG, "displayLegalitiesDialog: wrong");
-	}
-
-
-
-
 	@Override
 	public void handleLegalitiesAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
 	                                   double legalitiesVersion, String password)
@@ -356,6 +355,7 @@ public class LoginActivity
 		Log.d(TAG, "displaySignUpFragment:true");
 
 		getSupportFragmentManager().beginTransaction()
+		                           .addToBackStack(null)
 		                           .replace(R.id.login_container, SignUpFragment.newInstance(null, null, null, email))
 		                           .commit();
 	}
@@ -368,20 +368,61 @@ public class LoginActivity
 	 *
 	 * @param user    Pass the FirebaseUser over to the MainActivity so it's usable there.
 	 * @param account Pass the GoogleAccount to the MainActivity so it's usable there.
-	 * @param userID  I plan to replace this with SharedPrefs
 	 */
 	@Override
-	public void startMainActivity(FirebaseUser user, GoogleSignInAccount account, String userID)
+	public void startMainActivity(FirebaseUser user, GoogleSignInAccount account)
 	{
 		Log.d(TAG, "startMainActivity:true");
 		// TODO: Replace String userID with SharedPrefs.
 
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra("firebaseUser", user);
-		intent.putExtra("userFirestoreID", userID);
+		intent.putExtra("userFirestoreID", getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE).getString(FIRESTORE_ID_KEY, null));
 		intent.putExtra("googleSignInAccount", account);
 
 		startActivity(intent);
+	}
+
+
+
+
+	@Override
+	public Activity getActivitiesContext()
+	{
+		return this;
+	}
+
+
+
+
+	@Override
+	public void displayProgressBar()
+	{
+		Log.d(TAG, "displayProgressBar:true");
+
+		// Getting instances.
+		LinearLayout loginLayout, googleLayout, signUpLayout;
+		loginLayout = findViewById(R.id.login_linear_layout);
+		googleLayout = findViewById(R.id.google_linear_layout);
+		signUpLayout = findViewById(R.id.sign_up_linear_layout);
+		ImageView progressBar = findViewById(R.id.progress_bar);
+		TextView statusInfoTextView = findViewById(R.id.login_text_view);
+		Button loginButton = findViewById(R.id.login_login_button);
+		Glide.with(this)
+		     .load(R.drawable.waiting_assistant_content)
+		     .into(progressBar);
+
+		// Setting invisible first so in case of long loading times there are no views overlapping.
+		// Setting invisible.
+		loginLayout.setVisibility(View.INVISIBLE);
+		googleLayout.setVisibility(View.INVISIBLE);
+		signUpLayout.setVisibility(View.INVISIBLE);
+		loginButton.setVisibility(View.INVISIBLE);
+
+		// Setting visible.
+		progressBar.setVisibility(View.VISIBLE);
+		statusInfoTextView.setVisibility(View.VISIBLE);
+
 	}
 
 
@@ -399,7 +440,12 @@ public class LoginActivity
 
 
 	@Override
-	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}	/**
+	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
+
+
+
+
+	/**
 	 * Loads the SignUpFragment into the activities container.
 	 *
 	 * @param firstName The user's first name which he stated.

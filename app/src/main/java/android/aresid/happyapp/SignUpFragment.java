@@ -339,12 +339,14 @@ public class SignUpFragment
 				return;
 			}
 
-			mFragmentInteractionListener.displayLegalitiesDialog(firstName, surname, convertBirthdateIntoString(
-					mBirthdateDaySpinner.getSelectedItem()
-					                    .toString(), mBirthdateMonthSpinner.getSelectedItem()
-					                                                       .toString(), mBirthdateYearSpinner.getSelectedItem()
-					                                                                                         .toString()), email, false, 1.0,
-			                                                     password);
+			mFragmentInteractionListener.displayLegalitiesDialog(firstName, surname,
+			                                                     convertBirthdateIntoString(mBirthdateDaySpinner.getSelectedItem()
+			                                                                                                                        .toString(),
+			                                                                                                    mBirthdateMonthSpinner.getSelectedItem()
+			                                                                                                                          .toString(),
+			                                                                                                    mBirthdateYearSpinner.getSelectedItem()
+			                                                                                                                         .toString()),
+			                                                     email, false, 1.0, password);
 		}
 	}
 

@@ -6,8 +6,8 @@
 
 	<ImageView
 		android:id="@+id/progress_spinner"
-		android:layout_width="80dp"
-		android:layout_height="80dp"
+		android:layout_width="@dimen/waiting_assistant_size"
+		android:layout_height="@dimen/waiting_assistant_size"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toStartOf="@+id/loading_text"
 		app:layout_constraintStart_toStartOf="parent"
