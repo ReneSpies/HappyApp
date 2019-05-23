@@ -373,12 +373,11 @@ public class LoginActivity
 	public void startMainActivity(FirebaseUser user, GoogleSignInAccount account)
 	{
 		Log.d(TAG, "startMainActivity:true");
-		// TODO: Replace String userID with SharedPrefs.
 
 		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra("firebaseUser", user);
-		intent.putExtra("userFirestoreID", getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE).getString(FIRESTORE_ID_KEY, null));
-		intent.putExtra("googleSignInAccount", account);
+		intent.putExtra("firebase_user", user);
+		intent.putExtra("user_firestore_id", getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE).getString(FIRESTORE_ID_KEY, null));
+		intent.putExtra("google_sign_in_account", account);
 
 		startActivity(intent);
 	}

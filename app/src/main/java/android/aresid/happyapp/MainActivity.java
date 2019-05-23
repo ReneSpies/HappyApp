@@ -2,20 +2,25 @@ package android.aresid.happyapp;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity
 		extends AppCompatActivity
@@ -29,7 +34,14 @@ public class MainActivity
 		           LookFragment.OnFragmentInteractionListener
 
 {
+	private static final String FIREBASE_USER_INTENT_KEY = "firesbase_user";
+	private static final String GOOGLE_SIGNIN_ACCOUNT_INTENT_KEY = "google_sign_in_account";
+	private static final String USER_FIRESTORE_ID_INTENT_KEY = "user_firestore_id";
+	private static final String TAG = "MainActivity";
 	private FirebaseUser mFirebaseUser;
+	private GoogleSignInAccount mSignInAccount;
+	private String mUserFirestoreID;
+	private int doubleOnBackPressedHelper = 0;
 
 
 
@@ -37,6 +49,7 @@ public class MainActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		Log.d(TAG, "onCreate:true");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -44,7 +57,9 @@ public class MainActivity
 
 		if (extras != null)
 		{
-			mFirebaseUser = extras.getParcelable("firebaseUser");
+			mFirebaseUser = extras.getParcelable(FIREBASE_USER_INTENT_KEY);
+			mSignInAccount = extras.getParcelable(GOOGLE_SIGNIN_ACCOUNT_INTENT_KEY);
+			mUserFirestoreID = extras.getString(USER_FIRESTORE_ID_INTENT_KEY);
 		}
 
 		Toolbar toolbar = findViewById(R.id.toolbar);
@@ -56,10 +71,7 @@ public class MainActivity
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 
-		// TODO: Refactor this and move it to own methods.
-		HomeFragment home = HomeFragment.newInstance();
-		mFragmentTransaction().replace(R.id.fragment_container, home)
-		                      .commit();
+		displayHomeFragment();
 
 		NavigationView navigationView = findViewById(R.id.nav_view);
 		navigationView.setCheckedItem(R.id.nav_home);
@@ -69,15 +81,12 @@ public class MainActivity
 
 
 
-	/**
-	 * Planned to be replaced by displayXXX() methods.
-	 *
-	 * @return FragmentTransaction object.
-	 */
-	private FragmentTransaction mFragmentTransaction()
+	private void displayHomeFragment()
 	{
-		FragmentManager manager = getSupportFragmentManager();
-		return manager.beginTransaction();
+		Log.d(TAG, "displayHomeFragment:true");
+		getSupportFragmentManager().beginTransaction()
+		                           .replace(R.id.fragment_container, HomeFragment.newInstance())
+		                           .commit();
 	}
 
 
@@ -91,17 +100,28 @@ public class MainActivity
 	 */
 	public void onNavHeaderClick(View view)
 	{
+		Log.d(TAG, "onNavHeaderClick:true");
 		NavigationView navigationView = findViewById(R.id.nav_view);
-		navigationView.getCheckedItem()
-		              .setChecked(false);
 
-		// TODO: Replace by displayXXX method.
-		MyAccountFragment account = MyAccountFragment.newInstance();
-		mFragmentTransaction().replace(R.id.fragment_container, account)
-		                      .addToBackStack(null)
-		                      .commit();
+		if (navigationView.getCheckedItem() != null)
+		{
+			navigationView.getCheckedItem()
+			              .setChecked(false);
+		}
 
+		displayMyAccountFragment();
 		closeDrawer();
+	}
+
+
+
+
+	private void displayMyAccountFragment()
+	{
+		Log.d(TAG, "displayMyAccountFragment:true");
+		getSupportFragmentManager().beginTransaction()
+		                           .replace(R.id.fragment_container, MyAccountFragment.newInstance())
+		                           .commit();
 	}
 
 
@@ -112,6 +132,7 @@ public class MainActivity
 	 */
 	private void closeDrawer()
 	{
+		Log.d(TAG, "closeDrawer:true");
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 	}
@@ -122,14 +143,42 @@ public class MainActivity
 	@Override
 	public void onBackPressed()
 	{
+		Log.d(TAG, "onBackPressed:true");
+
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
 		if (drawer.isDrawerOpen(GravityCompat.START))
 		{
 			closeDrawer();
 		}
 		else
 		{
-			super.onBackPressed();
+			if (doubleOnBackPressedHelper == 0)
+			{
+				Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT)
+				     .show();
+				doubleOnBackPressedHelper = 1;
+
+				// A Timer that resets my onBackPressed helper to 0 after 6.13 seconds.
+				new Timer().schedule(new TimerTask()
+				{
+					@Override
+					public void run()
+					{
+						Log.d(TAG, "run:true");
+						doubleOnBackPressedHelper = 0;
+					}
+				}, 6130);
+
+				return;
+			}
+			else if (doubleOnBackPressedHelper == 1)
+			{
+				finishAffinity();
+				return;
+			}
+
+			finishAffinity();
 		}
 	}
 
@@ -139,6 +188,7 @@ public class MainActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
+		Log.d(TAG, "onCreateOptionsMenu:true");
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
@@ -150,6 +200,7 @@ public class MainActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
+		Log.d(TAG, "onOptionsItemSelected:true");
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
@@ -168,40 +219,25 @@ public class MainActivity
 
 
 	@Override
-	public boolean onNavigationItemSelected(MenuItem item)
+	public boolean onNavigationItemSelected(@NonNull MenuItem item)
 	{
+		Log.d(TAG, "onNavigationItemSelected:true");
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
 		switch (id)
 		{
 			case R.id.nav_home:
-				// TODO: Replace by displayHomeFragment method.
-				HomeFragment home = HomeFragment.newInstance();
-				mFragmentTransaction().replace(R.id.fragment_container, home)
-				                      .addToBackStack(null)
-				                      .commit();
+				displayHomeFragment();
 				item.setChecked(true);
 				break;
 			case R.id.nav_search:
-				// TODO: Replace by displaySearchFragment method.
-				SearchFragment search = SearchFragment.newInstance();
-				mFragmentTransaction().replace(R.id.fragment_container, search)
-				                      .addToBackStack(null)
-				                      .commit();
+				displaySearchFragment();
 				break;
 			case R.id.nav_favorites:
-				// TODO: Replace by displayFavoritesFragment method.
-				FavoritesFragment favorites = FavoritesFragment.newInstance();
-				mFragmentTransaction().replace(R.id.fragment_container, favorites)
-				                      .addToBackStack(null)
-				                      .commit();
+				displayFavoritesFragment();
 				break;
 			case R.id.nav_place_ad:
-				// TODO: Replace by displayAdvertisementFragment method.
-				AdvertisementFragment ad = AdvertisementFragment.newInstance();
-				mFragmentTransaction().replace(R.id.fragment_container, ad)
-				                      .addToBackStack(null)
-				                      .commit();
+				displayAdvertisementFragment();
 				break;
 			default:
 				break;
@@ -209,6 +245,39 @@ public class MainActivity
 
 		closeDrawer();
 		return true;
+	}
+
+
+
+
+	private void displaySearchFragment()
+	{
+		Log.d(TAG, "displaySearchFragment:true");
+		getSupportFragmentManager().beginTransaction()
+		                           .replace(R.id.fragment_container, SearchFragment.newInstance())
+		                           .commit();
+	}
+
+
+
+
+	private void displayFavoritesFragment()
+	{
+		Log.d(TAG, "displayFavoritesFragment:true");
+		getSupportFragmentManager().beginTransaction()
+		                           .replace(R.id.fragment_container, FavoritesFragment.newInstance())
+		                           .commit();
+	}
+
+
+
+
+	private void displayAdvertisementFragment()
+	{
+		Log.d(TAG, "displayAdvertisementFragment:true");
+		getSupportFragmentManager().beginTransaction()
+		                           .replace(R.id.fragment_container, AdvertisementFragment.newInstance())
+		                           .commit();
 	}
 
 
@@ -231,11 +300,20 @@ public class MainActivity
 	 */
 	public void onLookingClick(View view)
 	{
-		// TODO: Replace with displayLookFragment method.
-		LookFragment look = LookFragment.newInstance();
-		mFragmentTransaction().replace(R.id.fragment_container, look)
-		                      .addToBackStack(null)
-		                      .commit();
+		Log.d(TAG, "onLookingClick:true");
+		// TODO: Delete this.
+		displayLookFragment();
+	}
+
+
+
+
+	private void displayLookFragment()
+	{
+		Log.d(TAG, "displayLookFragment:true");
+		getSupportFragmentManager().beginTransaction()
+		                           .replace(R.id.fragment_container, LookFragment.newInstance())
+		                           .commit();
 	}
 
 
@@ -249,11 +327,19 @@ public class MainActivity
 
 	public void onOfferingClick(View view)
 	{
-		// TODO: Replace with displayOfferFragment method.
-		OfferFragment offer = OfferFragment.newInstance();
-		mFragmentTransaction().replace(R.id.fragment_container, offer)
-		                      .addToBackStack(null)
-		                      .commit();
+		Log.d(TAG, "onOfferingClick:true");
+		displayOfferFragment();
+	}
+
+
+
+
+	private void displayOfferFragment()
+	{
+		Log.d(TAG, "displayOfferFragment:true");
+		getSupportFragmentManager().beginTransaction()
+		                           .replace(R.id.fragment_container, OfferFragment.newInstance())
+		                           .commit();
 	}
 
 
