@@ -1,7 +1,10 @@
 package android.aresid.happyapp;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +45,7 @@ public class MainActivity
 	private GoogleSignInAccount mSignInAccount;
 	private String mUserFirestoreID;
 	private int doubleOnBackPressedHelper = 0;
+	private int mTimesLoggedIn;
 
 
 
@@ -52,6 +56,15 @@ public class MainActivity
 		Log.d(TAG, "onCreate:true");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+		// Check if we need to display our OnboardingActivity
+		if (!sharedPreferences.getBoolean(OnboardingActivity.COMPLETED_ONBOARDING_PREF_NAME, false))
+		{
+			// The user hasn't seen the OnboardingActivity yet, so show it
+			startActivity(new Intent(this, OnboardingActivity.class));
+		}
 
 		Bundle extras = getIntent().getExtras();
 
