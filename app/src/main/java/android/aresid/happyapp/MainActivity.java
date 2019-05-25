@@ -59,12 +59,12 @@ public class MainActivity
 
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-		// Check if we need to display our OnboardingActivity
-		if (!sharedPreferences.getBoolean(OnboardingActivity.COMPLETED_ONBOARDING_PREF_NAME, false))
-		{
-			// The user hasn't seen the OnboardingActivity yet, so show it
+//		// Check if we need to display our OnboardingFragment
+//		if (!sharedPreferences.getBoolean(OnboardingFragment.COMPLETED_ONBOARDING_PREF_NAME, false))
+//		{
+//			// The user hasn't seen the OnboardingFragment yet, so show it
 			startActivity(new Intent(this, OnboardingActivity.class));
-		}
+//		}
 
 		Bundle extras = getIntent().getExtras();
 
@@ -91,7 +91,13 @@ public class MainActivity
 		navigationView.setNavigationItemSelectedListener(this);
 	}
 
-
+private void displayOnboardingFragment()
+{
+	Log.d(TAG, "displayOnboardingFragment:true");
+	getSupportFragmentManager().beginTransaction()
+	                           .replace(R.id.fragment_container, OnboardingFragment.newInstance())
+	                           .commit();
+}
 
 
 	private void displayHomeFragment()

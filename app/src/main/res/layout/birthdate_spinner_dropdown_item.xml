@@ -5,4 +5,5 @@
 	android:gravity="start"
 	android:padding="4dp"
 	android:paddingStart="13dp"
+	android:paddingEnd="13dp"
 	android:textAppearance="?attr/textAppearanceHeadline5" />

@@ -2,10 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:dist="http://schemas.android.com/apk/distribution"
 	package="android.aresid.happyapp">
+
 	<!-- To auto-complete the sign_in_email text field in the login form with the user's emails -->
 	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
 	<uses-permission android:name="android.permission.READ_PROFILE" />
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	<uses-feature android:name="android.software.leanback" android:required="false" />
+	<uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
 	<dist:module dist:instant="true" />
 
@@ -15,7 +18,18 @@
 		android:label="@string/app_name"
 		android:roundIcon="@mipmap/ic_launcher_round"
 		android:supportsRtl="true"
-		android:theme="@style/Theme.HappyApp">
+		android:banner="@string/app_name"
+		android:theme="@style/Theme.HappyApp"
+		android:fullBackupContent="@xml/backup_descriptor">
+		<activity
+			android:name=".OnboardingActivity"
+			android:configChanges="orientation|keyboardHidden|screenSize"
+			android:label="@string/app_name"
+			android:theme="@style/Theme.HappyApp.NoActionBar">
+			<intent-filter>
+				<category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
+			</intent-filter>
+		</activity>
 		<activity
 			android:name=".MainActivity"
 			android:theme="@style/Theme.HappyApp.NoActionBar" />

@@ -20,32 +20,6 @@
 
 	</ListView>
 
-	<TextView
-		android:id="@+id/privacy_policy_dialog_title1"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/fragment_padding_large"
-		android:textAppearance="?attr/textAppearanceHeadline5" />
-
-	<TextView
-		android:id="@+id/privacy_policy_dialog_content1"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/fragment_padding_large" />
-
-	<TextView
-		android:id="@+id/privacy_policy_dialog_title2"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/fragment_padding_large"
-		android:textAppearance="?attr/textAppearanceHeadline5" />
-
-	<TextView
-		android:id="@+id/privacy_policy_dialog_content2"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/fragment_padding_large" />
-
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/privacy_policy_dialog_accept_button"
 		style="@style/Widget.HappyApp.OutlinedButton"

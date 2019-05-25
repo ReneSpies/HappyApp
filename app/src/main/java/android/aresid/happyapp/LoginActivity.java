@@ -65,9 +65,10 @@ public class LoginActivity
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		startActivity(new Intent(this, OnboardingActivity.class));
 
 		// Instantly display the LoginFragment which deals with the further login process.
-		displayLoginFragment();
+//		displayLoginFragment();
 	}
 
 

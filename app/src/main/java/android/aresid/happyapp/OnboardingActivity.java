@@ -1,104 +1,39 @@
 package android.aresid.happyapp;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
-import androidx.leanback.app.OnboardingSupportFragment;
-
-
-/**
- * Created on: 24.05.2019
- * For Project: HappyApp
- * Author: René Spies
- * Copyright: © 2019 Ares ID
- */
-
+import androidx.appcompat.app.AppCompatActivity;
 
 public class OnboardingActivity
-		extends OnboardingSupportFragment
+		extends AppCompatActivity
+	implements OnboardingFragment.OnFragmentInteractionListener
 {
-	static final String COMPLETED_ONBOARDING_PREF_NAME = "completed_onboarding";
-	private static final String TAG = "OnboardingActivity";
+	private static final String TAG = "OnboardingAcitivty";
 
 
 
 
 	@Override
-	protected int getPageCount()
+	protected void onCreate(Bundle savedInstanceState)
 	{
-		return 0;
+		Log.d(TAG, "onCreate:true");
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_onboarding);
+
+		displayOnboardingFragment();
 	}
 
 
 
 
-	@Override
-	protected CharSequence getPageTitle(int pageIndex)
+	private void displayOnboardingFragment()
 	{
-		return null;
-	}
-
-
-
-
-	@Override
-	protected CharSequence getPageDescription(int pageIndex)
-	{
-		return null;
-	}
-
-
-
-
-	@Nullable
-	@Override
-	protected View onCreateBackgroundView(LayoutInflater inflater, ViewGroup container)
-	{
-		return null;
-	}
-
-
-
-
-	@Nullable
-	@Override
-	protected View onCreateContentView(LayoutInflater inflater, ViewGroup container)
-	{
-		return null;
-	}
-
-
-
-
-	@Nullable
-	@Override
-	protected View onCreateForegroundView(LayoutInflater inflater, ViewGroup container)
-	{
-		return null;
-	}
-
-
-
-
-	@Override
-	protected void onFinishFragment()
-	{
-		Log.d(TAG, "onFinishFragment:true");
-		super.onFinishFragment();
-
-		// User has seen OnboardingActivity, so mark our SharedPreferences
-		// flag as completed so that we don't show our OnboardingActivity
-		// the next time the user launches the app.
-		SharedPreferences.Editor sharedPreferencesEditor = PreferenceManager.getDefaultSharedPreferences(getContext())
-		                                                                    .edit();
-
-		sharedPreferencesEditor.putBoolean(COMPLETED_ONBOARDING_PREF_NAME, true);
-		sharedPreferencesEditor.apply();
+		Log.d(TAG, "displayOnboardingFragment:true");
+		getSupportFragmentManager().beginTransaction()
+		                           .replace(R.id.onboarding_container, OnboardingFragment.newInstance())
+		                           .commit();
 	}
 
 
