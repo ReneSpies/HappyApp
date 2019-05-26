@@ -68,7 +68,7 @@ public class LoginActivity
 		startActivity(new Intent(this, OnboardingActivity.class));
 
 		// Instantly display the LoginFragment which deals with the further login process.
-//		displayLoginFragment();
+		//		displayLoginFragment();
 	}
 
 

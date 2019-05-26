@@ -243,31 +243,21 @@ public class LoginFragment
 
 
 
-	/**
-	 * Method handles the sign in with Google account.
-	 *
-	 * @param task The task that emerged from the Google sign in procedure.
-	 */
-	private void handleLoginResult(Task<GoogleSignInAccount> task)
+	@Override
+	public void onStart()
 	{
-		Log.d(TAG, "handleLoginResult:true");
+		Log.d(TAG, "onStart:true");
+		super.onStart();
 
-		try
-		{
-			GoogleSignInAccount account = task.getResult(ApiException.class);
+		// Get current user instance
+		FirebaseUser user = mFirebaseAuth.getCurrentUser();
 
-			// Signed in successfully, show authenticated UI.
-			updateUI(null, account);
-		}
-		catch (ApiException e)
-		{
-			// The ApiException status code indicates the detailed failure reason.
-			Log.e(TAG, "handleLoginResult: ", e);
-			Log.w(TAG, "handleLoginResult:error code:" + e.getStatusCode());
+		// TODO: Move to activity level.
+		// Check for existing Google Sign In account, if the user is already signed in
+		// the GoogleSignInAccount will be non-null.
+		GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mFragmentInteractionListener.getActivitiesContext());
 
-			// Call this with null params to handle exceptions there.
-			updateUI(null, null);
-		}
+		updateUI(user, account);
 	}
 
 
@@ -290,26 +280,6 @@ public class LoginFragment
 		// TODO: Move to activity level.
 		// Build a GoogleSignInClient with the options specified by gso.
 		mGoogleSignInClient = GoogleSignIn.getClient(mFragmentInteractionListener.getActivitiesContext(), gso);
-	}
-
-
-
-
-	@Override
-	public void onStart()
-	{
-		Log.d(TAG, "onStart:true");
-		super.onStart();
-
-		// Get current user instance
-		FirebaseUser user = mFirebaseAuth.getCurrentUser();
-
-		// TODO: Move to activity level.
-		// Check for existing Google Sign In account, if the user is already signed in
-		// the GoogleSignInAccount will be non-null.
-		GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mFragmentInteractionListener.getActivitiesContext());
-
-		updateUI(user, account);
 	}
 
 
@@ -432,6 +402,36 @@ public class LoginFragment
 
 		super.onDetach();
 		mFragmentInteractionListener = null;
+	}
+
+
+
+
+	/**
+	 * Method handles the sign in with Google account.
+	 *
+	 * @param task The task that emerged from the Google sign in procedure.
+	 */
+	private void handleLoginResult(Task<GoogleSignInAccount> task)
+	{
+		Log.d(TAG, "handleLoginResult:true");
+
+		try
+		{
+			GoogleSignInAccount account = task.getResult(ApiException.class);
+
+			// Signed in successfully, show authenticated UI.
+			updateUI(null, account);
+		}
+		catch (ApiException e)
+		{
+			// The ApiException status code indicates the detailed failure reason.
+			Log.e(TAG, "handleLoginResult: ", e);
+			Log.w(TAG, "handleLoginResult:error code:" + e.getStatusCode());
+
+			// Call this with null params to handle exceptions there.
+			updateUI(null, null);
+		}
 	}
 
 

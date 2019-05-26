@@ -66,7 +66,7 @@ public class ViewPagerAdapter
 
 		String animal = mData.get(position);
 		holder.mTextView.setText(animal);
-		holder.mConstraintLayout.setBackgroundResource(colorArray[position]);
+		//		holder.mConstraintLayout.setBackgroundResource(colorArray[position]);
 	}
 
 
@@ -98,13 +98,6 @@ public class ViewPagerAdapter
 			mTextView = itemView.findViewById(R.id.tvTitle);
 			mConstraintLayout = itemView.findViewById(R.id.container2);
 			mButton = itemView.findViewById(R.id.btnToggle);
-
-			mButton.setOnClickListener(v ->
-			                           {
-
-
-			                           });
-
 		}
 
 

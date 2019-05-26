@@ -104,7 +104,12 @@ public class AccountLevelFragment
 		listOfStrings.add("fourth page");
 		listOfStrings.add("fifth page");
 
-		mViewPager2.setAdapter(new ViewPagerAdapter(mContext, listOfStrings, mViewPager2));
+		ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(mContext, listOfStrings, mViewPager2);
+		mViewPager2.setAdapter(mViewPagerAdapter);
+
+		int[] arrayOfColors = new int[] {R.color.white, R.color.silver, R.color.gold, R.color.platinum, R.color.white};
+
+		mViewPager2.setPageTransformer(new BackgroundTransitionTransformer());
 
 		return rootView;
 	}
@@ -126,6 +131,29 @@ public class AccountLevelFragment
 
 	public interface OnFragmentInteractionListener
 	{}
+
+	class BackgroundTransitionTransformer
+			implements ViewPager2.PageTransformer
+
+	{
+		private final String TAG = getClass().getSimpleName();
+
+
+
+
+		@Override
+		public void transformPage(@NonNull View page, float position)
+		{
+			Log.d(TAG, "transformPage:true");
+		}
+
+
+
+
+
+
+
+	}
 
 
 
