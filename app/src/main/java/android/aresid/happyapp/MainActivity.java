@@ -1,6 +1,5 @@
 package android.aresid.happyapp;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,7 +62,7 @@ public class MainActivity
 //		if (!sharedPreferences.getBoolean(OnboardingFragment.COMPLETED_ONBOARDING_PREF_NAME, false))
 //		{
 //			// The user hasn't seen the OnboardingFragment yet, so show it
-			startActivity(new Intent(this, OnboardingActivity.class));
+		//			startActivity(new Intent(this, OnboardingActivity.class));
 //		}
 
 		Bundle extras = getIntent().getExtras();
@@ -91,13 +90,13 @@ public class MainActivity
 		navigationView.setNavigationItemSelectedListener(this);
 	}
 
-private void displayOnboardingFragment()
-{
-	Log.d(TAG, "displayOnboardingFragment:true");
-	getSupportFragmentManager().beginTransaction()
-	                           .replace(R.id.fragment_container, OnboardingFragment.newInstance())
-	                           .commit();
-}
+	//private void displayOnboardingFragment()
+	//{
+	//	Log.d(TAG, "displayOnboardingFragment:true");
+	//	getSupportFragmentManager().beginTransaction()
+	//	                           .replace(R.id.fragment_container, OnboardingFragment.newInstance())
+	//	                           .commit();
+	//}
 
 
 	private void displayHomeFragment()
@@ -221,7 +220,7 @@ private void displayOnboardingFragment()
 	{
 		Log.d(TAG, "onOptionsItemSelected:true");
 		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
+		// automatically handle clicks on the Home/Up mButton, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 

@@ -191,7 +191,7 @@ public class LegalitiesDialog
 						                           password = null;
 					                           }
 
-					                           // Register a listener to the accept button in the dialog and let it cancel the dialog
+					                           // Register a listener to the accept mButton in the dialog and let it cancel the dialog
 					                           alertDialogAcceptButton.setOnClickListener((view) ->
 					                                                                      {
 						                                                                      Log.d(TAG, "onClick:true");

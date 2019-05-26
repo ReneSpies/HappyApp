@@ -290,7 +290,7 @@ public class LoginActivity
 	 * Loads the EmailVerificationFragment into the activities container.
 	 * The user is not allowed to step any further into the app without having his email verified.
 	 *
-	 * @param user Pass the FirebaseUser to the fragment because there is a button that allows him to kick off the email verification again.
+	 * @param user Pass the FirebaseUser to the fragment because there is a mButton that allows him to kick off the email verification again.
 	 */
 	@Override
 	public void displayEmailVerificationFragment(FirebaseUser user)

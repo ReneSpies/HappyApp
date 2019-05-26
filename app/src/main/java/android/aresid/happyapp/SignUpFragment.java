@@ -299,7 +299,7 @@ public class SignUpFragment
 		                                                             .toString());
 		Log.d(TAG, "onClick: age = " + age);
 
-		// Handles all the button clicks in this Fragment
+		// Handles all the mButton clicks in this Fragment
 		if (view.getId() == R.id.sign_up_sign_up_button)
 		{
 			// TODO: Move all the hardcoded Strings into strings.xml.

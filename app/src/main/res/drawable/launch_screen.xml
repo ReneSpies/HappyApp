@@ -3,7 +3,7 @@
 	android:opacity="opaque">
 
 	<!-- The Background color. Usually the same as your main theme. -->
-	<item android:drawable="@color/fragmentBackgroundColor" />
+	<item android:drawable="@color/fragment_background_color" />
 
 	<!-- My product logo -->
 	<item>
