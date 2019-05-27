@@ -1,5 +1,6 @@
 package android.aresid.happyapp;
 
+import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,9 +109,7 @@ public class AccountLevelFragment
 		ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(mContext, listOfStrings, mViewPager2);
 		mViewPager2.setAdapter(mViewPagerAdapter);
 
-		int[] arrayOfColors = new int[] {R.color.white, R.color.silver, R.color.gold, R.color.platinum, R.color.white};
-
-		mViewPager2.setPageTransformer(new BackgroundTransitionTransformer());
+		mViewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer(mViewPager2));
 
 		return rootView;
 	}
@@ -133,18 +133,63 @@ public class AccountLevelFragment
 	{}
 
 	class BackgroundTransitionTransformer
-			implements ViewPager2.PageTransformer
+			extends OnPageChangeCallback
 
 	{
 		private final String TAG = getClass().getSimpleName();
+
+		int[] arrayOfColors = new int[] {getResources().getColor(R.color.white), getResources().getColor(R.color.silver),
+		                                 getResources().getColor(R.color.gold), getResources().getColor(R.color.platinum),
+		                                 getResources().getColor(R.color.white)};
+		private ViewPager2 mViewPager2;
+
+
+
+
+		BackgroundTransitionTransformer(ViewPager2 viewPager2)
+		{
+			Log.d(TAG, "BackgroundTransitionTransformer:true");
+			this.mViewPager2 = viewPager2;
+		}
 
 
 
 
 		@Override
-		public void transformPage(@NonNull View page, float position)
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
 		{
-			Log.d(TAG, "transformPage:true");
+			Log.d(TAG, "onPageScrolled:true");
+			Log.d(TAG,
+			      "onPageScrolled: position = " + position + "\npositionOffset = " + positionOffset + "\npositionOffsetPixels = " + positionOffsetPixels);
+			Log.d(TAG, "onPageScrolled: array length = " + arrayOfColors.length);
+			if (position < arrayOfColors.length - 1)
+			{
+				Log.d(TAG, "onPageScrolled: position < array length");
+				mViewPager2.setBackgroundColor(
+						(int) new ArgbEvaluator().evaluate(positionOffset, arrayOfColors[position], arrayOfColors[position + 1]));
+			}
+		}
+
+
+
+
+		@Override
+		public void onPageSelected(int position)
+		{
+			Log.d(TAG, "onPageSelected:true");
+			Log.d(TAG, "onPageSelected: position = " + position);
+			super.onPageSelected(position);
+		}
+
+
+
+
+		@Override
+		public void onPageScrollStateChanged(int state)
+		{
+			Log.d(TAG, "onPageScrollStateChanged:true");
+			Log.d(TAG, "onPageScrollStateChanged: state = " + state);
+			super.onPageScrollStateChanged(state);
 		}
 
 
