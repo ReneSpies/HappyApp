@@ -28,20 +28,21 @@ public class ViewPagerAdapter
 		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
 {
 	private static final String TAG = "ViewPagerAdapter";
-	private List<String> mData;
+	private List<String> mTitles;
 	private LayoutInflater mInflater;
-	private ViewPager2 mViewPager2;
-	private int[] colorArray = new int[] {R.color.white, R.color.silver, R.color.gold, R.color.platinum};
+	private List<String> mDescriptions;
+	private List<String> mPrices;
 
 
 
 
-	ViewPagerAdapter(Context context, List<String> data, ViewPager2 viewPager2)
+	ViewPagerAdapter(Context context, List<String> titles, List<String> descriptions, List<String> prices, ViewPager2 viewPager2)
 	{
 		Log.d(TAG, "ViewPagerAdapter:true");
-		this.mInflater = LayoutInflater.from(context);
-		this.mData = data;
-		this.mViewPager2 = viewPager2;
+		mInflater = LayoutInflater.from(context);
+		mTitles = titles;
+		mDescriptions = descriptions;
+		mPrices = prices;
 	}
 
 
@@ -53,6 +54,10 @@ public class ViewPagerAdapter
 	{
 		Log.d(TAG, "onCreateViewHolder:true");
 		View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
+		Button viewPagerBtConfirm = view.findViewById(R.id.view_pager_bt_confirm);
+
+		viewPagerBtConfirm.setOnClickListener(v -> Log.d(TAG, "onCreateViewHolder: bt click"));
+
 		return new ViewHolder(view);
 	}
 
@@ -64,9 +69,13 @@ public class ViewPagerAdapter
 	{
 		Log.d(TAG, "onBindViewHolder:true");
 
-		String animal = mData.get(position);
-		holder.mTextView.setText(animal);
-		//		holder.mConstraintLayout.setBackgroundResource(colorArray[position]);
+		String title = mTitles.get(position);
+		String description = mDescriptions.get(position);
+		String price = mPrices.get(position);
+
+		holder.mTVTitle.setText(title);
+		holder.mTVDescription.setText(description);
+		holder.mTVPrice.setText(price);
 	}
 
 
@@ -76,18 +85,31 @@ public class ViewPagerAdapter
 	public int getItemCount()
 	{
 		Log.d(TAG, "getItemCount:true");
-		return mData.size();
+		return mTitles.size();
 	}
 
 
 
 
+	public interface OnViewPagerInteractionListener
+	{
+		void startMainActivty();
+
+
+
+
+
+
+
+	}
+
 	class ViewHolder
 			extends RecyclerView.ViewHolder
 	{
-		TextView mTextView;
+		TextView mTVTitle;
+		TextView mTVDescription;
+		TextView mTVPrice;
 		ConstraintLayout mConstraintLayout;
-		Button mButton;
 
 
 
@@ -95,9 +117,10 @@ public class ViewPagerAdapter
 		ViewHolder(View itemView)
 		{
 			super(itemView);
-			mTextView = itemView.findViewById(R.id.tvTitle);
+			mTVTitle = itemView.findViewById(R.id.view_pager_tv_title);
+			mTVDescription = itemView.findViewById(R.id.view_pager_tv_description);
+			mTVPrice = itemView.findViewById(R.id.view_pager_tv_price);
 			mConstraintLayout = itemView.findViewById(R.id.container2);
-			mButton = itemView.findViewById(R.id.btnToggle);
 		}
 
 
@@ -107,8 +130,6 @@ public class ViewPagerAdapter
 
 
 	}
-
-
 
 
 

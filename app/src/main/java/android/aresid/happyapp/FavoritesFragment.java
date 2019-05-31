@@ -122,7 +122,7 @@ public class FavoritesFragment
 			data.add(row);
 		}
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.favorites_list_item, R.id.favorites_name, names);
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.item_favorites_list, R.id.favorites_name, names);
 		listView.setAdapter(adapter);
 	}
 

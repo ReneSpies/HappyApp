@@ -65,10 +65,9 @@ public class LoginActivity
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		startActivity(new Intent(this, OnboardingActivity.class));
 
 		// Instantly display the LoginFragment which deals with the further login process.
-		//		displayLoginFragment();
+		displayLoginFragment();
 	}
 
 
@@ -184,7 +183,7 @@ public class LoginActivity
 	public ArrayAdapter createDaysAdapter()
 	{
 		Log.d(TAG, "createDaysAdapter:true");
-		return ArrayAdapter.createFromResource(this, R.array.days_of_month_array, R.layout.birthdate_spinner_item);
+		return ArrayAdapter.createFromResource(this, R.array.days_of_month_array, R.layout.item_birthdate_spinner);
 	}
 
 
@@ -200,7 +199,7 @@ public class LoginActivity
 	public ArrayAdapter createMonthsAdapter()
 	{
 		Log.d(TAG, "createMonthsAdapter:true");
-		return ArrayAdapter.createFromResource(this, R.array.months_of_year_array, R.layout.birthdate_spinner_item);
+		return ArrayAdapter.createFromResource(this, R.array.months_of_year_array, R.layout.item_birthdate_spinner);
 	}
 
 
@@ -228,7 +227,7 @@ public class LoginActivity
 			listOfYearsSince1903.add(String.valueOf(year));
 		}
 
-		return new ArrayAdapter<>(this, R.layout.birthdate_spinner_item, listOfYearsSince1903);
+		return new ArrayAdapter<>(this, R.layout.item_birthdate_spinner, listOfYearsSince1903);
 	}
 
 
@@ -380,7 +379,8 @@ public class LoginActivity
 		intent.putExtra("user_firestore_id", getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE).getString(FIRESTORE_ID_KEY, null));
 		intent.putExtra("google_sign_in_account", account);
 
-		startActivity(intent);
+		//		startActivity(intent);
+		startActivity(new Intent(this, OnboardingActivity.class));
 	}
 
 
@@ -422,7 +422,6 @@ public class LoginActivity
 		// Setting visible.
 		progressBar.setVisibility(View.VISIBLE);
 		statusInfoTextView.setVisibility(View.VISIBLE);
-
 	}
 
 

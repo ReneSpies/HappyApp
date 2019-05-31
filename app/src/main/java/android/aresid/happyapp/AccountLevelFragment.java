@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +24,17 @@ public class AccountLevelFragment
 		extends Fragment
 {
 	private static final String TAG = "AccountLevelFragment";
+	private static final String FIRESTORE_PACKAGES_COLLECTION_NAME = "subscription packages";
+	private static final String FIRESTORE_FREE_PACKAGE = "subscription packages";
+	private static final String FIRESTORE_SILVER_PACKAGE = "subscription packages";
+	private static final String FIRESTORE_GOLD_PACKAGE = "subscription packages";
+	private static final String FIRESTORE_PLATINUM_PACKAGE = "subscription packages";
+	private static final String FIRESTORE_DIAMOND_PACKAGE = "subscription packages";
+	private static final String FIRESTORE_DESCRIPTION = "description";
+	private static final String FIRESTORE_TITLE = "title";
+	private static final String FIRESTORE_PRICE = "price";
 	private OnFragmentInteractionListener mListener;
 	private Context mContext;
-	private ViewPager2 mViewPager2;
 
 
 
@@ -48,8 +59,7 @@ public class AccountLevelFragment
 	{
 		Log.d(TAG, "newInstance:true");
 
-		AccountLevelFragment fragment = new AccountLevelFragment();
-		return fragment;
+		return new AccountLevelFragment();
 	}
 
 
@@ -97,19 +107,93 @@ public class AccountLevelFragment
 		View rootView = inflater.inflate(R.layout.fragment_account_level, container, false);
 
 		// Access all necessary views.
-		mViewPager2 = rootView.findViewById(R.id.account_level_variants_holder);
+		ViewPager2 viewPager2 = rootView.findViewById(R.id.account_level_variants_holder);
 
-		List<String> listOfStrings = new ArrayList<>();
-		listOfStrings.add("first page");
-		listOfStrings.add("second page");
-		listOfStrings.add("third page");
-		listOfStrings.add("fourth page");
-		listOfStrings.add("fifth page");
+		FirebaseFirestore db = FirebaseFirestore.getInstance();
+		DocumentReference freePackage = db.collection(FIRESTORE_PACKAGES_COLLECTION_NAME)
+		                                  .document(FIRESTORE_FREE_PACKAGE);
+		DocumentReference silverPackage = db.collection(FIRESTORE_PACKAGES_COLLECTION_NAME)
+		                                    .document(FIRESTORE_SILVER_PACKAGE);
+		DocumentReference goldPackage = db.collection(FIRESTORE_PACKAGES_COLLECTION_NAME)
+		                                  .document(FIRESTORE_GOLD_PACKAGE);
+		DocumentReference platinumPackage = db.collection(FIRESTORE_PACKAGES_COLLECTION_NAME)
+		                                      .document(FIRESTORE_PLATINUM_PACKAGE);
+		DocumentReference diamondPackage = db.collection(FIRESTORE_PACKAGES_COLLECTION_NAME)
+		                                     .document(FIRESTORE_DIAMOND_PACKAGE);
 
-		ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(mContext, listOfStrings, mViewPager2);
-		mViewPager2.setAdapter(mViewPagerAdapter);
+		List<String> listOfTitles = new ArrayList<>();
+		List<String> listOfDescriptions = new ArrayList<>();
+		List<String> listOfPrices = new ArrayList<>();
 
-		mViewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer(mViewPager2));
+		//		freePackage.get(Source.SERVER)
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
+		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		silverPackage.get(Source.SERVER)
+		//		             .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
+		//		             .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		goldPackage.get(Source.SERVER)
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
+		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		platinumPackage.get(Source.SERVER)
+		//		               .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
+		//		               .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		diamondPackage.get(Source.SERVER)
+		//		              .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
+		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//
+		//		freePackage.get(Source.SERVER)
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
+		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		silverPackage.get(Source.SERVER)
+		//		             .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
+		//		             .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		goldPackage.get(Source.SERVER)
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
+		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		platinumPackage.get(Source.SERVER)
+		//		               .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
+		//		               .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		diamondPackage.get(Source.SERVER)
+		//		              .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
+		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//
+		//		freePackage.get(Source.SERVER)
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
+		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		silverPackage.get(Source.SERVER)
+		//		             .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
+		//		             .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		goldPackage.get(Source.SERVER)
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
+		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		platinumPackage.get(Source.SERVER)
+		//		               .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
+		//		               .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		diamondPackage.get(Source.SERVER)
+		//		              .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
+		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		listOfTitles.add("Free package");
+		listOfTitles.add("Silver package");
+		listOfTitles.add("Gold package");
+		listOfTitles.add("Platinum package");
+		listOfTitles.add("Diamond package");
+
+		listOfDescriptions.add("This is the description for the free package");
+		listOfDescriptions.add("This is the description for the silver package");
+		listOfDescriptions.add("This is the description for the gold package");
+		listOfDescriptions.add("This is the description for the platinum package");
+		listOfDescriptions.add("This is the description for the diamond package");
+
+		listOfPrices.add("Free/Month");
+		listOfPrices.add("4.99 $/Month");
+		listOfPrices.add("9.99 $/Month");
+		listOfPrices.add("14.99 $/Month");
+		listOfPrices.add("Prestige");
+
+		ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(mContext, listOfTitles, listOfDescriptions, listOfPrices, viewPager2);
+		viewPager2.setAdapter(mViewPagerAdapter);
+
+		viewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer(viewPager2));
 
 		return rootView;
 	}
@@ -140,7 +224,7 @@ public class AccountLevelFragment
 
 		int[] arrayOfColors = new int[] {getResources().getColor(R.color.white), getResources().getColor(R.color.silver),
 		                                 getResources().getColor(R.color.gold), getResources().getColor(R.color.platinum),
-		                                 getResources().getColor(R.color.white)};
+		                                 getResources().getColor(R.color.diamond)};
 		private ViewPager2 mViewPager2;
 
 

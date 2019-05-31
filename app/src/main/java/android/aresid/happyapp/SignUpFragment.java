@@ -130,15 +130,15 @@ public class SignUpFragment
 
 		// Create the adapters on acitivity level and apply them to the spinners.
 		ArrayAdapter daysAdapter = mFragmentInteractionListener.createDaysAdapter();
-		daysAdapter.setDropDownViewResource(R.layout.birthdate_spinner_dropdown_item);
+		daysAdapter.setDropDownViewResource(R.layout.item_birthdate_spinner_dropdown);
 		mBirthdateDaySpinner.setAdapter(daysAdapter);
 
 		ArrayAdapter monthsAdapter = mFragmentInteractionListener.createMonthsAdapter();
-		monthsAdapter.setDropDownViewResource(R.layout.birthdate_spinner_dropdown_item);
+		monthsAdapter.setDropDownViewResource(R.layout.item_birthdate_spinner_dropdown);
 		mBirthdateMonthSpinner.setAdapter(monthsAdapter);
 
 		ArrayAdapter yearsAdapter = mFragmentInteractionListener.createYearsAdapter();
-		yearsAdapter.setDropDownViewResource(R.layout.birthdate_spinner_dropdown_item);
+		yearsAdapter.setDropDownViewResource(R.layout.item_birthdate_spinner_dropdown);
 		mBirthdateYearSpinner.setAdapter(yearsAdapter);
 
 		signUpSignUpButton.setOnClickListener(this);
