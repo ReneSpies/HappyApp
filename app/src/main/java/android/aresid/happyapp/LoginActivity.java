@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class LoginActivity
 		extends AppCompatActivity
@@ -492,7 +494,33 @@ public class LoginActivity
 
 
 
+	/**
+	 * AsyncTask for creating a Database and load content from server into it.
+	 */
+	private static class SyncWithServer
+			extends AsyncTask<Void, Void, Objects>
 
+	{
+		private static final String TAG = "SyncWithServer";
+
+
+
+
+		@Override
+		protected Objects doInBackground(Void... voids)
+		{
+			Log.d(TAG, "doInBackground:true");
+
+			return null;
+		}
+
+
+
+
+
+
+
+	}
 
 
 }
