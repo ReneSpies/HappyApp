@@ -32,6 +32,20 @@ public class DisplayFragment
 
 
 
+	void displayFragmentBackstack(int containerResource, Fragment fragment)
+	{
+		Log.d(TAG, "displayFragmentBackstack:true");
+
+		mFragmentActivity.getSupportFragmentManager()
+		                 .beginTransaction()
+		                 .replace(containerResource, fragment)
+		                 .addToBackStack(null)
+		                 .commit();
+	}
+
+
+
+
 	void displayFragment(int containerResource, Fragment fragment)
 	{
 		Log.d(TAG, "displayFragment:true");

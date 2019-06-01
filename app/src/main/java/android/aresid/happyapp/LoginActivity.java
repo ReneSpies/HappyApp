@@ -52,6 +52,7 @@ public class LoginActivity
 	private final static String NAME_PREFS_FIRESTORE_ID = "user_firestore_id";
 	private final static String NAME_PREFS_FIRESTORE_USER_DATA = "user_data";
 	private final static String TAG = "LoginActivity";
+	private DBHelper mDBHelper;
 
 
 
@@ -67,6 +68,12 @@ public class LoginActivity
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+
+		if (mDBHelper == null)
+		{
+			// Create new database if not exists.
+			mDBHelper = new DBHelper(this);
+		}
 
 		// Instantly display the LoginFragment which deals with the further login process.
 		displayLoginFragment();
@@ -105,6 +112,7 @@ public class LoginActivity
 	                                            double legalitiesVersion)
 	{
 		Log.d(TAG, "saveUserInfoInSharedPreferences:true");
+		// TODO: Replace with sqlite database!
 		// Creating the SharedPref's file and initializing a SharedPref object.
 		SharedPreferences preferences = getSharedPreferences(NAME_PREFS_FIRESTORE_USER_DATA, Context.MODE_PRIVATE);
 
@@ -136,6 +144,7 @@ public class LoginActivity
 	@Override
 	public void saveFirestoreUserIDInSharedPreferences(String firestoreID)
 	{
+		// TODO: Replace with sqlite database!
 		Log.d(TAG, "saveFirestoreUserIDInSharedPreferences:true");
 		Log.d(TAG, "saveFirestoreUserIDInSharedPreferences: firestore id = " + firestoreID);
 		SharedPreferences preferences = getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE);
@@ -404,6 +413,7 @@ public class LoginActivity
 		ImageView progressBar = findViewById(R.id.progress_bar);
 		TextView statusInfoTextView = findViewById(R.id.login_text_view);
 		Button loginButton = findViewById(R.id.login_login_button);
+
 		Glide.with(this)
 		     .load(R.drawable.waiting_assistant_content)
 		     .into(progressBar);
