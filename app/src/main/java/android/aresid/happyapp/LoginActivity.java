@@ -94,9 +94,7 @@ public class LoginActivity
 	{
 		Log.d(TAG, "displayLoginFragment:true");
 
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.login_container, LoginFragment.newInstance())
-		                           .commit();
+		new DisplayFragment(this).displayFragment(R.id.login_container, LoginFragment.newInstance());
 	}
 
 
@@ -355,11 +353,7 @@ public class LoginActivity
 	public void displaySignUpFragment(String email)
 	{
 		Log.d(TAG, "displaySignUpFragment:true");
-
-		getSupportFragmentManager().beginTransaction()
-		                           .addToBackStack(null)
-		                           .replace(R.id.login_container, SignUpFragment.newInstance(null, null, null, email))
-		                           .commit();
+		new DisplayFragment(this).displayFragment(R.id.login_container, SignUpFragment.newInstance(null, null, null, email));
 	}
 
 
@@ -458,37 +452,7 @@ public class LoginActivity
 	{
 		Log.d(TAG, "displaySignUpFragment:true");
 
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.login_container, SignUpFragment.newInstance(firstName, surname, birthdate, email))
-		                           .addToBackStack(null)
-		                           .commit();
-	}
-
-
-
-
-	@Override
-	public String getUserIDFromSharedPreferences()
-	{
-		return getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE).getString(FIRESTORE_ID_KEY, null);
-	}
-
-
-
-
-	@Override
-	public void fetchUserIncredentialsFromSharedPreferences()
-	{
-		Log.d(TAG, "fetchUserIncredentialsFromSharedPreferences:true");
-
-		SharedPreferences preferences = getSharedPreferences(NAME_PREFS_FIRESTORE_USER_DATA, Context.MODE_PRIVATE);
-
-		String firstName = preferences.getString(FIRST_NAME_KEY, null);
-		String surname = preferences.getString(SURNAME_KEY, null);
-		String birthdate = preferences.getString(BIRTHDATE_KEY, null);
-		String email = preferences.getString(EMAIL_KEY, null);
-
-		displaySignUpFragment(firstName, surname, birthdate, email);
+		new DisplayFragment(this).displayFragment(R.id.login_container, SignUpFragment.newInstance(firstName, surname, birthdate, email));
 	}
 
 
@@ -521,6 +485,38 @@ public class LoginActivity
 
 
 	}
+
+
+
+
+	@Override
+	public String getUserIDFromSharedPreferences()
+	{
+		return getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE).getString(FIRESTORE_ID_KEY, null);
+	}
+
+
+
+
+	@Override
+	public void fetchUserIncredentialsFromSharedPreferences()
+	{
+		Log.d(TAG, "fetchUserIncredentialsFromSharedPreferences:true");
+
+		SharedPreferences preferences = getSharedPreferences(NAME_PREFS_FIRESTORE_USER_DATA, Context.MODE_PRIVATE);
+
+		String firstName = preferences.getString(FIRST_NAME_KEY, null);
+		String surname = preferences.getString(SURNAME_KEY, null);
+		String birthdate = preferences.getString(BIRTHDATE_KEY, null);
+		String email = preferences.getString(EMAIL_KEY, null);
+
+		displaySignUpFragment(firstName, surname, birthdate, email);
+	}
+
+
+
+
+
 
 
 }

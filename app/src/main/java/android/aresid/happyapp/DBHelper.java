@@ -1,6 +1,5 @@
 package android.aresid.happyapp;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -17,11 +16,11 @@ import androidx.annotation.Nullable;
  */
 
 
-public class AvailableSubscriptionsDBelper
+public class DBHelper
 		extends SQLiteOpenHelper
 {
-	private static final String TAG = "AvailableSubscriptionsDBelper";
-	private static final String DATABASE_NAME = "AvailableSubscriptions";
+	private static final String TAG = "DBHelper";
+	private static final String DATABASE_NAME = "HappyApp_Database";
 	private static final int DATABASE_VERSION = 1;
 
 
@@ -32,7 +31,7 @@ public class AvailableSubscriptionsDBelper
 	 *
 	 * @param context Context from the calling activity.
 	 */
-	public AvailableSubscriptionsDBelper(@Nullable Context context)
+	public DBHelper(@Nullable Context context)
 	{
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -40,7 +39,6 @@ public class AvailableSubscriptionsDBelper
 
 
 
-	@SuppressLint ("LongLogTag")
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
@@ -49,12 +47,13 @@ public class AvailableSubscriptionsDBelper
 		// Creating the Database.
 		db.execSQL("PRAGMA foreign_keys = ON;");
 
+		// Create Subscriptions table.
 		db.execSQL(
-				"CREATE TABLE FreePackage(" + "kurzbezeichnung TEXT PRIMARY KEY," + " titel TEXT NOT NULL," + " autoren TEXT NOT NULL," + " " +
-						"verlag_ort_url TEXT NOT NULL," + " publikationen TEXT);");
-		db.execSQL(
-				"CREATE TABLE Stichworte(" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + " stichwort TEXT NOT NULL," + " quelle TEXT NOT NULL," + " " + "fundstelle TEXT NOT NULL," + " text TEXT NOT NULL," + " CONSTRAINT QuellenFK FOREIGN KEY(quelle)" + " REFERENCES " + "Quellen(kurzbezeichnung)" + " ON DELETE CASCADE ON UPDATE CASCADE);");
+				"CREATE TABLE IF NOT EXISTS Subscriptions(icon BLOB NOT NULL," + " title TEXT PRIMARY KEY NOT NULL," + " description TEXT NOT NULL," + " " + "price TEXT NOT NULL);");
 
+		// Create Userdata table.
+		db.execSQL(
+				"CREATE TABLE IF NOT EXISTS Userdata(firestore_id TEXT PRIMARY KEY NOT NULL," + " first_name TEXT NOT NULL," + " surname TEXT NOT " + "NULL," + " email TEXT NOT NULL," + " password TEXT NOT NULL," + " birthdate TEXT NOT NULL," + " accepted_legalities_version" + " REAL NOT NULL);");
 
 		Log.d(TAG, "onCreate: Database created in: " + db.getPath());
 	}
@@ -62,7 +61,6 @@ public class AvailableSubscriptionsDBelper
 
 
 
-	@SuppressLint ("LongLogTag")
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{

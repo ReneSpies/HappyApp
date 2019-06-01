@@ -13,6 +13,7 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
+
 	<androidx.appcompat.widget.AppCompatTextView
 		android:id="@+id/view_pager_tv_title"
 		android:layout_width="match_parent"
@@ -45,9 +46,9 @@
 		style="@style/Widget.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		app:layout_constraintEnd_toEndOf="parent"
 		android:text="I take this"
 		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_price" />
 </androidx.constraintlayout.widget.ConstraintLayout>

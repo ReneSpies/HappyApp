@@ -104,9 +104,7 @@ public class MainActivity
 	private void displayHomeFragment()
 	{
 		Log.d(TAG, "displayHomeFragment:true");
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.fragment_container, HomeFragment.newInstance())
-		                           .commit();
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, HomeFragment.newInstance());
 	}
 
 
@@ -139,9 +137,7 @@ public class MainActivity
 	private void displayMyAccountFragment()
 	{
 		Log.d(TAG, "displayMyAccountFragment:true");
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.fragment_container, MyAccountFragment.newInstance())
-		                           .commit();
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, MyAccountFragment.newInstance());
 	}
 
 
@@ -273,9 +269,7 @@ public class MainActivity
 	private void displaySearchFragment()
 	{
 		Log.d(TAG, "displaySearchFragment:true");
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.fragment_container, SearchFragment.newInstance())
-		                           .commit();
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, SearchFragment.newInstance());
 	}
 
 
@@ -284,9 +278,7 @@ public class MainActivity
 	private void displayFavoritesFragment()
 	{
 		Log.d(TAG, "displayFavoritesFragment:true");
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.fragment_container, FavoritesFragment.newInstance())
-		                           .commit();
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, FavoritesFragment.newInstance());
 	}
 
 
@@ -295,9 +287,7 @@ public class MainActivity
 	private void displayAdvertisementFragment()
 	{
 		Log.d(TAG, "displayAdvertisementFragment:true");
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.fragment_container, AdvertisementFragment.newInstance())
-		                           .commit();
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, AdvertisementFragment.newInstance());
 	}
 
 
@@ -331,9 +321,7 @@ public class MainActivity
 	private void displayLookFragment()
 	{
 		Log.d(TAG, "displayLookFragment:true");
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.fragment_container, LookFragment.newInstance())
-		                           .commit();
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, LookFragment.newInstance());
 	}
 
 
@@ -357,9 +345,7 @@ public class MainActivity
 	private void displayOfferFragment()
 	{
 		Log.d(TAG, "displayOfferFragment:true");
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.fragment_container, OfferFragment.newInstance())
-		                           .commit();
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, OfferFragment.newInstance());
 	}
 
 
