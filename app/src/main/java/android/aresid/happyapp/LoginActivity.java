@@ -73,6 +73,7 @@ public class LoginActivity
 		{
 			// Create new database if not exists.
 			mDBHelper = new DBHelper(this);
+			Log.d(TAG, "onCreate: db = " + mDBHelper);
 		}
 
 		// Instantly display the LoginFragment which deals with the further login process.
@@ -316,7 +317,8 @@ public class LoginActivity
 	/**
 	 * Method uploads data from the SharedPreferences onto the Firestore cloud and creates a new user.
 	 */
-	private void createUserInFirestore()
+	private void createUserInFirestore(String firstName, String surname, String email, String password, String birthdate,
+	                                   double acceptedLegalitiesVersion)
 	{
 		Log.d(TAG, "createUserInFirestore:true");
 

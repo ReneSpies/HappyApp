@@ -1,6 +1,9 @@
 package android.aresid.happyapp;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
@@ -22,6 +25,24 @@ import java.util.HashMap;
 public class DBHelper
 		extends SQLiteOpenHelper
 {
+	static final String TABLE_SUBSCRIPTIONS = "Subscriptions";
+	static final String TABLE_USERDATA = "Userdata";
+	static final String[] TABLE_USERDATA_COLUMN_NAMES = new String[] {
+			"firestore_id",
+			"first_name",
+			"surname",
+			"email",
+			"password",
+			"birthdate",
+			"accepted_legalities_version",
+			"subscription"
+	};
+	static final String[] TABLE_SUBSCRIPTIONS_COLUMN_NAMES = new String[] {
+			"icon",
+			"title",
+			"description",
+			"price"
+	};
 	private static final String TAG = "DBHelper";
 	private static final String DATABASE_NAME = "HappyApp_Database";
 	private static final int DATABASE_VERSION = 1;
@@ -47,20 +68,29 @@ public class DBHelper
 	{
 		Log.d(TAG, "onCreate:true");
 
-		// Creating the Database.
-		db.execSQL("PRAGMA foreign_keys = ON;");
+		try
+		{
+			// Creating the Database.
+			db.execSQL("PRAGMA foreign_keys = ON;");
 
-		// Create Subscriptions table.
-		db.execSQL(
-				"CREATE TABLE IF NOT EXISTS Subscriptions(icon BLOB NOT NULL, title TEXT PRIMARY KEY NOT NULL, description TEXT NOT NULL, price " +
-						"TEXT" + " NOT NULL);");
+			// Create Subscriptions table.
+			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_SUBSCRIPTIONS + "(" + TABLE_SUBSCRIPTIONS_COLUMN_NAMES[0] + " BLOB NOT NULL, " +
+			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + " TEXT PRIMARY KEY NOT NULL, " + TABLE_SUBSCRIPTIONS_COLUMN_NAMES[2] +
+			           " TEXT NOT NULL, " + TABLE_SUBSCRIPTIONS_COLUMN_NAMES[3] + " TEXT NOT NULL);");
 
-		// Create Userdata table.
-		db.execSQL(
-				"CREATE TABLE IF NOT EXISTS Userdata(firestore_id TEXT PRIMARY KEY NOT NULL, first_name TEXT NOT NULL, surname TEXT NOT NULL, email "
-						+ "TEXT NOT NULL, password TEXT NOT NULL, birthdate TEXT NOT NULL, accepted_legalities_version REAL NOT NULL);");
+			// Create Userdata table.
+			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_USERDATA + "(" + TABLE_USERDATA_COLUMN_NAMES[0] + " TEXT PRIMARY KEY NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[1] + " TEXT NOT NULL, " + TABLE_USERDATA_COLUMN_NAMES[2] + " TEXT NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[3] + "TEXT NOT NULL, " + TABLE_USERDATA_COLUMN_NAMES[4] + " TEXT NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[5] + " TEXT NOT NULL, " + TABLE_USERDATA_COLUMN_NAMES[6] + " REAL NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[7] + " TEXT NOT NULL);");
 
-		Log.d(TAG, "onCreate: Database created in: " + db.getPath());
+			Log.d(TAG, "onCreate: Database created in: " + db.getPath());
+		}
+		catch (SQLException e)
+		{
+			Log.e(TAG, "onCreate: ", e);
+		}
 	}
 
 
@@ -76,14 +106,44 @@ public class DBHelper
 
 
 	/**
-	 * Get Userdata from the database.
+	 * Get userdata from user with specified ID.
 	 *
 	 * @return HashMap of userdata from the database.
 	 */
-	HashMap<String, Object> getUserdata()
+	HashMap<String, Object> getUserdata(String firestoreID)
 	{
 		Log.d(TAG, "getUserdata:true");
-		return null;
+
+		// Get a readable DB object.
+		SQLiteDatabase db = getReadableDatabase();
+
+		// The Cursor that holds the data I retrieve from the DB via query method.
+		Cursor cursor = db.query(
+				TABLE_USERDATA, // The table to get info from.
+				null, // The column names to get info from. null = all.
+				TABLE_USERDATA_COLUMN_NAMES[0] + " = '" + firestoreID + "'", // The row to get info from.
+				null, // Needed if ?s is included in selection argument.
+				null, // A filter declared how to group rows.
+				null, // A filter declared which row groups to include in the cursor.
+				null // How to order rows.
+		                        );
+
+		HashMap<String, Object> mapOfUserInfo = new HashMap<>();
+
+		if (cursor.moveToNext())
+		{
+			for (int i = 0;
+			     i < cursor.getColumnCount();
+			     i++)
+			{
+				mapOfUserInfo.put(cursor.getColumnName(i), cursor.getString(i));
+
+				Log.d(TAG, "getUserdata: mapOfUserInfo updated = " + mapOfUserInfo.get(cursor.getColumnName(i)));
+			}
+		}
+
+		cursor.close();
+		return mapOfUserInfo;
 	}
 
 
@@ -92,10 +152,35 @@ public class DBHelper
 	/**
 	 * Insert new userdata into the database.
 	 */
-	void insertUserdata()
+	void insertUser(String firestoreID, String firstName, String surname, String email, String password, String birthdate,
+	                double acceptedLegalitiesVersion)
 	{
-		Log.d(TAG, "insertUserdata:true");
-		// TODO: I don't know if I really need this yet.
+		Log.d(TAG, "insertUser:true");
+
+		ContentValues values = new ContentValues();
+		values.put("firestoreID", firestoreID);
+		values.put("firstName", firstName);
+		values.put("surname", surname);
+		values.put("email", email);
+		values.put("password", password);
+		values.put("birthdate", birthdate);
+		values.put("acceptedLegalitiesVersion", acceptedLegalitiesVersion);
+
+		SQLiteDatabase db = getWritableDatabase();
+		Log.d(TAG, "insertUser: db path = " + db.getPath());
+
+		try
+		{
+			db.insertOrThrow(TABLE_USERDATA, null, values);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			db.close();
+		}
 	}
 
 
@@ -117,9 +202,53 @@ public class DBHelper
 	 *
 	 * @return HashMap of subscriptions from the database.
 	 */
-	HashMap<String, Object> getSubscriptions()
+	HashMap<String, String> getSubscriptions(String subscriptionName)
 	{
 		Log.d(TAG, "getSubscriptions:true");
+
+		// String[] for columns to return.
+		String[] arrayOfColumns = new String[] {
+				TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1],
+				TABLE_SUBSCRIPTIONS_COLUMN_NAMES[2],
+				TABLE_SUBSCRIPTIONS_COLUMN_NAMES[3]
+		};
+
+		// Get a readable DB object.
+		SQLiteDatabase db = getReadableDatabase();
+
+		// The Cursor that holds the data I retrieve from the DB via query method.
+		Cursor cursor = db.query(TABLE_SUBSCRIPTIONS, arrayOfColumns, TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + " = '" + subscriptionName + "'", null,
+		                         null, null, null
+		                        );
+
+		HashMap<String, String> mapOfSubscriptionData = new HashMap<>();
+
+		if (cursor.moveToNext())
+		{
+			for (int i = 0;
+			     i < cursor.getColumnCount();
+			     i++)
+			{
+				mapOfSubscriptionData.put(cursor.getColumnName(i), cursor.getString(i));
+			}
+		}
+
+		cursor.close();
+		return mapOfSubscriptionData;
+	}
+
+
+
+
+	/**
+	 * Get subscription icon for specified subscription.
+	 *
+	 * @return Subscription icon as bitmap.
+	 */
+	Bitmap getSubscriptionIcon(String subscriptionName)
+	{
+		Log.d(TAG, "getSubscriptionIcon:true");
+		// TODO: TODO!
 		return null;
 	}
 
