@@ -111,7 +111,11 @@ public class HomeFragment
 	{
 		super.onViewCreated(view, savedInstanceState);
 
-		String[] names = new String[] {"Sabine", "Saskia", "Caro"};
+		String[] names = new String[] {
+				"Sabine",
+				"Saskia",
+				"Caro"
+		};
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_home_list, R.id.home_name, names);
 		ListView listView = view.findViewById(R.id.home_list);

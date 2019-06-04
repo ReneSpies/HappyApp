@@ -169,9 +169,20 @@ public class SignUpFragment
 		Log.d(TAG, "convertBirthdateFromString:true");
 		Log.d(TAG, "convertBirthdateFromString: birthdate = " + birthdate);
 		List<Integer> listOfBirthdate = new ArrayList<>();
-		String[] arrayOfMonthsInYear = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September",
-		                                             "October",
-		                                             "November", "December"};
+		String[] arrayOfMonthsInYear = new String[] {
+				"January",
+				"February",
+				"March",
+				"April",
+				"May",
+				"June",
+				"July",
+				"August",
+				"September",
+				"October",
+				"November",
+				"December"
+		};
 		List<Integer> listOfDaysInMonth = new ArrayList<>();
 		List<Integer> listOfYears = new ArrayList<>();
 		int yearsHelper = 0;
@@ -296,7 +307,8 @@ public class SignUpFragment
 		                                                            .toString(), mBirthdateMonthSpinner.getSelectedItem()
 		                                                                                               .toString(),
 		                                        mBirthdateYearSpinner.getSelectedItem()
-		                                                             .toString());
+		                                                             .toString()
+		                                       );
 		Log.d(TAG, "onClick: age = " + age);
 
 		// Handles all the mButton clicks in this Fragment
@@ -329,24 +341,18 @@ public class SignUpFragment
 				        .show();
 				return;
 			}
-			else if (!isAgeCorrect(mBirthdateDaySpinner.getSelectedItem()
-			                                           .toString(), mBirthdateMonthSpinner.getSelectedItem()
-			                                                                              .toString(), mBirthdateYearSpinner.getSelectedItem()
-			                                                                                                                .toString()))
+			else if (!isAgeCorrect(
+					mBirthdateDaySpinner.getSelectedItem()
+					                    .toString(), mBirthdateMonthSpinner.getSelectedItem()
+					                                                       .toString(), mBirthdateYearSpinner.getSelectedItem()
+					                                                                                         .toString()))
 			{
 				Snackbar.make(view, "You must be older than 18 years to register", Snackbar.LENGTH_LONG)
 				        .show();
 				return;
 			}
 
-			mFragmentInteractionListener.displayLegalitiesDialog(firstName, surname,
-			                                                     convertBirthdateIntoString(mBirthdateDaySpinner.getSelectedItem()
-			                                                                                                                        .toString(),
-			                                                                                                    mBirthdateMonthSpinner.getSelectedItem()
-			                                                                                                                          .toString(),
-			                                                                                                    mBirthdateYearSpinner.getSelectedItem()
-			                                                                                                                         .toString()),
-			                                                     email, false, 1.0, password);
+			mFragmentInteractionListener.displayLegalitiesDialog(firstName, surname, email, password, age, "13.0.13");
 		}
 	}
 
@@ -468,8 +474,20 @@ public class SignUpFragment
 		HashMap<String, Integer> months = new HashMap<>(11);
 
 		// String array to iterate through the available month names.
-		String[] monthNames = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
-		                                    "November", "December"};
+		String[] monthNames = new String[] {
+				"January",
+				"February",
+				"March",
+				"April",
+				"May",
+				"June",
+				"July",
+				"August",
+				"September",
+				"October",
+				"November",
+				"December"
+		};
 
 		int i = 0;
 		for (String month : monthNames)
@@ -516,7 +534,8 @@ public class SignUpFragment
 	 * @param email     User's email name to save.
 	 * @param password  I don't know why this is here.
 	 */
-	private void saveUserInFirestore(String firstName, String surname, String email, String password)
+	private void saveUserInFirestore(String firstName, String surname, String email, String password, String birthdate,
+	                                 String acceptedLegalitiesVersion)
 	{
 		Log.d(TAG, "saveUserInFirestore:true");
 
@@ -551,8 +570,10 @@ public class SignUpFragment
 
 			                        // TODO: Request brithdate and move this method to the dialog.
 			                        // Saving the users ID in the SharedPreferences so I can access the document from other activities as well
-			                        mFragmentInteractionListener.saveUserInfoInSharedPreferences(user.get("firstName"), user.get("surname"), null,
-			                                                                                     user.get("email"), false, 0);
+			                        mFragmentInteractionListener.saveUserInfoInSharedPreferences(user.get("firstName"), user.get("surname"),
+			                                                                                     user.get("email"), password, birthdate,
+			                                                                                     acceptedLegalitiesVersion
+			                                                                                    );
 
 			                        handleSignUp(PASSWORD, EMAIL);
 		                        })
@@ -590,7 +611,8 @@ public class SignUpFragment
 			                                   if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException)
 			                                   {
 				                                   Toast.makeText(getContext(), "The email address is already in use by another account.",
-				                                                  Toast.LENGTH_LONG)
+				                                                  Toast.LENGTH_LONG
+				                                                 )
 				                                        .show();
 			                                   }
 		                                   });
@@ -622,15 +644,15 @@ public class SignUpFragment
 		void displayLoginFragment();
 
 
-		void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-		                                     double legalitiesVersion);
+		void saveUserInfoInSharedPreferences(String firstName, String surname, String email, String password, String birthdate,
+		                                     String acceptedLegalitiesVersion);
 
 
 		void saveFirestoreUserIDInSharedPreferences(String firestoreID);
 
 
-		void displayLegalitiesDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-		                             double legalitiesVersion, String password);
+		void displayLegalitiesDialog(String firstName, String surname, String email, String password, String birthdate,
+		                             String acceptedLegalitiesVersion);
 
 
 		ArrayAdapter createDaysAdapter();

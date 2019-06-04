@@ -41,15 +41,15 @@ public class LegalitiesDialog
 	private static final String TERMS_AND_CONDITIONS_CONTENT_KEY = "terms_and_conditions";
 	private static final String PRIVACY_POLICY_TITLE = "Privacy policy";
 	private static final String PRIVACY_POLICY_CONTENT_KEY = "privacy_policy";
-	private final String TAG = getClass().getSimpleName();
-	private double legalitiesVersion;
+	private static final String TAG = "LegalitiesDialog";
+	private String mAcceptedLegalitiesVersion;
 	private OnPrivacyPolicyDialogInteractionListener mDialogInteractionListener;
 
 
 
 
-	public static LegalitiesDialog newInstance(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                           double legalitiesVersion, String password)
+	public static LegalitiesDialog newInstance(String firstName, String surname, String email, String password, String birthdate,
+	                                           String acceptedLegalitiesVersion)
 	{
 		Bundle args = new Bundle();
 		LegalitiesDialog fragment = new LegalitiesDialog();
@@ -57,11 +57,17 @@ public class LegalitiesDialog
 		// Putting the parameters into the arguments bundle
 		args.putString("firstName", firstName);
 		args.putString("surname", surname);
-		args.putString("birthdate", birthdate);
-		args.putString("email", email);
-		args.putBoolean("acceptedLegalities", acceptedLegalities);
-		args.putDouble("legalitiesVersion", legalitiesVersion);
 		args.putString("password", password);
+		args.putString("email", email);
+		args.putString("birthdate", birthdate);
+		args.putString("acceptedLegalitiesVersion", acceptedLegalitiesVersion);
+
+		Log.d(TAG, "newInstance: firstName = " + firstName);
+		Log.d(TAG, "newInstance: surname = " + surname);
+		Log.d(TAG, "newInstance: email = " + email);
+		Log.d(TAG, "newInstance: password = " + password);
+		Log.d(TAG, "newInstance: birthdate = " + birthdate);
+		Log.d(TAG, "newInstance: acceptedLegalitiesVersion = " + acceptedLegalitiesVersion);
 
 		fragment.setArguments(args);
 		return fragment;
@@ -147,9 +153,11 @@ public class LegalitiesDialog
 				                           {
 					                           TermsAndConditions termsAndConditions = new TermsAndConditions(TERMS_AND_CONDITIONS_TITLE,
 					                                                                                          command.getString(
-							                                                                                          TERMS_AND_CONDITIONS_CONTENT_KEY));
+							                                                                                          TERMS_AND_CONDITIONS_CONTENT_KEY)
+					                           );
 					                           PrivacyPolicy privacyPolicy = new PrivacyPolicy(PRIVACY_POLICY_TITLE,
-					                                                                           command.getString(PRIVACY_POLICY_CONTENT_KEY));
+					                                                                           command.getString(PRIVACY_POLICY_CONTENT_KEY)
+					                           );
 					                           List<Legalities> listOfLegalities = new ArrayList<>();
 					                           listOfLegalities.add(termsAndConditions);
 					                           listOfLegalities.add(privacyPolicy);
@@ -157,7 +165,8 @@ public class LegalitiesDialog
 					                           // Create an Adapter and load the List from above in it.
 					                           LegalitiesAdapter adapterOfList = new LegalitiesAdapter(
 							                           mDialogInteractionListener.getActivitiesContext(), R.layout.legalities_list_view_content,
-							                           listOfLegalities);
+							                           listOfLegalities
+					                           );
 
 					                           legalitiesContent.setAdapter(adapterOfList);
 
@@ -166,13 +175,11 @@ public class LegalitiesDialog
 					                           alertDialogAcceptButton.setVisibility(View.VISIBLE);
 					                           waitingAssistantText.setVisibility(View.INVISIBLE);
 
-					                           setLegalitiesVersion(command.getDouble("version"));
-
+					                           Log.d(TAG, "onCreateDialog: version code = " + command.getString("version"));
 					                           Log.d(TAG, "onCreateDialog: document = " + command.getData());
 
 					                           String firstName, surname, birthdate, email, password;
-					                           double legalitiesVersion = getLegalitiesVersion();
-					                           Log.d(TAG, "onCreateDialog: legalitiesVersion = " + legalitiesVersion);
+					                           String acceptedLegalitiesVersion = command.getString("version");
 
 					                           if (getArguments() != null)
 					                           {
@@ -197,8 +204,9 @@ public class LegalitiesDialog
 						                                                                      Log.d(TAG, "onClick:true");
 
 						                                                                      mDialogInteractionListener.handleLegalitiesAccept(
-								                                                                      firstName, surname, birthdate, email, true,
-								                                                                      legalitiesVersion, password);
+								                                                                      firstName, surname, email, password, birthdate,
+								                                                                      acceptedLegalitiesVersion
+						                                                                                                                       );
 
 						                                                                      dialog.cancel();
 					                                                                      });
@@ -218,10 +226,10 @@ public class LegalitiesDialog
 	 *
 	 * @return The current legalities version.
 	 */
-	private double getLegalitiesVersion()
+	private String getAcceptedLegalitiesVersion()
 	{
-		Log.d(TAG, "getLegalitiesVersion:true");
-		return this.legalitiesVersion;
+		Log.d(TAG, "getAcceptedLegalitiesVersion:true");
+		return mAcceptedLegalitiesVersion;
 	}
 
 
@@ -230,12 +238,12 @@ public class LegalitiesDialog
 	/**
 	 * Setter for the legalities version. This is needed because I have to set the legalities verison inside a lambda.
 	 *
-	 * @param legalitiesVersion The legalities version that needs to be set as double.
+	 * @param acceptedLegalitiesVersion The legalities version that needs to be set as double.
 	 */
-	private void setLegalitiesVersion(double legalitiesVersion)
+	private void setAcceptedLegalitiesVersion(String acceptedLegalitiesVersion)
 	{
-		Log.d(TAG, "setLegalitiesVersion:true");
-		this.legalitiesVersion = legalitiesVersion;
+		Log.d(TAG, "setAcceptedLegalitiesVersion:true");
+		mAcceptedLegalitiesVersion = acceptedLegalitiesVersion;
 	}
 
 
@@ -243,8 +251,8 @@ public class LegalitiesDialog
 
 	public interface OnPrivacyPolicyDialogInteractionListener
 	{
-		void handleLegalitiesAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-		                            double legalitiesVersion, String password);
+		void handleLegalitiesAccept(String firstName, String surname, String email, String password, String birthdate,
+		                            String acceptedLegalitiesVersion);
 
 
 		LayoutInflater getLayoutInflaterForDialog();

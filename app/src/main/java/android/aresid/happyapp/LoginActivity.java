@@ -46,7 +46,7 @@ public class LoginActivity
 	private final static String SURNAME_KEY = "surname";
 	private final static String BIRTHDATE_KEY = "birthdate";
 	private final static String EMAIL_KEY = "email";
-	private final static String ACCEPTED_LEGALITIES_KEY = "accepted_legalities";
+	private final static String ACCEPTED_LEGALITIES_VERSION_KEY = "accepted_legalities";
 	private final static String LEGALITIES_VERSION_KEY = "legalities_version";
 	private final static String FIRESTORE_ID_KEY = "firestore_id";
 	private final static String NAME_PREFS_FIRESTORE_ID = "user_firestore_id";
@@ -109,8 +109,8 @@ public class LoginActivity
 
 
 	@Override
-	public void saveUserInfoInSharedPreferences(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                            double legalitiesVersion)
+	public void saveUserInfoInSharedPreferences(String firstName, String surname, String email, String password, String birthdate,
+	                                            String acceptedLegalitiesVersion)
 	{
 		Log.d(TAG, "saveUserInfoInSharedPreferences:true");
 		// TODO: Replace with sqlite database!
@@ -119,18 +119,18 @@ public class LoginActivity
 
 		try
 		{
-			Log.d(TAG,
-			      "saveUserInfoInSharedPreferences:\nfirstName " + firstName + "\nsurname " + surname + "\nbirthdate" + " " + birthdate + "\nemail " + email + "\nacceptedLegalities " + acceptedLegalities + "\nlegalitiesVersion " + legalitiesVersion);
+			Log.d(
+					TAG, "saveUserInfoInSharedPreferences:\nfirstName " + firstName + "\nsurname " + surname + "\nbirthdate" + " " + birthdate +
+					     "\nemail" + " " + email + "\nacceptedLegalities " + acceptedLegalitiesVersion);
 			preferences.edit()
 			           .putString(FIRST_NAME_KEY, firstName)
 			           .putString(SURNAME_KEY, surname)
 			           .putString(BIRTHDATE_KEY, birthdate)
 			           .putString(EMAIL_KEY, email)
-			           .putBoolean(ACCEPTED_LEGALITIES_KEY, acceptedLegalities)
-			           .putFloat(LEGALITIES_VERSION_KEY, (float) legalitiesVersion)
+			           .putString(ACCEPTED_LEGALITIES_VERSION_KEY, acceptedLegalitiesVersion)
 			           .apply();
 
-			createUserInFirestore();
+			createUserInFirestore(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
 		}
 		catch (Exception ex)
 		{
@@ -170,13 +170,19 @@ public class LoginActivity
 	 * Furthermore there is the confirmation that the user is older than 18 years.
 	 */
 	@Override
-	public void displayLegalitiesDialog(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                    double legalitiesVersion, String password)
+	public void displayLegalitiesDialog(String firstName, String surname, String email, String password, String birthdate,
+	                                    String acceptedLegalitiesVersion)
 	{
 		Log.d(TAG, "displayLegalitiesDialog:true");
 
-		LegalitiesDialog dialog = LegalitiesDialog.newInstance(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion,
-		                                                       password);
+		Log.d(TAG, "displayLegalitiesDialog: firstName = " + firstName);
+		Log.d(TAG, "displayLegalitiesDialog: surname = " + surname);
+		Log.d(TAG, "displayLegalitiesDialog: email = " + email);
+		Log.d(TAG, "displayLegalitiesDialog: password = " + password);
+		Log.d(TAG, "displayLegalitiesDialog: birthdate = " + birthdate);
+		Log.d(TAG, "displayLegalitiesDialog: acceptedLegalitiesVersion = " + acceptedLegalitiesVersion);
+
+		LegalitiesDialog dialog = LegalitiesDialog.newInstance(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
 		dialog.show(getSupportFragmentManager(), "LegalitiesDialog");
 	}
 
@@ -243,14 +249,57 @@ public class LoginActivity
 
 
 
+	/**
+	 * Method uploads data from the SharedPreferences onto the Firestore cloud and creates a new user.
+	 */
+	private void createUserInFirestore(String firstName, String surname, String email, String password, String birthdate,
+	                                   String acceptedLegalitiesVersion)
+	{
+		Log.d(TAG, "createUserInFirestore:true");
+
+		// Get Firestore instance.
+		FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
+
+		// Get and save the data from shared preferences into a HashMap.
+
+		Map<String, Object> userData = new HashMap<>();
+		userData.put("first_name", firstName);
+		userData.put("surname", surname);
+		userData.put("email", email);
+		userData.put("password", password);
+		userData.put("birthdate", birthdate);
+		userData.put("accepted_legalities_version", acceptedLegalitiesVersion);
+
+		// Add a new document with a generated ID.
+		firestoreDB.collection("users")
+		           .add(userData)
+		           .addOnSuccessListener(documentReference ->
+		                                 {
+			                                 Log.d(TAG, "createUserInFirestore: success");
+			                                 Log.d(TAG, "createUserInFirestore: new user added with id = " + documentReference.getId());
+
+			                                 mDBHelper.insertUser(documentReference.getId(), firstName, surname, email, password, birthdate,
+			                                                      acceptedLegalitiesVersion
+			                                                     );
+		                                 })
+		           .addOnFailureListener(e ->
+		                                 {
+			                                 Log.d(TAG, "createUserInFirestore: failure");
+			                                 Log.e(TAG, "createUserInFirestore: ", e);
+		                                 });
+	}
+
+
+
+
 	@Override
-	public void handleLegalitiesAccept(String firstName, String surname, String birthdate, String email, boolean acceptedLegalities,
-	                                   double legalitiesVersion, String password)
+	public void handleLegalitiesAccept(String firstName, String surname, String email, String password, String birthdate,
+	                                   String acceptedLegalitiesVersion)
 	{
 		Log.d(TAG, "handleLegalitiesAccept:true");
 
 		handleSignUp(email, password);
-		saveUserInfoInSharedPreferences(firstName, surname, birthdate, email, acceptedLegalities, legalitiesVersion);
+		createUserInFirestore(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
 	}
 
 
@@ -309,47 +358,6 @@ public class LoginActivity
 		getSupportFragmentManager().beginTransaction()
 		                           .replace(R.id.login_container, EmailVerificationFragment.newInstance(user))
 		                           .commit();
-	}
-
-
-
-
-	/**
-	 * Method uploads data from the SharedPreferences onto the Firestore cloud and creates a new user.
-	 */
-	private void createUserInFirestore(String firstName, String surname, String email, String password, String birthdate,
-	                                   double acceptedLegalitiesVersion)
-	{
-		Log.d(TAG, "createUserInFirestore:true");
-
-		// Get Firestore instance.
-		FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
-
-		// Get and save the data from shared preferences into a HashMap.
-		SharedPreferences prefs = getSharedPreferences("user_data", Context.MODE_PRIVATE);
-		Map<String, Object> userData = new HashMap<>();
-		userData.put(FIRST_NAME_KEY, prefs.getString(FIRST_NAME_KEY, null));
-		userData.put(SURNAME_KEY, prefs.getString(SURNAME_KEY, null));
-		userData.put(BIRTHDATE_KEY, prefs.getString(BIRTHDATE_KEY, null));
-		userData.put(EMAIL_KEY, prefs.getString(EMAIL_KEY, null));
-		userData.put(ACCEPTED_LEGALITIES_KEY, prefs.getBoolean(ACCEPTED_LEGALITIES_KEY, false));
-		userData.put(LEGALITIES_VERSION_KEY, prefs.getFloat(LEGALITIES_VERSION_KEY, 0.9f));
-
-		// Add a new document with a generated ID.
-		firestoreDB.collection("users")
-		           .add(userData)
-		           .addOnSuccessListener(documentReference ->
-		                                 {
-			                                 Log.d(TAG, "createUserInFirestore: success");
-			                                 Log.d(TAG, "createUserInFirestore: new user added with id = " + documentReference.getId());
-
-			                                 saveFirestoreUserIDInSharedPreferences(documentReference.getId());
-		                                 })
-		           .addOnFailureListener(e ->
-		                                 {
-			                                 Log.d(TAG, "createUserInFirestore: failure");
-			                                 Log.e(TAG, "createUserInFirestore: ", e);
-		                                 });
 	}
 
 
@@ -453,24 +461,6 @@ public class LoginActivity
 
 
 	/**
-	 * Loads the SignUpFragment into the activities container.
-	 *
-	 * @param firstName The user's first name which he stated.
-	 * @param surname   The user's surname which he stated.
-	 * @param email     The user's email which he stated.
-	 */
-	@Override
-	public void displaySignUpFragment(String firstName, String surname, String birthdate, String email)
-	{
-		Log.d(TAG, "displaySignUpFragment:true");
-
-		new DisplayFragment(this).displayFragment(R.id.login_container, SignUpFragment.newInstance(firstName, surname, birthdate, email));
-	}
-
-
-
-
-	/**
 	 * AsyncTask for creating a Database and load content from server into it.
 	 */
 	private static class SyncWithServer
@@ -496,6 +486,24 @@ public class LoginActivity
 
 
 
+	}
+
+
+
+
+	/**
+	 * Loads the SignUpFragment into the activities container.
+	 *
+	 * @param firstName The user's first name which he stated.
+	 * @param surname   The user's surname which he stated.
+	 * @param email     The user's email which he stated.
+	 */
+	@Override
+	public void displaySignUpFragment(String firstName, String surname, String birthdate, String email)
+	{
+		Log.d(TAG, "displaySignUpFragment:true");
+
+		new DisplayFragment(this).displayFragment(R.id.login_container, SignUpFragment.newInstance(firstName, surname, birthdate, email));
 	}
 
 

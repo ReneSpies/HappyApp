@@ -112,7 +112,15 @@ public class FavoritesFragment
 		ArrayList<HashMap<String, String>> data = new ArrayList<>();
 		ListView listView = view.findViewById(R.id.favorites_list);
 
-		String[] names = new String[] {"Lisa", "Melanie", "Geraldine", "Sebbl", "Julia", "Caro", "Karina"};
+		String[] names = new String[] {
+				"Lisa",
+				"Melanie",
+				"Geraldine",
+				"Sebbl",
+				"Julia",
+				"Caro",
+				"Karina"
+		};
 
 		for (String name : names)
 		{

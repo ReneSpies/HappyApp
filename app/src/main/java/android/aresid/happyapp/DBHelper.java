@@ -153,9 +153,17 @@ public class DBHelper
 	 * Insert new userdata into the database.
 	 */
 	void insertUser(String firestoreID, String firstName, String surname, String email, String password, String birthdate,
-	                double acceptedLegalitiesVersion)
+	                String acceptedLegalitiesVersion)
 	{
 		Log.d(TAG, "insertUser:true");
+
+		Log.d(TAG, "insertUser: firestoreID = " + firestoreID);
+		Log.d(TAG, "insertUser: firstName = " + firstName);
+		Log.d(TAG, "insertUser: surname = " + surname);
+		Log.d(TAG, "insertUser: email = " + email);
+		Log.d(TAG, "insertUser: password = " + password);
+		Log.d(TAG, "insertUser: birthdate = " + birthdate);
+		Log.d(TAG, "insertUser: acceptedLegalitiesVersion = " + acceptedLegalitiesVersion);
 
 		ContentValues values = new ContentValues();
 		values.put("firestoreID", firestoreID);

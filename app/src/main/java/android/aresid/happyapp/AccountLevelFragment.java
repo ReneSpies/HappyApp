@@ -222,9 +222,13 @@ public class AccountLevelFragment
 	{
 		private final String TAG = getClass().getSimpleName();
 
-		int[] arrayOfColors = new int[] {getResources().getColor(R.color.white), getResources().getColor(R.color.silver),
-		                                 getResources().getColor(R.color.gold), getResources().getColor(R.color.platinum),
-		                                 getResources().getColor(R.color.diamond)};
+		int[] arrayOfColors = new int[] {
+				getResources().getColor(R.color.white),
+				getResources().getColor(R.color.silver),
+				getResources().getColor(R.color.gold),
+				getResources().getColor(R.color.platinum),
+				getResources().getColor(R.color.diamond)
+		};
 		private ViewPager2 mViewPager2;
 
 
@@ -243,8 +247,8 @@ public class AccountLevelFragment
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
 		{
 			Log.d(TAG, "onPageScrolled:true");
-			Log.d(TAG,
-			      "onPageScrolled: position = " + position + "\npositionOffset = " + positionOffset + "\npositionOffsetPixels = " + positionOffsetPixels);
+			Log.d(TAG, "onPageScrolled: position = " + position + "\npositionOffset = " + positionOffset + "\npositionOffsetPixels = " +
+			           positionOffsetPixels);
 			Log.d(TAG, "onPageScrolled: array length = " + arrayOfColors.length);
 			if (position < arrayOfColors.length - 1)
 			{
