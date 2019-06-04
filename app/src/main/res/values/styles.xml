@@ -23,10 +23,8 @@
 	<style name="Widget.HappyApp.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 		<!--<item name="android:paddingBottom">6dp</item>-->
 		<item name="android:layout_margin">13dp</item>
-		<item name="boxCornerRadiusBottomEnd">25.13dp</item>
-		<item name="boxCornerRadiusBottomStart">25.13dp</item>
-		<item name="boxCornerRadiusTopStart">25.13dp</item>
-		<item name="boxCornerRadiusTopEnd">25.13dp</item>
+		<item name="boxCornerRadiusBottomEnd">.13dp</item>
+		<item name="boxCornerRadiusTopStart">.13dp</item>
 	</style>
 
 	<style name="Theme.HappyApp.ContainedButton" parent="Widget.MaterialComponents.Button">
