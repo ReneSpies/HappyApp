@@ -298,8 +298,7 @@ public class LoginActivity
 	{
 		Log.d(TAG, "handleLegalitiesAccept:true");
 
-		handleSignUp(email, password);
-		createUserInFirestore(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
+		handleSignUp(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
 	}
 
 
@@ -311,7 +310,7 @@ public class LoginActivity
 	 * @param email    The email to create a new user with.
 	 * @param password The password to create a new user with.
 	 */
-	private void handleSignUp(String email, String password)
+	private void handleSignUp(String firstName, String surname, String email, String password, String birthdate, String acceptedLegalitiesVersion)
 	{
 		Log.d(TAG, "handleSignUp:true");
 		FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -320,6 +319,7 @@ public class LoginActivity
 		                                  {
 			                                  Log.d(TAG, "onSuccess:true");
 
+			                                  createUserInFirestore(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
 			                                  displayEmailVerificationFragment(authResult.getUser());
 		                                  })
 		            .addOnFailureListener(e ->
