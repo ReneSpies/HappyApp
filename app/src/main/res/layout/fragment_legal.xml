@@ -39,7 +39,7 @@
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/legal_confirm_button"
-		style="@style/Widget.HappyApp.ContainedButton"
+		style="@style/Theme.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="Confirm" />

@@ -80,7 +80,7 @@
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/login_login_button"
-		style="@style/Widget.HappyApp.ContainedButton"
+		style="@style/Theme.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/sign_me_in"
@@ -107,12 +107,11 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/or_sign_in_using"
-			android:textAlignment="center"
-			android:textAllCaps="true" />
+			android:textAlignment="center" />
 
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/login_google_button"
-			style="@style/Widget.HappyApp.ContainedButton"
+			style="@style/Theme.HappyApp.ContainedButton"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/google" />
@@ -137,12 +136,11 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/no_account"
-			android:textAlignment="center"
-			android:textAllCaps="true" />
+			android:textAlignment="center" />
 
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/login_sign_up_button"
-			style="@style/Widget.HappyApp.ContainedButton"
+			style="@style/Theme.HappyApp.ContainedButton"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/sign_me_up" />

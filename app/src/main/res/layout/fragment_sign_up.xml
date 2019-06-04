@@ -17,6 +17,7 @@
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/sign_up_first_name_field"
 			android:layout_width="match_parent"
+			android:inputType="text"
 			android:layout_height="wrap_content"
 			android:hint="@string/first_name" />
 	</com.google.android.material.textfield.TextInputLayout>
@@ -32,6 +33,7 @@
 			android:id="@+id/sign_up_surname_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:inputType="text"
 			android:hint="@string/surname" />
 	</com.google.android.material.textfield.TextInputLayout>
 
@@ -87,31 +89,25 @@
 				android:id="@+id/birthdate_day"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:spinnerMode="dialog">
-
-			</androidx.appcompat.widget.AppCompatSpinner>
+				android:spinnerMode="dialog" />
 
 			<androidx.appcompat.widget.AppCompatSpinner
 				android:id="@+id/birthdate_month"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:spinnerMode="dialog">
-
-			</androidx.appcompat.widget.AppCompatSpinner>
+				android:spinnerMode="dialog" />
 
 			<androidx.appcompat.widget.AppCompatSpinner
 				android:id="@+id/birthdate_year"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:spinnerMode="dialog">
-
-			</androidx.appcompat.widget.AppCompatSpinner>
+				android:spinnerMode="dialog" />
 		</LinearLayout>
 	</LinearLayout>
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/sign_up_sign_up_button"
-		style="@style/Widget.HappyApp.ContainedButton"
+		style="@style/Theme.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/sign_up_now" />
