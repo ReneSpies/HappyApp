@@ -82,9 +82,10 @@ public class LoginActivity
 
 
 
-	static void setComesFromEmailVerificationFragment(boolean value)
+	static boolean getComesFromEmailVerificationFragment()
 	{
-		mComesFromEmailVerificationFragment = value;
+		Log.d(TAG, "getComesFromEmailVerificationFragment:true");
+		return mComesFromEmailVerificationFragment;
 	}
 
 
@@ -97,6 +98,13 @@ public class LoginActivity
 	}
 
 
+
+
+	static void setComesFromEmailVerificationFragment(boolean value)
+	{
+		Log.d(TAG, "setComesFromEmailVerificationFragment:true");
+		mComesFromEmailVerificationFragment = value;
+	}
 
 
 	/**

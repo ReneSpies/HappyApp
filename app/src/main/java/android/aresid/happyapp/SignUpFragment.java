@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -47,6 +48,11 @@ public class SignUpFragment
 	private Spinner mBirthdateDaySpinner;
 	private Spinner mBirthdateMonthSpinner;
 	private Spinner mBirthdateYearSpinner;
+	private TextInputLayout mFirstNameFieldLayout;
+	private TextInputLayout mSurnameFieldLayout;
+	private TextInputLayout mEmailFieldLayout;
+	private TextInputLayout mPasswordFieldLayout;
+
 
 
 
@@ -122,6 +128,10 @@ public class SignUpFragment
 		mBirthdateDaySpinner = rootView.findViewById(R.id.birthdate_day);
 		mBirthdateMonthSpinner = rootView.findViewById(R.id.birthdate_month);
 		mBirthdateYearSpinner = rootView.findViewById(R.id.birthdate_year);
+		mFirstNameFieldLayout = rootView.findViewById(R.id.sign_up_first_name_field_layout);
+		mSurnameFieldLayout = rootView.findViewById(R.id.sign_up_surname_field_layout);
+		mEmailFieldLayout = rootView.findViewById(R.id.sign_up_email_field_layout);
+		mPasswordFieldLayout = rootView.findViewById(R.id.sign_up_password_field_layout);
 		Button signUpSignUpButton = rootView.findViewById(R.id.sign_up_sign_up_button);
 
 		// Create the adapters on acitivity level and apply them to the spinners.
@@ -315,29 +325,63 @@ public class SignUpFragment
 
 			if (firstName.length() == 0)
 			{
-				mFirstNameField.setError("You forgot me");
+				// Reset the other fields errors.
+				mSurnameFieldLayout.setError(null);
+				mEmailFieldLayout.setError(null);
+				mPasswordFieldLayout.setError(null);
+
+				// Set this fields error.
+				mFirstNameFieldLayout.setError("You forgot me");
 				return;
 			}
 			else if (surname.length() == 0)
 			{
-				mSurnameField.setError("You forgot me");
+				// Reset the other fields errors.
+				mFirstNameFieldLayout.setError(null);
+				mEmailFieldLayout.setError(null);
+				mPasswordFieldLayout.setError(null);
+
+				// Set this fields error.
+				mSurnameFieldLayout.setError("You forgot me");
+				return;
+			}
+			else if (mEmailField.length() == 0)
+			{
+				// Reset the other fields errors.
+				mFirstNameFieldLayout.setError(null);
+				mSurnameFieldLayout.setError(null);
+				mPasswordFieldLayout.setError(null);
+
+				// Set this fields error.
+				mEmailFieldLayout.setError("You forgot me");
 				return;
 			}
 			else if (!isEmailCorrect(email))
 			{
-				mEmailField.setError("You forgot me");
+				// Reset the other fields errors.
+				mFirstNameFieldLayout.setError(null);
+				mSurnameFieldLayout.setError(null);
+				mPasswordFieldLayout.setError(null);
+
+				// Set this fields error.
+				mEmailFieldLayout.setError("Applicable physics do not allow this Email");
 				return;
 			}
 			else if (!isPasswordCorrect(password))
 			{
-				mPasswordField.setError("You forgot me. I have to be longer than six characters");
+				// Reset the other fields errors.
+				mFirstNameFieldLayout.setError(null);
+				mSurnameFieldLayout.setError(null);
+				mEmailFieldLayout.setError(null);
+
+				// Set this fields error.
+				mPasswordFieldLayout.setError("You forgot me. I have to be longer than six characters");
 				return;
 			}
-			else if (!isAgeCorrect(
-					mBirthdateDaySpinner.getSelectedItem()
-					                    .toString(), mBirthdateMonthSpinner.getSelectedItem()
-					                                                       .toString(), mBirthdateYearSpinner.getSelectedItem()
-					                                                                                         .toString()))
+			else if (!isAgeCorrect(mBirthdateDaySpinner.getSelectedItem()
+			                                           .toString(), mBirthdateMonthSpinner.getSelectedItem()
+			                                                                              .toString(), mBirthdateYearSpinner.getSelectedItem()
+			                                                                                                                .toString()))
 			{
 				Snackbar.make(view, "You must be older than 18 years to register", Snackbar.LENGTH_LONG)
 				        .show();

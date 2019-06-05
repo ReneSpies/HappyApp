@@ -13,6 +13,8 @@
 		style="@style/Widget.HappyApp.TextInputLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:id="@+id/sign_up_first_name_field_layout"
+		app:errorEnabled="true"
 		android:layout_marginBottom="4dp">
 
 		<com.google.android.material.textfield.TextInputEditText
@@ -26,6 +28,8 @@
 	<com.google.android.material.textfield.TextInputLayout
 		style="@style/Widget.HappyApp.TextInputLayout"
 		android:layout_width="match_parent"
+		android:id="@+id/sign_up_surname_field_layout"
+		app:errorEnabled="true"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="4dp"
 		android:layout_marginBottom="4dp">
@@ -41,6 +45,8 @@
 	<com.google.android.material.textfield.TextInputLayout
 		style="@style/Widget.HappyApp.TextInputLayout"
 		android:layout_width="match_parent"
+		android:id="@+id/sign_up_email_field_layout"
+		app:errorEnabled="true"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="4dp"
 		android:layout_marginBottom="4dp">
@@ -58,6 +64,8 @@
 		android:layout_width="match_parent"
 		app:passwordToggleEnabled="true"
 		android:layout_height="wrap_content"
+		android:id="@+id/sign_up_password_field_layout"
+		app:errorEnabled="true"
 		android:layout_marginTop="4dp"
 		android:layout_marginBottom="4dp">
 

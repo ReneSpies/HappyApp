@@ -21,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -35,10 +36,12 @@ public class LoginFragment
 	private EditText mEmailField;
 	private EditText mPasswordField;
 	private Button mLoginInButton;
+	private TextInputLayout mPasswordFieldLayout;
 	private Button mSignUpButton;
 	private Button mGoogleLoginButton;
 	private FirebaseAuth mFirebaseAuth;
 	private GoogleSignInClient mGoogleSignInClient;
+	private TextInputLayout mEmailFieldLayout;
 
 
 
@@ -81,21 +84,29 @@ public class LoginFragment
 				// Check password and email validity.
 				if (mEmailField.length() == 0)
 				{
-					mEmailField.setError("You forgot me");
+					// Reset the other fields errors.
+					mPasswordFieldLayout.setError(null);
+
+					// Set this fields error.
+					mEmailFieldLayout.setError("You forgot me");
 					return;
 				}
 				if (!isEmailCorrect(email))
 				{
-					mEmailField.setError("Something went wrong here");
-					//					Snackbar.make(v, getString(R.string.check_email), Snackbar.LENGTH_SHORT)
-					//					        .show();
+					// Reset the other fields errors.
+					mPasswordFieldLayout.setError(null);
+
+					// Set this fields error.
+					mEmailFieldLayout.setError("Applicable physics do not allow this Email");
 					return;
 				}
 				else if (!isPasswordCorrect(password))
 				{
-					mPasswordField.setError("You forgot me");
-					//					Snackbar.make(v, getString(R.string.password_min_chars), Snackbar.LENGTH_SHORT)
-					//					        .show();
+					// Reset the other fields errors.
+					mEmailFieldLayout.setError(null);
+
+					// Set this fields error.
+					mPasswordFieldLayout.setError("You forgot me");
 					return;
 				}
 
@@ -292,7 +303,7 @@ public class LoginFragment
 
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		Log.d(TAG, "onCreateView:true");
 
@@ -305,6 +316,8 @@ public class LoginFragment
 		mSignUpButton = rootView.findViewById(R.id.login_sign_up_button);
 		mGoogleLoginButton = rootView.findViewById(R.id.login_google_button);
 		mPasswordField = rootView.findViewById(R.id.login_password_field);
+		mPasswordFieldLayout = rootView.findViewById(R.id.login_password_field_layout);
+		mEmailFieldLayout = rootView.findViewById(R.id.login_email_field_layout);
 
 		// Calling the onClick handler
 		mLoginInButton.setOnClickListener(this);
