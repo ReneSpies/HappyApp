@@ -3,8 +3,6 @@ package android.aresid.happyapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,10 +27,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class LoginActivity
 		extends AppCompatActivity
@@ -53,6 +51,7 @@ public class LoginActivity
 	private final static String NAME_PREFS_FIRESTORE_USER_DATA = "user_data";
 	private final static String TAG = "LoginActivity";
 	private DBHelper mDBHelper;
+	private static boolean mComesFromEmailVerificationFragment = false;
 
 
 
@@ -83,6 +82,13 @@ public class LoginActivity
 
 
 
+	static void setComesFromEmailVerificationFragment(boolean value)
+	{
+		mComesFromEmailVerificationFragment = value;
+	}
+
+
+
 	@Override
 	public void onStart()
 	{
@@ -103,63 +109,6 @@ public class LoginActivity
 		Log.d(TAG, "displayLoginFragment:true");
 
 		new DisplayFragment(this).displayFragment(R.id.login_container, LoginFragment.newInstance());
-	}
-
-
-
-
-	@Override
-	public void saveUserInfoInSharedPreferences(String firstName, String surname, String email, String password, String birthdate,
-	                                            String acceptedLegalitiesVersion)
-	{
-		Log.d(TAG, "saveUserInfoInSharedPreferences:true");
-		// TODO: Replace with sqlite database!
-		// Creating the SharedPref's file and initializing a SharedPref object.
-		SharedPreferences preferences = getSharedPreferences(NAME_PREFS_FIRESTORE_USER_DATA, Context.MODE_PRIVATE);
-
-		try
-		{
-			Log.d(
-					TAG, "saveUserInfoInSharedPreferences:\nfirstName " + firstName + "\nsurname " + surname + "\nbirthdate" + " " + birthdate +
-					     "\nemail" + " " + email + "\nacceptedLegalities " + acceptedLegalitiesVersion);
-			preferences.edit()
-			           .putString(FIRST_NAME_KEY, firstName)
-			           .putString(SURNAME_KEY, surname)
-			           .putString(BIRTHDATE_KEY, birthdate)
-			           .putString(EMAIL_KEY, email)
-			           .putString(ACCEPTED_LEGALITIES_VERSION_KEY, acceptedLegalitiesVersion)
-			           .apply();
-
-			createUserInFirestore(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
-		}
-		catch (Exception ex)
-		{
-			Log.e(TAG, "saveUserInfoInSharedPreferences: ", ex);
-		}
-
-	}
-
-
-
-
-	@Override
-	public void saveFirestoreUserIDInSharedPreferences(String firestoreID)
-	{
-		// TODO: Replace with sqlite database!
-		Log.d(TAG, "saveFirestoreUserIDInSharedPreferences:true");
-		Log.d(TAG, "saveFirestoreUserIDInSharedPreferences: firestore id = " + firestoreID);
-		SharedPreferences preferences = getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE);
-
-		try
-		{
-			preferences.edit()
-			           .putString(FIRESTORE_ID_KEY, firestoreID)
-			           .apply();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 
@@ -249,70 +198,12 @@ public class LoginActivity
 
 
 
-	/**
-	 * Method uploads data from the SharedPreferences onto the Firestore cloud and creates a new user.
-	 */
-	private void createUserInFirestore(String firstName, String surname, String email, String password, String birthdate,
-	                                   String acceptedLegalitiesVersion)
-	{
-		Log.d(TAG, "createUserInFirestore:true");
-
-		// Get Firestore instance.
-		FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
-
-		// Get and save the data from shared preferences into a HashMap.
-
-		Map<String, Object> userData = new HashMap<>();
-		userData.put("first_name", firstName);
-		userData.put("surname", surname);
-		userData.put("email", email);
-		userData.put("password", password);
-		userData.put("birthdate", birthdate);
-		userData.put("accepted_legalities_version", acceptedLegalitiesVersion);
-
-		// Add a new document with a generated ID.
-		firestoreDB.collection("users")
-		           .add(userData)
-		           .addOnSuccessListener(documentReference ->
-		                                 {
-			                                 Log.d(TAG, "createUserInFirestore: success");
-			                                 Log.d(TAG, "createUserInFirestore: new user added with id = " + documentReference.getId());
-
-			                                 mDBHelper.insertUser(documentReference.getId(), firstName, surname, email, password, birthdate,
-			                                                      acceptedLegalitiesVersion
-			                                                     );
-		                                 })
-		           .addOnFailureListener(e ->
-		                                 {
-			                                 Log.d(TAG, "createUserInFirestore: failure");
-			                                 Log.e(TAG, "createUserInFirestore: ", e);
-		                                 });
-	}
-
-
-
-
 	@Override
 	public void handleLegalitiesAccept(String firstName, String surname, String email, String password, String birthdate,
 	                                   String acceptedLegalitiesVersion)
 	{
 		Log.d(TAG, "handleLegalitiesAccept:true");
 
-		handleSignUp(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
-	}
-
-
-
-
-	/**
-	 * Method handles the sign up and registers a new user in my Firebase console.
-	 *
-	 * @param email    The email to create a new user with.
-	 * @param password The password to create a new user with.
-	 */
-	private void handleSignUp(String firstName, String surname, String email, String password, String birthdate, String acceptedLegalitiesVersion)
-	{
-		Log.d(TAG, "handleSignUp:true");
 		FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 		firebaseAuth.createUserWithEmailAndPassword(email, password)
 		            .addOnSuccessListener(authResult ->
@@ -345,6 +236,51 @@ public class LoginActivity
 
 
 	/**
+	 * Method uploads data from the SharedPreferences onto the Firestore cloud and creates a new user.
+	 */
+	private void createUserInFirestore(String firstName, String surname, String email, String password, String birthdate,
+	                                   String acceptedLegalitiesVersion)
+	{
+		Log.d(TAG, "createUserInFirestore:true");
+
+		// Get Firestore instance.
+		FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
+
+		// Get and save the data from shared preferences into a HashMap.
+
+		Map<String, Object> userData = new HashMap<>();
+		userData.put("first_name", firstName);
+		userData.put("surname", surname);
+		userData.put("email", email);
+		userData.put("password", password);
+		userData.put("birthdate", birthdate);
+		userData.put("accepted_legalities_version", acceptedLegalitiesVersion);
+		userData.put("when", new Date());
+
+		// Add a new document with a generated ID.
+		firestoreDB.collection("users")
+		           .add(userData)
+		           .addOnSuccessListener(documentReference ->
+		                                 {
+			                                 Log.d(TAG, "createUserInFirestore: success");
+			                                 Log.d(TAG, "createUserInFirestore: new user added with id = " + documentReference.getId());
+
+			                                 // Insert User into database.
+			                                 mDBHelper.insertUser(documentReference.getId(), firstName, surname, email, password, birthdate,
+			                                                      acceptedLegalitiesVersion
+			                                                     );
+		                                 })
+		           .addOnFailureListener(e ->
+		                                 {
+			                                 Log.d(TAG, "createUserInFirestore: failure");
+			                                 Log.e(TAG, "createUserInFirestore: ", e);
+		                                 });
+	}
+
+
+
+
+	/**
 	 * Loads the EmailVerificationFragment into the activities container.
 	 * The user is not allowed to step any further into the app without having his email verified.
 	 *
@@ -354,10 +290,15 @@ public class LoginActivity
 	public void displayEmailVerificationFragment(FirebaseUser user)
 	{
 		Log.d(TAG, "displayEmailVerificationFragment:true");
+		Log.d(TAG, "displayEmailVerificationFragment: mComesFromEmailVerificatoinFragment = " + mComesFromEmailVerificationFragment);
 
-		getSupportFragmentManager().beginTransaction()
-		                           .replace(R.id.login_container, EmailVerificationFragment.newInstance(user))
-		                           .commit();
+		if (!mComesFromEmailVerificationFragment)
+		{
+			Log.d(TAG, "displayEmailVerificationFragment: umm hello");
+			new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, EmailVerificationFragment.newInstance(user));
+		}
+
+		mComesFromEmailVerificationFragment = false;
 	}
 
 
@@ -372,7 +313,7 @@ public class LoginActivity
 	public void displaySignUpFragment(String email)
 	{
 		Log.d(TAG, "displaySignUpFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.login_container, SignUpFragment.newInstance(null, null, null, email));
+		new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, SignUpFragment.newInstance(null, null, null, email));
 	}
 
 
@@ -461,37 +402,6 @@ public class LoginActivity
 
 
 	/**
-	 * AsyncTask for creating a Database and load content from server into it.
-	 */
-	private static class SyncWithServer
-			extends AsyncTask<Void, Void, Objects>
-
-	{
-		private static final String TAG = "SyncWithServer";
-
-
-
-
-		@Override
-		protected Objects doInBackground(Void... voids)
-		{
-			Log.d(TAG, "doInBackground:true");
-
-			return null;
-		}
-
-
-
-
-
-
-
-	}
-
-
-
-
-	/**
 	 * Loads the SignUpFragment into the activities container.
 	 *
 	 * @param firstName The user's first name which he stated.
@@ -503,34 +413,7 @@ public class LoginActivity
 	{
 		Log.d(TAG, "displaySignUpFragment:true");
 
-		new DisplayFragment(this).displayFragment(R.id.login_container, SignUpFragment.newInstance(firstName, surname, birthdate, email));
-	}
-
-
-
-
-	@Override
-	public String getUserIDFromSharedPreferences()
-	{
-		return getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE).getString(FIRESTORE_ID_KEY, null);
-	}
-
-
-
-
-	@Override
-	public void fetchUserIncredentialsFromSharedPreferences()
-	{
-		Log.d(TAG, "fetchUserIncredentialsFromSharedPreferences:true");
-
-		SharedPreferences preferences = getSharedPreferences(NAME_PREFS_FIRESTORE_USER_DATA, Context.MODE_PRIVATE);
-
-		String firstName = preferences.getString(FIRST_NAME_KEY, null);
-		String surname = preferences.getString(SURNAME_KEY, null);
-		String birthdate = preferences.getString(BIRTHDATE_KEY, null);
-		String email = preferences.getString(EMAIL_KEY, null);
-
-		displaySignUpFragment(firstName, surname, birthdate, email);
+		new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, SignUpFragment.newInstance(firstName, surname, birthdate, email));
 	}
 
 

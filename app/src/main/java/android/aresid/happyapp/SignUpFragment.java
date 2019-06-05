@@ -12,21 +12,17 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class SignUpFragment
 		extends Fragment
@@ -80,7 +76,7 @@ public class SignUpFragment
 
 
 	@Override
-	public void onAttach(Context context)
+	public void onAttach(@NonNull Context context)
 	{
 		super.onAttach(context);
 
@@ -113,7 +109,7 @@ public class SignUpFragment
 
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		Log.d(TAG, "onCreateView:true");
 		View rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
@@ -319,26 +315,22 @@ public class SignUpFragment
 
 			if (firstName.length() == 0)
 			{
-				Snackbar.make(view, "You must enter your first name first", Snackbar.LENGTH_LONG)
-				        .show();
+				mFirstNameField.setError("You forgot me");
 				return;
 			}
 			else if (surname.length() == 0)
 			{
-				Snackbar.make(view, "You must enter your surname first", Snackbar.LENGTH_LONG)
-				        .show();
+				mSurnameField.setError("You forgot me");
 				return;
 			}
 			else if (!isEmailCorrect(email))
 			{
-				Snackbar.make(view, "Check Email", Snackbar.LENGTH_LONG)
-				        .show();
+				mEmailField.setError("You forgot me");
 				return;
 			}
 			else if (!isPasswordCorrect(password))
 			{
-				Snackbar.make(view, "Password must be larger than 6 characters", Snackbar.LENGTH_LONG)
-				        .show();
+				mPasswordField.setError("You forgot me. I have to be longer than six characters");
 				return;
 			}
 			else if (!isAgeCorrect(
@@ -503,152 +495,12 @@ public class SignUpFragment
 
 
 
-	/**
-	 * Method checks if birthdate is valid (30.02 == invalid) and if the user's age > 18.
-	 *
-	 * @param dayDD    Day in DD format.
-	 * @param monthMM  Month in MM format.
-	 * @param yearYYYY Year in YYYY format.
-	 * @return Boolean if birthdate is valid.
-	 */
-	private boolean isBirthdateValid(int dayDD, int monthMM, int yearYYYY)
-	{
-		Log.d(TAG, "isBirthdateValid:true");
-
-		if (dayDD > 29 && monthMM == 02) return false;
-
-		String currentDate = new SimpleDateFormat("ddmmyyyy", Locale.GERMANY).format(new Date());
-		Log.d(TAG, "isBirthdateValid: current date " + currentDate);
-		return true;
-	}
-
-
-
-
-	/**
-	 * Method to save userdata to firestore.
-	 * I plan to refactor this in coop with SharedPrefs.
-	 *
-	 * @param firstName User's first name to save.
-	 * @param surname   User's surname name to save.
-	 * @param email     User's email name to save.
-	 * @param password  I don't know why this is here.
-	 */
-	private void saveUserInFirestore(String firstName, String surname, String email, String password, String birthdate,
-	                                 String acceptedLegalitiesVersion)
-	{
-		Log.d(TAG, "saveUserInFirestore:true");
-
-		final String PASSWORD = password;
-		final String EMAIL = email;
-
-		// Get Firestore instance
-		FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-		// Save the data in a HashMap
-		final Map<String, String> user = new HashMap<>();
-		user.put("firstName", firstName);
-		user.put("surname", surname);
-		if (email != null)
-		{
-			user.put("email", email);
-		}
-		else
-		{
-			user.put("email", "no email");
-		}
-
-		// Add a new document with a generated ID
-		db.collection("users")
-		  .add(user)
-		  .addOnSuccessListener(documentReference ->
-		                        {
-			                        Log.d(TAG, "New user added with ID: " + documentReference.getId());
-
-			                        // Save the users ID in a member variable so I can easily access it in this fragment
-			                        mUserFirestoreID = documentReference.getId();
-
-			                        // TODO: Request brithdate and move this method to the dialog.
-			                        // Saving the users ID in the SharedPreferences so I can access the document from other activities as well
-			                        mFragmentInteractionListener.saveUserInfoInSharedPreferences(user.get("firstName"), user.get("surname"),
-			                                                                                     user.get("email"), password, birthdate,
-			                                                                                     acceptedLegalitiesVersion
-			                                                                                    );
-
-			                        handleSignUp(PASSWORD, EMAIL);
-		                        })
-		  .addOnFailureListener(e ->
-		                        {
-			                        Log.d(TAG, "onFailure:true");
-			                        Log.e(TAG, "saveUserInFirestore:failure", e);
-		                        });
-	}
-
-
-
-
-	/**
-	 * Method handles the sign up and registers a new user in my Firebase console.
-	 *
-	 * @param email    The email to create a new user with.
-	 * @param password The password to create a new user with.
-	 */
-	private void handleSignUp(String email, String password)
-	{
-		Log.d(TAG, "handleSignUp:true");
-		mFirebaseAuth.createUserWithEmailAndPassword(email, password)
-		             .addOnSuccessListener(authResult ->
-		                                   {
-			                                   Log.d(TAG, "onSuccess:true");
-
-			                                   updateUI(authResult.getUser());
-		                                   })
-		             .addOnFailureListener(e ->
-		                                   {
-			                                   // TODO: exception handling!
-			                                   Log.d(TAG, "onFailure:true");
-			                                   Log.e(TAG, "onFailure: ", e);
-			                                   if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException)
-			                                   {
-				                                   Toast.makeText(getContext(), "The email address is already in use by another account.",
-				                                                  Toast.LENGTH_LONG
-				                                                 )
-				                                        .show();
-			                                   }
-		                                   });
-	}
-
-
-
-
-	/**
-	 * Method updates the UI after sign up got handled with.
-	 *
-	 * @param user Passes this to the next fragment.
-	 */
-	private void updateUI(FirebaseUser user)
-	{
-		Log.d(TAG, "updateUI:true");
-
-		mFragmentInteractionListener.displayEmailVerificationFragment(user);
-	}
-
-
-
-
 	public interface OnFragmentInteractionListener
 	{
 		void displayEmailVerificationFragment(FirebaseUser user);
 
 
 		void displayLoginFragment();
-
-
-		void saveUserInfoInSharedPreferences(String firstName, String surname, String email, String password, String birthdate,
-		                                     String acceptedLegalitiesVersion);
-
-
-		void saveFirestoreUserIDInSharedPreferences(String firestoreID);
 
 
 		void displayLegalitiesDialog(String firstName, String surname, String email, String password, String birthdate,

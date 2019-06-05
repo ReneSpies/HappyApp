@@ -21,7 +21,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -80,16 +79,23 @@ public class LoginFragment
 				                                .toString();
 
 				// Check password and email validity.
+				if (mEmailField.length() == 0)
+				{
+					mEmailField.setError("You forgot me");
+					return;
+				}
 				if (!isEmailCorrect(email))
 				{
-					Snackbar.make(v, getString(R.string.check_email), Snackbar.LENGTH_SHORT)
-					        .show();
+					mEmailField.setError("Something went wrong here");
+					//					Snackbar.make(v, getString(R.string.check_email), Snackbar.LENGTH_SHORT)
+					//					        .show();
 					return;
 				}
 				else if (!isPasswordCorrect(password))
 				{
-					Snackbar.make(v, getString(R.string.password_min_chars), Snackbar.LENGTH_SHORT)
-					        .show();
+					mPasswordField.setError("You forgot me");
+					//					Snackbar.make(v, getString(R.string.password_min_chars), Snackbar.LENGTH_SHORT)
+					//					        .show();
 					return;
 				}
 

@@ -216,7 +216,8 @@ public class EmailVerificationFragment
 			case R.id.emailverification_back_button:
 			{
 				Log.d(TAG, "onClick:emailverification_back_button");
-				onBackButtonClick();
+				LoginActivity.setComesFromEmailVerificationFragment(true);
+				mFragmentInteractionListener.onBackPressed();
 				break;
 			}
 
@@ -232,22 +233,6 @@ public class EmailVerificationFragment
 
 
 
-	private void onBackButtonClick()
-	{
-		Log.d(TAG, "onBackButtonClick:true");
-		fetchUserIncredentialsFromSharedPreferences();
-	}
-
-
-
-
-	private void fetchUserIncredentialsFromSharedPreferences()
-	{
-		Log.d(TAG, "fetchUserIncredentialsFromSharedPreferences:true");
-
-		mFragmentInteractionListener.fetchUserIncredentialsFromSharedPreferences();
-	}
-
 
 
 
@@ -259,13 +244,7 @@ public class EmailVerificationFragment
 		void displaySignUpFragment(String firstName, String surname, String birthdate, String email);
 
 
-		String getUserIDFromSharedPreferences();
-
-
-		void fetchUserIncredentialsFromSharedPreferences();
-
-
-
+		void onBackPressed();
 
 
 
