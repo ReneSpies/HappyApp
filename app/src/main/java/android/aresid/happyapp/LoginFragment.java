@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -106,7 +105,7 @@ public class LoginFragment
 					mEmailFieldLayout.setError(null);
 
 					// Set this fields error.
-					mPasswordFieldLayout.setError("You forgot me");
+					mPasswordFieldLayout.setError("I am not correct");
 					return;
 				}
 
@@ -197,8 +196,11 @@ public class LoginFragment
 
 			                                   if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException)
 			                                   {
-				                                   Toast.makeText(getActivity(), "No user found under this email or password", Toast.LENGTH_SHORT)
-				                                        .show();
+				                                   mPasswordFieldLayout.setError("No user found under this email or password");
+			                                   }
+			                                   else if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException)
+			                                   {
+				                                   mPasswordFieldLayout.setError("Password or email not fitting");
 			                                   }
 		                                   });
 	}
@@ -215,116 +217,6 @@ public class LoginFragment
 
 		Intent loginIntent = mGoogleSignInClient.getSignInIntent();
 		startActivityForResult(loginIntent, RC_LOGIN);
-	}
-
-
-
-
-	@Override
-	public void onAttach(@NonNull Context context)
-	{
-		Log.d(TAG, "onAttach:true");
-
-		super.onAttach(context);
-		if (context instanceof OnFragmentInteractionListener)
-		{
-			mFragmentInteractionListener = (OnFragmentInteractionListener) context;
-		}
-		else
-		{
-			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-		}
-	}
-
-
-
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		Log.d(TAG, "onActivityResult:true");
-
-		super.onActivityResult(requestCode, resultCode, data);
-
-		// Result returned from launching then Intent from GoogleSignInIntent.getSignInIntent().
-		if (requestCode == RC_LOGIN)
-		{
-			// The task returned by this is always completed, no need to register a listener.
-			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
-			// Method handles the sign in with Google account.
-			handleLoginResult(task);
-		}
-	}
-
-
-
-
-	@Override
-	public void onStart()
-	{
-		Log.d(TAG, "onStart:true");
-		super.onStart();
-
-		// Get current user instance
-		FirebaseUser user = mFirebaseAuth.getCurrentUser();
-
-		// TODO: Move to activity level.
-		// Check for existing Google Sign In account, if the user is already signed in
-		// the GoogleSignInAccount will be non-null.
-		GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mFragmentInteractionListener.getActivitiesContext());
-
-		updateUI(user, account);
-	}
-
-
-
-
-	@Override
-	public void onCreate(Bundle savedInstanceState)
-	{
-		Log.d(TAG, "onCreate:true");
-		super.onCreate(savedInstanceState);
-
-		// Grab a new FirebaseAuth instance
-		mFirebaseAuth = FirebaseAuth.getInstance();
-
-		// Configure sign-in to request the user's ID, email address, and basic
-		// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-		                                                                                              .build();
-
-		// TODO: Move to activity level.
-		// Build a GoogleSignInClient with the options specified by gso.
-		mGoogleSignInClient = GoogleSignIn.getClient(mFragmentInteractionListener.getActivitiesContext(), gso);
-	}
-
-
-
-
-	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-	{
-		Log.d(TAG, "onCreateView:true");
-
-		// Inflate the layout for this fragment
-		View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-
-		// Init all the views for this fragment
-		mEmailField = rootView.findViewById(R.id.login_email_field);
-		mLoginInButton = rootView.findViewById(R.id.login_login_button);
-		mSignUpButton = rootView.findViewById(R.id.login_sign_up_button);
-		mGoogleLoginButton = rootView.findViewById(R.id.login_google_button);
-		mPasswordField = rootView.findViewById(R.id.login_password_field);
-		mPasswordFieldLayout = rootView.findViewById(R.id.login_password_field_layout);
-		mEmailFieldLayout = rootView.findViewById(R.id.login_email_field_layout);
-
-		// Calling the onClick handler
-		mLoginInButton.setOnClickListener(this);
-		mSignUpButton.setOnClickListener(this);
-		mGoogleLoginButton.setOnClickListener(this);
-
-		return rootView;
 	}
 
 
@@ -385,6 +277,119 @@ public class LoginFragment
 
 
 	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		Log.d(TAG, "onActivityResult:true");
+
+		super.onActivityResult(requestCode, resultCode, data);
+
+		// Result returned from launching then Intent from GoogleSignInIntent.getSignInIntent().
+		if (requestCode == RC_LOGIN)
+		{
+			// TODO: google cloud platform enabling
+			// TODO: throw in sql db and firestore.
+			// The task returned by this is always completed, no need to register a listener.
+			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+			// Method handles the sign in with Google account.
+			handleLoginResult(task);
+		}
+	}
+
+
+
+
+	@Override
+	public void onAttach(@NonNull Context context)
+	{
+		Log.d(TAG, "onAttach:true");
+
+		super.onAttach(context);
+
+		if (context instanceof OnFragmentInteractionListener)
+		{
+			mFragmentInteractionListener = (OnFragmentInteractionListener) context;
+		}
+		else
+		{
+			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+		}
+	}
+
+
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		Log.d(TAG, "onCreate:true");
+		super.onCreate(savedInstanceState);
+
+		// Grab a new FirebaseAuth instance
+		mFirebaseAuth = FirebaseAuth.getInstance();
+
+		// Configure sign-in to request the user's ID, email address, and basic
+		// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
+		                                                                                              .build();
+
+		// TODO: Move to activity level.
+		// Build a GoogleSignInClient with the options specified by gso.
+		mGoogleSignInClient = GoogleSignIn.getClient(mFragmentInteractionListener.getActivitiesContext(), gso);
+	}
+
+
+
+
+	@Override
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		Log.d(TAG, "onCreateView:true");
+
+		// Inflate the layout for this fragment
+		View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+
+		// Init all the views for this fragment
+		mEmailField = rootView.findViewById(R.id.login_email_field);
+		mLoginInButton = rootView.findViewById(R.id.login_login_button);
+		mSignUpButton = rootView.findViewById(R.id.login_sign_up_button);
+		mGoogleLoginButton = rootView.findViewById(R.id.login_google_button);
+		mPasswordField = rootView.findViewById(R.id.login_password_field);
+		mPasswordFieldLayout = rootView.findViewById(R.id.login_password_field_layout);
+		mEmailFieldLayout = rootView.findViewById(R.id.login_email_field_layout);
+
+		// Calling the onClick handler
+		mLoginInButton.setOnClickListener(this);
+		mSignUpButton.setOnClickListener(this);
+		mGoogleLoginButton.setOnClickListener(this);
+
+		return rootView;
+	}
+
+
+
+
+	@Override
+	public void onStart()
+	{
+		Log.d(TAG, "onStart:true");
+		super.onStart();
+
+		// Get current user instance
+		FirebaseUser user = mFirebaseAuth.getCurrentUser();
+
+		// TODO: Move to activity level.
+		// Check for existing Google Sign In account, if the user is already signed in
+		// the GoogleSignInAccount will be non-null.
+		GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mFragmentInteractionListener.getActivitiesContext());
+
+		updateUI(user, account);
+	}
+
+
+
+
+	@Override
 	public void onResume()
 	{
 		Log.d(TAG, "onResume:true");
@@ -439,8 +444,15 @@ public class LoginFragment
 		{
 			GoogleSignInAccount account = task.getResult(ApiException.class);
 
+			Log.d(TAG, "handleLoginResult: family name = " + account.getFamilyName());
+			Log.d(TAG, "handleLoginResult: given name = " + account.getGivenName());
+			Log.d(TAG, "handleLoginResult: display name = " + account.getDisplayName());
+			Log.d(TAG, "handleLoginResult: email = " + account.getEmail());
+			Log.d(TAG, "handleLoginResult: id = " + account.getId());
+			Log.d(TAG, "handleLoginResult: account = " + account.getAccount());
+
 			// Signed in successfully, show authenticated UI.
-			updateUI(null, account);
+			//			updateUI(null, account);
 		}
 		catch (ApiException e)
 		{
@@ -465,6 +477,9 @@ public class LoginFragment
 
 
 		void startMainActivity(FirebaseUser user, GoogleSignInAccount account);
+
+
+		void startOnboardingActivity(FirebaseUser user, GoogleSignInAccount account);
 
 
 		Activity getActivitiesContext();

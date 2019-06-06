@@ -107,6 +107,18 @@ public class LoginActivity
 	}
 
 
+
+
+	@Override
+	public void onBackPressed()
+	{
+		Log.d(TAG, "onBackPressed:true");
+		super.onBackPressed();
+	}
+
+
+
+
 	/**
 	 * Loads the LoginFragment into the activities container.
 	 * The Fragment handles the further login process.
@@ -345,6 +357,15 @@ public class LoginActivity
 
 		//		startActivity(intent);
 		startActivity(new Intent(this, OnboardingActivity.class));
+	}
+
+
+
+
+	@Override
+	public void startOnboardingActivity(FirebaseUser user, GoogleSignInAccount account)
+	{
+		Log.d(TAG, "startOnboardingActivity:true");
 	}
 
 

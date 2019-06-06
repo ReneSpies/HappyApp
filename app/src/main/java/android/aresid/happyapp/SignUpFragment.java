@@ -375,7 +375,7 @@ public class SignUpFragment
 				mEmailFieldLayout.setError(null);
 
 				// Set this fields error.
-				mPasswordFieldLayout.setError("You forgot me. I have to be longer than six characters");
+				mPasswordFieldLayout.setError("I have to be longer than six characters");
 				return;
 			}
 			else if (!isAgeCorrect(mBirthdateDaySpinner.getSelectedItem()

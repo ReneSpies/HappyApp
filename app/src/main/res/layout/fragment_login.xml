@@ -14,6 +14,7 @@
 		android:layout_height="@dimen/waiting_assistant_size"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
+		android:contentDescription="Happy App logo"
 		android:visibility="invisible"
 		app:layout_constraintBottom_toTopOf="@+id/google_linear_layout"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -45,11 +46,11 @@
 		app:layout_constraintTop_toTopOf="parent">
 
 		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/login_email_field_layout"
 			style="@style/Widget.HappyApp.TextInputLayout"
 			android:layout_width="match_parent"
-			android:id="@+id/login_email_field_layout"
-			app:errorEnabled="true"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content"
+			app:errorEnabled="true">
 
 			<com.google.android.material.textfield.TextInputEditText
 				android:id="@+id/login_email_field"
@@ -62,12 +63,12 @@
 		</com.google.android.material.textfield.TextInputLayout>
 
 		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/login_password_field_layout"
 			style="@style/Widget.HappyApp.TextInputLayout"
 			android:layout_width="match_parent"
-			app:passwordToggleEnabled="true"
-			android:id="@+id/login_password_field_layout"
+			android:layout_height="wrap_content"
 			app:errorEnabled="true"
-			android:layout_height="wrap_content">
+			app:passwordToggleEnabled="true">
 
 			<com.google.android.material.textfield.TextInputEditText
 				android:id="@+id/login_password_field"
@@ -119,6 +120,8 @@
 			style="@style/Theme.HappyApp.ContainedButton"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/button_margin_start_end"
+			android:layout_marginEnd="@dimen/button_margin_start_end"
 			android:text="@string/google" />
 	</LinearLayout>
 
@@ -148,6 +151,8 @@
 			style="@style/Theme.HappyApp.ContainedButton"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/button_margin_start_end"
+			android:layout_marginEnd="@dimen/button_margin_start_end"
 			android:text="@string/sign_me_up" />
 	</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

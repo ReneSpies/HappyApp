@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class EmailVerificationFragment
@@ -217,6 +218,8 @@ public class EmailVerificationFragment
 			{
 				Log.d(TAG, "onClick:emailverification_back_button");
 				LoginActivity.setComesFromEmailVerificationFragment(true);
+				FirebaseAuth.getInstance()
+				            .signOut();
 				mFragmentInteractionListener.onBackPressed();
 				break;
 			}
