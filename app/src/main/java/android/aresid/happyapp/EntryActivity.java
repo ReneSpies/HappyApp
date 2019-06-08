@@ -1,5 +1,7 @@
 package android.aresid.happyapp;
 
+import android.animation.ArgbEvaluator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -32,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoginActivity
+public class EntryActivity
 		extends AppCompatActivity
 		implements GoogleApiClient.OnConnectionFailedListener,
 		           LoginFragment.OnFragmentInteractionListener,
@@ -49,9 +52,9 @@ public class LoginActivity
 	private final static String FIRESTORE_ID_KEY = "firestore_id";
 	private final static String NAME_PREFS_FIRESTORE_ID = "user_firestore_id";
 	private final static String NAME_PREFS_FIRESTORE_USER_DATA = "user_data";
-	private final static String TAG = "LoginActivity";
-	private DBHelper mDBHelper;
+	private final static String TAG = "EntryActivity";
 	private static boolean mComesFromEmailVerificationFragment = false;
+	private DBHelper mDBHelper;
 
 
 
@@ -63,10 +66,10 @@ public class LoginActivity
 
 		// Make sure this is before super.onCreate() and setContentView().
 		// This is my startup theme that gets launched before the app is loaded.
-		setTheme(R.style.Theme_HappyApp);
+		//		setTheme(R.style.Theme_HappyApp);
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_entry);
 
 		if (mDBHelper == null)
 		{
@@ -75,6 +78,34 @@ public class LoginActivity
 			Log.d(TAG, "onCreate: db = " + mDBHelper);
 		}
 
+		// Set up the ViewPager for the subscriptions.
+		ViewPager2 vpSubscriptionsView = findViewById(R.id.entry_activity_subscription_view_pager);
+
+		List<String> listOfTitles = new ArrayList<>();
+		List<String> listOfDescriptions = new ArrayList<>();
+		List<String> listOfPrices = new ArrayList<>();
+
+		// Silver package
+		listOfTitles.add("Silver package");
+		listOfDescriptions.add("Description for silver package");
+		listOfPrices.add("4.99 $/Month");
+
+		// Gold package
+		listOfTitles.add("Gold package");
+		listOfDescriptions.add("Description for gold package");
+		listOfPrices.add("9.99 $/Month");
+
+		// Platinum package
+		listOfTitles.add("Platinum package");
+		listOfDescriptions.add("Description for platinum package");
+		listOfPrices.add("14.99 $/Month");
+
+		ViewPagerAdapter vpAdapter = new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPrices, vpSubscriptionsView);
+		vpSubscriptionsView.setAdapter(vpAdapter);
+		vpSubscriptionsView.registerOnPageChangeCallback(new BackgroundTransitionTransformer(vpSubscriptionsView));
+
+		populateSubscriptionsTable();
+
 		// Instantly display the LoginFragment which deals with the further login process.
 		displayLoginFragment();
 	}
@@ -82,38 +113,12 @@ public class LoginActivity
 
 
 
-	static boolean getComesFromEmailVerificationFragment()
+	/**
+	 * Method populates the Subscriptions table in the db with the server data.
+	 */
+	private void populateSubscriptionsTable()
 	{
-		Log.d(TAG, "getComesFromEmailVerificationFragment:true");
-		return mComesFromEmailVerificationFragment;
-	}
-
-
-
-	@Override
-	public void onStart()
-	{
-		Log.d(TAG, "onStart:true");
-		super.onStart();
-	}
-
-
-
-
-	static void setComesFromEmailVerificationFragment(boolean value)
-	{
-		Log.d(TAG, "setComesFromEmailVerificationFragment:true");
-		mComesFromEmailVerificationFragment = value;
-	}
-
-
-
-
-	@Override
-	public void onBackPressed()
-	{
-		Log.d(TAG, "onBackPressed:true");
-		super.onBackPressed();
+		Log.d(TAG, "populateSubscriptionsTable:true");
 	}
 
 
@@ -128,7 +133,7 @@ public class LoginActivity
 	{
 		Log.d(TAG, "displayLoginFragment:true");
 
-		new DisplayFragment(this).displayFragment(R.id.login_container, LoginFragment.newInstance());
+		//		new DisplayFragment(this).displayFragment(R.id.login_container, LoginFragment.newInstance());
 	}
 
 
@@ -213,6 +218,26 @@ public class LoginActivity
 		}
 
 		return new ArrayAdapter<>(this, R.layout.item_birthdate_spinner, listOfYearsSince1903);
+	}
+
+
+
+
+	@Override
+	public void onStart()
+	{
+		Log.d(TAG, "onStart:true");
+		super.onStart();
+	}
+
+
+
+
+	@Override
+	public void onBackPressed()
+	{
+		Log.d(TAG, "onBackPressed:true");
+		super.onBackPressed();
 	}
 
 
@@ -315,7 +340,7 @@ public class LoginActivity
 		if (!mComesFromEmailVerificationFragment)
 		{
 			Log.d(TAG, "displayEmailVerificationFragment: umm hello");
-			new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, EmailVerificationFragment.newInstance(user));
+			//			new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, EmailVerificationFragment.newInstance(user));
 		}
 
 		mComesFromEmailVerificationFragment = false;
@@ -333,7 +358,7 @@ public class LoginActivity
 	public void displaySignUpFragment(String email)
 	{
 		Log.d(TAG, "displaySignUpFragment:true");
-		new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, SignUpFragment.newInstance(null, null, null, email));
+		//		new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, SignUpFragment.newInstance(null, null, null, email));
 	}
 
 
@@ -355,8 +380,7 @@ public class LoginActivity
 		intent.putExtra("user_firestore_id", getSharedPreferences(NAME_PREFS_FIRESTORE_ID, Context.MODE_PRIVATE).getString(FIRESTORE_ID_KEY, null));
 		intent.putExtra("google_sign_in_account", account);
 
-		//		startActivity(intent);
-		startActivity(new Intent(this, OnboardingActivity.class));
+		startActivity(intent);
 	}
 
 
@@ -366,6 +390,13 @@ public class LoginActivity
 	public void startOnboardingActivity(FirebaseUser user, GoogleSignInAccount account)
 	{
 		Log.d(TAG, "startOnboardingActivity:true");
+
+		Intent intent = new Intent(this, OnboardingActivity.class);
+		intent.putExtra("firebase_user", user);
+		intent.putExtra("sql_user", (String) null);
+		intent.putExtra("google_account", account);
+
+		startActivity(intent);
 	}
 
 
@@ -430,19 +461,99 @@ public class LoginActivity
 
 
 
-	/**
-	 * Loads the SignUpFragment into the activities container.
-	 *
-	 * @param firstName The user's first name which he stated.
-	 * @param surname   The user's surname which he stated.
-	 * @param email     The user's email which he stated.
-	 */
-	@Override
-	public void displaySignUpFragment(String firstName, String surname, String birthdate, String email)
+	class BackgroundTransitionTransformer
+			extends ViewPager2.OnPageChangeCallback
 	{
-		Log.d(TAG, "displaySignUpFragment:true");
+		private static final String TAG = "BackgroundTransitionTransformer";
+		int[] mArrayOfColors;
+		private ViewPager2 mViewPager2;
 
-		new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, SignUpFragment.newInstance(firstName, surname, birthdate, email));
+
+
+
+		@SuppressLint ("LongLogTag")
+		BackgroundTransitionTransformer(ViewPager2 viewPager2)
+		{
+			super();
+
+			Log.d(TAG, "BackgroundTransitionTransformer:true");
+
+			mViewPager2 = viewPager2;
+
+			// Populate the int[] for the colors.
+			if (viewPager2.getAdapter() != null)
+			{
+				mArrayOfColors = new int[viewPager2.getAdapter()
+				                                   .getItemCount()];
+				for (int i = 0;
+				     i <= viewPager2.getAdapter()
+				                    .getItemCount();
+				     i++)
+				{
+					Log.d(TAG, "i = " + i);
+
+					switch (i)
+					{
+						case 0:
+							mArrayOfColors[i] = getResources().getColor(R.color.silver);
+							break;
+						case 1:
+							mArrayOfColors[i] = getResources().getColor(R.color.gold);
+							break;
+						case 2:
+							mArrayOfColors[i] = getResources().getColor(R.color.platinum);
+							break;
+					}
+				}
+			}
+			else
+			{
+				mArrayOfColors[0] = getResources().getColor(R.color.silver);
+				mArrayOfColors[1] = getResources().getColor(R.color.gold);
+				mArrayOfColors[2] = getResources().getColor(R.color.platinum);
+			}
+		}
+
+
+
+
+		@SuppressLint ("LongLogTag")
+		@Override
+		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+		{
+			Log.d(TAG, "onPageScrolled:true");
+
+			if (position < mArrayOfColors.length - 1)
+			{
+				mViewPager2.setBackgroundColor(
+						(int) new ArgbEvaluator().evaluate(positionOffset, mArrayOfColors[position], mArrayOfColors[position + 1]));
+			}
+		}
+
+
+
+
+		@Override
+		public void onPageSelected(int position)
+		{
+			super.onPageSelected(position);
+		}
+
+
+
+
+		@Override
+		public void onPageScrollStateChanged(int state)
+		{
+			super.onPageScrollStateChanged(state);
+		}
+
+
+
+
+
+
+
 	}
 
 

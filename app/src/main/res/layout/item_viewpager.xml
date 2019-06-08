@@ -11,6 +11,7 @@
 		android:src="@drawable/ic_app_logo"
 		app:layout_constraintBottom_toTopOf="@id/view_pager_tv_title"
 		app:layout_constraintEnd_toEndOf="parent"
+		android:antialias="true"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,10 +44,10 @@
 
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/view_pager_bt_confirm"
-		style="@style/Theme.HappyApp.ContainedButton"
+		style="@style/Widget.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="I take this"
+		android:text="Check this out"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

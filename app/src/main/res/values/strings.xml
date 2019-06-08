@@ -12,6 +12,8 @@
 	<string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+	<string name="plain_email">Email</string>
+	<string name="plain_password">Password</string>
 	<string name="title_activity_main">MainActivity</string>
 	<string name="title_section1">Section 1</string>
 	<string name="title_section2">Section 2</string>
@@ -76,6 +78,17 @@
 	<string name="third_screen_message">Let users know the unique features offered by your app</string>
 	<string name="tab_text_1">Tab 1</string>
 	<string name="tab_text_2">Tab 2</string>
+	<string name="plain_or_login_using">or login using</string>
+	<string name="plain_google">Google</string>
+	<string name="plain_happy_app_logo">Happy App Logo</string>
+	<string name="plain_register_an_account_for_happyapp">Register an account for HappyApp</string>
+	<string name="plain_first_name">First Name</string>
+	<string name="plain_family_name">Family Name</string>
+	<string name="plain_date_of_birth">Date of birth</string>
+	<string name="plain_register_now">Register now</string>
+	<string name="contraction_confirm_tc_privacy_policy">I confirm that I\'ve read and accepted the Terms and Conditions and Privacy Policy</string>
+	<string name="plain_dd_mm_yyyy">DD.MM.YYYY</string>
+	<string name="plain_choose_a_subscription">Choose a subscription</string>
 	<!---->
 
 

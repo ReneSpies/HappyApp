@@ -217,7 +217,6 @@ public class EmailVerificationFragment
 			case R.id.emailverification_back_button:
 			{
 				Log.d(TAG, "onClick:emailverification_back_button");
-				LoginActivity.setComesFromEmailVerificationFragment(true);
 				FirebaseAuth.getInstance()
 				            .signOut();
 				mFragmentInteractionListener.onBackPressed();
@@ -244,7 +243,6 @@ public class EmailVerificationFragment
 		void displayLoginFragment();
 
 
-		void displaySignUpFragment(String firstName, String surname, String birthdate, String email);
 
 
 		void onBackPressed();

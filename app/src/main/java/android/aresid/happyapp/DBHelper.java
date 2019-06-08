@@ -11,6 +11,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 
 
@@ -34,8 +35,7 @@ public class DBHelper
 			"email",
 			"password",
 			"birthdate",
-			"accepted_legalities_version",
-			"subscription"
+			"accepted_legalities_version"
 	};
 	static final String[] TABLE_SUBSCRIPTIONS_COLUMN_NAMES = new String[] {
 			"icon",
@@ -73,17 +73,26 @@ public class DBHelper
 			// Creating the Database.
 			db.execSQL("PRAGMA foreign_keys = ON;");
 
-			// Create Subscriptions table.
-			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_SUBSCRIPTIONS + "(" + TABLE_SUBSCRIPTIONS_COLUMN_NAMES[0] + " BLOB NOT NULL, " +
-			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + " TEXT PRIMARY KEY NOT NULL, " + TABLE_SUBSCRIPTIONS_COLUMN_NAMES[2] +
-			           " TEXT NOT NULL, " + TABLE_SUBSCRIPTIONS_COLUMN_NAMES[3] + " TEXT NOT NULL);");
-
 			// Create Userdata table.
-			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_USERDATA + "(" + TABLE_USERDATA_COLUMN_NAMES[0] + " TEXT PRIMARY KEY NOT NULL, " +
-			           TABLE_USERDATA_COLUMN_NAMES[1] + " TEXT NOT NULL, " + TABLE_USERDATA_COLUMN_NAMES[2] + " TEXT NOT NULL, " +
-			           TABLE_USERDATA_COLUMN_NAMES[3] + "TEXT NOT NULL, " + TABLE_USERDATA_COLUMN_NAMES[4] + " TEXT NOT NULL, " +
-			           TABLE_USERDATA_COLUMN_NAMES[5] + " TEXT NOT NULL, " + TABLE_USERDATA_COLUMN_NAMES[6] + " REAL NOT NULL, " +
-			           TABLE_USERDATA_COLUMN_NAMES[7] + " TEXT NOT NULL);");
+			// This one is first because it gets referenced.
+			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_USERDATA + "(" +
+			           TABLE_USERDATA_COLUMN_NAMES[0] + " TEXT PRIMARY KEY NOT NULL UNIQUE," +
+			           TABLE_USERDATA_COLUMN_NAMES[1] + " TEXT NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[2] + " TEXT NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[3] + "TEXT NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[4] + " TEXT NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[5] + " TEXT NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[6] + " REAL NOT NULL);");
+
+			// Create Subscriptions table.
+			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_SUBSCRIPTIONS + "(" +
+			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[0] + " BLOB NOT NULL, " +
+			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + "TEXT PRIMARY KEY NOT NULL, " +
+			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[2] + " TEXT NOT NULL, " +
+			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[3] + " TEXT NOT NULL," +
+			           "CONSTRAINT SubscriptionFK FOREIGN KEY(" + TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + ")" +
+			           "REFERENCES Userdata(" + TABLE_USERDATA_COLUMN_NAMES[0] + ")" +
+			           "ON DELETE RESTRICT ON UPDATE CASCADE);");
 
 			Log.d(TAG, "onCreate: Database created in: " + db.getPath());
 		}
@@ -166,13 +175,13 @@ public class DBHelper
 		Log.d(TAG, "insertUser: acceptedLegalitiesVersion = " + acceptedLegalitiesVersion);
 
 		ContentValues values = new ContentValues();
-		values.put("firestoreID", firestoreID);
-		values.put("firstName", firstName);
-		values.put("surname", surname);
-		values.put("email", email);
-		values.put("password", password);
-		values.put("birthdate", birthdate);
-		values.put("acceptedLegalitiesVersion", acceptedLegalitiesVersion);
+		values.put(TABLE_USERDATA_COLUMN_NAMES[0], firestoreID);
+		values.put(TABLE_USERDATA_COLUMN_NAMES[1], firstName);
+		values.put(TABLE_USERDATA_COLUMN_NAMES[2], surname);
+		values.put(TABLE_USERDATA_COLUMN_NAMES[3], email);
+		values.put(TABLE_USERDATA_COLUMN_NAMES[4], password);
+		values.put(TABLE_USERDATA_COLUMN_NAMES[5], birthdate);
+		values.put(TABLE_USERDATA_COLUMN_NAMES[6], acceptedLegalitiesVersion);
 
 		SQLiteDatabase db = getWritableDatabase();
 		Log.d(TAG, "insertUser: db path = " + db.getPath());
@@ -196,10 +205,27 @@ public class DBHelper
 
 	/**
 	 * Insert a new subscription into the database.
+	 * This is called from EntryActivity onCreate and checks the version code in SharedPrefs to see if it has changed.
+	 * If it has changed it gets updated from there only.
 	 */
 	void insertSubscription(Bitmap icon, String title, String description, String price)
 	{
 		Log.d(TAG, "insertSubscription:true");
+
+		Log.d(TAG, "insertSubscription: icon = " + icon);
+		Log.d(TAG, "insertSubscription: title = " + title);
+		Log.d(TAG, "insertSubscription: description = " + description);
+		Log.d(TAG, "insertSubscription: price = " + price);
+
+		// Convert the bitmap into a byte[] so it can be saved in database.
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		icon.compress(Bitmap.CompressFormat.PNG, 100, bos);
+
+		ContentValues values = new ContentValues();
+		values.put(TABLE_SUBSCRIPTIONS_COLUMN_NAMES[0], bos.toByteArray() /*the icon value is now compressed to byte[]*/);
+		values.put(TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1], title);
+		values.put(TABLE_SUBSCRIPTIONS_COLUMN_NAMES[2], description);
+		values.put(TABLE_SUBSCRIPTIONS_COLUMN_NAMES[3], price);
 	}
 
 

@@ -148,8 +148,7 @@ public class LegalitiesDialog
 		                             .document("legalities v1.0");
 
 		docRef.get()
-		      .
-				      addOnSuccessListener(command ->
+		      .addOnSuccessListener(command ->
 				                           {
 					                           TermsAndConditions termsAndConditions = new TermsAndConditions(TERMS_AND_CONDITIONS_TITLE,
 					                                                                                          command.getString(

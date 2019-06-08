@@ -61,7 +61,7 @@
 
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/emailverification_send_again_button"
-			style="@style/Theme.HappyApp.ContainedButton"
+			style="@style/Widget.HappyApp.ContainedButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="@dimen/nav_header_vertical_spacing"

@@ -251,7 +251,9 @@ public class LoginFragment
 				                           if (USER.isEmailVerified())
 				                           {
 					                           Log.d(TAG, "isEmailVerified:" + USER.isEmailVerified());
-					                           mFragmentInteractionListener.startMainActivity(USER, null);
+					                           // TODO: Subscription handling.
+					                           mFragmentInteractionListener.startOnboardingActivity(USER, null);
+					                           //					                           mFragmentInteractionListener.startMainActivity(USER, null);
 				                           }
 				                           else
 				                           {
@@ -265,7 +267,9 @@ public class LoginFragment
 		else if (account != null)
 		{
 			Log.d(TAG, "updateUI:account != null");
-			mFragmentInteractionListener.startMainActivity(null, account);
+			// TODO: Subscription handling.
+			mFragmentInteractionListener.startOnboardingActivity(null, account);
+			//			mFragmentInteractionListener.startMainActivity(null, account);
 		}
 		else
 		{
