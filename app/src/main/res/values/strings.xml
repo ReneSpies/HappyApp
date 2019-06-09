@@ -89,6 +89,8 @@
 	<string name="contraction_confirm_tc_privacy_policy">I confirm that I\'ve read and accepted the Terms and Conditions and Privacy Policy</string>
 	<string name="plain_dd_mm_yyyy">DD.MM.YYYY</string>
 	<string name="plain_choose_a_subscription">Choose a subscription</string>
+	<string name="plain_processing_login">Processing login</string>
+	<string name="plain_logging_in">Logging in</string>
 	<!---->
 
 

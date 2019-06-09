@@ -44,7 +44,8 @@ public class EntryActivity
 		           LoginFragment.OnFragmentInteractionListener,
 		           SignUpFragment.OnFragmentInteractionListener,
 		           EmailVerificationFragment.OnFragmentInteractionListener,
-		           LegalitiesDialog.OnPrivacyPolicyDialogInteractionListener
+		           LegalitiesDialog.OnPrivacyPolicyDialogInteractionListener,
+		           NoLoginButtonTextWatcher.OnNoLoginButtonTextWatcherInteractionListener
 {
 	private final static String FIRST_NAME_KEY = "first_name";
 	private final static String SURNAME_KEY = "surname";
@@ -62,6 +63,7 @@ public class EntryActivity
 	private TextInputEditText mEtLoginEmailField;
 	private TextInputLayout mEtLoginPasswordLayout;
 	private TextInputLayout mEtLoginEmailLayout;
+	private FirebaseUser mFirebaseUser;
 
 
 
@@ -95,9 +97,9 @@ public class EntryActivity
 		mEtLoginEmailLayout = findViewById(R.id.entry_activity_login_email_layout);
 
 		mEtLoginPasswordField.addTextChangedListener(
-				new NoLoginButtonTextWatcher(mEtLoginEmailField, mEtLoginPasswordField, mEtLoginEmailLayout, mEtLoginPasswordLayout));
+				new NoLoginButtonTextWatcher(this));
 		mEtLoginEmailField.addTextChangedListener(
-				new NoLoginButtonTextWatcher(mEtLoginEmailField, mEtLoginPasswordField, mEtLoginEmailLayout, mEtLoginPasswordLayout));
+				new NoLoginButtonTextWatcher(this));
 
 
 		// Set up the ViewPager for the subscriptions.
@@ -140,10 +142,84 @@ public class EntryActivity
 	{
 		Log.d(TAG, "onStart:true");
 		super.onStart();
+
+		FirebaseUser user = FirebaseAuth.getInstance()
+		                                .getCurrentUser();
+
+		updateUI(user, null);
 	}
 
 
 
+
+	void updateUI(FirebaseUser user, GoogleSignInAccount account)
+	{
+		Log.d(TAG, "updateUI:true");
+
+		ImageView waitingAssistant = findViewById(R.id.entry_activity_logging_in_waiting_assistant);
+
+
+		if (user != null)
+		{
+			Glide.with(this)
+			     .load(R.drawable.waiting_assistant_content)
+			     .into(waitingAssistant);
+
+			findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
+			findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
+
+			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
+			toast.show();
+
+			user.reload()
+			    .addOnSuccessListener(command ->
+			                          {
+				                          Log.d(TAG, "updateUI: success");
+
+				                          toast.cancel();
+
+				                          if (user.isEmailVerified())
+				                          {
+					                          startMainActivityWithUser(user);
+				                          }
+				                          else
+				                          {
+					                          startEmailVerificationActivity(user);
+				                          }
+			                          })
+			    .addOnFailureListener(e ->
+			                          {
+				                          Log.d(TAG, "updateUI: failure");
+				                          Log.e(TAG, "updateUI: ", e);
+			                          });
+		}
+		else if (account != null)
+		{
+			// TODO
+		}
+		else
+		{
+			// TODO
+		}
+	}
+
+
+
+
+	void startMainActivityWithUser(FirebaseUser user)
+	{
+		Log.d(TAG, "startMainActivityWithUser:true");
+		// TODO
+	}
+
+
+
+
+	void startEmailVerificationActivity(FirebaseUser user)
+	{
+		Log.d(TAG, "startEmailVerificationActivity:true");
+		// TODO
+	}
 
 	/**
 	 * Method populates the Subscriptions table in the db with the server data.
@@ -503,6 +579,17 @@ public class EntryActivity
 
 	@Override
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
+
+
+
+
+	@Override
+	public void loginWithUser(FirebaseUser user)
+	{
+		Log.d(TAG, "loginWithUser:true");
+
+		updateUI(user, null);
+	}
 
 
 
