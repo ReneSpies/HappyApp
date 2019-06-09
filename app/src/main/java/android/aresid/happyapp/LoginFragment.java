@@ -253,7 +253,8 @@ public class LoginFragment
 					                           Log.d(TAG, "isEmailVerified:" + USER.isEmailVerified());
 					                           // TODO: Subscription handling.
 					                           mFragmentInteractionListener.startOnboardingActivity(USER, null);
-					                           //					                           mFragmentInteractionListener.startMainActivity(USER, null);
+					                           //					                           mFragmentInteractionListener.startMainActivity(USER,
+					                           //					                           null);
 				                           }
 				                           else
 				                           {

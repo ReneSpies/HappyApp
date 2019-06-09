@@ -56,7 +56,6 @@ public class SignUpFragment
 
 
 
-
 	public SignUpFragment()
 	{
 		Log.d(TAG, "SignUpFragment:emptyConstructor");

@@ -10,6 +10,7 @@
 		android:id="@+id/favorites_image"
 		android:layout_width="@dimen/profile_picture_size"
 		android:layout_height="@dimen/profile_picture_size"
+		android:contentDescription="TODO"
 		android:src="@mipmap/ic_launcher"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

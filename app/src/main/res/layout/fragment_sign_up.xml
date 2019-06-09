@@ -10,46 +10,46 @@
 	android:padding="@dimen/fragment_padding_medium">
 
 	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/sign_up_first_name_field_layout"
 		style="@style/Widget.HappyApp.TextInputLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:id="@+id/sign_up_first_name_field_layout"
-		app:errorEnabled="true"
-		android:layout_marginBottom="4dp">
+		android:layout_marginBottom="4dp"
+		app:errorEnabled="true">
 
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/sign_up_first_name_field"
 			android:layout_width="match_parent"
-			android:inputType="text"
 			android:layout_height="wrap_content"
-			android:hint="@string/first_name" />
+			android:hint="@string/first_name"
+			android:inputType="text" />
 	</com.google.android.material.textfield.TextInputLayout>
 
 	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/sign_up_surname_field_layout"
 		style="@style/Widget.HappyApp.TextInputLayout"
 		android:layout_width="match_parent"
-		android:id="@+id/sign_up_surname_field_layout"
-		app:errorEnabled="true"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="4dp"
-		android:layout_marginBottom="4dp">
+		android:layout_marginBottom="4dp"
+		app:errorEnabled="true">
 
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/sign_up_surname_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:inputType="text"
-			android:hint="@string/surname" />
+			android:hint="@string/surname"
+			android:inputType="text" />
 	</com.google.android.material.textfield.TextInputLayout>
 
 	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/sign_up_email_field_layout"
 		style="@style/Widget.HappyApp.TextInputLayout"
 		android:layout_width="match_parent"
-		android:id="@+id/sign_up_email_field_layout"
-		app:errorEnabled="true"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="4dp"
-		android:layout_marginBottom="4dp">
+		android:layout_marginBottom="4dp"
+		app:errorEnabled="true">
 
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/sign_up_email_field"
@@ -60,14 +60,14 @@
 	</com.google.android.material.textfield.TextInputLayout>
 
 	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/sign_up_password_field_layout"
 		style="@style/Widget.HappyApp.TextInputLayout"
 		android:layout_width="match_parent"
-		app:passwordToggleEnabled="true"
 		android:layout_height="wrap_content"
-		android:id="@+id/sign_up_password_field_layout"
-		app:errorEnabled="true"
 		android:layout_marginTop="4dp"
-		android:layout_marginBottom="4dp">
+		android:layout_marginBottom="4dp"
+		app:errorEnabled="true"
+		app:passwordToggleEnabled="true">
 
 		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/sign_up_password_field"

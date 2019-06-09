@@ -235,17 +235,15 @@ public class EmailVerificationFragment
 
 
 
-
-
-
 	public interface OnFragmentInteractionListener
 	{
 		void displayLoginFragment();
 
 
-
-
 		void onBackPressed();
+
+
+
 
 
 

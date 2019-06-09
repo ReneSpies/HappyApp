@@ -149,67 +149,69 @@ public class LegalitiesDialog
 
 		docRef.get()
 		      .addOnSuccessListener(command ->
-				                           {
-					                           TermsAndConditions termsAndConditions = new TermsAndConditions(TERMS_AND_CONDITIONS_TITLE,
-					                                                                                          command.getString(
-							                                                                                          TERMS_AND_CONDITIONS_CONTENT_KEY)
-					                           );
-					                           PrivacyPolicy privacyPolicy = new PrivacyPolicy(PRIVACY_POLICY_TITLE,
-					                                                                           command.getString(PRIVACY_POLICY_CONTENT_KEY)
-					                           );
-					                           List<Legalities> listOfLegalities = new ArrayList<>();
-					                           listOfLegalities.add(termsAndConditions);
-					                           listOfLegalities.add(privacyPolicy);
+		                            {
+			                            TermsAndConditions termsAndConditions = new TermsAndConditions(
+					                            TERMS_AND_CONDITIONS_TITLE,
+					                            command.getString(
+							                            TERMS_AND_CONDITIONS_CONTENT_KEY)
+			                            );
+			                            PrivacyPolicy privacyPolicy = new PrivacyPolicy(
+					                            PRIVACY_POLICY_TITLE,
+					                            command.getString(PRIVACY_POLICY_CONTENT_KEY)
+			                            );
+			                            List<Legalities> listOfLegalities = new ArrayList<>();
+			                            listOfLegalities.add(termsAndConditions);
+			                            listOfLegalities.add(privacyPolicy);
 
-					                           // Create an Adapter and load the List from above in it.
-					                           LegalitiesAdapter adapterOfList = new LegalitiesAdapter(
-							                           mDialogInteractionListener.getActivitiesContext(), R.layout.legalities_list_view_content,
-							                           listOfLegalities
-					                           );
+			                            // Create an Adapter and load the List from above in it.
+			                            LegalitiesAdapter adapterOfList = new LegalitiesAdapter(
+					                            mDialogInteractionListener.getActivitiesContext(), R.layout.legalities_list_view_content,
+					                            listOfLegalities
+			                            );
 
-					                           legalitiesContent.setAdapter(adapterOfList);
+			                            legalitiesContent.setAdapter(adapterOfList);
 
-					                           // Set the waiting feedback invisible and show the actual content
-					                           waitingAssistant.setVisibility(View.INVISIBLE);
-					                           alertDialogAcceptButton.setVisibility(View.VISIBLE);
-					                           waitingAssistantText.setVisibility(View.INVISIBLE);
+			                            // Set the waiting feedback invisible and show the actual content
+			                            waitingAssistant.setVisibility(View.INVISIBLE);
+			                            alertDialogAcceptButton.setVisibility(View.VISIBLE);
+			                            waitingAssistantText.setVisibility(View.INVISIBLE);
 
-					                           Log.d(TAG, "onCreateDialog: version code = " + command.getString("version"));
-					                           Log.d(TAG, "onCreateDialog: document = " + command.getData());
+			                            Log.d(TAG, "onCreateDialog: version code = " + command.getString("version"));
+			                            Log.d(TAG, "onCreateDialog: document = " + command.getData());
 
-					                           String firstName, surname, birthdate, email, password;
-					                           String acceptedLegalitiesVersion = command.getString("version");
+			                            String firstName, surname, birthdate, email, password;
+			                            String acceptedLegalitiesVersion = command.getString("version");
 
-					                           if (getArguments() != null)
-					                           {
-						                           firstName = getArguments().getString("firstName");
-						                           surname = getArguments().getString("surname");
-						                           birthdate = getArguments().getString("birthdate");
-						                           email = getArguments().getString("email");
-						                           password = getArguments().getString("password");
-					                           }
-					                           else
-					                           {
-						                           firstName = null;
-						                           surname = null;
-						                           birthdate = null;
-						                           email = null;
-						                           password = null;
-					                           }
+			                            if (getArguments() != null)
+			                            {
+				                            firstName = getArguments().getString("firstName");
+				                            surname = getArguments().getString("surname");
+				                            birthdate = getArguments().getString("birthdate");
+				                            email = getArguments().getString("email");
+				                            password = getArguments().getString("password");
+			                            }
+			                            else
+			                            {
+				                            firstName = null;
+				                            surname = null;
+				                            birthdate = null;
+				                            email = null;
+				                            password = null;
+			                            }
 
-					                           // Register a listener to the accept mButton in the dialog and let it cancel the dialog
-					                           alertDialogAcceptButton.setOnClickListener((view) ->
-					                                                                      {
-						                                                                      Log.d(TAG, "onClick:true");
+			                            // Register a listener to the accept mButton in the dialog and let it cancel the dialog
+			                            alertDialogAcceptButton.setOnClickListener((view) ->
+			                                                                       {
+				                                                                       Log.d(TAG, "onClick:true");
 
-						                                                                      mDialogInteractionListener.handleLegalitiesAccept(
-								                                                                      firstName, surname, email, password, birthdate,
-								                                                                      acceptedLegalitiesVersion
-						                                                                                                                       );
+				                                                                       mDialogInteractionListener.handleLegalitiesAccept(
+						                                                                       firstName, surname, email, password, birthdate,
+						                                                                       acceptedLegalitiesVersion
+				                                                                                                                        );
 
-						                                                                      dialog.cancel();
-					                                                                      });
-				                           })
+				                                                                       dialog.cancel();
+			                                                                       });
+		                            })
 		      .addOnFailureListener(command -> Log.e(TAG, "onCreateDialog: failure", command));
 
 		// Finally show the dialog

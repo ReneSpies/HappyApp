@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,6 +58,10 @@ public class EntryActivity
 	private final static String TAG = "EntryActivity";
 	private static boolean mComesFromEmailVerificationFragment = false;
 	private DBHelper mDBHelper;
+	private TextInputEditText mEtLoginPasswordField;
+	private TextInputEditText mEtLoginEmailField;
+	private TextInputLayout mEtLoginPasswordLayout;
+	private TextInputLayout mEtLoginEmailLayout;
 
 
 
@@ -71,12 +78,27 @@ public class EntryActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_entry);
 
+		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
+		sv.setSmoothScrollingEnabled(true);
+
+
 		if (mDBHelper == null)
 		{
 			// Create new database if not exists.
 			mDBHelper = new DBHelper(this);
 			Log.d(TAG, "onCreate: db = " + mDBHelper);
 		}
+
+		mEtLoginPasswordField = findViewById(R.id.entry_activity_login_password_field);
+		mEtLoginPasswordLayout = findViewById(R.id.entry_activity_login_password_layout);
+		mEtLoginEmailField = findViewById(R.id.entry_activity_login_email_field);
+		mEtLoginEmailLayout = findViewById(R.id.entry_activity_login_email_layout);
+
+		mEtLoginPasswordField.addTextChangedListener(
+				new NoLoginButtonTextWatcher(mEtLoginEmailField, mEtLoginPasswordField, mEtLoginEmailLayout, mEtLoginPasswordLayout));
+		mEtLoginEmailField.addTextChangedListener(
+				new NoLoginButtonTextWatcher(mEtLoginEmailField, mEtLoginPasswordField, mEtLoginEmailLayout, mEtLoginPasswordLayout));
+
 
 		// Set up the ViewPager for the subscriptions.
 		ViewPager2 vpSubscriptionsView = findViewById(R.id.entry_activity_subscription_view_pager);
@@ -107,7 +129,17 @@ public class EntryActivity
 		populateSubscriptionsTable();
 
 		// Instantly display the LoginFragment which deals with the further login process.
-		displayLoginFragment();
+		//		displayLoginFragment();
+	}
+
+
+
+
+	@Override
+	public void onStart()
+	{
+		Log.d(TAG, "onStart:true");
+		super.onStart();
 	}
 
 
@@ -119,6 +151,30 @@ public class EntryActivity
 	private void populateSubscriptionsTable()
 	{
 		Log.d(TAG, "populateSubscriptionsTable:true");
+	}
+
+
+
+
+	void loginWithEmailAndPassword(String email, String password)
+	{
+		Log.d(TAG, "loginWithEmailAndPassword:true");
+
+		FirebaseAuth auth = FirebaseAuth.getInstance();
+
+		auth.signInWithEmailAndPassword(email, password)
+		    .addOnSuccessListener(command ->
+		                          {
+			                          Log.d(TAG, "loginWithEmailAndPassword: success");
+			                          mEtLoginPasswordLayout.setError(null);
+		                          })
+		    .addOnFailureListener(command ->
+		                          {
+			                          Log.d(TAG, "loginWithEmailAndPassword: failure");
+			                          mEtLoginPasswordLayout.setError("You got me wrong");
+
+			                          Log.e(TAG, "loginWithEmailAndPassword: ", command.getCause());
+		                          });
 	}
 
 
@@ -218,16 +274,6 @@ public class EntryActivity
 		}
 
 		return new ArrayAdapter<>(this, R.layout.item_birthdate_spinner, listOfYearsSince1903);
-	}
-
-
-
-
-	@Override
-	public void onStart()
-	{
-		Log.d(TAG, "onStart:true");
-		super.onStart();
 	}
 
 

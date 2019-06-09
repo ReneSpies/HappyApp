@@ -23,6 +23,7 @@
 			android:layout_column="0"
 			android:layout_columnWeight="1"
 			android:layout_gravity="center"
+			android:contentDescription="TODO"
 			android:src="@mipmap/ic_launcher" />
 
 		<TextView

@@ -8,10 +8,10 @@
 	<androidx.appcompat.widget.AppCompatImageView
 		android:layout_width="@dimen/image_view_app_logo_size"
 		android:layout_height="@dimen/image_view_app_logo_size"
+		android:antialias="true"
 		android:src="@drawable/ic_app_logo"
 		app:layout_constraintBottom_toTopOf="@id/view_pager_tv_title"
 		app:layout_constraintEnd_toEndOf="parent"
-		android:antialias="true"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
 
