@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -83,7 +84,6 @@ public class EntryActivity
 		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
 		sv.setSmoothScrollingEnabled(true);
 
-
 		if (mDBHelper == null)
 		{
 			// Create new database if not exists.
@@ -126,7 +126,8 @@ public class EntryActivity
 
 		ViewPagerAdapter vpAdapter = new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPrices, vpSubscriptionsView);
 		vpSubscriptionsView.setAdapter(vpAdapter);
-		vpSubscriptionsView.registerOnPageChangeCallback(new BackgroundTransitionTransformer(vpSubscriptionsView));
+		vpSubscriptionsView.registerOnPageChangeCallback(new BackgroundTransitionTransformer(this, vpSubscriptionsView));
+
 
 		populateSubscriptionsTable();
 
@@ -220,6 +221,9 @@ public class EntryActivity
 		Log.d(TAG, "startEmailVerificationActivity:true");
 		// TODO
 	}
+
+
+
 
 	/**
 	 * Method populates the Subscriptions table in the db with the server data.
@@ -532,7 +536,7 @@ public class EntryActivity
 
 
 
-
+	
 	@Override
 	public void displayProgressBar()
 	{
@@ -600,12 +604,13 @@ public class EntryActivity
 		private static final String TAG = "BackgroundTransitionTransformer";
 		int[] mArrayOfColors;
 		private ViewPager2 mViewPager2;
+		private ScrollView mScrollView;
 
 
 
 
 		@SuppressLint ("LongLogTag")
-		BackgroundTransitionTransformer(ViewPager2 viewPager2)
+		BackgroundTransitionTransformer(AppCompatActivity context, ViewPager2 viewPager2)
 		{
 			super();
 
@@ -645,6 +650,8 @@ public class EntryActivity
 				mArrayOfColors[1] = getResources().getColor(R.color.gold);
 				mArrayOfColors[2] = getResources().getColor(R.color.platinum);
 			}
+
+			mScrollView = context.findViewById(R.id.entry_activity_scroll_view);
 		}
 
 
@@ -658,8 +665,45 @@ public class EntryActivity
 
 			if (position < mArrayOfColors.length - 1)
 			{
-				mViewPager2.setBackgroundColor(
+				mScrollView.getViewTreeObserver()
+				           .addOnScrollChangedListener(() ->
+				                                       {
+					                                       TypedArray ta = getTheme().obtainStyledAttributes(new int[] {
+							                                       R.attr.backgroundColor
+					                                       });
+
+					                                       int backgroundColor = ta.getColor(0, 0xfff);
+					                                       ta.recycle();
+
+					                                       if (mScrollView.getScrollY() >= 0.0 &&
+					                                           mScrollView.getScrollY() <= mScrollView.getChildAt(0)
+					                                                                                  .getHeight() - mScrollView.getHeight())
+					                                       {
+						                                       Log.d(TAG, "onCreate: scrollY = " + mScrollView.getScrollY());
+						                                       Log.d(
+								                                       TAG, "onCreate: height = " + (mScrollView.getChildAt(0)
+								                                                                                .getHeight() -
+								                                                                     mScrollView.getHeight()));
+						                                       mScrollView.setBackgroundColor((int) new
+								                                       ArgbEvaluator().evaluate(
+								                                       (float) mScrollView.getScrollY() / (mScrollView
+										                                                                           .getChildAt(0)
+										                                                                           .getHeight() -
+								                                                                           mScrollView.getHeight()),
+								                                       backgroundColor,
+								                                       getResources().getColor(R
+										                                                               .color.silver)
+						                                                                       ));
+					                                       }
+				                                       });
+
+				mScrollView.setBackgroundColor(
 						(int) new ArgbEvaluator().evaluate(positionOffset, mArrayOfColors[position], mArrayOfColors[position + 1]));
+
+
+				//								mViewPager2.setBackgroundColor(
+				//										(int) new ArgbEvaluator().evaluate(positionOffset, mArrayOfColors[position],
+				//										mArrayOfColors[position + 1]));
 			}
 		}
 
