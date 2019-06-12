@@ -37,9 +37,9 @@
 		android:layout_width="70.13dp"
 		android:layout_height="70.13dp"
 		android:layout_marginTop="13dp"
+		android:contentDescription="TODO"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		android:contentDescription="TODO"
 		app:layout_constraintTop_toTopOf="parent" />
 
 	<TextView

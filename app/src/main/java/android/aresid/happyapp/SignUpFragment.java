@@ -313,7 +313,7 @@ public class SignUpFragment
 		                                                                                               .toString(),
 		                                        mBirthdateYearSpinner.getSelectedItem()
 		                                                             .toString()
-		                                       );
+		);
 		Log.d(TAG, "onClick: age = " + age);
 
 		// Handles all the mButton clicks in this Fragment

@@ -135,7 +135,7 @@ public class DBHelper
 				null, // A filter declared how to group rows.
 				null, // A filter declared which row groups to include in the cursor.
 				null // How to order rows.
-		                        );
+		);
 
 		HashMap<String, Object> mapOfUserInfo = new HashMap<>();
 
@@ -253,7 +253,7 @@ public class DBHelper
 		// The Cursor that holds the data I retrieve from the DB via query method.
 		Cursor cursor = db.query(TABLE_SUBSCRIPTIONS, arrayOfColumns, TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + " = '" + subscriptionName + "'", null,
 		                         null, null, null
-		                        );
+		);
 
 		HashMap<String, String> mapOfSubscriptionData = new HashMap<>();
 

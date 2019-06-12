@@ -40,7 +40,7 @@
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:id="@+id/entry_activity_constraint_layout"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+			android:layout_height="wrap_content">
 
 			<ImageView
 				android:id="@+id/entry_activity_app_logo"
@@ -277,17 +277,16 @@
 				android:id="@+id/entry_activity_subscription_view_pager"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_registration_button"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_view_pager_caption" />
 
-			<com.google.android.material.button.MaterialButton
-				android:id="@+id/entry_activity_registration_button"
-				style="@style/Widget.HappyApp.ContainedButton"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/plain_register_now"
-				app:layout_constraintBottom_toBottomOf="parent"
-				app:layout_constraintTop_toBottomOf="@id/entry_activity_subscription_view_pager" />
+			<!--<com.google.android.material.button.MaterialButton-->
+			<!--android:id="@+id/entry_activity_registration_button"-->
+			<!--style="@style/Widget.HappyApp.ContainedButton"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:text="@string/plain_register_now"-->
+			<!--app:layout_constraintBottom_toBottomOf="parent"-->
+			<!--app:layout_constraintTop_toBottomOf="@id/entry_activity_subscription_view_pager" />-->
 
 
 			<!--<FrameLayout-->

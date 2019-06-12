@@ -142,16 +142,18 @@ public class NoLoginButtonTextWatcher
 						                                                       mWaitingAssistantTextView.setVisibility(View.GONE);
 
 						                                                       // TODO: Exception handling!
-						                                                       if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException)
+						                                                       if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException |
+						                                                           e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException)
 						                                                       {
 							                                                       mPasswordLayout.setError("Email or password incorrect");
 						                                                       }
 						                                                       else if (e instanceof com.google.firebase.FirebaseNetworkException)
 						                                                       {
 							                                                       Toast.makeText(
-									                                                       mContext, "Check your internet connection",
+									                                                       mContext,
+									                                                       "Check your internet connection and try again later",
 									                                                       Toast.LENGTH_LONG
-							                                                                     )
+							                                                       )
 							                                                            .show();
 						                                                       }
 					                                                       });

@@ -207,7 +207,7 @@ public class LegalitiesDialog
 				                                                                       mDialogInteractionListener.handleLegalitiesAccept(
 						                                                                       firstName, surname, email, password, birthdate,
 						                                                                       acceptedLegalitiesVersion
-				                                                                                                                        );
+				                                                                       );
 
 				                                                                       dialog.cancel();
 			                                                                       });

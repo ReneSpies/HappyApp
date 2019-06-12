@@ -126,8 +126,63 @@ public class EntryActivity
 
 		ViewPagerAdapter vpAdapter = new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPrices, vpSubscriptionsView);
 		vpSubscriptionsView.setAdapter(vpAdapter);
-		vpSubscriptionsView.registerOnPageChangeCallback(new BackgroundTransitionTransformer(this, vpSubscriptionsView));
+		BackgroundTransitionTransformer btt = new BackgroundTransitionTransformer(this, vpSubscriptionsView);
+		vpSubscriptionsView.registerOnPageChangeCallback(btt);
 
+		sv.getViewTreeObserver()
+		  .addOnScrollChangedListener(() ->
+		                              {
+			                              TypedArray ta = getTheme().obtainStyledAttributes(new int[] {
+					                              R.attr.backgroundColor
+			                              });
+
+			                              int backgroundColor = ta.getColor(0, 0xfff);
+			                              ta.recycle();
+
+			                              int scrollY = sv.getScrollY() + sv.getHeight() - vpSubscriptionsView.getTop();
+			                              Log.d(TAG, "onCreate: sv height = " + sv.getHeight());
+
+			                              Log.d(TAG, "onCreate: scrollY = " + scrollY);
+
+			                              if (scrollY >= 0.0 &&
+			                                  scrollY <= sv.getChildAt(0)
+			                                               .getHeight() - sv.getHeight())
+			                              {
+				                              Log.d(TAG, "onCreate: scrollY = " + scrollY);
+				                              Log.d(TAG, "onCreate: height = " + (sv.getChildAt(0)
+				                                                                    .getHeight() -
+				                                                                  sv.getHeight()));
+
+				                              if (btt.getPosition() < btt.mArrayOfColors.length - 1)
+				                              {
+					                              sv.setBackgroundColor((int) new
+							                              ArgbEvaluator().evaluate(
+							                              (float) scrollY / (sv.getChildAt(0)
+							                                                   .getHeight() -
+							                                                 sv.getHeight() - vpSubscriptionsView.getHeight()),
+							                              backgroundColor, new ArgbEvaluator().evaluate(
+									                              btt.getPositionOffset(),
+									                              btt.mArrayOfColors[btt.getPosition()],
+									                              btt.mArrayOfColors[btt.getPosition() + 1]
+							                              )
+					                              ));
+				                              }
+				                              else
+				                              {
+					                              sv.setBackgroundColor((int) new
+							                              ArgbEvaluator().evaluate(
+							                              (float) sv.getScrollY() / (sv.getChildAt(0)
+							                                                           .getHeight() -
+							                                                         sv.getHeight()),
+							                              backgroundColor, new ArgbEvaluator().evaluate(
+									                              btt.getPositionOffset(),
+									                              btt.mArrayOfColors[btt.getPosition()],
+									                              btt.mArrayOfColors[2]
+							                              )
+					                              ));
+				                              }
+			                              }
+		                              });
 
 		populateSubscriptionsTable();
 
@@ -439,7 +494,7 @@ public class EntryActivity
 			                                 // Insert User into database.
 			                                 mDBHelper.insertUser(documentReference.getId(), firstName, surname, email, password, birthdate,
 			                                                      acceptedLegalitiesVersion
-			                                                     );
+			                                 );
 		                                 })
 		           .addOnFailureListener(e ->
 		                                 {
@@ -536,7 +591,7 @@ public class EntryActivity
 
 
 
-	
+
 	@Override
 	public void displayProgressBar()
 	{
@@ -605,6 +660,8 @@ public class EntryActivity
 		int[] mArrayOfColors;
 		private ViewPager2 mViewPager2;
 		private ScrollView mScrollView;
+		private float mPositionOffset = 0;
+		private int mPosition;
 
 
 
@@ -658,53 +715,23 @@ public class EntryActivity
 
 
 		@SuppressLint ("LongLogTag")
+		float getPositionOffset()
+		{
+			Log.d(TAG, "getPositionOffset:true");
+			return mPositionOffset;
+		}
+
+
+
+
+		@SuppressLint ("LongLogTag")
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
 		{
 			Log.d(TAG, "onPageScrolled:true");
 
-			if (position < mArrayOfColors.length - 1)
-			{
-				mScrollView.getViewTreeObserver()
-				           .addOnScrollChangedListener(() ->
-				                                       {
-					                                       TypedArray ta = getTheme().obtainStyledAttributes(new int[] {
-							                                       R.attr.backgroundColor
-					                                       });
-
-					                                       int backgroundColor = ta.getColor(0, 0xfff);
-					                                       ta.recycle();
-
-					                                       if (mScrollView.getScrollY() >= 0.0 &&
-					                                           mScrollView.getScrollY() <= mScrollView.getChildAt(0)
-					                                                                                  .getHeight() - mScrollView.getHeight())
-					                                       {
-						                                       Log.d(TAG, "onCreate: scrollY = " + mScrollView.getScrollY());
-						                                       Log.d(
-								                                       TAG, "onCreate: height = " + (mScrollView.getChildAt(0)
-								                                                                                .getHeight() -
-								                                                                     mScrollView.getHeight()));
-						                                       mScrollView.setBackgroundColor((int) new
-								                                       ArgbEvaluator().evaluate(
-								                                       (float) mScrollView.getScrollY() / (mScrollView
-										                                                                           .getChildAt(0)
-										                                                                           .getHeight() -
-								                                                                           mScrollView.getHeight()),
-								                                       backgroundColor,
-								                                       getResources().getColor(R
-										                                                               .color.silver)
-						                                                                       ));
-					                                       }
-				                                       });
-
-				mScrollView.setBackgroundColor(
-						(int) new ArgbEvaluator().evaluate(positionOffset, mArrayOfColors[position], mArrayOfColors[position + 1]));
-
-
-				//								mViewPager2.setBackgroundColor(
-				//										(int) new ArgbEvaluator().evaluate(positionOffset, mArrayOfColors[position],
-				//										mArrayOfColors[position + 1]));
-			}
+			mPosition = position;
+			mPositionOffset = positionOffset;
 		}
 
 
@@ -723,6 +750,16 @@ public class EntryActivity
 		public void onPageScrollStateChanged(int state)
 		{
 			super.onPageScrollStateChanged(state);
+		}
+
+
+
+
+		@SuppressLint ("LongLogTag")
+		int getPosition()
+		{
+			Log.d(TAG, "getPosition:true");
+			return mPosition;
 		}
 
 
