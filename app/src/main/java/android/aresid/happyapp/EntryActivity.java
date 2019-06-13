@@ -5,12 +5,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.RotateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -43,32 +41,33 @@ import java.util.Map;
 public class EntryActivity
 		extends AppCompatActivity
 		implements GoogleApiClient.OnConnectionFailedListener,
-		LoginFragment.OnFragmentInteractionListener,
-		SignUpFragment.OnFragmentInteractionListener,
-		EmailVerificationFragment.OnFragmentInteractionListener,
-		LegalitiesDialog.OnPrivacyPolicyDialogInteractionListener,
-		NoLoginButtonTextWatcher.OnNoLoginButtonTextWatcherInteractionListener {
-	private final static String FIRST_NAME_KEY = "first_name";
-	private final static String SURNAME_KEY = "surname";
-	private final static String BIRTHDATE_KEY = "birthdate";
-	private final static String EMAIL_KEY = "email";
-	private final static String ACCEPTED_LEGALITIES_VERSION_KEY = "accepted_legalities";
-	private final static String LEGALITIES_VERSION_KEY = "legalities_version";
-	private final static String FIRESTORE_ID_KEY = "firestore_id";
-	private final static String NAME_PREFS_FIRESTORE_ID = "user_firestore_id";
-	private final static String NAME_PREFS_FIRESTORE_USER_DATA = "user_data";
-	private final static String TAG = "EntryActivity";
-	private static boolean mComesFromEmailVerificationFragment = false;
-	private DBHelper mDBHelper;
-	private TextInputEditText mEtLoginPasswordField;
-	private TextInputEditText mEtLoginEmailField;
-	private TextInputLayout mEtLoginPasswordLayout;
-	private TextInputLayout mEtLoginEmailLayout;
-	private FirebaseUser mFirebaseUser;
+		           LoginFragment.OnFragmentInteractionListener,
+		           SignUpFragment.OnFragmentInteractionListener,
+		           EmailVerificationFragment.OnFragmentInteractionListener,
+		           LegalitiesDialog.OnPrivacyPolicyDialogInteractionListener,
+		           NoLoginButtonTextWatcher.OnNoLoginButtonTextWatcherInteractionListener {
 
+	private final static String            FIRST_NAME_KEY                      = "first_name";
+	private final static String            SURNAME_KEY                         = "surname";
+	private final static String            BIRTHDATE_KEY                       = "birthdate";
+	private final static String            EMAIL_KEY                           = "email";
+	private final static String            ACCEPTED_LEGALITIES_VERSION_KEY     = "accepted_legalities";
+	private final static String            LEGALITIES_VERSION_KEY              = "legalities_version";
+	private final static String            FIRESTORE_ID_KEY                    = "firestore_id";
+	private final static String            NAME_PREFS_FIRESTORE_ID             = "user_firestore_id";
+	private final static String            NAME_PREFS_FIRESTORE_USER_DATA      = "user_data";
+	private final static String            TAG                                 = "EntryActivity";
+	private static       boolean           mComesFromEmailVerificationFragment = false;
+	private              DBHelper          mDBHelper;
+	private              TextInputEditText mEtLoginPasswordField;
+	private              TextInputEditText mEtLoginEmailField;
+	private              TextInputLayout   mEtLoginPasswordLayout;
+	private              TextInputLayout   mEtLoginEmailLayout;
+	private              FirebaseUser      mFirebaseUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		Log.d(TAG, "onCreate:true");
 
 		// Make sure this is before super.onCreate() and setContentView().
@@ -82,25 +81,23 @@ public class EntryActivity
 		sv.setSmoothScrollingEnabled(true);
 
 		if (mDBHelper == null) {
+
 			// Create new database if not exists.
 			mDBHelper = new DBHelper(this);
+
 			Log.d(TAG, "onCreate: db = " + mDBHelper);
+
 		}
 
 		mEtLoginPasswordField = findViewById(R.id.entry_activity_login_password_field);
 		mEtLoginPasswordLayout = findViewById(R.id.entry_activity_login_password_layout);
 		mEtLoginEmailField = findViewById(R.id.entry_activity_login_email_field);
 		mEtLoginEmailLayout = findViewById(R.id.entry_activity_login_email_layout);
-
-		mEtLoginPasswordField.addTextChangedListener(
-				new NoLoginButtonTextWatcher(this));
-		mEtLoginEmailField.addTextChangedListener(
-				new NoLoginButtonTextWatcher(this));
-
+		mEtLoginPasswordField.addTextChangedListener(new NoLoginButtonTextWatcher(this));
+		mEtLoginEmailField.addTextChangedListener(new NoLoginButtonTextWatcher(this));
 
 		// Set up the ViewPager for the subscriptions.
 		ViewPager2 vpSubscriptionsView = findViewById(R.id.entry_activity_subscription_view_pager);
-
 		List<String> listOfTitles = new ArrayList<>();
 		List<String> listOfDescriptions = new ArrayList<>();
 		List<String> listOfPrices = new ArrayList<>();
@@ -122,57 +119,32 @@ public class EntryActivity
 
 		ViewPagerAdapter vpAdapter = new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPrices, vpSubscriptionsView);
 		vpSubscriptionsView.setAdapter(vpAdapter);
+
 		BackgroundTransitionTransformer btt = new BackgroundTransitionTransformer(this, vpSubscriptionsView);
 		vpSubscriptionsView.registerOnPageChangeCallback(btt);
 
 		sv.getViewTreeObserver()
-				.addOnScrollChangedListener(() ->
-				{
-					TypedArray ta = getTheme().obtainStyledAttributes(new int[]{
-							R.attr.backgroundColor
-					});
+		  .addOnScrollChangedListener(() -> {
 
-					int backgroundColor = ta.getColor(0, 0xfff);
-					ta.recycle();
+			  int scrollY = sv.getScrollY() + sv.getHeight() - vpSubscriptionsView.getTop();
+			  if (scrollY >= 0.0 && scrollY <= vpSubscriptionsView.getHeight()) {
 
-					int scrollY = sv.getScrollY() + sv.getHeight() - vpSubscriptionsView.getTop();
-					Log.d(TAG, "onCreate: sv height = " + sv.getHeight());
+				  if (btt.getPosition() < btt.mArrayOfColors.length - 1) {
 
-					Log.d(TAG, "onCreate: scrollY = " + scrollY);
+					  sv.setBackgroundColor((int) new ArgbEvaluator().evaluate((float) scrollY /
+					                                                           vpSubscriptionsView.getHeight(), getResources().getColor(R.color.white),
+					                                                           new ArgbEvaluator().evaluate(btt.getPositionOffset(), btt.mArrayOfColors[btt.getPosition()], btt.mArrayOfColors[
+							  btt.getPosition() + 1])));
 
-					if (scrollY >= 0.0 &&
-							scrollY <= vpSubscriptionsView.getHeight()) {
-						Log.d(TAG, "onCreate: scrollY = " + scrollY);
-						Log.d(TAG, "onCreate: height = " + (sv.getChildAt(0)
-								.getHeight() -
-								sv.getHeight()));
-						Log.d(TAG, "onCreate: percentage = " + (float) scrollY / vpSubscriptionsView.getHeight());
+				  } else {
 
-						if (btt.getPosition() < btt.mArrayOfColors.length - 1) {
-							sv.setBackgroundColor((int) new
-									ArgbEvaluator().evaluate(
-									(float) scrollY / vpSubscriptionsView.getHeight(),
-									backgroundColor, new ArgbEvaluator().evaluate(
-											btt.getPositionOffset(),
-											btt.mArrayOfColors[btt.getPosition()],
-											btt.mArrayOfColors[btt.getPosition() + 1]
-									)
-							));
-						} else {
-							sv.setBackgroundColor((int) new
-									ArgbEvaluator().evaluate(
-									(float) sv.getScrollY() / (sv.getChildAt(0)
-											.getHeight() -
-											sv.getHeight()),
-									backgroundColor, new ArgbEvaluator().evaluate(
-											btt.getPositionOffset(),
-											btt.mArrayOfColors[btt.getPosition()],
-											btt.mArrayOfColors[2]
-									)
-							));
-						}
-					}
-				});
+					  sv.setBackgroundColor((int) new ArgbEvaluator().evaluate((float) scrollY /
+					                                                           vpSubscriptionsView.getHeight(), getResources().getColor(R.color.white),
+					                                                           new ArgbEvaluator().evaluate(btt.getPositionOffset(), btt.mArrayOfColors[btt.getPosition()], btt.mArrayOfColors[2])));
+
+				  }
+			  }
+		  });
 
 		populateSubscriptionsTable();
 
@@ -180,29 +152,30 @@ public class EntryActivity
 		//		displayLoginFragment();
 	}
 
-
 	@Override
 	public void onStart() {
+
 		Log.d(TAG, "onStart:true");
+
 		super.onStart();
 
 		FirebaseUser user = FirebaseAuth.getInstance()
-				.getCurrentUser();
+		                                .getCurrentUser();
 
 		updateUI(user, null);
 	}
 
-
 	void updateUI(FirebaseUser user, GoogleSignInAccount account) {
+
 		Log.d(TAG, "updateUI:true");
 
 		ImageView waitingAssistant = findViewById(R.id.entry_activity_logging_in_waiting_assistant);
 
-
 		if (user != null) {
+
 			Glide.with(this)
-					.load(R.drawable.waiting_assistant_content)
-					.into(waitingAssistant);
+			     .load(R.drawable.waiting_assistant_content)
+			     .into(waitingAssistant);
 
 			findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
 			findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
@@ -211,71 +184,82 @@ public class EntryActivity
 			toast.show();
 
 			user.reload()
-					.addOnSuccessListener(command ->
-					{
-						Log.d(TAG, "updateUI: success");
+			    .addOnSuccessListener(command -> {
 
-						toast.cancel();
+				    Log.d(TAG, "updateUI: success");
+				    toast.cancel();
+				    if (user.isEmailVerified()) {
 
-						if (user.isEmailVerified()) {
-							startMainActivityWithUser(user);
-						} else {
-							startEmailVerificationActivity(user);
-						}
-					})
-					.addOnFailureListener(e ->
-					{
-						Log.d(TAG, "updateUI: failure");
-						Log.e(TAG, "updateUI: ", e);
-					});
-		} else if (account != null) {
-			// TODO
+					    startMainActivityWithUser(user);
+
+				    } else {
+
+					    startEmailVerificationActivity(user);
+
+				    }
+			    })
+			    .addOnFailureListener(e -> {
+
+				    Log.d(TAG, "updateUI: failure");
+				    Log.e(TAG, "updateUI: ", e);
+
+			    });
+
 		} else {
-			// TODO
+
+			if (account != null) {
+
+				// TODO
+
+			} else {
+
+				// TODO
+
+			}
 		}
 	}
 
-
 	void startMainActivityWithUser(FirebaseUser user) {
+
 		Log.d(TAG, "startMainActivityWithUser:true");
 		// TODO
 	}
 
-
 	void startEmailVerificationActivity(FirebaseUser user) {
+
 		Log.d(TAG, "startEmailVerificationActivity:true");
 		// TODO
 	}
-
 
 	/**
 	 * Method populates the Subscriptions table in the db with the server data.
 	 */
 	private void populateSubscriptionsTable() {
+
 		Log.d(TAG, "populateSubscriptionsTable:true");
 	}
 
-
 	void loginWithEmailAndPassword(String email, String password) {
+
 		Log.d(TAG, "loginWithEmailAndPassword:true");
 
 		FirebaseAuth auth = FirebaseAuth.getInstance();
 
 		auth.signInWithEmailAndPassword(email, password)
-				.addOnSuccessListener(command ->
-				{
-					Log.d(TAG, "loginWithEmailAndPassword: success");
-					mEtLoginPasswordLayout.setError(null);
-				})
-				.addOnFailureListener(command ->
-				{
-					Log.d(TAG, "loginWithEmailAndPassword: failure");
-					mEtLoginPasswordLayout.setError("You got me wrong");
+		    .addOnSuccessListener(command -> {
 
-					Log.e(TAG, "loginWithEmailAndPassword: ", command.getCause());
-				});
+			    Log.d(TAG, "loginWithEmailAndPassword: success");
+			    mEtLoginPasswordLayout.setError(null);
+
+		    })
+		    .addOnFailureListener(command -> {
+
+			    Log.d(TAG, "loginWithEmailAndPassword: failure");
+			    mEtLoginPasswordLayout.setError("You got me wrong");
+			    Log.e(TAG, "loginWithEmailAndPassword: ", command.getCause());
+
+		    });
 	}
-
 
 	/**
 	 * Loads the LoginFragment into the activities container.
@@ -283,21 +267,19 @@ public class EntryActivity
 	 */
 	@Override
 	public void displayLoginFragment() {
-		Log.d(TAG, "displayLoginFragment:true");
 
+		Log.d(TAG, "displayLoginFragment:true");
 		//		new DisplayFragment(this).displayFragment(R.id.login_container, LoginFragment.newInstance());
 	}
-
 
 	/**
 	 * Shows a Dialog with important legalities such as terms and conditions and privacy policy.
 	 * Furthermore there is the confirmation that the user is older than 18 years.
 	 */
 	@Override
-	public void displayLegalitiesDialog(String firstName, String surname, String email, String password, String birthdate,
-	                                    String acceptedLegalitiesVersion) {
-		Log.d(TAG, "displayLegalitiesDialog:true");
+	public void displayLegalitiesDialog(String firstName, String surname, String email, String password, String birthdate, String acceptedLegalitiesVersion) {
 
+		Log.d(TAG, "displayLegalitiesDialog:true");
 		Log.d(TAG, "displayLegalitiesDialog: firstName = " + firstName);
 		Log.d(TAG, "displayLegalitiesDialog: surname = " + surname);
 		Log.d(TAG, "displayLegalitiesDialog: email = " + email);
@@ -309,7 +291,6 @@ public class EntryActivity
 		dialog.show(getSupportFragmentManager(), "LegalitiesDialog");
 	}
 
-
 	/**
 	 * Method creates and populates an adapter for the spinner that's handling the days.
 	 * Note: The case of e. g. 30.02.2019 is handled in the SignUpFragment class.
@@ -318,10 +299,10 @@ public class EntryActivity
 	 */
 	@Override
 	public ArrayAdapter createDaysAdapter() {
+
 		Log.d(TAG, "createDaysAdapter:true");
 		return ArrayAdapter.createFromResource(this, R.array.days_of_month_array, R.layout.item_birthdate_spinner);
 	}
-
 
 	/**
 	 * Method creates and populates an adapter for the spinner that's handling the months.
@@ -331,10 +312,10 @@ public class EntryActivity
 	 */
 	@Override
 	public ArrayAdapter createMonthsAdapter() {
+
 		Log.d(TAG, "createMonthsAdapter:true");
 		return ArrayAdapter.createFromResource(this, R.array.months_of_year_array, R.layout.item_birthdate_spinner);
 	}
-
 
 	/**
 	 * Method creates and populates an adapter for the spinner that's handling the years.
@@ -344,73 +325,76 @@ public class EntryActivity
 	 */
 	@Override
 	public ArrayAdapter createYearsAdapter() {
+
 		Log.d(TAG, "createYearsAdapter:true");
-
 		List<String> listOfYearsSince1903 = new ArrayList<>();
-
 		// Iterate through the years from now to 1903 and add them to the list.
 		for (int year = Calendar.getInstance()
-				.get(Calendar.YEAR);
-		     year >= 1903;
-		     year--) {
+		                        .get(Calendar.YEAR); year >= 1903; year--) {
+
 			listOfYearsSince1903.add(String.valueOf(year));
+
 		}
 
 		return new ArrayAdapter<>(this, R.layout.item_birthdate_spinner, listOfYearsSince1903);
 	}
 
-
 	@Override
 	public void onBackPressed() {
+
 		Log.d(TAG, "onBackPressed:true");
 		super.onBackPressed();
 	}
 
-
 	@Override
-	public void handleLegalitiesAccept(String firstName, String surname, String email, String password, String birthdate,
-	                                   String acceptedLegalitiesVersion) {
+	public void handleLegalitiesAccept(String firstName, String surname, String email, String password, String birthdate, String acceptedLegalitiesVersion) {
+
 		Log.d(TAG, "handleLegalitiesAccept:true");
 
 		FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
 		firebaseAuth.createUserWithEmailAndPassword(email, password)
-				.addOnSuccessListener(authResult ->
-				{
-					Log.d(TAG, "onSuccess:true");
+		            .addOnSuccessListener(authResult -> {
 
-					createUserInFirestore(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
-					displayEmailVerificationFragment(authResult.getUser());
-				})
-				.addOnFailureListener(e ->
-				{
-					// TODO: exception handling!
-					// TODO: Move hardcoded strings to strings.xml.
-					Log.d(TAG, "onFailure:true");
-					Log.e(TAG, "onFailure: ", e);
-					if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException) {
-						Toast.makeText(this, "The email address is already in use by another account.", Toast.LENGTH_LONG)
-								.show();
-					}
-					if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
-						Toast.makeText(this, "Your email adress does not seem to fit. Please check it", Toast.LENGTH_LONG)
-								.show();
-					}
-				});
+			            Log.d(TAG, "onSuccess:true");
+			            createUserInFirestore(firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
+			            displayEmailVerificationFragment(authResult.getUser());
+
+		            })
+		            .addOnFailureListener(e -> {
+
+			            // TODO: exception handling!
+			            // TODO: Move hardcoded strings to strings.xml.
+			            Log.d(TAG, "onFailure:true");
+			            Log.e(TAG, "onFailure: ", e);
+
+			            if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException) {
+
+				            Toast.makeText(this, "The email address is already in use by another account.", Toast.LENGTH_LONG)
+				                 .show();
+
+			            }
+
+			            if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
+
+				            Toast.makeText(this, "Your email adress does not seem to fit. Please check it", Toast.LENGTH_LONG)
+				                 .show();
+
+			            }
+		            });
 	}
-
 
 	/**
 	 * Method uploads data from the SharedPreferences onto the Firestore cloud and creates a new user.
 	 */
-	private void createUserInFirestore(String firstName, String surname, String email, String password, String birthdate,
-	                                   String acceptedLegalitiesVersion) {
+	private void createUserInFirestore(String firstName, String surname, String email, String password, String birthdate, String acceptedLegalitiesVersion) {
+
 		Log.d(TAG, "createUserInFirestore:true");
 
 		// Get Firestore instance.
 		FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
 
 		// Get and save the data from shared preferences into a HashMap.
-
 		Map<String, Object> userData = new HashMap<>();
 		userData.put("first_name", firstName);
 		userData.put("surname", surname);
@@ -422,24 +406,22 @@ public class EntryActivity
 
 		// Add a new document with a generated ID.
 		firestoreDB.collection("users")
-				.add(userData)
-				.addOnSuccessListener(documentReference ->
-				{
-					Log.d(TAG, "createUserInFirestore: success");
-					Log.d(TAG, "createUserInFirestore: new user added with id = " + documentReference.getId());
+		           .add(userData)
+		           .addOnSuccessListener(documentReference -> {
 
-					// Insert User into database.
-					mDBHelper.insertUser(documentReference.getId(), firstName, surname, email, password, birthdate,
-							acceptedLegalitiesVersion
-					);
-				})
-				.addOnFailureListener(e ->
-				{
-					Log.d(TAG, "createUserInFirestore: failure");
-					Log.e(TAG, "createUserInFirestore: ", e);
-				});
+			           Log.d(TAG, "createUserInFirestore: success");
+			           Log.d(TAG, "createUserInFirestore: new user added with id = " + documentReference.getId());
+			           // Insert User into database.
+			           mDBHelper.insertUser(documentReference.getId(), firstName, surname, email, password, birthdate, acceptedLegalitiesVersion);
+
+		           })
+		           .addOnFailureListener(e -> {
+
+			           Log.d(TAG, "createUserInFirestore: failure");
+			           Log.e(TAG, "createUserInFirestore: ", e);
+
+		           });
 	}
-
 
 	/**
 	 * Loads the EmailVerificationFragment into the activities container.
@@ -449,17 +431,18 @@ public class EntryActivity
 	 */
 	@Override
 	public void displayEmailVerificationFragment(FirebaseUser user) {
+
 		Log.d(TAG, "displayEmailVerificationFragment:true");
 		Log.d(TAG, "displayEmailVerificationFragment: mComesFromEmailVerificatoinFragment = " + mComesFromEmailVerificationFragment);
 
 		if (!mComesFromEmailVerificationFragment) {
+
 			Log.d(TAG, "displayEmailVerificationFragment: umm hello");
 			//			new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, EmailVerificationFragment.newInstance(user));
 		}
 
 		mComesFromEmailVerificationFragment = false;
 	}
-
 
 	/**
 	 * Loads the SignUpFragment into the activities container.
@@ -468,10 +451,10 @@ public class EntryActivity
 	 */
 	@Override
 	public void displaySignUpFragment(String email) {
+
 		Log.d(TAG, "displaySignUpFragment:true");
 		//		new DisplayFragment(this).displayFragmentBackstack(R.id.login_container, SignUpFragment.newInstance(null, null, null, email));
 	}
-
 
 	/**
 	 * Kicks off an Intent and starts the MainActivity via it.
@@ -481,6 +464,7 @@ public class EntryActivity
 	 */
 	@Override
 	public void startMainActivity(FirebaseUser user, GoogleSignInAccount account) {
+
 		Log.d(TAG, "startMainActivity:true");
 
 		Intent intent = new Intent(this, MainActivity.class);
@@ -491,9 +475,9 @@ public class EntryActivity
 		startActivity(intent);
 	}
 
-
 	@Override
 	public void startOnboardingActivity(FirebaseUser user, GoogleSignInAccount account) {
+
 		Log.d(TAG, "startOnboardingActivity:true");
 
 		Intent intent = new Intent(this, OnboardingActivity.class);
@@ -504,15 +488,15 @@ public class EntryActivity
 		startActivity(intent);
 	}
 
-
 	@Override
 	public Activity getActivitiesContext() {
+
 		return this;
 	}
 
-
 	@Override
 	public void displayProgressBar() {
+
 		Log.d(TAG, "displayProgressBar:true");
 
 		// Getting instances.
@@ -520,13 +504,13 @@ public class EntryActivity
 		loginLayout = findViewById(R.id.login_linear_layout);
 		googleLayout = findViewById(R.id.google_linear_layout);
 		signUpLayout = findViewById(R.id.sign_up_linear_layout);
+
 		ImageView progressBar = findViewById(R.id.progress_bar);
 		TextView statusInfoTextView = findViewById(R.id.login_text_view);
 		Button loginButton = findViewById(R.id.login_login_button);
-
 		Glide.with(this)
-				.load(R.drawable.waiting_assistant_content)
-				.into(progressBar);
+		     .load(R.drawable.waiting_assistant_content)
+		     .into(progressBar);
 
 		// Setting invisible first so in case of long loading times there are no views overlapping.
 		// Setting invisible.
@@ -540,40 +524,38 @@ public class EntryActivity
 		statusInfoTextView.setVisibility(View.VISIBLE);
 	}
 
-
 	@Override
 	public LayoutInflater getLayoutInflaterForDialog() {
-		Log.d(TAG, "getLayoutInflater:true");
 
+		Log.d(TAG, "getLayoutInflater:true");
 		return getLayoutInflater();
 	}
 
-
 	@Override
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-	}
 
+	}
 
 	@Override
 	public void loginWithUser(FirebaseUser user) {
-		Log.d(TAG, "loginWithUser:true");
 
+		Log.d(TAG, "loginWithUser:true");
 		updateUI(user, null);
 	}
 
-
 	class BackgroundTransitionTransformer
 			extends ViewPager2.OnPageChangeCallback {
+
 		private static final String TAG = "BackgroundTransitionTransformer";
 		int[] mArrayOfColors;
 		private ViewPager2 mViewPager2;
 		private ScrollView mScrollView;
-		private float mPositionOffset = 0;
-		private int mPosition;
+		private float      mPositionOffset = 0;
+		private int        mPosition;
 
-
-		@SuppressLint("LongLogTag")
+		@SuppressLint ("LongLogTag")
 		BackgroundTransitionTransformer(AppCompatActivity context, ViewPager2 viewPager2) {
+
 			super();
 
 			Log.d(TAG, "BackgroundTransitionTransformer:true");
@@ -583,14 +565,15 @@ public class EntryActivity
 			// Populate the int[] for the colors.
 			if (viewPager2.getAdapter() != null) {
 				mArrayOfColors = new int[viewPager2.getAdapter()
-						.getItemCount()];
-				for (int i = 0;
-				     i <= viewPager2.getAdapter()
-						     .getItemCount();
-				     i++) {
+				                                   .getItemCount()];
+
+				for (int i = 0; i <= viewPager2.getAdapter()
+				                               .getItemCount(); i++) {
+
 					Log.d(TAG, "i = " + i);
 
 					switch (i) {
+
 						case 0:
 							mArrayOfColors[i] = getResources().getColor(R.color.silver);
 							break;
@@ -600,55 +583,54 @@ public class EntryActivity
 						case 2:
 							mArrayOfColors[i] = getResources().getColor(R.color.platinum);
 							break;
+
 					}
 				}
+
 			} else {
+
 				mArrayOfColors[0] = getResources().getColor(R.color.silver);
 				mArrayOfColors[1] = getResources().getColor(R.color.gold);
 				mArrayOfColors[2] = getResources().getColor(R.color.platinum);
+
 			}
 
 			mScrollView = context.findViewById(R.id.entry_activity_scroll_view);
 		}
 
-
-		@SuppressLint("LongLogTag")
+		@SuppressLint ("LongLogTag")
 		float getPositionOffset() {
+
 			Log.d(TAG, "getPositionOffset:true");
 			return mPositionOffset;
 		}
 
-
-		@SuppressLint("LongLogTag")
+		@SuppressLint ("LongLogTag")
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-			Log.d(TAG, "onPageScrolled:true");
 
+			Log.d(TAG, "onPageScrolled:true");
 			mPosition = position;
 			mPositionOffset = positionOffset;
 		}
 
-
 		@Override
 		public void onPageSelected(int position) {
+
 			super.onPageSelected(position);
 		}
 
-
 		@Override
 		public void onPageScrollStateChanged(int state) {
+
 			super.onPageScrollStateChanged(state);
 		}
 
-
-		@SuppressLint("LongLogTag")
+		@SuppressLint ("LongLogTag")
 		int getPosition() {
+
 			Log.d(TAG, "getPosition:true");
 			return mPosition;
 		}
-
-
 	}
-
-
 }

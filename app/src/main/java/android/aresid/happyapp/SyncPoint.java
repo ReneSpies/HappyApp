@@ -1,6 +1,5 @@
 package android.aresid.happyapp;
 
-
 import android.util.Log;
 
 /**
@@ -9,43 +8,25 @@ import android.util.Log;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
+public class SyncPoint {
 
-
-public class SyncPoint
-{
 	private static final String TAG = "SyncPoint";
-
-
-
 
 	/**
 	 * Constructor for SyncPoint.
 	 */
-	SyncPoint()
-	{
+	SyncPoint() {
+
 		Log.d(TAG, "SyncPoint:true");
 	}
 
+	void loadIntoDatabase() {
 
-
-
-	void loadIntoDatabase()
-	{
 		Log.d(TAG, "loadIntoDatabase:true");
 	}
 
+	void uploadToServer() {
 
-
-
-	void uploadToServer()
-	{
 		Log.d(TAG, "uploadToServer:true");
 	}
-
-
-
-
-
-
-
 }

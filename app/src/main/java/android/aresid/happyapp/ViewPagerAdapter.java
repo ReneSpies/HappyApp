@@ -15,29 +15,23 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.List;
 
-
 /**
  * Created on: 26.05.2019
  * For Project: HappyApp
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
-
-
 public class ViewPagerAdapter
-		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
-{
-	private static final String TAG = "ViewPagerAdapter";
-	private List<String> mTitles;
-	private LayoutInflater mInflater;
-	private List<String> mDescriptions;
-	private List<String> mPrices;
+		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder> {
 
+	private static final String         TAG = "ViewPagerAdapter";
+	private              List<String>   mTitles;
+	private              LayoutInflater mInflater;
+	private              List<String>   mDescriptions;
+	private              List<String>   mPrices;
 
+	ViewPagerAdapter(Context context, List<String> titles, List<String> descriptions, List<String> prices, ViewPager2 viewPager2) {
 
-
-	ViewPagerAdapter(Context context, List<String> titles, List<String> descriptions, List<String> prices, ViewPager2 viewPager2)
-	{
 		Log.d(TAG, "ViewPagerAdapter:true");
 		mInflater = LayoutInflater.from(context);
 		mTitles = titles;
@@ -45,96 +39,56 @@ public class ViewPagerAdapter
 		mPrices = prices;
 	}
 
-
-
-
 	@NonNull
 	@Override
-	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-	{
+	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
 		Log.d(TAG, "onCreateViewHolder:true");
 		View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
 		Button viewPagerBtConfirm = view.findViewById(R.id.view_pager_bt_confirm);
-
 		viewPagerBtConfirm.setOnClickListener(v -> Log.d(TAG, "onCreateViewHolder: bt click"));
-
 		return new ViewHolder(view);
 	}
 
-
-
-
 	@Override
-	public void onBindViewHolder(@NonNull ViewHolder holder, int position)
-	{
-		Log.d(TAG, "onBindViewHolder:true");
+	public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+		Log.d(TAG, "onBindViewHolder:true");
 		String title = mTitles.get(position);
 		String description = mDescriptions.get(position);
 		String price = mPrices.get(position);
-
 		holder.mTVTitle.setText(title);
 		holder.mTVDescription.setText(description);
 		holder.mTVPrice.setText(price);
 	}
 
-
-
-
 	@Override
-	public int getItemCount()
-	{
+	public int getItemCount() {
+
 		Log.d(TAG, "getItemCount:true");
 		return mTitles.size();
 	}
 
+	public interface OnViewPagerInteractionListener {
 
-
-
-	public interface OnViewPagerInteractionListener
-	{
 		void startMainActivty();
-
-
-
-
-
-
-
 	}
 
 	class ViewHolder
-			extends RecyclerView.ViewHolder
-	{
-		TextView mTVTitle;
-		TextView mTVDescription;
-		TextView mTVPrice;
+			extends RecyclerView.ViewHolder {
+
+		TextView         mTVTitle;
+		TextView         mTVDescription;
+		TextView         mTVPrice;
 		ConstraintLayout mConstraintLayout;
 
+		ViewHolder(View itemView) {
 
-
-
-		ViewHolder(View itemView)
-		{
 			super(itemView);
 			mTVTitle = itemView.findViewById(R.id.view_pager_tv_title);
 			mTVDescription = itemView.findViewById(R.id.view_pager_tv_description);
 			mTVPrice = itemView.findViewById(R.id.view_pager_tv_price);
 			mConstraintLayout = itemView.findViewById(R.id.container2);
 		}
-
-
-
-
-
-
-
 	}
-
-
-
-
-
-
-
 }

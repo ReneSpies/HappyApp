@@ -1,6 +1,5 @@
 package android.aresid.happyapp;
 
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -11,15 +10,10 @@ import androidx.annotation.NonNull;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
+class Legalities {
 
-
-class Legalities
-{
 	private static final String TAG = "Legalities";
-	private String mTitle, mContent;
-
-
-
+	private              String mTitle, mContent;
 
 	/**
 	 * Constructor.
@@ -27,73 +21,54 @@ class Legalities
 	 * @param title   Title for the specific legality.
 	 * @param content Content for the specific legality.
 	 */
-	Legalities(String title, String content)
-	{
+	Legalities(String title, String content) {
+
 		Log.d(TAG, "Legalities:true");
 		mTitle = title;
 		mContent = content;
 	}
-
-
-
 
 	/**
 	 * Getter for the title of the specific legality.
 	 *
 	 * @return Title of the specific legality.
 	 */
-	public String getTitle()
-	{
+	public String getTitle() {
+
 		Log.d(TAG, "getTitle:true");
 		return mTitle;
 	}
-
-
-
 
 	/**
 	 * Setter for the title for the specific legality.
 	 *
 	 * @param title Title for the specific legality.
 	 */
-	public void setTitle(@NonNull String title)
-	{
+	public void setTitle(@NonNull String title) {
+
 		Log.d(TAG, "setTitle:true");
 		mTitle = title;
 	}
-
-
-
 
 	/**
 	 * Getter for the content of the specific legality.
 	 *
 	 * @return Content of the specific legality.
 	 */
-	public String getContent()
-	{
+	public String getContent() {
+
 		Log.d(TAG, "getContent:true");
 		return mContent;
 	}
-
-
-
 
 	/**
 	 * Setter for the content for the specific legality.
 	 *
 	 * @param content Content for the specific legality.
 	 */
-	public void setContent(@NonNull String content)
-	{
+	public void setContent(@NonNull String content) {
+
 		Log.d(TAG, "setContent:true");
 		mContent = content;
 	}
-
-
-
-
-
-
-
 }

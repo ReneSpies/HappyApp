@@ -1,6 +1,5 @@
 package android.aresid.happyapp;
 
-
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -11,16 +10,11 @@ import androidx.annotation.NonNull;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
-
-
 public class TermsAndConditions
-		extends Legalities
-{
+		extends Legalities {
+
 	private static final String TAG = "TermsAndConditions";
-	private String mTitle, mContent;
-
-
-
+	private              String mTitle, mContent;
 
 	/**
 	 * Constructor.
@@ -28,16 +22,13 @@ public class TermsAndConditions
 	 * @param title   Title for t&c.
 	 * @param content Content for t&c.
 	 */
-	TermsAndConditions(String title, String content)
-	{
+	TermsAndConditions(String title, String content) {
+
 		super(title, content);
 		Log.d(TAG, "TermsAndConditions:true");
 		mTitle = title;
 		mContent = content;
 	}
-
-
-
 
 	/**
 	 * Getter for title of t&c.
@@ -45,14 +36,11 @@ public class TermsAndConditions
 	 * @return Title of t&c.
 	 */
 	@Override
-	public String getTitle()
-	{
+	public String getTitle() {
+
 		Log.d(TAG, "getTitle:true");
 		return mTitle;
 	}
-
-
-
 
 	/**
 	 * Setter for title for t&c.
@@ -60,14 +48,11 @@ public class TermsAndConditions
 	 * @param title Title for t&c.
 	 */
 	@Override
-	public void setTitle(@NonNull String title)
-	{
+	public void setTitle(@NonNull String title) {
+
 		Log.d(TAG, "setTitle:true");
 		mTitle = title;
 	}
-
-
-
 
 	/**
 	 * Getter for content of t&c.
@@ -75,14 +60,11 @@ public class TermsAndConditions
 	 * @return Content of t&c.
 	 */
 	@Override
-	public String getContent()
-	{
+	public String getContent() {
+
 		Log.d(TAG, "getContent:true");
 		return mContent;
 	}
-
-
-
 
 	/**
 	 * Setter for content for t&c.
@@ -90,16 +72,9 @@ public class TermsAndConditions
 	 * @param content Content for t&c.
 	 */
 	@Override
-	public void setContent(@NonNull String content)
-	{
+	public void setContent(@NonNull String content) {
+
 		Log.d(TAG, "setContent:true");
 		mContent = content;
 	}
-
-
-
-
-
-
-
 }
