@@ -209,7 +209,7 @@
 					android:hint="@string/plain_email"
 					android:imeActionId="4"
 					android:imeOptions="actionNext"
-					android:inputType="text" />
+					android:inputType="textEmailAddress" />
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<com.google.android.material.textfield.TextInputLayout
@@ -243,11 +243,7 @@
 					android:id="@+id/entry_activity_registration_date_of_birth_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_date_of_birth"
-					android:imeActionId="6"
-					android:imeOptions="actionDone"
-					android:inputType="date"
-					android:text="@string/plain_dd_mm_yyyy" />
+					android:hint="@string/plain_date_of_birth" />
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<com.google.android.material.checkbox.MaterialCheckBox

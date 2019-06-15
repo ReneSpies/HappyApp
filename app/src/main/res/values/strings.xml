@@ -91,6 +91,7 @@
 	<string name="plain_choose_a_subscription">Choose a subscription</string>
 	<string name="plain_processing_login">Processing login</string>
 	<string name="plain_logging_in">Logging in</string>
+	<string name="placeholder_date_of_birth_content">%1d.%1d.%1d</string>
 	<!---->
 
 
