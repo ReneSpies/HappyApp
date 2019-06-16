@@ -24,11 +24,12 @@ import java.util.List;
 public class ViewPagerAdapter
 		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder> {
 
-	private static final String         TAG = "ViewPagerAdapter";
-	private              List<String>   mTitles;
-	private              LayoutInflater mInflater;
-	private              List<String>   mDescriptions;
-	private              List<String>   mPrices;
+	private static final String                         TAG = "ViewPagerAdapter";
+	private              List<String>                   mTitles;
+	private              LayoutInflater                 mInflater;
+	private              List<String>                   mDescriptions;
+	private              List<String>                   mPrices;
+	private              OnViewPagerInteractionListener mListener;
 
 	ViewPagerAdapter(Context context, List<String> titles, List<String> descriptions, List<String> prices, ViewPager2 viewPager2) {
 
@@ -37,6 +38,17 @@ public class ViewPagerAdapter
 		mTitles = titles;
 		mDescriptions = descriptions;
 		mPrices = prices;
+
+		if (context instanceof OnViewPagerInteractionListener) {
+
+			mListener = (OnViewPagerInteractionListener) context;
+
+		} else {
+
+			throw new RuntimeException(context.toString() + " must implement OnViewPagerInteractionListener");
+
+		}
+
 	}
 
 	@NonNull
@@ -46,8 +58,17 @@ public class ViewPagerAdapter
 		Log.d(TAG, "onCreateViewHolder:true");
 		View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
 		Button viewPagerBtConfirm = view.findViewById(R.id.view_pager_bt_confirm);
-		viewPagerBtConfirm.setOnClickListener(v -> Log.d(TAG, "onCreateViewHolder: bt click"));
+
+		viewPagerBtConfirm.setOnClickListener(v -> {
+
+			Log.d(TAG, "onCreateViewHolder: bt click");
+
+			mListener.createUserWithEmailAndPassword();
+
+		});
+
 		return new ViewHolder(view);
+
 	}
 
 	@Override
@@ -71,7 +92,8 @@ public class ViewPagerAdapter
 
 	public interface OnViewPagerInteractionListener {
 
-		void startMainActivty();
+		void createUserWithEmailAndPassword();
+
 	}
 
 	class ViewHolder

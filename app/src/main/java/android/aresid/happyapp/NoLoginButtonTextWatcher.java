@@ -43,12 +43,18 @@ public class NoLoginButtonTextWatcher
 	NoLoginButtonTextWatcher(AppCompatActivity context) {
 
 		Log.d(TAG, "NoLoginButtonTextWatcher:true");
+
 		mContext = context;
+
 		if (mContext instanceof OnNoLoginButtonTextWatcherInteractionListener) {
+
 			mListener = (OnNoLoginButtonTextWatcherInteractionListener) mContext;
+
 		} else {
+
 			throw new RuntimeException(context.toString() + " must implement OnNoLoginButtonTextWatcherListener");
 		}
+
 		mEditableHelper = "";
 		mEmailField = mContext.findViewById(R.id.entry_activity_login_email_field);
 		mPasswordField = mContext.findViewById(R.id.entry_activity_login_password_field);
@@ -56,10 +62,13 @@ public class NoLoginButtonTextWatcher
 		mPasswordLayout = mContext.findViewById(R.id.entry_activity_login_password_layout);
 		mWaitingAssistant = mContext.findViewById(R.id.entry_activity_login_waiting_assistant);
 		mWaitingAssistantTextView = mContext.findViewById(R.id.entry_activity_login_waiting_assistant_text_view);
+
 		mHandler = new Handler();
+
 		Glide.with(mContext)
 		     .load(R.drawable.waiting_assistant_content)
 		     .into(mWaitingAssistant);
+
 	}
 
 	@SuppressLint ("LongLogTag")
@@ -67,6 +76,7 @@ public class NoLoginButtonTextWatcher
 	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
 		Log.d(TAG, "beforeTextChanged:true");
+
 	}
 
 	@SuppressLint ("LongLogTag")
@@ -74,6 +84,7 @@ public class NoLoginButtonTextWatcher
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 		Log.d(TAG, "onTextChanged:true");
+
 	}
 
 	@SuppressLint ("LongLogTag")
@@ -81,48 +92,76 @@ public class NoLoginButtonTextWatcher
 	public void afterTextChanged(Editable s) {
 
 		Log.d(TAG, "afterTextChanged: Editable = " + s);
+
 		mHandler.removeMessages(0);
+
 		if (!mEditableHelper.equals(s.toString())) {
+
 			if (mEmailField.length() != 0 && mPasswordField.length() != 0) {
+
 				mHandler.postDelayed(() -> {
+
 					Log.d(TAG, "afterTextChanged: run");
+
 					String email = mEmailField.getText()
 					                          .toString();
 					String password = mPasswordField.getText()
 					                                .toString();
+
 					mWaitingAssistant.setVisibility(View.VISIBLE);
 					mWaitingAssistantTextView.setVisibility(View.VISIBLE);
+
 					FirebaseAuth.getInstance()
 					            .signInWithEmailAndPassword(email, password)
 					            .addOnSuccessListener(command -> {
+
 						            Log.d(TAG, "afterTextChanged: success");
+
 						            mListener.loginWithUser(command.getUser());
 						            mEmailLayout.setError(null);
 						            mPasswordLayout.setError(null);
+
 					            })
 					            .addOnFailureListener(e -> {
+
 						            Log.d(TAG, "afterTextChanged: failure");
 						            Log.e(TAG, "afterTextChanged: ", e);
+
 						            mWaitingAssistant.setVisibility(View.GONE);
 						            mWaitingAssistantTextView.setVisibility(View.GONE);
-						            // TODO: Exception handling!
+
+						            // TODO
+
 						            if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException | e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
+
 							            mPasswordLayout.setError("Email or password incorrect");
+
 						            } else {
+
 							            if (e instanceof com.google.firebase.FirebaseNetworkException) {
+
 								            Toast.makeText(mContext, "Check your internet connection and try again later", Toast.LENGTH_LONG)
 								                 .show();
+
 							            }
+
 						            }
+
 					            });
+
 				}, 1013);
+
 			}
+
 			mEditableHelper = s.toString();
+
 		}
+
 	}
 
 	interface OnNoLoginButtonTextWatcherInteractionListener {
 
 		void loginWithUser(FirebaseUser user);
+
 	}
 }
