@@ -40,7 +40,7 @@
 	<string name="hello_blank_fragment">Hello blank fragment</string>
 	<string name="todo_update_fragment">TODO: Update fragment</string>
 
-	<!--Advertisement Fragment-->
+	Advertisement Fragment
 	<string name="offer">I offer</string>
 	<string name="looking">I am looking</string>
 	<string name="mode">Mode: %1s</string>
@@ -65,12 +65,8 @@
 	<string name="google">Google</string>
 	<string name="or_sign_in_using">or sign in using</string>
 	<string name="loggin_in">Logging in&#8230;</string>
-	<string name="privacy_policy"><![CDATA[I confirm that I\'ve read the privacy policy and T&C and I agree with it.]]></string>
-	<string name="age_confirmation"><![CDATA[I confirm that I am >= 18 years old.]]></string>
 
 	<string name="title_activity_onboarding">OnboardingActivity</string>
-	<string name="dummy_button">Dummy Button</string>
-	<string name="dummy_content">DUMMY\nCONTENT</string>
 
 	<string name="plain_or_login_using">or login using</string>
 	<string name="plain_google">Google</string>
@@ -79,9 +75,7 @@
 	<string name="plain_first_name">First Name*</string>
 	<string name="plain_family_name">Family Name*</string>
 	<string name="plain_date_of_birth">Date of birth*</string>
-	<string name="plain_register_now">Register now</string>
 	<string name="contraction_confirm_tc_privacy_policy">I confirm that I\'ve read and accepted the Terms and Conditions and Privacy Policy</string>
-	<string name="plain_choose_a_subscription">Choose a subscription</string>
 	<string name="plain_processing_login">Processing login</string>
 	<string name="plain_logging_in">Logging in</string>
 	<string name="placeholder_date_of_birth_content">%1d.%1d.%1d</string>
@@ -89,6 +83,13 @@
 	<string name="contraction_displayed_name">This will be your displayed name</string>
 	<string name="contraction_registration_email">Email*</string>
 	<string name="contraction_registration_password">Password*</string>
+	<string name="plain_happyapp_gold_subscription_logo">HappyApp Gold subscription logo</string>
+	<string name="plain_happyapp_gold">HappyApp Gold</string>
+	<string name="plain_test_first_30_days_for_free">Test first 30 days for free</string>
+	<string name="plain_after_that_only">after that only</string>
+	<string name="plain_6_99_per_30_days">6.99 $ per 30 days</string>
+	<string name="plain_check_out">Check out</string>
+	<string name="plain_subscribe">Subscribe</string>
 	<!---->
 
 

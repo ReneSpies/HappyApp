@@ -82,7 +82,7 @@ public class EntryActivity
 		etRegistrationDateOfBirthField.setOnClickListener(this);
 		etRegistrationDateOfBirthField.setOnFocusChangeListener((v, hasFocus) -> {
 
-			if (v.hasFocus()) {
+			if (hasFocus) {
 
 				new DatePickerFragment(this).show(getSupportFragmentManager(), "date picker");
 
