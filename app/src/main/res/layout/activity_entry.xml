@@ -61,6 +61,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:hint="@string/plain_email"
+				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_login_password_layout"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_app_logo">
 
@@ -80,6 +81,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:hint="@string/plain_password"
+				app:errorEnabled="true"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_login_email_layout"
 				app:passwordToggleEnabled="true">
 
@@ -163,6 +165,7 @@
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_registration_family_name_layout"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_registration_seperator_text_view">
 
@@ -181,7 +184,8 @@
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_email_layout"
+				app:errorEnabled="true"
+				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_nickname_layout"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_registration_first_name_layout">
 
 				<com.google.android.material.textfield.TextInputEditText
@@ -194,20 +198,50 @@
 					android:inputType="text" />
 			</com.google.android.material.textfield.TextInputLayout>
 
+			<TextView
+				android:id="@+id/entry_activity_registration_nickname_info_text_view"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:text="@string/contraction_displayed_name"
+				android:textAppearance="?attr/textAppearanceCaption"
+				app:layout_constraintBottom_toTopOf="@+id/entry_activity_registration_nickname_layout"
+				app:layout_constraintEnd_toEndOf="@+id/entry_activity_registration_nickname_layout"
+				app:layout_constraintStart_toStartOf="@+id/entry_activity_registration_nickname_layout" />
+
+			<com.google.android.material.textfield.TextInputLayout
+				android:id="@+id/entry_activity_registration_nickname_layout"
+				style="@style/Widget.HappyApp.TextInputLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:errorEnabled="true"
+				app:layout_constraintBottom_toTopOf="@+id/entry_activity_registration_email_layout"
+				app:layout_constraintTop_toBottomOf="@+id/entry_activity_registration_family_name_layout">
+
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/entry_activity_registration_nickname_field"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/plain_nickname"
+					android:imeActionId="4"
+					android:imeOptions="actionNext"
+					android:inputType="text" />
+			</com.google.android.material.textfield.TextInputLayout>
+
 			<com.google.android.material.textfield.TextInputLayout
 				android:id="@+id/entry_activity_registration_email_layout"
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_password_layout"
-				app:layout_constraintTop_toBottomOf="@id/entry_activity_registration_family_name_layout">
+				app:layout_constraintTop_toBottomOf="@id/entry_activity_registration_nickname_layout">
 
 				<com.google.android.material.textfield.TextInputEditText
 					android:id="@+id/entry_activity_registration_email_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_email"
-					android:imeActionId="4"
+					android:hint="@string/contraction_registration_email"
+					android:imeActionId="5"
 					android:imeOptions="actionNext"
 					android:inputType="textEmailAddress" />
 			</com.google.android.material.textfield.TextInputLayout>
@@ -217,6 +251,7 @@
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_date_of_birth_layout"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_registration_email_layout"
 				app:passwordToggleEnabled="true">
@@ -225,8 +260,8 @@
 					android:id="@+id/entry_activity_registration_password_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_password"
-					android:imeActionId="5"
+					android:hint="@string/contraction_registration_password"
+					android:imeActionId="6"
 					android:imeOptions="actionNext"
 					android:inputType="textPassword" />
 			</com.google.android.material.textfield.TextInputLayout>
@@ -236,6 +271,7 @@
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_registration_confirm_tc_privacy_policy_checkbox"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_registration_password_layout">
 
@@ -243,7 +279,8 @@
 					android:id="@+id/entry_activity_registration_date_of_birth_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_date_of_birth" />
+					android:hint="@string/plain_date_of_birth"
+					android:imeActionId="7" />
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<com.google.android.material.checkbox.MaterialCheckBox

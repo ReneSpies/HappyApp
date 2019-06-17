@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -103,7 +104,6 @@ public class EntryActivity
 		List<String> listOfDescriptions = new ArrayList<>();
 		List<String> listOfPrices = new ArrayList<>();
 
-		// TODO: Move to server and load content from server into db and then use it locally.
 		// Silver package
 		listOfTitles.add("Silver package");
 		listOfDescriptions.add("Description for silver package");
@@ -163,6 +163,242 @@ public class EntryActivity
 		                                .getCurrentUser();
 
 		updateUI(user);
+	}
+
+	@Override
+	public void createUserWithEmailAndPassword() {
+
+		Log.d(TAG, "createUserWithEmailAndPassword:true");
+
+		TextInputEditText etRegistrationEmailField = findViewById(R.id.entry_activity_registration_email_field);
+		TextInputEditText etRegistrationPasswordField = findViewById(R.id.entry_activity_registration_password_field);
+		TextInputEditText etRegistrationFirstNameField = findViewById(R.id.entry_activity_registration_first_name_field);
+		TextInputEditText etRegistrationFamilyNameField = findViewById(R.id.entry_activity_registration_family_name_field);
+		TextInputEditText etRegistrationDobField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
+		TextInputEditText etRegistrationNicknameField = findViewById(R.id.entry_activity_registration_nickname_field);
+		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_nickname_layout);
+		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
+		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
+		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
+		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
+		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+
+		String email = etRegistrationEmailField.getText()
+		                                       .toString();
+		String password = etRegistrationPasswordField.getText()
+		                                             .toString();
+
+		if (etRegistrationFirstNameField.length() == 0) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationFirstNameLayout.setError("You forgot me");
+
+			smoothScrollTo(etRegistrationFirstNameLayout.getTop());
+
+			return;
+
+		} else if (etRegistrationFirstNameField.getText()
+		                                       .toString()
+		                                       .startsWith(" ")) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationFirstNameLayout.setError("First Name cannot start with whitespace");
+
+			smoothScrollTo(etRegistrationFirstNameLayout.getTop());
+
+			return;
+
+		} else if (etRegistrationFamilyNameField.length() == 0) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationFamilyNameLayout.setError("You forgot me");
+
+			smoothScrollTo(etRegistrationFirstNameLayout.getBottom());
+
+			return;
+
+		} else if (etRegistrationFamilyNameField.getText()
+		                                        .toString()
+		                                        .startsWith(" ")) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationFamilyNameLayout.setError("Family Name cannot start with whitespace");
+
+			smoothScrollTo(etRegistrationFirstNameLayout.getBottom());
+
+			return;
+
+		} else if (etRegistrationNicknameField.length() == 0) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationNicknameLayout.setError("You forgot me");
+
+			smoothScrollTo(etRegistrationFamilyNameLayout.getBottom());
+
+			return;
+
+		} else if (etRegistrationNicknameField.getText()
+		                                      .toString()
+		                                      .startsWith(" ")) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationNicknameLayout.setError("Nickname cannot start with whitespace");
+
+			smoothScrollTo(etRegistrationFamilyNameLayout.getBottom());
+
+			return;
+
+		} else if (email.length() == 0) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationEmailLayout.setError("You forgot me");
+
+			smoothScrollTo(etRegistrationNicknameLayout.getBottom());
+
+			return;
+
+		} else if (email.startsWith(" ")) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationEmailLayout.setError("Email cannot start with whitespace");
+
+			smoothScrollTo(etRegistrationNicknameLayout.getBottom());
+
+			return;
+
+		} else if (password.length() == 0) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationPasswordLayout.setError("You forgot me");
+
+			smoothScrollTo(etRegistrationEmailLayout.getBottom());
+
+			return;
+
+		} else if (etRegistrationPasswordField.getText()
+		                                      .toString()
+		                                      .startsWith(" ")) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationPasswordLayout.setError("Password cannot start with whitespace");
+
+			smoothScrollTo(etRegistrationEmailLayout.getBottom());
+
+			return;
+
+		} else if (password.length() < 6) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationPasswordLayout.setError("I need to be longer than 6 characters of your choice");
+
+			smoothScrollTo(etRegistrationEmailLayout.getBottom());
+
+			return;
+
+		} else if (etRegistrationDobField.length() == 0) {
+
+			setRegistrationLayoutErrorsNull();
+
+			etRegistrationDobLayout.setError("You forgot me");
+
+			smoothScrollTo(etRegistrationPasswordLayout.getBottom());
+
+			return;
+
+		} else if (!cbTermsConditionsPrivacyPolicy.isChecked()) {
+
+			setRegistrationLayoutErrorsNull();
+
+			cbTermsConditionsPrivacyPolicy.setError("Required field");
+
+			smoothScrollTo(etRegistrationDobLayout.getBottom());
+
+			return;
+
+		} else {
+
+			setRegistrationLayoutErrorsNull();
+
+		}
+
+		FirebaseAuth.getInstance()
+		            .createUserWithEmailAndPassword(email, password)
+		            .addOnSuccessListener(command -> {
+
+			            Log.d(TAG, "createUserWithEmailAndPassword: success");
+			            Log.d(TAG, "createUserWithEmailAndPassword: user = " + command.getUser());
+
+			            updateUI(command.getUser());
+
+		            })
+		            .addOnFailureListener(e -> {
+
+			            Log.d(TAG, "createUserWithEmailAndPassword: failure");
+			            Log.e(TAG, "createUserWithEmailAndPassword: ", e);
+
+			            // TODO
+
+			            if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException) {
+
+				            smoothScrollTo(etRegistrationNicknameLayout.getBottom());
+
+				            etRegistrationEmailLayout.setError("This email is already in use");
+
+			            } else if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
+
+				            smoothScrollTo(etRegistrationNicknameLayout.getBottom());
+
+				            etRegistrationEmailLayout.setError("This email is badly formatted");
+
+			            }
+
+		            });
+	}
+
+	private void setRegistrationLayoutErrorsNull() {
+
+		Log.d(TAG, "setRegistrationLayoutErrorsNull:true");
+
+		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
+		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
+		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
+		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
+		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_nickname_layout);
+		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+
+		cbTermsConditionsPrivacyPolicy.clearFocus();
+
+		etRegistrationFirstNameLayout.setError(null);
+		etRegistrationFamilyNameLayout.setError(null);
+		etRegistrationNicknameLayout.setError(null);
+		etRegistrationEmailLayout.setError(null);
+		etRegistrationPasswordLayout.setError(null);
+		etRegistrationDobLayout.setError(null);
+		cbTermsConditionsPrivacyPolicy.setError(null);
+
+	}
+
+	private void smoothScrollTo(float y) {
+
+		Log.d(TAG, "smoothScrollTo:true");
+
+		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
+
+		svParent.smoothScrollTo(0, (int) y);
+
 	}
 
 	/**
@@ -275,6 +511,22 @@ public class EntryActivity
 
 	}
 
+	@Override
+	public void loginWithUser(FirebaseUser user) {
+
+		Log.d(TAG, "loginWithUser:true");
+
+		updateUI(user);
+
+	}
+
+	@Override
+	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+		Log.d(TAG, "onConnectionFailed:true");
+
+	}
+
 	void updateUI(FirebaseUser user) {
 
 		Log.d(TAG, "updateUI:true");
@@ -349,90 +601,26 @@ public class EntryActivity
 
 	}
 
-	@Override
-	public void loginWithUser(FirebaseUser user) {
+	private void setRegistrationLayoutErrorsEnabled(boolean enabled) {
 
-		Log.d(TAG, "loginWithUser:true");
+		Log.d(TAG, "setRegistrationLayoutErrorsEnabled:true");
 
-		updateUI(user);
-
-	}
-
-	@Override
-	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-		Log.d(TAG, "onConnectionFailed:true");
-
-	}
-
-	@Override
-	public void createUserWithEmailAndPassword() {
-
-		Log.d(TAG, "createUserWithEmailAndPassword:true");
-
-		// TODO: rename!
-
-		TextInputEditText etRegistrationEmailField = findViewById(R.id.entry_activity_registration_email_field);
-		TextInputEditText etRegistrationPasswordField = findViewById(R.id.entry_activity_registration_password_field);
+		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
+		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
 		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
 		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
+		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_nickname_layout);
 
-		String email = etRegistrationEmailField.getText()
-		                                       .toString();
-		String password = etRegistrationPasswordField.getText()
-		                                             .toString();
+		etRegistrationFirstNameLayout.setErrorEnabled(enabled);
+		etRegistrationFamilyNameLayout.setErrorEnabled(enabled);
+		etRegistrationEmailLayout.setErrorEnabled(enabled);
+		etRegistrationPasswordLayout.setErrorEnabled(enabled);
+		etRegistrationDobLayout.setErrorEnabled(enabled);
+		etRegistrationNicknameLayout.setErrorEnabled(enabled);
 
-		if (email.length() == 0) {
+		Log.d(TAG, "setRegistrationLayoutErrorsEnabled:end");
 
-			etRegistrationEmailLayout.setError("You forgot me");
-
-			return;
-
-		} else {
-			if (password.length() == 0) {
-
-				etRegistrationPasswordField.setError("You forgot me");
-
-				return;
-
-			} else {
-				if (password.length() < 6) {
-
-					etRegistrationPasswordLayout.setError("I need to be longer than 6 characters of your choice");
-
-				} else {
-
-					etRegistrationEmailLayout.setError(null);
-					etRegistrationPasswordLayout.setError(null);
-
-				}
-			}
-		}
-
-		FirebaseAuth.getInstance()
-		            .createUserWithEmailAndPassword(email, password)
-		            .addOnSuccessListener(command -> {
-
-			            Log.d(TAG, "createUserWithEmailAndPassword: success");
-			            Log.d(TAG, "createUserWithEmailAndPassword: user = " + command.getUser());
-
-			            updateUI(command.getUser());
-
-		            })
-		            .addOnFailureListener(e -> {
-
-			            Log.d(TAG, "createUserWithEmailAndPassword: failure");
-			            Log.e(TAG, "createUserWithEmailAndPassword: ", e);
-
-			            // TODO
-
-			            if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException) {
-
-				            etRegistrationEmailLayout.setError("This email is already in use");
-
-			            }
-
-		            });
 	}
 
 	class BackgroundTransitionTransformer

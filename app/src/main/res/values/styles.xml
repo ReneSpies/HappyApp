@@ -39,8 +39,8 @@
 		<item name="android:layout_margin">13dp</item>
 		<item name="boxCornerRadiusBottomEnd">.13dp</item>
 		<item name="boxCornerRadiusTopStart">.13dp</item>
-		<item name="boxCornerRadiusBottomStart">10.13dp</item>
-		<item name="boxCornerRadiusTopEnd">10.13dp</item>
+		<item name="boxCornerRadiusBottomStart">@dimen/text_input_layout_corner_radius</item>
+		<item name="boxCornerRadiusTopEnd">@dimen/text_input_layout_corner_radius</item>
 	</style>
 
 	<style name="Widget.HappyApp.ContainedButton" parent="Widget.MaterialComponents.Button">
