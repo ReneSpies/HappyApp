@@ -87,9 +87,12 @@
 	<string name="plain_happyapp_gold">HappyApp Gold</string>
 	<string name="plain_test_first_30_days_for_free">Test first 30 days for free</string>
 	<string name="plain_after_that_only">after that only</string>
-	<string name="plain_6_99_per_30_days">6.99 $ per 30 days</string>
+	<string name="plain_6_99_per_30_days">$6.99 per 30 days</string>
 	<string name="plain_check_out">Check out</string>
 	<string name="plain_subscribe">Subscribe</string>
+	<string name="plain_login">Login</string>
+	<string name="plain_processing_registration">Processing registration</string>
+	<string name="plain_processing">Processing</string>
 	<!---->
 
 

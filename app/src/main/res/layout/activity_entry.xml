@@ -95,6 +95,15 @@
 					android:maxLines="1" />
 			</com.google.android.material.textfield.TextInputLayout>
 
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/entry_activity_login_login_button"
+				style="@style/Widget.HappyApp.ContainedButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/plain_login"
+				app:layout_constraintEnd_toEndOf="@+id/entry_activity_login_password_layout"
+				app:layout_constraintTop_toBottomOf="@+id/entry_activity_login_password_layout" />
+
 			<ImageView
 				android:id="@+id/entry_activity_login_waiting_assistant"
 				android:layout_width="50.13dp"
@@ -321,6 +330,7 @@
 				android:id="@+id/entry_activity_subscription_title"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:visibility="invisible"
 				android:text="@string/plain_happyapp_gold"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"
@@ -356,9 +366,42 @@
 				android:text="@string/plain_6_99_per_30_days"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline6"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_check_out_button"
+				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_waiting_assistant_layout"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_description_point_2" />
+
+
+			<!--<ImageView-->
+			<!--android:id="@+id/entry_activity_subscription_waiting_assistant"-->
+			<!--android:layout_width="50.13dp"-->
+			<!--android:layout_height="50.13dp"-->
+			<!--android:contentDescription="@string/plain_processing_registration"-->
+			<!--android:visibility="invisible" />-->
+
+			<LinearLayout
+				android:id="@+id/entry_activity_subscription_waiting_assistant_layout"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal"
+				android:visibility="invisible"
+				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_check_out_button"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent">
+
+				<ImageView
+					android:id="@+id/entry_activity_subscription_waiting_assistant"
+					android:layout_width="50.13dp"
+					android:layout_height="50.13dp"
+					android:contentDescription="@string/plain_processing_registration" />
+
+				<TextView
+					android:id="@+id/entry_activity_subscription_waiting_assistant_text_view"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/plain_processing"
+					android:textAppearance="?attr/textAppearanceCaption" />
+			</LinearLayout>
 
 			<com.google.android.material.button.MaterialButton
 				android:id="@+id/entry_activity_subscription_check_out_button"
@@ -368,11 +411,6 @@
 				android:text="@string/plain_check_out"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_price" />
-
-			<androidx.viewpager2.widget.ViewPager2
-				android:id="@+id/entry_activity_subscription_view_pager"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content" />
 
 			<!--<com.google.android.material.button.MaterialButton-->
 			<!--android:id="@+id/entry_activity_registration_button"-->

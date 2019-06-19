@@ -1,6 +1,5 @@
 package android.aresid.happyapp;
 
-import android.animation.ArgbEvaluator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -17,6 +17,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -32,22 +37,26 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EntryActivity
 		extends AppCompatActivity
 		implements GoogleApiClient.OnConnectionFailedListener,
-		           NoLoginButtonTextWatcher.OnNoLoginButtonTextWatcherInteractionListener,
 		           ViewPagerAdapter.OnViewPagerInteractionListener,
-		           View.OnClickListener {
+		           View.OnClickListener,
+		           PurchasesUpdatedListener,
+		           BillingClientStateListener {
 
 	private final static String             TAG                = "EntryActivity";
 	private static final int                REQUEST_CODE_LOGIN = 13;
 	private              DBHelper           mDBHelper;
 	private              GoogleSignInClient mGoogleSignInClient;
 	private              FirebaseAuth       mAuth;
+	private              BillingClient      mBillingClient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +69,22 @@ public class EntryActivity
 		// Instantiate FirebaseAuth.
 		mAuth = FirebaseAuth.getInstance();
 
+		// Load waiting assistant into ImageViews.
+		Glide.with(this)
+		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
+		     .into((ImageView) findViewById(R.id.entry_activity_login_waiting_assistant));
+		Glide.with(this)
+		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
+		     .into((ImageView) findViewById(R.id.entry_activity_logging_in_waiting_assistant));
+		Glide.with(this)
+		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
+		     .into((ImageView) findViewById(R.id.entry_activity_subscription_waiting_assistant));
+
+//		mBillingClient = BillingClient.newBuilder(this)
+//		                              .setListener(this)
+//		                              .build();
+//		mBillingClient.startConnection(this);
+
 		// Configure Google Sign In.
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getResources().getString(R.string.default_web_client_id))
 		                                                                                              .requestEmail()
@@ -68,15 +93,14 @@ public class EntryActivity
 		mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 		// Access all views that are needed.
-		TextInputEditText etLoginPasswordField = findViewById(R.id.entry_activity_login_password_field);
-		TextInputEditText etLoginEmailField = findViewById(R.id.entry_activity_login_email_field);
+		Button btLogin = findViewById(R.id.entry_activity_login_login_button);
 		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
 		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
-		ViewPager2 vpSubscriptionsView = findViewById(R.id.entry_activity_subscription_view_pager);
+		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
 
-		etLoginPasswordField.addTextChangedListener(new NoLoginButtonTextWatcher(this));
-		etLoginEmailField.addTextChangedListener(new NoLoginButtonTextWatcher(this));
+		btCheckOut.setOnClickListener(this);
+		btLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
 		btGoogleLogin.setOnClickListener(this);
 		etRegistrationDateOfBirthField.setOnClickListener(this);
@@ -100,55 +124,6 @@ public class EntryActivity
 
 		}
 
-		List<String> listOfTitles = new ArrayList<>();
-		List<String> listOfDescriptions = new ArrayList<>();
-		List<String> listOfPrices = new ArrayList<>();
-
-		// Silver package
-		listOfTitles.add("Silver package");
-		listOfDescriptions.add("Description for silver package");
-		listOfPrices.add("4.99 $/Month");
-
-		// Gold package
-		listOfTitles.add("Gold package");
-		listOfDescriptions.add("Description for gold package");
-		listOfPrices.add("9.99 $/Month");
-
-		// Platinum package
-		listOfTitles.add("Platinum package");
-		listOfDescriptions.add("Description for platinum package");
-		listOfPrices.add("14.99 $/Month");
-
-		ViewPagerAdapter vpAdapter = new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPrices, vpSubscriptionsView);
-		vpSubscriptionsView.setAdapter(vpAdapter);
-
-		BackgroundTransitionTransformer btt = new BackgroundTransitionTransformer(vpSubscriptionsView);
-		vpSubscriptionsView.registerOnPageChangeCallback(btt);
-
-		sv.getViewTreeObserver()
-		  .addOnScrollChangedListener(() -> {
-
-			  int scrollY = sv.getScrollY() + sv.getHeight() - vpSubscriptionsView.getTop();
-
-			  if (scrollY >= 0.0 && scrollY <= vpSubscriptionsView.getHeight()) {
-
-				  if (btt.getPosition() < btt.mArrayOfColors.length - 1) {
-
-					  sv.setBackgroundColor((int) new ArgbEvaluator().evaluate((float) scrollY /
-					                                                           vpSubscriptionsView.getHeight(), getResources().getColor(R.color.white),
-					                                                           new ArgbEvaluator().evaluate(btt.getPositionOffset(), btt.mArrayOfColors[btt.getPosition()], btt.mArrayOfColors[
-							  btt.getPosition() + 1])));
-
-				  } else {
-
-					  sv.setBackgroundColor((int) new ArgbEvaluator().evaluate((float) scrollY /
-					                                                           vpSubscriptionsView.getHeight(), getResources().getColor(R.color.white),
-					                                                           new ArgbEvaluator().evaluate(btt.getPositionOffset(), btt.mArrayOfColors[btt.getPosition()], btt.mArrayOfColors[2])));
-
-				  }
-			  }
-		  });
-
 		populateSubscriptionsTable();
 	}
 
@@ -163,6 +138,86 @@ public class EntryActivity
 		                                .getCurrentUser();
 
 		updateUI(user);
+	}
+
+	/**
+	 * Method populates the Subscriptions table in the db with the server data.
+	 */
+	private void populateSubscriptionsTable() {
+
+		Log.d(TAG, "populateSubscriptionsTable:true");
+		// TODO
+
+	}
+
+	void updateUI(FirebaseUser user) {
+
+		Log.d(TAG, "updateUI:true");
+
+		Log.d(TAG, "updateUI: display name = " + user.getDisplayName());
+
+		if (user != null) {
+
+			if (user.getProviderData()
+			        .get(1)
+			        .getProviderId()
+			        .equals("google.com")) {
+
+				// TODO
+
+			}
+
+			findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
+			findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
+
+			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
+			toast.show();
+
+			user.reload()
+			    .addOnSuccessListener(command -> {
+
+				    Log.d(TAG, "updateUI: success");
+				    toast.cancel();
+				    if (user.isEmailVerified()) {
+
+					    startMainActivity(user);
+
+				    } else {
+
+					    startEmailVerificationActivity(user);
+
+				    }
+
+			    })
+			    .addOnFailureListener(e -> {
+
+				    Log.d(TAG, "updateUI: failure");
+				    Log.e(TAG, "updateUI: ", e);
+
+			    });
+
+		} else {
+
+			Log.d(TAG, "updateUI: user == null");
+
+			// TODO
+
+		}
+
+	}
+
+	void startMainActivity(FirebaseUser user) {
+
+		Log.d(TAG, "startMainActivity:true");
+		// TODO
+
+	}
+
+	void startEmailVerificationActivity(FirebaseUser user) {
+
+		Log.d(TAG, "startEmailVerificationActivity:true");
+		// TODO
+
 	}
 
 	@Override
@@ -183,15 +238,19 @@ public class EntryActivity
 		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
 		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
 		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+		Query query = FirebaseFirestore.getInstance()
+		                               .collection("users")
+		                               .whereEqualTo("nickname", etRegistrationNicknameField.getText()
+		                                                                                    .toString());
 
 		String email = etRegistrationEmailField.getText()
 		                                       .toString();
 		String password = etRegistrationPasswordField.getText()
 		                                             .toString();
 
-		if (etRegistrationFirstNameField.length() == 0) {
+		setRegistrationLayoutErrorsNull();
 
-			setRegistrationLayoutErrorsNull();
+		if (etRegistrationFirstNameField.length() == 0) {
 
 			etRegistrationFirstNameLayout.setError("You forgot me");
 
@@ -203,8 +262,6 @@ public class EntryActivity
 		                                       .toString()
 		                                       .startsWith(" ")) {
 
-			setRegistrationLayoutErrorsNull();
-
 			etRegistrationFirstNameLayout.setError("First Name cannot start with whitespace");
 
 			smoothScrollTo(etRegistrationFirstNameLayout.getTop());
@@ -212,8 +269,6 @@ public class EntryActivity
 			return;
 
 		} else if (etRegistrationFamilyNameField.length() == 0) {
-
-			setRegistrationLayoutErrorsNull();
 
 			etRegistrationFamilyNameLayout.setError("You forgot me");
 
@@ -225,8 +280,6 @@ public class EntryActivity
 		                                        .toString()
 		                                        .startsWith(" ")) {
 
-			setRegistrationLayoutErrorsNull();
-
 			etRegistrationFamilyNameLayout.setError("Family Name cannot start with whitespace");
 
 			smoothScrollTo(etRegistrationFirstNameLayout.getBottom());
@@ -234,8 +287,6 @@ public class EntryActivity
 			return;
 
 		} else if (etRegistrationNicknameField.length() == 0) {
-
-			setRegistrationLayoutErrorsNull();
 
 			etRegistrationNicknameLayout.setError("You forgot me");
 
@@ -247,8 +298,6 @@ public class EntryActivity
 		                                      .toString()
 		                                      .startsWith(" ")) {
 
-			setRegistrationLayoutErrorsNull();
-
 			etRegistrationNicknameLayout.setError("Nickname cannot start with whitespace");
 
 			smoothScrollTo(etRegistrationFamilyNameLayout.getBottom());
@@ -256,8 +305,6 @@ public class EntryActivity
 			return;
 
 		} else if (email.length() == 0) {
-
-			setRegistrationLayoutErrorsNull();
 
 			etRegistrationEmailLayout.setError("You forgot me");
 
@@ -267,8 +314,6 @@ public class EntryActivity
 
 		} else if (email.startsWith(" ")) {
 
-			setRegistrationLayoutErrorsNull();
-
 			etRegistrationEmailLayout.setError("Email cannot start with whitespace");
 
 			smoothScrollTo(etRegistrationNicknameLayout.getBottom());
@@ -276,8 +321,6 @@ public class EntryActivity
 			return;
 
 		} else if (password.length() == 0) {
-
-			setRegistrationLayoutErrorsNull();
 
 			etRegistrationPasswordLayout.setError("You forgot me");
 
@@ -289,8 +332,6 @@ public class EntryActivity
 		                                      .toString()
 		                                      .startsWith(" ")) {
 
-			setRegistrationLayoutErrorsNull();
-
 			etRegistrationPasswordLayout.setError("Password cannot start with whitespace");
 
 			smoothScrollTo(etRegistrationEmailLayout.getBottom());
@@ -298,8 +339,6 @@ public class EntryActivity
 			return;
 
 		} else if (password.length() < 6) {
-
-			setRegistrationLayoutErrorsNull();
 
 			etRegistrationPasswordLayout.setError("I need to be longer than 6 characters of your choice");
 
@@ -309,8 +348,6 @@ public class EntryActivity
 
 		} else if (etRegistrationDobField.length() == 0) {
 
-			setRegistrationLayoutErrorsNull();
-
 			etRegistrationDobLayout.setError("You forgot me");
 
 			smoothScrollTo(etRegistrationPasswordLayout.getBottom());
@@ -319,19 +356,17 @@ public class EntryActivity
 
 		} else if (!cbTermsConditionsPrivacyPolicy.isChecked()) {
 
-			setRegistrationLayoutErrorsNull();
-
 			cbTermsConditionsPrivacyPolicy.setError("Required field");
 
 			smoothScrollTo(etRegistrationDobLayout.getBottom());
 
 			return;
 
-		} else {
-
-			setRegistrationLayoutErrorsNull();
-
 		}
+
+		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
+		btCheckOut.setEnabled(false);
+		findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.VISIBLE);
 
 		FirebaseAuth.getInstance()
 		            .createUserWithEmailAndPassword(email, password)
@@ -340,6 +375,11 @@ public class EntryActivity
 			            Log.d(TAG, "createUserWithEmailAndPassword: success");
 			            Log.d(TAG, "createUserWithEmailAndPassword: user = " + command.getUser());
 
+			            command.getUser()
+			                   .updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(etRegistrationNicknameField.getText()
+			                                                                                                                   .toString())
+			                                                                        .build());
+
 			            updateUI(command.getUser());
 
 		            })
@@ -347,6 +387,10 @@ public class EntryActivity
 
 			            Log.d(TAG, "createUserWithEmailAndPassword: failure");
 			            Log.e(TAG, "createUserWithEmailAndPassword: ", e);
+
+			            btCheckOut.setEnabled(true);
+
+			            findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
 
 			            // TODO
 
@@ -401,16 +445,6 @@ public class EntryActivity
 
 	}
 
-	/**
-	 * Method populates the Subscriptions table in the db with the server data.
-	 */
-	private void populateSubscriptionsTable() {
-
-		Log.d(TAG, "populateSubscriptionsTable:true");
-		// TODO
-
-	}
-
 	@Override
 	public void onBackPressed() {
 
@@ -443,7 +477,107 @@ public class EntryActivity
 
 				break;
 
+			case R.id.entry_activity_login_login_button:
+				Log.d(TAG, "onClick: id = login button");
+
+				loginUser();
+
+				break;
+
+			case R.id.entry_activity_subscription_check_out_button:
+				Log.d(TAG, "onClick: id = check out button");
+
+				createUserWithEmailAndPassword();
+
+				break;
+
 		}
+
+	}
+
+	public void loginUser() {
+
+		Log.d(TAG, "loginWithUser:true");
+
+		EditText etEmailField = findViewById(R.id.entry_activity_login_email_field);
+		EditText etPasswordField = findViewById(R.id.entry_activity_login_password_field);
+		TextInputLayout etEmailFieldLayout = findViewById(R.id.entry_activity_login_email_layout);
+		TextInputLayout etPasswordFieldLayout = findViewById(R.id.entry_activity_login_password_layout);
+
+		String email = etEmailField.getText()
+		                           .toString();
+		String password = etPasswordField.getText()
+		                                 .toString();
+
+		if (email.length() == 0) {
+
+			setLoginLayoutErrorsNull();
+
+			etEmailFieldLayout.setError("You forgot me");
+
+			return;
+
+		} else if (password.length() == 0) {
+
+			setLoginLayoutErrorsNull();
+
+			etPasswordFieldLayout.setError("You forgot me");
+
+			return;
+
+		} else {
+
+			setLoginLayoutErrorsNull();
+
+		}
+
+		// Show loading assistant.
+		findViewById(R.id.entry_activity_login_waiting_assistant).setVisibility(View.VISIBLE);
+		findViewById(R.id.entry_activity_login_waiting_assistant_text_view).setVisibility(View.VISIBLE);
+
+		mAuth.signInWithEmailAndPassword(email, password)
+		     .addOnSuccessListener(command -> {
+
+			     Log.d(TAG, "loginUser: success");
+
+			     updateUI(command.getUser());
+
+		     })
+		     .addOnFailureListener(e -> {
+
+			     Log.d(TAG, "loginUser: failure");
+			     Log.e(TAG, "loginUser: ", e);
+
+			     setLoginLayoutErrorsNull();
+
+			     findViewById(R.id.entry_activity_login_waiting_assistant).setVisibility(View.GONE);
+			     findViewById(R.id.entry_activity_login_waiting_assistant_text_view).setVisibility(View.GONE);
+
+			     // TODO
+
+			     if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
+
+				     etEmailFieldLayout.setError("Email or password incorrect");
+
+			     } else if (e instanceof com.google.firebase.FirebaseNetworkException) {
+
+				     etEmailFieldLayout.setError("Check your internet connection and try again");
+
+			     }
+
+		     });
+
+	}
+
+	private void setLoginLayoutErrorsNull() {
+
+		Log.d(TAG, "setLoginLayoutErrorsNull:true");
+
+		TextInputLayout emailLayout = findViewById(R.id.entry_activity_login_email_layout);
+		TextInputLayout passwordLayout = findViewById(R.id.entry_activity_login_password_layout);
+
+		emailLayout.setError(null);
+		passwordLayout.setError(null);
 
 	}
 
@@ -512,92 +646,9 @@ public class EntryActivity
 	}
 
 	@Override
-	public void loginWithUser(FirebaseUser user) {
-
-		Log.d(TAG, "loginWithUser:true");
-
-		updateUI(user);
-
-	}
-
-	@Override
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
 		Log.d(TAG, "onConnectionFailed:true");
-
-	}
-
-	void updateUI(FirebaseUser user) {
-
-		Log.d(TAG, "updateUI:true");
-
-		ImageView waitingAssistant = findViewById(R.id.entry_activity_logging_in_waiting_assistant);
-
-		if (user != null) {
-
-			if (user.getProviderData()
-			        .get(1)
-			        .getProviderId()
-			        .equals("google.com")) {
-
-				// TODO
-
-			}
-
-			Glide.with(this)
-			     .load(R.drawable.waiting_assistant_content)
-			     .into(waitingAssistant);
-
-			findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
-			findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
-
-			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
-			toast.show();
-
-			user.reload()
-			    .addOnSuccessListener(command -> {
-
-				    Log.d(TAG, "updateUI: success");
-				    toast.cancel();
-				    if (user.isEmailVerified()) {
-
-					    startMainActivity(user);
-
-				    } else {
-
-					    startEmailVerificationActivity(user);
-
-				    }
-
-			    })
-			    .addOnFailureListener(e -> {
-
-				    Log.d(TAG, "updateUI: failure");
-				    Log.e(TAG, "updateUI: ", e);
-
-			    });
-
-		} else {
-
-			Log.d(TAG, "updateUI: user == null");
-
-			// TODO
-
-		}
-
-	}
-
-	void startMainActivity(FirebaseUser user) {
-
-		Log.d(TAG, "startMainActivity:true");
-		// TODO
-
-	}
-
-	void startEmailVerificationActivity(FirebaseUser user) {
-
-		Log.d(TAG, "startEmailVerificationActivity:true");
-		// TODO
 
 	}
 
@@ -620,6 +671,36 @@ public class EntryActivity
 		etRegistrationNicknameLayout.setErrorEnabled(enabled);
 
 		Log.d(TAG, "setRegistrationLayoutErrorsEnabled:end");
+
+	}
+
+	@Override
+	public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
+
+		Log.d(TAG, "onPurchasesUpdated:true");
+
+	}
+
+	@Override
+	public void onBillingSetupFinished(BillingResult billingResult) {
+
+		Log.d(TAG, "onBillingSetupFinished:true");
+
+		if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+
+			// The BillingClient is ready. You can query purchases here.
+
+		}
+
+	}
+
+	@Override
+	public void onBillingServiceDisconnected() {
+
+		Log.d(TAG, "onBillingServiceDisconnected:true");
+
+		// Try to restart the connection on the next request to
+		// Google Play by calling the startConnection() method.
 
 	}
 
