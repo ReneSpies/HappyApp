@@ -194,7 +194,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				app:errorEnabled="true"
-				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_nickname_layout"
+				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_username_layout"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_registration_first_name_layout">
 
 				<com.google.android.material.textfield.TextInputEditText
@@ -208,17 +208,17 @@
 			</com.google.android.material.textfield.TextInputLayout>
 
 			<TextView
-				android:id="@+id/entry_activity_registration_nickname_info_text_view"
+				android:id="@+id/entry_activity_registration_username_info_text_view"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:text="@string/contraction_displayed_name"
 				android:textAppearance="?attr/textAppearanceCaption"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_registration_nickname_layout"
-				app:layout_constraintEnd_toEndOf="@+id/entry_activity_registration_nickname_layout"
-				app:layout_constraintStart_toStartOf="@+id/entry_activity_registration_nickname_layout" />
+				app:layout_constraintBottom_toTopOf="@+id/entry_activity_registration_username_layout"
+				app:layout_constraintEnd_toEndOf="@+id/entry_activity_registration_username_layout"
+				app:layout_constraintStart_toStartOf="@+id/entry_activity_registration_username_layout" />
 
 			<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/entry_activity_registration_nickname_layout"
+				android:id="@+id/entry_activity_registration_username_layout"
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -227,10 +227,10 @@
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_registration_family_name_layout">
 
 				<com.google.android.material.textfield.TextInputEditText
-					android:id="@+id/entry_activity_registration_nickname_field"
+					android:id="@+id/entry_activity_registration_username_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_nickname"
+					android:hint="@string/plain_username"
 					android:imeActionId="4"
 					android:imeOptions="actionNext"
 					android:inputType="text" />
@@ -243,7 +243,7 @@
 				android:layout_height="wrap_content"
 				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_password_layout"
-				app:layout_constraintTop_toBottomOf="@id/entry_activity_registration_nickname_layout">
+				app:layout_constraintTop_toBottomOf="@id/entry_activity_registration_username_layout">
 
 				<com.google.android.material.textfield.TextInputEditText
 					android:id="@+id/entry_activity_registration_email_field"
@@ -330,10 +330,10 @@
 				android:id="@+id/entry_activity_subscription_title"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:visibility="invisible"
 				android:text="@string/plain_happyapp_gold"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"
+				android:visibility="invisible"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_description_point_1"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_logo" />
 
