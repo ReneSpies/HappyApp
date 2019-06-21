@@ -81,6 +81,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:hint="@string/plain_password"
+				app:layout_constraintBottom_toTopOf="@+id/entry_activity_email_login_seperator_view"
 				app:errorEnabled="true"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_login_email_layout"
 				app:passwordToggleEnabled="true">
@@ -104,28 +105,30 @@
 				app:layout_constraintEnd_toEndOf="@+id/entry_activity_login_password_layout"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_login_password_layout" />
 
-			<ImageView
-				android:id="@+id/entry_activity_login_waiting_assistant"
-				android:layout_width="50.13dp"
-				android:layout_height="50.13dp"
-				android:layout_marginStart="13dp"
-				android:contentDescription="@string/plain_processing_login"
-				android:visibility="gone"
-				app:layout_constraintEnd_toStartOf="@+id/entry_activity_login_waiting_assistant_text_view"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/entry_activity_login_password_layout" />
-
-			<TextView
-				android:id="@+id/entry_activity_login_waiting_assistant_text_view"
-				android:layout_width="0dp"
+			<LinearLayout
+				android:id="@+id/entry_activity_login_waiting_assistant_layout"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/plain_logging_in"
-				android:textAppearance="?attr/textAppearanceCaption"
+				android:gravity="center"
+				android:orientation="horizontal"
 				android:visibility="gone"
-				app:layout_constraintBottom_toBottomOf="@+id/entry_activity_login_waiting_assistant"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toEndOf="@+id/entry_activity_login_waiting_assistant"
-				app:layout_constraintTop_toTopOf="@+id/entry_activity_login_waiting_assistant" />
+				app:layout_constraintStart_toStartOf="@+id/entry_activity_login_password_layout"
+				app:layout_constraintTop_toBottomOf="@+id/entry_activity_login_password_layout"
+				tools:ignore="UseCompoundDrawables">
+
+				<ImageView
+					android:id="@+id/entry_activity_login_waiting_assistant"
+					android:layout_width="50.13dp"
+					android:layout_height="50.13dp"
+					android:contentDescription="@string/plain_processing_login" />
+
+				<TextView
+					android:id="@+id/entry_activity_login_waiting_assistant_text_view"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/plain_logging_in"
+					android:textAppearance="?attr/textAppearanceCaption" />
+			</LinearLayout>
 
 			<View
 				android:id="@+id/entry_activity_email_login_seperator_view"
@@ -387,7 +390,8 @@
 				android:visibility="invisible"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_check_out_button"
 				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent">
+				app:layout_constraintStart_toStartOf="parent"
+				tools:ignore="UseCompoundDrawables">
 
 				<ImageView
 					android:id="@+id/entry_activity_subscription_waiting_assistant"

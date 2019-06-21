@@ -96,6 +96,10 @@
 
 	<!-- Content descriptions -->
 	<string name="plain_processing_registration">Processing registration</string>
+	<string name="contraction_google_email_verification_header">Before you can proceed, we ask you to give us your date of birth so we can make sure you are 18+ and also to confirm that you\'ve read and accepted our Privacy Policy and Terms and Conditions. Furthermore it\'d be cool if you can verify your email address (we've already sent you one)</string>
+	<string name="plain_back">Back</string>
+	<string name="plain_send_again">Send again</string>
+	<string name="plain_i_didn_t_get_an_email">I didn\'t get an email</string>
 
 
 </resources>

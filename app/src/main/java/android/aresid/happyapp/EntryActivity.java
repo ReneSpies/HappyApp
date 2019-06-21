@@ -1,6 +1,5 @@
 package android.aresid.happyapp;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
@@ -30,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -43,6 +42,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class EntryActivity
 		extends AppCompatActivity
@@ -53,12 +54,15 @@ public class EntryActivity
 		           BillingClientStateListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener {
 
-	private final static String             TAG                = "EntryActivity";
-	private static final int                REQUEST_CODE_LOGIN = 13;
+	private final static String             TAG                    = "EntryActivity";
+	private static final int                REQUEST_CODE_LOGIN     = 13;
 	private              DBHelper           mDBHelper;
 	private              GoogleSignInClient mGoogleSignInClient;
 	private              FirebaseAuth       mAuth;
 	private              BillingClient      mBillingClient;
+	private              int                mCurrentTimeSyncHelper = 0;
+	private              int                mBackPressedHelper     = 0;
+	private              int                mCreateUserHelper      = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,21 +70,16 @@ public class EntryActivity
 		Log.d(TAG, "onCreate:true");
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_entry);
+//		setContentView(R.layout.activity_entry);
+		setContentView(R.layout.activity_google_email_verification);
 
 		// Instantiate FirebaseAuth.
 		mAuth = FirebaseAuth.getInstance();
 
 		// Load waiting assistant into ImageViews.
-		Glide.with(this)
-		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
-		     .into((ImageView) findViewById(R.id.entry_activity_login_waiting_assistant));
-		Glide.with(this)
-		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
-		     .into((ImageView) findViewById(R.id.entry_activity_logging_in_waiting_assistant));
-		Glide.with(this)
-		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
-		     .into((ImageView) findViewById(R.id.entry_activity_subscription_waiting_assistant));
+		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
+		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
+		loadGifInto(findViewById(R.id.entry_activity_subscription_waiting_assistant));
 
 //		mBillingClient = BillingClient.newBuilder(this)
 //		                              .setListener(this)
@@ -127,6 +126,7 @@ public class EntryActivity
 		}
 
 		populateSubscriptionsTable();
+
 	}
 
 	@Override
@@ -140,6 +140,16 @@ public class EntryActivity
 		                                .getCurrentUser();
 
 		updateUI(user);
+	}
+
+	private void loadGifInto(ImageView view) {
+
+		Log.d(TAG, "loadGifInto:true");
+
+		Glide.with(this)
+		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
+		     .into(view);
+
 	}
 
 	/**
@@ -318,15 +328,10 @@ public class EntryActivity
 		btCheckOut.setEnabled(false);
 		findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.VISIBLE);
 
-		Log.d(TAG, "createUserWithEmailAndPassword: username = " + username);
-
-		db.collection("users")
-		  .whereEqualTo("username", username)
+		db.collection(FirestoreNames.COLLECTION_USERS)
+		  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
 		  .get()
 		  .addOnSuccessListener(command -> {
-
-			  Log.d(TAG, "createUserWithEmailAndPassword: query success");
-			  Log.d(TAG, "createUserWithEmailAndPassword: command = " + command.isEmpty());
 
 			  if (command.isEmpty()) {
 
@@ -335,7 +340,6 @@ public class EntryActivity
 				              .addOnSuccessListener(result -> {
 
 					              Log.d(TAG, "createUserWithEmailAndPassword: success");
-					              Log.d(TAG, "createUserWithEmailAndPassword: user = " + result.getUser());
 
 					              result.getUser()
 					                    .updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(etRegistrationUsernameField.getText()
@@ -374,6 +378,11 @@ public class EntryActivity
 
 						              etRegistrationEmailLayout.setError("This email is badly formatted");
 
+					              } else {
+
+						              Toast.makeText(this, "Oops. Something went wrong. Please try again", Toast.LENGTH_SHORT)
+						                   .show();
+
 					              }
 
 				              });
@@ -402,6 +411,9 @@ public class EntryActivity
 			  Log.d(TAG, "createUserWithEmailAndPassword: query failure");
 			  Log.e(TAG, "createUserWithEmailAndPassword: ", e);
 
+			  Toast.makeText(this, "Something went wrong. Please try again", Toast.LENGTH_SHORT)
+			       .show();
+
 			  btCheckOut.setEnabled(true);
 			  etRegistrationFirstNameField.setEnabled(true);
 			  etRegistrationFamilyNameField.setEnabled(true);
@@ -413,6 +425,177 @@ public class EntryActivity
 			  findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
 
 		  });
+
+	}
+
+	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username, String email, String dob) {
+
+		Log.d(TAG, "saveUserInFirestore:true");
+
+		FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+		Toast toast = Toast.makeText(this, "Something went wrong. Please stand by", Toast.LENGTH_SHORT);
+
+		HashMap<String, String> userInfo = new HashMap<>();
+		userInfo.put(FirestoreNames.COLUMN_FIRST_NAME, firstName);
+		userInfo.put(FirestoreNames.COLUMN_FAMILY_NAME, familyName);
+		userInfo.put(FirestoreNames.COLUMN_USERNAME, username);
+		userInfo.put(FirestoreNames.COLUMN_EMAIL, email);
+		userInfo.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
+
+		db.collection(FirestoreNames.COLLECTION_USERS)
+		  .document(user.getUid())
+		  .set(userInfo)
+		  .addOnSuccessListener(command -> {
+
+			  Log.d(TAG, "saveUserInFirestore: success");
+
+			  toast.cancel();
+
+			  mCreateUserHelper = 0;
+
+			  new RetrieveInternetTime(this, user.getUid()).execute("time.google.com");
+
+			  updateUI(user);
+
+		  })
+		  .addOnFailureListener(e -> {
+
+			  Log.d(TAG, "saveUserInFirestore: failure");
+			  Log.e(TAG, "saveUserInFirestore: ", e);
+
+			  toast.cancel();
+
+			  if (mCreateUserHelper <= 3) {
+
+				  toast.show();
+
+				  mCreateUserHelper++;
+
+				  saveUserInFirestore(user, firstName, familyName, username, email, dob);
+
+			  }
+
+		  });
+
+	}
+
+	@Override
+	public void onBackPressed() {
+
+		Log.d(TAG, "onBackPressed:true");
+
+		Toast toast = Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT);
+
+		if (mBackPressedHelper == 0) {
+
+			Log.d(TAG, "onBackPressed: helper == 0");
+
+			toast.show();
+
+			mBackPressedHelper = 1;
+
+			// A Timer that resets my onBackPressed helper to 0 after 6.13 seconds.
+			new Timer().schedule(new TimerTask() {
+
+				@Override
+				public void run() {
+
+					Log.d(TAG, "run:true");
+
+					mBackPressedHelper = 0;
+
+				}
+
+			}, 6130);
+
+		} else {
+
+			if (mBackPressedHelper == 1) {
+
+				Log.d(TAG, "onBackPressed: helper == 1");
+
+				toast.cancel();
+
+				super.onBackPressed();
+
+			}
+
+		}
+
+	}
+
+	public void loginUser() {
+
+		Log.d(TAG, "loginWithUser:true");
+
+		EditText etEmailField = findViewById(R.id.entry_activity_login_email_field);
+		EditText etPasswordField = findViewById(R.id.entry_activity_login_password_field);
+		TextInputLayout etEmailFieldLayout = findViewById(R.id.entry_activity_login_email_layout);
+		TextInputLayout etPasswordFieldLayout = findViewById(R.id.entry_activity_login_password_layout);
+
+		String email = etEmailField.getText()
+		                           .toString();
+		String password = etPasswordField.getText()
+		                                 .toString();
+
+		setLoginLayoutErrorsNull();
+
+		if (email.length() == 0) {
+
+			smoothScrollTo(etEmailFieldLayout.getTop());
+
+			etEmailFieldLayout.setError("You forgot me");
+
+			return;
+
+		} else if (password.length() == 0) {
+
+			smoothScrollTo(etEmailFieldLayout.getBottom());
+
+			etPasswordFieldLayout.setError("You forgot me");
+
+			return;
+
+		}
+
+		// Show loading assistant.
+		findViewById(R.id.entry_activity_login_waiting_assistant_layout).setVisibility(View.VISIBLE);
+
+		mAuth.signInWithEmailAndPassword(email, password)
+		     .addOnSuccessListener(command -> {
+
+			     Log.d(TAG, "loginUser: success");
+
+			     updateUI(command.getUser());
+
+		     })
+		     .addOnFailureListener(e -> {
+
+			     Log.d(TAG, "loginUser: failure");
+			     Log.e(TAG, "loginUser: ", e);
+
+			     setLoginLayoutErrorsNull();
+
+			     findViewById(R.id.entry_activity_login_waiting_assistant_layout).setVisibility(View.GONE);
+
+			     // TODO
+
+			     if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
+
+				     smoothScrollTo(etEmailFieldLayout.getTop());
+
+				     etEmailFieldLayout.setError("Email or password incorrect");
+
+			     } else if (e instanceof com.google.firebase.FirebaseNetworkException) {
+
+				     smoothScrollTo(etEmailFieldLayout.getTop());
+
+				     etEmailFieldLayout.setError("Check your internet connection and try again");
+
+			     }
+
+		     });
 
 	}
 
@@ -440,59 +623,26 @@ public class EntryActivity
 
 	}
 
-	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username, String email, String dob) {
-
-		Log.d(TAG, "saveUserInFirestore:true");
-
-		new RetrieveInternetTime(this, user.getUid()).execute("time.google.com");
-
-		FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-		HashMap<String, String> userInfo = new HashMap<>();
-		userInfo.put(FirestoreNames.COLUMN_FIRST_NAME, firstName);
-		userInfo.put(FirestoreNames.COLUMN_FAMILY_NAME, familyName);
-		userInfo.put(FirestoreNames.COLUMN_USERNAME, username);
-		userInfo.put(FirestoreNames.COLUMN_EMAIL, email);
-		userInfo.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
-
-		db.collection(FirestoreNames.COLLECTION_USERS)
-		  .document(user.getUid())
-		  .set(userInfo)
-		  .addOnSuccessListener(command -> {
-
-			  Log.d(TAG, "saveUserInFirestore: success");
-
-			  updateUI(user);
-
-		  })
-		  .addOnFailureListener(e -> {
-
-			  Log.d(TAG, "saveUserInFirestore: failure");
-			  Log.e(TAG, "saveUserInFirestore: ", e);
-
-		  });
-
-	}
-
 	void updateUI(FirebaseUser user) {
 
 		Log.d(TAG, "updateUI:true");
 
 		if (user != null) {
 
-			Log.d(TAG, "updateUI: display name = " + user.getDisplayName());
-
 			if (user.getProviderData()
 			        .get(1)
 			        .getProviderId()
 			        .equals("google.com")) {
 
+				Log.d(TAG, "updateUI: display name = " + user.getDisplayName());
+				Log.d(TAG, "updateUI: email = " + user.getEmail());
+				Log.d(TAG, "updateUI: " + user.getPhoneNumber());
+
 				// TODO
 
 			}
 
-			findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
-			findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
+			changeToLoadingScreen();
 
 			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
 			toast.show();
@@ -501,7 +651,9 @@ public class EntryActivity
 			    .addOnSuccessListener(command -> {
 
 				    Log.d(TAG, "updateUI: success");
+
 				    toast.cancel();
+
 				    if (user.isEmailVerified()) {
 
 					    startMainActivity(user);
@@ -522,8 +674,12 @@ public class EntryActivity
 
 				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
 
-					    Toast.makeText(this, "There is no user record corresponding to this identifier. The user may have been deleted.", Toast.LENGTH_LONG)
+					    Toast.makeText(this, "There is no user record corresponding to this identifier. The user may have been deleted", Toast.LENGTH_LONG)
 					         .show();
+
+					    mAuth.signOut();
+
+					    changeFromLoadingScreen();
 
 				    }
 
@@ -549,12 +705,12 @@ public class EntryActivity
 
 	}
 
-	@Override
-	public void onBackPressed() {
+	private void changeToLoadingScreen() {
 
-		Log.d(TAG, "onBackPressed:true");
-		super.onBackPressed();
-		// TODO
+		Log.d(TAG, "changeToLoadingScreen:true");
+
+		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
+		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
 
 	}
 
@@ -599,77 +755,12 @@ public class EntryActivity
 
 	}
 
-	public void loginUser() {
+	private void changeFromLoadingScreen() {
 
-		Log.d(TAG, "loginWithUser:true");
+		Log.d(TAG, "changeFromLoadingScreen:true");
 
-		EditText etEmailField = findViewById(R.id.entry_activity_login_email_field);
-		EditText etPasswordField = findViewById(R.id.entry_activity_login_password_field);
-		TextInputLayout etEmailFieldLayout = findViewById(R.id.entry_activity_login_email_layout);
-		TextInputLayout etPasswordFieldLayout = findViewById(R.id.entry_activity_login_password_layout);
-
-		String email = etEmailField.getText()
-		                           .toString();
-		String password = etPasswordField.getText()
-		                                 .toString();
-
-		if (email.length() == 0) {
-
-			setLoginLayoutErrorsNull();
-
-			etEmailFieldLayout.setError("You forgot me");
-
-			return;
-
-		} else if (password.length() == 0) {
-
-			setLoginLayoutErrorsNull();
-
-			etPasswordFieldLayout.setError("You forgot me");
-
-			return;
-
-		} else {
-
-			setLoginLayoutErrorsNull();
-
-		}
-
-		// Show loading assistant.
-		findViewById(R.id.entry_activity_login_waiting_assistant).setVisibility(View.VISIBLE);
-		findViewById(R.id.entry_activity_login_waiting_assistant_text_view).setVisibility(View.VISIBLE);
-
-		mAuth.signInWithEmailAndPassword(email, password)
-		     .addOnSuccessListener(command -> {
-
-			     Log.d(TAG, "loginUser: success");
-
-			     updateUI(command.getUser());
-
-		     })
-		     .addOnFailureListener(e -> {
-
-			     Log.d(TAG, "loginUser: failure");
-			     Log.e(TAG, "loginUser: ", e);
-
-			     setLoginLayoutErrorsNull();
-
-			     findViewById(R.id.entry_activity_login_waiting_assistant).setVisibility(View.GONE);
-			     findViewById(R.id.entry_activity_login_waiting_assistant_text_view).setVisibility(View.GONE);
-
-			     // TODO
-
-			     if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
-
-				     etEmailFieldLayout.setError("Email or password incorrect");
-
-			     } else if (e instanceof com.google.firebase.FirebaseNetworkException) {
-
-				     etEmailFieldLayout.setError("Check your internet connection and try again");
-
-			     }
-
-		     });
+		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.GONE);
+		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
 
 	}
 
@@ -713,7 +804,7 @@ public class EntryActivity
 				// Google login failed. Update UI appropriately.
 				Log.e(TAG, "onActivityResult: ", e);
 
-				Toast.makeText(this, "Oops. Something went wrong", Toast.LENGTH_LONG)
+				Toast.makeText(this, "Oops. Something went wrong. Please try again", Toast.LENGTH_SHORT)
 				     .show();
 
 			}
@@ -726,6 +817,23 @@ public class EntryActivity
 
 		Log.d(TAG, "firebaseAuthWithGoogleAccount:true");
 		Log.d(TAG, "firebaseAuthWithGoogleAccount: id = " + account.getId());
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: email = " + account.getEmail());
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: given name = " + account.getGivenName());
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: family name = " + account.getFamilyName());
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: photo url = " + account.getPhotoUrl());
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: display name = " + account.getDisplayName());
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: id token = " + account.getIdToken());
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: auth code = " + account.getServerAuthCode());
+
+		for (Scope scope : account.getGrantedScopes()) {
+
+			Log.d(TAG, "firebaseAuthWithGoogleAccount: scope = " + scope.toString());
+			Log.d(TAG, "firebaseAuthWithGoogleAccount: scope uri = " + scope.getScopeUri());
+			Log.d(TAG, "firebaseAuthWithGoogleAccount: scope hashcode = " + scope.hashCode());
+
+		}
+
+		changeToLoadingScreen();
 
 		AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 
@@ -736,14 +844,29 @@ public class EntryActivity
 
 			     // Login success.
 			     FirebaseUser user = mAuth.getCurrentUser();
-			     updateUI(user);
+
+			     if (command.getAdditionalUserInfo()
+			                .isNewUser()) {
+
+				     Log.d(TAG, "firebaseAuthWithGoogleAccount: user is new");
+
+				     saveUserInFirestore(user, account.getGivenName(), account.getFamilyName(), account.getDisplayName(), account.getEmail(), null);
+
+			     } else {
+
+				     updateUI(user);
+
+			     }
 
 		     })
 		     .addOnFailureListener(e -> {
 
 			     Log.e(TAG, "firebaseAuthWithGoogleAccount: ", e);
 
-			     // TODO
+			     Toast.makeText(this, "Oops. Something went wrong. Please try again", Toast.LENGTH_SHORT)
+			          .show();
+
+			     changeFromLoadingScreen();
 
 		     });
 
@@ -753,28 +876,6 @@ public class EntryActivity
 	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
 		Log.d(TAG, "onConnectionFailed:true");
-
-	}
-
-	private void setRegistrationLayoutErrorsEnabled(boolean enabled) {
-
-		Log.d(TAG, "setRegistrationLayoutErrorsEnabled:true");
-
-		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
-		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
-		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
-		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
-		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
-		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_username_layout);
-
-		etRegistrationFirstNameLayout.setErrorEnabled(enabled);
-		etRegistrationFamilyNameLayout.setErrorEnabled(enabled);
-		etRegistrationEmailLayout.setErrorEnabled(enabled);
-		etRegistrationPasswordLayout.setErrorEnabled(enabled);
-		etRegistrationDobLayout.setErrorEnabled(enabled);
-		etRegistrationNicknameLayout.setErrorEnabled(enabled);
-
-		Log.d(TAG, "setRegistrationLayoutErrorsEnabled:end");
 
 	}
 
@@ -825,98 +926,19 @@ public class EntryActivity
 			  Log.d(TAG, "currentTime: failure");
 			  Log.e(TAG, "currentTime: ", e);
 
+			  if (mCurrentTimeSyncHelper <= 3) {
+
+				  Toast.makeText(this, "Something went wrong synchronizing with the server. Trying again", Toast.LENGTH_SHORT)
+				       .show();
+
+				  currentTime(time, uid);
+
+				  mCurrentTimeSyncHelper++;
+
+			  }
+
 		  });
 
 	}
 
-	class BackgroundTransitionTransformer
-			extends ViewPager2.OnPageChangeCallback {
-
-		private static final String TAG = "BackgroundTransitionTransformer";
-		int[] mArrayOfColors;
-		private float mPositionOffset = 0;
-		private int   mPosition;
-
-		@SuppressLint ("LongLogTag")
-		BackgroundTransitionTransformer(ViewPager2 viewPager2) {
-
-			super();
-
-			Log.d(TAG, "BackgroundTransitionTransformer:true");
-
-			// Populate the int[] for the colors.
-			if (viewPager2.getAdapter() != null) {
-				mArrayOfColors = new int[viewPager2.getAdapter()
-				                                   .getItemCount()];
-
-				for (int i = 0; i <= viewPager2.getAdapter()
-				                               .getItemCount(); i++) {
-
-					Log.d(TAG, "i = " + i);
-
-					switch (i) {
-
-						case 0:
-							mArrayOfColors[i] = getResources().getColor(R.color.silver);
-							break;
-						case 1:
-							mArrayOfColors[i] = getResources().getColor(R.color.gold);
-							break;
-						case 2:
-							mArrayOfColors[i] = getResources().getColor(R.color.platinum);
-							break;
-
-					}
-				}
-
-			} else {
-
-				mArrayOfColors[0] = getResources().getColor(R.color.silver);
-				mArrayOfColors[1] = getResources().getColor(R.color.gold);
-				mArrayOfColors[2] = getResources().getColor(R.color.platinum);
-
-			}
-
-		}
-
-		@SuppressLint ("LongLogTag")
-		float getPositionOffset() {
-
-			Log.d(TAG, "getPositionOffset:true");
-			return mPositionOffset;
-
-		}
-
-		@SuppressLint ("LongLogTag")
-		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-			Log.d(TAG, "onPageScrolled:true");
-			mPosition = position;
-			mPositionOffset = positionOffset;
-
-		}
-
-		@Override
-		public void onPageSelected(int position) {
-
-			super.onPageSelected(position);
-
-		}
-
-		@Override
-		public void onPageScrollStateChanged(int state) {
-
-			super.onPageScrollStateChanged(state);
-
-		}
-
-		@SuppressLint ("LongLogTag")
-		int getPosition() {
-
-			Log.d(TAG, "getPosition:true");
-			return mPosition;
-
-		}
-	}
 }

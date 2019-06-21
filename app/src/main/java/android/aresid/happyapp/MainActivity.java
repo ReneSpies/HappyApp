@@ -134,7 +134,7 @@ public class MainActivity
 			if (doubleOnBackPressedHelper == 0) {
 				Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT)
 				     .show();
-				doubleOnBackPressedHelper = 1;
+				doubleOnBackPressedHelper++;
 				// A Timer that resets my onBackPressed helper to 0 after 6.13 seconds.
 				new Timer().schedule(new TimerTask() {
 
