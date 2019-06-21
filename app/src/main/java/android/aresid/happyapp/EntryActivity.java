@@ -2,6 +2,7 @@ package android.aresid.happyapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -42,8 +43,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class EntryActivity
 		extends AppCompatActivity
@@ -70,8 +69,8 @@ public class EntryActivity
 		Log.d(TAG, "onCreate:true");
 
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_entry);
-		setContentView(R.layout.activity_google_email_verification);
+		setContentView(R.layout.activity_entry);
+//		setContentView(R.layout.activity_google_email_verification);
 
 		// Instantiate FirebaseAuth.
 		mAuth = FirebaseAuth.getInstance();
@@ -142,6 +141,119 @@ public class EntryActivity
 		updateUI(user);
 	}
 
+	void updateUI(FirebaseUser user) {
+
+		Log.d(TAG, "updateUI:true");
+
+		if (user != null) {
+
+			changeToLoadingScreen();
+
+			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
+			toast.show();
+
+			user.reload()
+			    .addOnSuccessListener(command -> {
+
+				    Log.d(TAG, "updateUI: success");
+
+				    toast.cancel();
+
+				    if (user.isEmailVerified()) {
+
+					    startMainActivity(user);
+
+				    } else {
+
+					    if (user.getProviderData()
+					            .get(1)
+					            .getProviderId()
+					            .equals("google.com")) {
+
+						    startGoogleEmailVerificationActivity(user);
+
+					    } else {
+
+						    startEmailVerificationActivity(user);
+
+					    }
+
+				    }
+
+			    })
+			    .addOnFailureListener(e -> {
+
+				    Log.d(TAG, "updateUI: failure");
+				    Log.e(TAG, "updateUI: ", e);
+
+				    // TODO
+
+				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
+
+					    Toast.makeText(this, "There is no user record corresponding to this identifier. The user may have been deleted", Toast.LENGTH_LONG)
+					         .show();
+
+					    mAuth.signOut();
+
+					    changeFromLoadingScreen();
+
+				    }
+
+			    });
+
+		} else {
+
+			Log.d(TAG, "updateUI: user == null");
+
+			// TODO
+
+		}
+
+	}
+
+	private void changeToLoadingScreen() {
+
+		Log.d(TAG, "changeToLoadingScreen:true");
+
+		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
+		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
+
+	}
+
+	void startMainActivity(FirebaseUser user) {
+
+		Log.d(TAG, "startMainActivity:true");
+		// TODO
+
+	}
+
+	private void startGoogleEmailVerificationActivity(FirebaseUser user) {
+
+		Log.d(TAG, "startGoogleEmailVerificationActivity:true");
+
+		Intent intent = new Intent(this, GoogleEmailVerificationActivity.class);
+		intent.putExtra("user", user);
+
+		startActivity(intent);
+
+	}
+
+	void startEmailVerificationActivity(FirebaseUser user) {
+
+		Log.d(TAG, "startEmailVerificationActivity:true");
+		// TODO
+
+	}
+
+	private void changeFromLoadingScreen() {
+
+		Log.d(TAG, "changeFromLoadingScreen:true");
+
+		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.GONE);
+		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
+
+	}
+
 	private void loadGifInto(ImageView view) {
 
 		Log.d(TAG, "loadGifInto:true");
@@ -158,20 +270,6 @@ public class EntryActivity
 	private void populateSubscriptionsTable() {
 
 		Log.d(TAG, "populateSubscriptionsTable:true");
-		// TODO
-
-	}
-
-	void startMainActivity(FirebaseUser user) {
-
-		Log.d(TAG, "startMainActivity:true");
-		// TODO
-
-	}
-
-	void startEmailVerificationActivity(FirebaseUser user) {
-
-		Log.d(TAG, "startEmailVerificationActivity:true");
 		// TODO
 
 	}
@@ -495,19 +593,27 @@ public class EntryActivity
 
 			mBackPressedHelper = 1;
 
-			// A Timer that resets my onBackPressed helper to 0 after 6.13 seconds.
-			new Timer().schedule(new TimerTask() {
+			new Handler().postDelayed(() -> {
 
-				@Override
-				public void run() {
+				Log.d(TAG, "run:true");
 
-					Log.d(TAG, "run:true");
-
-					mBackPressedHelper = 0;
-
-				}
+				mBackPressedHelper = 0;
 
 			}, 6130);
+
+			// A Timer that resets my onBackPressed helper to 0 after 6.13 seconds.
+//			new Timer().schedule(new TimerTask() {
+//
+//				@Override
+//				public void run() {
+//
+//					Log.d(TAG, "run:true");
+//
+//					mBackPressedHelper = 0;
+//
+//				}
+//
+//			}, 6130);
 
 		} else {
 
@@ -623,78 +729,6 @@ public class EntryActivity
 
 	}
 
-	void updateUI(FirebaseUser user) {
-
-		Log.d(TAG, "updateUI:true");
-
-		if (user != null) {
-
-			if (user.getProviderData()
-			        .get(1)
-			        .getProviderId()
-			        .equals("google.com")) {
-
-				Log.d(TAG, "updateUI: display name = " + user.getDisplayName());
-				Log.d(TAG, "updateUI: email = " + user.getEmail());
-				Log.d(TAG, "updateUI: " + user.getPhoneNumber());
-
-				// TODO
-
-			}
-
-			changeToLoadingScreen();
-
-			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
-			toast.show();
-
-			user.reload()
-			    .addOnSuccessListener(command -> {
-
-				    Log.d(TAG, "updateUI: success");
-
-				    toast.cancel();
-
-				    if (user.isEmailVerified()) {
-
-					    startMainActivity(user);
-
-				    } else {
-
-					    startEmailVerificationActivity(user);
-
-				    }
-
-			    })
-			    .addOnFailureListener(e -> {
-
-				    Log.d(TAG, "updateUI: failure");
-				    Log.e(TAG, "updateUI: ", e);
-
-				    // TODO
-
-				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
-
-					    Toast.makeText(this, "There is no user record corresponding to this identifier. The user may have been deleted", Toast.LENGTH_LONG)
-					         .show();
-
-					    mAuth.signOut();
-
-					    changeFromLoadingScreen();
-
-				    }
-
-			    });
-
-		} else {
-
-			Log.d(TAG, "updateUI: user == null");
-
-			// TODO
-
-		}
-
-	}
-
 	private void smoothScrollTo(float y) {
 
 		Log.d(TAG, "smoothScrollTo:true");
@@ -702,15 +736,6 @@ public class EntryActivity
 		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
 
 		svParent.smoothScrollTo(0, (int) y);
-
-	}
-
-	private void changeToLoadingScreen() {
-
-		Log.d(TAG, "changeToLoadingScreen:true");
-
-		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
-		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
 
 	}
 
@@ -752,15 +777,6 @@ public class EntryActivity
 				break;
 
 		}
-
-	}
-
-	private void changeFromLoadingScreen() {
-
-		Log.d(TAG, "changeFromLoadingScreen:true");
-
-		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.GONE);
-		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
 
 	}
 
