@@ -73,11 +73,7 @@ public class GoogleEmailVerificationActivity
 
 		Log.d(TAG, "checkUserStatus:true");
 
-		Handler handler = new Handler();
-
-		handler.postDelayed(() -> {
-
-			handler.removeMessages(0);
+		new Handler().postDelayed(() -> {
 
 			Log.d(TAG, "run:true");
 
@@ -87,8 +83,6 @@ public class GoogleEmailVerificationActivity
 				    Log.d(TAG, "checkUserStatus: success");
 
 				    if (user.isEmailVerified()) {
-
-					    handler.removeMessages(0);
 
 					    // TODO
 
@@ -108,7 +102,7 @@ public class GoogleEmailVerificationActivity
 
 			    });
 
-		}, 2513);
+		}, 1130);
 
 	}
 
