@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -68,26 +69,34 @@ public class EmailVerificationFragment
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		Log.d(TAG, "onCreateView:true");
+
 		View rootView = inflater.inflate(R.layout.fragment_email_verification, container, false);
+
 		// Init all the views for this fragment
 		mBackButton = rootView.findViewById(R.id.emailverification_back_button);
 		mSendEmailAgainButton = rootView.findViewById(R.id.emailverification_send_again_button);
+
 		// Add onClick listener to the buttons
 		mBackButton.setOnClickListener(this);
 		mSendEmailAgainButton.setOnClickListener(this);
+
 		// Inflate the layout for this fragment
 		return rootView;
+
 	}
 
 	@Override
 	public void onStart() {
 
 		Log.d(TAG, "onStart:true");
+
 		super.onStart();
+
 		updateUI(mFirebaseUser);
+
 	}
 
 	@Override

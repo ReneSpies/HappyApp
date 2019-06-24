@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
@@ -40,6 +41,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +80,7 @@ public class EntryActivity
 		// Load waiting assistant into ImageViews.
 		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
 		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
-		loadGifInto(findViewById(R.id.entry_activity_subscription_waiting_assistant));
+//		loadGifInto(findViewById(R.id.entry_activity_subscription_waiting_assistant));
 
 //		mBillingClient = BillingClient.newBuilder(this)
 //		                              .setListener(this)
@@ -97,9 +99,23 @@ public class EntryActivity
 		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
 		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
-		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
+//		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
+		ViewPager2 vpSubscriptionViewPager = findViewById(R.id.entry_activity_subscription_view_pager);
 
-		btCheckOut.setOnClickListener(this);
+		List<String> listOfTitles = new ArrayList<String>();
+		listOfTitles.add("Free package");
+		listOfTitles.add("HappyApp Gold");
+
+		List<String> listOfDescriptions = new ArrayList<String>();
+		listOfDescriptions.add("Free package description");
+		listOfDescriptions.add("HappyApp gold description");
+
+		List<String> listOfPriceTags = new ArrayList<>();
+		listOfPriceTags.add("Free");
+		listOfPriceTags.add("$6.99/Month");
+
+		vpSubscriptionViewPager.setAdapter(new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPriceTags, vpSubscriptionViewPager));
+//		btCheckOut.setOnClickListener(this);
 		btLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
 		btGoogleLogin.setOnClickListener(this);
@@ -307,7 +323,7 @@ public class EntryActivity
 		String dob = etRegistrationDobField.getText()
 		                                   .toString();
 
-		setRegistrationLayoutErrorsNull();
+		setLayoutErrorsNull();
 
 		if (firstName.length() == 0) {
 
@@ -422,9 +438,9 @@ public class EntryActivity
 		etRegistrationPasswordField.setEnabled(false);
 		etRegistrationDobField.setEnabled(false);
 
-		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
-		btCheckOut.setEnabled(false);
-		findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.VISIBLE);
+//		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
+//		btCheckOut.setEnabled(false);
+//		findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.VISIBLE);
 
 		db.collection(FirestoreNames.COLLECTION_USERS)
 		  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
@@ -452,7 +468,7 @@ public class EntryActivity
 					              Log.d(TAG, "createUserWithEmailAndPassword: failure");
 					              Log.e(TAG, "createUserWithEmailAndPassword: ", e);
 
-					              btCheckOut.setEnabled(true);
+//					              btCheckOut.setEnabled(true);
 					              etRegistrationFirstNameField.setEnabled(true);
 					              etRegistrationFamilyNameField.setEnabled(true);
 					              etRegistrationUsernameField.setEnabled(true);
@@ -460,7 +476,7 @@ public class EntryActivity
 					              etRegistrationPasswordField.setEnabled(true);
 					              etRegistrationDobField.setEnabled(true);
 
-					              findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
+//					              findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
 
 					              // TODO
 
@@ -487,9 +503,9 @@ public class EntryActivity
 
 			  } else {
 
-				  findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
+//				  findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
 
-				  btCheckOut.setEnabled(true);
+//				  btCheckOut.setEnabled(true);
 				  etRegistrationFirstNameField.setEnabled(true);
 				  etRegistrationFamilyNameField.setEnabled(true);
 				  etRegistrationUsernameField.setEnabled(true);
@@ -512,7 +528,7 @@ public class EntryActivity
 			  Toast.makeText(this, "Something went wrong. Please try again", Toast.LENGTH_SHORT)
 			       .show();
 
-			  btCheckOut.setEnabled(true);
+//			  btCheckOut.setEnabled(true);
 			  etRegistrationFirstNameField.setEnabled(true);
 			  etRegistrationFamilyNameField.setEnabled(true);
 			  etRegistrationUsernameField.setEnabled(true);
@@ -520,7 +536,7 @@ public class EntryActivity
 			  etRegistrationPasswordField.setEnabled(true);
 			  etRegistrationDobField.setEnabled(true);
 
-			  findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
+//			  findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
 
 		  });
 
@@ -631,6 +647,86 @@ public class EntryActivity
 
 	}
 
+	private void setLayoutErrorsNull() {
+
+		Log.d(TAG, "setLayoutErrorsNull:true");
+
+		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
+		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
+		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
+		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
+		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_username_layout);
+		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+		TextInputLayout emailLayout = findViewById(R.id.entry_activity_login_email_layout);
+		TextInputLayout passwordLayout = findViewById(R.id.entry_activity_login_password_layout);
+
+
+		cbTermsConditionsPrivacyPolicy.clearFocus();
+
+		emailLayout.setError(null);
+		passwordLayout.setError(null);
+		etRegistrationFirstNameLayout.setError(null);
+		etRegistrationFamilyNameLayout.setError(null);
+		etRegistrationNicknameLayout.setError(null);
+		etRegistrationEmailLayout.setError(null);
+		etRegistrationPasswordLayout.setError(null);
+		etRegistrationDobLayout.setError(null);
+		cbTermsConditionsPrivacyPolicy.setError(null);
+
+	}
+
+	@Override
+	public void onClick(View v) {
+
+		Log.d(TAG, "onClick:true");
+
+		switch (v.getId()) {
+
+			case R.id.entry_activity_login_google_button:
+				Log.d(TAG, "onClick: id = google login button");
+
+				// Google login.
+				Intent googleLoginIntent = mGoogleSignInClient.getSignInIntent();
+				startActivityForResult(googleLoginIntent, REQUEST_CODE_LOGIN);
+
+				break;
+
+			case R.id.entry_activity_registration_date_of_birth_field:
+				Log.d(TAG, "onClick: id = dob field");
+
+				new DatePickerFragment(this).show(getSupportFragmentManager(), "date picker");
+
+				break;
+
+			case R.id.entry_activity_login_login_button:
+				Log.d(TAG, "onClick: id = login button");
+
+				loginUser();
+
+				break;
+
+//			case R.id.entry_activity_subscription_check_out_button:
+//				Log.d(TAG, "onClick: id = check out button");
+//
+//				createUserWithEmailAndPassword();
+//
+//				break;
+
+		}
+
+	}
+
+	private void smoothScrollTo(float y) {
+
+		Log.d(TAG, "smoothScrollTo:true");
+
+		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
+
+		svParent.smoothScrollTo(0, (int) y);
+
+	}
+
 	public void loginUser() {
 
 		Log.d(TAG, "loginWithUser:true");
@@ -645,7 +741,7 @@ public class EntryActivity
 		String password = etPasswordField.getText()
 		                                 .toString();
 
-		setLoginLayoutErrorsNull();
+		setLayoutErrorsNull();
 
 		if (email.length() == 0) {
 
@@ -681,7 +777,7 @@ public class EntryActivity
 			     Log.d(TAG, "loginUser: failure");
 			     Log.e(TAG, "loginUser: ", e);
 
-			     setLoginLayoutErrorsNull();
+			     setLayoutErrorsNull();
 
 			     findViewById(R.id.entry_activity_login_waiting_assistant_layout).setVisibility(View.GONE);
 
@@ -705,92 +801,6 @@ public class EntryActivity
 
 	}
 
-	private void setRegistrationLayoutErrorsNull() {
-
-		Log.d(TAG, "setRegistrationLayoutErrorsNull:true");
-
-		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
-		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
-		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
-		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
-		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
-		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_username_layout);
-		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
-
-		cbTermsConditionsPrivacyPolicy.clearFocus();
-
-		etRegistrationFirstNameLayout.setError(null);
-		etRegistrationFamilyNameLayout.setError(null);
-		etRegistrationNicknameLayout.setError(null);
-		etRegistrationEmailLayout.setError(null);
-		etRegistrationPasswordLayout.setError(null);
-		etRegistrationDobLayout.setError(null);
-		cbTermsConditionsPrivacyPolicy.setError(null);
-
-	}
-
-	private void smoothScrollTo(float y) {
-
-		Log.d(TAG, "smoothScrollTo:true");
-
-		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
-
-		svParent.smoothScrollTo(0, (int) y);
-
-	}
-
-	@Override
-	public void onClick(View v) {
-
-		Log.d(TAG, "onClick:true");
-
-		switch (v.getId()) {
-
-			case R.id.entry_activity_login_google_button:
-				Log.d(TAG, "onClick: id = google login button");
-
-				// Google login.
-				Intent googleLoginIntent = mGoogleSignInClient.getSignInIntent();
-				startActivityForResult(googleLoginIntent, REQUEST_CODE_LOGIN);
-
-				break;
-
-			case R.id.entry_activity_registration_date_of_birth_field:
-				Log.d(TAG, "onClick: id = dob field");
-
-				new DatePickerFragment(this).show(getSupportFragmentManager(), "date picker");
-
-				break;
-
-			case R.id.entry_activity_login_login_button:
-				Log.d(TAG, "onClick: id = login button");
-
-				loginUser();
-
-				break;
-
-			case R.id.entry_activity_subscription_check_out_button:
-				Log.d(TAG, "onClick: id = check out button");
-
-				createUserWithEmailAndPassword();
-
-				break;
-
-		}
-
-	}
-
-	private void setLoginLayoutErrorsNull() {
-
-		Log.d(TAG, "setLoginLayoutErrorsNull:true");
-
-		TextInputLayout emailLayout = findViewById(R.id.entry_activity_login_email_layout);
-		TextInputLayout passwordLayout = findViewById(R.id.entry_activity_login_password_layout);
-
-		emailLayout.setError(null);
-		passwordLayout.setError(null);
-
-	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

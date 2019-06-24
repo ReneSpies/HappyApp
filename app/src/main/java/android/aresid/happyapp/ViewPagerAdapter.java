@@ -34,6 +34,7 @@ public class ViewPagerAdapter
 	ViewPagerAdapter(Context context, List<String> titles, List<String> descriptions, List<String> prices, ViewPager2 viewPager2) {
 
 		Log.d(TAG, "ViewPagerAdapter:true");
+
 		mInflater = LayoutInflater.from(context);
 		mTitles = titles;
 		mDescriptions = descriptions;
@@ -56,6 +57,7 @@ public class ViewPagerAdapter
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
 		Log.d(TAG, "onCreateViewHolder:true");
+
 		View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
 		Button viewPagerBtConfirm = view.findViewById(R.id.view_pager_bt_confirm);
 
@@ -75,19 +77,24 @@ public class ViewPagerAdapter
 	public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
 		Log.d(TAG, "onBindViewHolder:true");
+
 		String title = mTitles.get(position);
 		String description = mDescriptions.get(position);
 		String price = mPrices.get(position);
+
 		holder.mTVTitle.setText(title);
 		holder.mTVDescription.setText(description);
 		holder.mTVPrice.setText(price);
+
 	}
 
 	@Override
 	public int getItemCount() {
 
 		Log.d(TAG, "getItemCount:true");
+
 		return mTitles.size();
+
 	}
 
 	public interface OnViewPagerInteractionListener {
@@ -107,10 +114,12 @@ public class ViewPagerAdapter
 		ViewHolder(View itemView) {
 
 			super(itemView);
+
 			mTVTitle = itemView.findViewById(R.id.view_pager_tv_title);
 			mTVDescription = itemView.findViewById(R.id.view_pager_tv_description);
 			mTVPrice = itemView.findViewById(R.id.view_pager_tv_price);
 			mConstraintLayout = itemView.findViewById(R.id.container2);
+
 		}
 	}
 }

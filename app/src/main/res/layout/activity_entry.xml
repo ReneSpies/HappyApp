@@ -315,106 +315,114 @@
 				android:text="@string/plain_subscribe"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_logo"
+				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_view_pager"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_registration_confirm_tc_privacy_policy_checkbox" />
 
-			<ImageView
-				android:id="@+id/entry_activity_subscription_logo"
-				android:layout_width="200.13dp"
-				android:layout_height="200.13dp"
-				android:contentDescription="@string/plain_happyapp_gold_subscription_logo"
-				android:src="@drawable/ic_app_logo"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_title"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
+
+			<androidx.viewpager2.widget.ViewPager2
+				android:layout_width="match_parent"
+				android:id="@+id/entry_activity_subscription_view_pager"
+				android:layout_height="wrap_content"
+				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_view_pager_caption" />
 
-			<TextView
-				android:id="@+id/entry_activity_subscription_title"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/plain_happyapp_gold"
-				android:textAlignment="center"
-				android:textAppearance="?attr/textAppearanceHeadline5"
-				android:visibility="invisible"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_description_point_1"
-				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_logo" />
+			<!--<ImageView-->
+			<!--android:id="@+id/entry_activity_subscription_logo"-->
+			<!--android:layout_width="200.13dp"-->
+			<!--android:layout_height="200.13dp"-->
+			<!--android:contentDescription="@string/plain_happyapp_gold_subscription_logo"-->
+			<!--android:src="@drawable/ic_app_logo"-->
+			<!--app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_title"-->
+			<!--app:layout_constraintEnd_toEndOf="parent"-->
+			<!--app:layout_constraintStart_toStartOf="parent"-->
+			<!--app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_view_pager_caption" />-->
 
-			<TextView
-				android:id="@+id/entry_activity_subscription_description_point_1"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/plain_test_first_30_days_for_free"
-				android:textAlignment="center"
-				android:textAppearance="?attr/textAppearanceHeadline6"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_description_point_2"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_title" />
+			<!--<TextView-->
+			<!--android:id="@+id/entry_activity_subscription_title"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:text="@string/plain_happyapp_gold"-->
+			<!--android:textAlignment="center"-->
+			<!--android:textAppearance="?attr/textAppearanceHeadline5"-->
+			<!--android:visibility="invisible"-->
+			<!--app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_description_point_1"-->
+			<!--app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_logo" />-->
 
-			<TextView
-				android:id="@+id/entry_activity_subscription_description_point_2"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/plain_after_that_only"
-				android:textAlignment="center"
-				android:textAppearance="?attr/textAppearanceHeadline6"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_price"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_description_point_1" />
+			<!--<TextView-->
+			<!--android:id="@+id/entry_activity_subscription_description_point_1"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:text="@string/plain_test_first_30_days_for_free"-->
+			<!--android:textAlignment="center"-->
+			<!--android:textAppearance="?attr/textAppearanceHeadline6"-->
+			<!--app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_description_point_2"-->
+			<!--app:layout_constraintEnd_toEndOf="parent"-->
+			<!--app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_title" />-->
 
-			<TextView
-				android:id="@+id/entry_activity_subscription_price"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/plain_6_99_per_30_days"
-				android:textAlignment="center"
-				android:textAppearance="?attr/textAppearanceHeadline6"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_waiting_assistant_layout"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_description_point_2" />
+			<!--<TextView-->
+			<!--android:id="@+id/entry_activity_subscription_description_point_2"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:text="@string/plain_after_that_only"-->
+			<!--android:textAlignment="center"-->
+			<!--android:textAppearance="?attr/textAppearanceHeadline6"-->
+			<!--app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_price"-->
+			<!--app:layout_constraintEnd_toEndOf="parent"-->
+			<!--app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_description_point_1" />-->
 
+			<!--<TextView-->
+			<!--android:id="@+id/entry_activity_subscription_price"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:text="@string/plain_6_99_per_30_days"-->
+			<!--android:textAlignment="center"-->
+			<!--android:textAppearance="?attr/textAppearanceHeadline6"-->
+			<!--app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_waiting_assistant_layout"-->
+			<!--app:layout_constraintEnd_toEndOf="parent"-->
+			<!--app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_description_point_2" />-->
+
+
+			<!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+			<!--&lt;!&ndash;android:id="@+id/entry_activity_subscription_waiting_assistant"&ndash;&gt;-->
+			<!--&lt;!&ndash;android:layout_width="50.13dp"&ndash;&gt;-->
+			<!--&lt;!&ndash;android:layout_height="50.13dp"&ndash;&gt;-->
+			<!--&lt;!&ndash;android:contentDescription="@string/plain_processing_registration"&ndash;&gt;-->
+			<!--&lt;!&ndash;android:visibility="invisible" />&ndash;&gt;-->
+
+			<!--<LinearLayout-->
+			<!--android:id="@+id/entry_activity_subscription_waiting_assistant_layout"-->
+			<!--android:layout_width="wrap_content"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:gravity="center"-->
+			<!--android:orientation="horizontal"-->
+			<!--android:visibility="invisible"-->
+			<!--app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_check_out_button"-->
+			<!--app:layout_constraintEnd_toEndOf="parent"-->
+			<!--app:layout_constraintStart_toStartOf="parent"-->
+			<!--tools:ignore="UseCompoundDrawables">-->
 
 			<!--<ImageView-->
 			<!--android:id="@+id/entry_activity_subscription_waiting_assistant"-->
 			<!--android:layout_width="50.13dp"-->
 			<!--android:layout_height="50.13dp"-->
-			<!--android:contentDescription="@string/plain_processing_registration"-->
-			<!--android:visibility="invisible" />-->
+			<!--android:contentDescription="@string/plain_processing_registration" />-->
 
-			<LinearLayout
-				android:id="@+id/entry_activity_subscription_waiting_assistant_layout"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:orientation="horizontal"
-				android:visibility="invisible"
-				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_check_out_button"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				tools:ignore="UseCompoundDrawables">
+			<!--<TextView-->
+			<!--android:id="@+id/entry_activity_subscription_waiting_assistant_text_view"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:text="@string/plain_processing"-->
+			<!--android:textAppearance="?attr/textAppearanceCaption" />-->
+			<!--</LinearLayout>-->
 
-				<ImageView
-					android:id="@+id/entry_activity_subscription_waiting_assistant"
-					android:layout_width="50.13dp"
-					android:layout_height="50.13dp"
-					android:contentDescription="@string/plain_processing_registration" />
-
-				<TextView
-					android:id="@+id/entry_activity_subscription_waiting_assistant_text_view"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="@string/plain_processing"
-					android:textAppearance="?attr/textAppearanceCaption" />
-			</LinearLayout>
-
-			<com.google.android.material.button.MaterialButton
-				android:id="@+id/entry_activity_subscription_check_out_button"
-				style="@style/Widget.HappyApp.ContainedButton"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:text="@string/plain_check_out"
-				app:layout_constraintBottom_toBottomOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_price" />
+			<!--<com.google.android.material.button.MaterialButton-->
+			<!--android:id="@+id/entry_activity_subscription_check_out_button"-->
+			<!--style="@style/Widget.HappyApp.ContainedButton"-->
+			<!--android:layout_width="match_parent"-->
+			<!--android:layout_height="wrap_content"-->
+			<!--android:text="@string/plain_check_out"-->
+			<!--app:layout_constraintBottom_toBottomOf="parent"-->
+			<!--app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_price" />-->
 
 			<!--<com.google.android.material.button.MaterialButton-->
 			<!--android:id="@+id/entry_activity_registration_button"-->
