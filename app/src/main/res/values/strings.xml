@@ -100,6 +100,7 @@
 	<string name="plain_back">Back</string>
 	<string name="plain_send_again">Send again</string>
 	<string name="plain_i_didn_t_get_an_email">I didn\'t get an email</string>
+	<string name="plain_logout">Logout</string>
 
 
 </resources>

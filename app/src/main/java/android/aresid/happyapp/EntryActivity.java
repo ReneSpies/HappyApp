@@ -55,7 +55,14 @@ public class EntryActivity
 		           BillingClientStateListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener {
 
-	private final static String             TAG                    = "EntryActivity";
+	static final         String             VP_TITLE_HAPPYAPP_FREE = "HappyApp Free";
+	static final         String             VP_TITLE_HAPPYAPP_GOLD = "HappyApp Gold";
+	static final         String             VP_DESC_HAPPYAPP_FREE  = "Desc for HappyApp Free";
+	static final         String             VP_DESC_HAPPYAPP_GOLD  = "Desc for HappyApp Gold";
+	static final         String             VP_PRICE_HAPPYAPP_FREE = "Free/Month";
+	static final         String             VP_PRICE_HAPPYAPP_GOLD = "$6.99/Month";
+	private static final String             TAG                    = "EntryActivity";
+	private static final String             GOOGLE_COM             = "google.com";
 	private static final int                REQUEST_CODE_LOGIN     = 13;
 	private              DBHelper           mDBHelper;
 	private              GoogleSignInClient mGoogleSignInClient;
@@ -76,6 +83,19 @@ public class EntryActivity
 
 		// Instantiate FirebaseAuth.
 		mAuth = FirebaseAuth.getInstance();
+		mAuth.addAuthStateListener(firebaseAuth -> {
+
+			Log.d(TAG, "onCreate: auth state changed");
+
+			if (firebaseAuth.getCurrentUser() == null) {
+
+				Log.d(TAG, "onCreate: user = " + firebaseAuth.getCurrentUser());
+
+				changeFromLoadingScreen();
+
+			}
+
+		});
 
 		// Load waiting assistant into ImageViews.
 		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
@@ -100,21 +120,23 @@ public class EntryActivity
 		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
 //		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
-		ViewPager2 vpSubscriptionViewPager = findViewById(R.id.entry_activity_subscription_view_pager);
+		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
 
-		List<String> listOfTitles = new ArrayList<String>();
-		listOfTitles.add("Free package");
-		listOfTitles.add("HappyApp Gold");
-
-		List<String> listOfDescriptions = new ArrayList<String>();
-		listOfDescriptions.add("Free package description");
-		listOfDescriptions.add("HappyApp gold description");
-
+		List<String> listOfTitles = new ArrayList<>();
+		List<String> listOfDescriptions = new ArrayList<>();
 		List<String> listOfPriceTags = new ArrayList<>();
-		listOfPriceTags.add("Free");
-		listOfPriceTags.add("$6.99/Month");
 
-		vpSubscriptionViewPager.setAdapter(new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPriceTags, vpSubscriptionViewPager));
+		// List population for HappyApp Free
+		listOfTitles.add(VP_TITLE_HAPPYAPP_FREE);
+		listOfDescriptions.add(VP_DESC_HAPPYAPP_FREE);
+		listOfPriceTags.add(VP_PRICE_HAPPYAPP_FREE);
+
+		// List population for HappyApp Gold
+		listOfTitles.add(VP_TITLE_HAPPYAPP_GOLD);
+		listOfDescriptions.add(VP_DESC_HAPPYAPP_GOLD);
+		listOfPriceTags.add(VP_PRICE_HAPPYAPP_GOLD);
+
+		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPriceTags, vpSubscriptions));
 //		btCheckOut.setOnClickListener(this);
 		btLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
@@ -124,7 +146,7 @@ public class EntryActivity
 
 			if (hasFocus) {
 
-				new DatePickerFragment(this).show(getSupportFragmentManager(), "date picker");
+				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
 
 			}
 
@@ -165,6 +187,19 @@ public class EntryActivity
 
 			changeToLoadingScreen();
 
+			if (user.getProviderData()
+			        .get(1)
+			        .getProviderId()
+			        .equals(GOOGLE_COM)) {
+
+				Log.d(TAG, "updateUI: google user");
+
+				startGoogleEmailVerificationActivity(user);
+
+				return;
+
+			}
+
 			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
 			toast.show();
 
@@ -181,18 +216,7 @@ public class EntryActivity
 
 				    } else {
 
-					    if (user.getProviderData()
-					            .get(1)
-					            .getProviderId()
-					            .equals("google.com")) {
-
-						    startGoogleEmailVerificationActivity(user);
-
-					    } else {
-
-						    startEmailVerificationActivity(user);
-
-					    }
+					    startEmailVerificationActivity(user);
 
 				    }
 
@@ -236,13 +260,6 @@ public class EntryActivity
 
 	}
 
-	void startMainActivity(FirebaseUser user) {
-
-		Log.d(TAG, "startMainActivity:true");
-		// TODO
-
-	}
-
 	private void startGoogleEmailVerificationActivity(FirebaseUser user) {
 
 		Log.d(TAG, "startGoogleEmailVerificationActivity:true");
@@ -251,6 +268,13 @@ public class EntryActivity
 		intent.putExtra("user", user);
 
 		startActivity(intent);
+
+	}
+
+	void startMainActivity(FirebaseUser user) {
+
+		Log.d(TAG, "startMainActivity:true");
+		// TODO
 
 	}
 
@@ -617,20 +641,6 @@ public class EntryActivity
 
 			}, 6130);
 
-			// A Timer that resets my onBackPressed helper to 0 after 6.13 seconds.
-//			new Timer().schedule(new TimerTask() {
-//
-//				@Override
-//				public void run() {
-//
-//					Log.d(TAG, "run:true");
-//
-//					mBackPressedHelper = 0;
-//
-//				}
-//
-//			}, 6130);
-
 		} else {
 
 			if (mBackPressedHelper == 1) {
@@ -639,40 +649,13 @@ public class EntryActivity
 
 				toast.cancel();
 
-				super.onBackPressed();
+				finishAffinity();
 
 			}
 
 		}
 
-	}
-
-	private void setLayoutErrorsNull() {
-
-		Log.d(TAG, "setLayoutErrorsNull:true");
-
-		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
-		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
-		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
-		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
-		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
-		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_username_layout);
-		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
-		TextInputLayout emailLayout = findViewById(R.id.entry_activity_login_email_layout);
-		TextInputLayout passwordLayout = findViewById(R.id.entry_activity_login_password_layout);
-
-
-		cbTermsConditionsPrivacyPolicy.clearFocus();
-
-		emailLayout.setError(null);
-		passwordLayout.setError(null);
-		etRegistrationFirstNameLayout.setError(null);
-		etRegistrationFamilyNameLayout.setError(null);
-		etRegistrationNicknameLayout.setError(null);
-		etRegistrationEmailLayout.setError(null);
-		etRegistrationPasswordLayout.setError(null);
-		etRegistrationDobLayout.setError(null);
-		cbTermsConditionsPrivacyPolicy.setError(null);
+		finishAffinity();
 
 	}
 
@@ -695,7 +678,7 @@ public class EntryActivity
 			case R.id.entry_activity_registration_date_of_birth_field:
 				Log.d(TAG, "onClick: id = dob field");
 
-				new DatePickerFragment(this).show(getSupportFragmentManager(), "date picker");
+				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
 
 				break;
 
@@ -714,16 +697,6 @@ public class EntryActivity
 //				break;
 
 		}
-
-	}
-
-	private void smoothScrollTo(float y) {
-
-		Log.d(TAG, "smoothScrollTo:true");
-
-		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
-
-		svParent.smoothScrollTo(0, (int) y);
 
 	}
 
@@ -801,6 +774,43 @@ public class EntryActivity
 
 	}
 
+	private void setLayoutErrorsNull() {
+
+		Log.d(TAG, "setLayoutErrorsNull:true");
+
+		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
+		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
+		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
+		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
+		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_username_layout);
+		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+		TextInputLayout emailLayout = findViewById(R.id.entry_activity_login_email_layout);
+		TextInputLayout passwordLayout = findViewById(R.id.entry_activity_login_password_layout);
+
+		cbTermsConditionsPrivacyPolicy.clearFocus();
+
+		emailLayout.setError(null);
+		passwordLayout.setError(null);
+		etRegistrationFirstNameLayout.setError(null);
+		etRegistrationFamilyNameLayout.setError(null);
+		etRegistrationNicknameLayout.setError(null);
+		etRegistrationEmailLayout.setError(null);
+		etRegistrationPasswordLayout.setError(null);
+		etRegistrationDobLayout.setError(null);
+		cbTermsConditionsPrivacyPolicy.setError(null);
+
+	}
+
+	private void smoothScrollTo(float y) {
+
+		Log.d(TAG, "smoothScrollTo:true");
+
+		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
+
+		svParent.smoothScrollTo(0, (int) y);
+
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
