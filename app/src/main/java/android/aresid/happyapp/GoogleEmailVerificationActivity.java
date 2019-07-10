@@ -300,9 +300,9 @@ public class GoogleEmailVerificationActivity
 	}
 
 	@Override
-	public void createUserWithEmailAndPassword() {
+	public void createUser(double requestCode) {
 
-		Log.d(TAG, "createUserWithEmailAndPassword:true");
+		Log.d(TAG, "createUser:true");
 
 	}
 }

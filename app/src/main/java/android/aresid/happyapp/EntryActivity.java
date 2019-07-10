@@ -320,44 +320,117 @@ public class EntryActivity
 	}
 
 	@Override
-	public void createUserWithEmailAndPassword(int requestCode) {
+	public void createUser(double requestCode) {
 
-		Log.d(TAG, "createUserWithEmailAndPassword:true");
+		Log.d(TAG, "createUser:true");
+
+		TextInputEditText etRegistrationDobField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
+		TextInputEditText etRegistrationUsernameField = findViewById(R.id.entry_activity_registration_username_field);
+		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
+		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
+		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
+		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
+		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		TextInputLayout etRegistrationUsernameLayout = findViewById(R.id.entry_activity_registration_username_layout);
+		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+
+		String username = etRegistrationUsernameField.getText()
+		                                             .toString();
+		String dob = etRegistrationDobField.getText()
+		                                   .toString();
+
+		FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 		if (requestCode == REQUEST_GOOGLE) {
 
-			Log.d(TAG, "createUserWithEmailAndPassword: request code is google");
+			Log.d(TAG, "createUser: request code is google");
+
+			etRegistrationFirstNameLayout.setEnabled(false);
+			etRegistrationFamilyNameLayout.setEnabled(false);
+			etRegistrationEmailLayout.setEnabled(false);
+			etRegistrationPasswordLayout.setEnabled(false);
+
+			setLayoutErrorsNull();
+
+			if (username.length() == 0) {
+
+				etRegistrationUsernameLayout.setError("You forgot me");
+
+				smoothScrollTo(etRegistrationUsernameLayout.getTop());
+
+				return;
+
+			} else if (username.startsWith(" ")) {
+
+				etRegistrationUsernameLayout.setError("Username cannot start with whitespace");
+
+				smoothScrollTo(etRegistrationUsernameLayout.getTop());
+
+				return;
+
+			} else if (etRegistrationDobField.length() == 0) {
+
+				etRegistrationDobLayout.setError("You forgot me");
+
+				smoothScrollTo(etRegistrationDobLayout.getTop());
+
+				return;
+
+			}
+
+			etRegistrationUsernameLayout.setEnabled(false);
+			etRegistrationDobLayout.setEnabled(false);
+
+			db.collection(FirestoreNames.COLLECTION_USERS)
+			  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
+			  .get()
+			  .addOnSuccessListener(command -> {
+
+				  Log.d(TAG, "createUser:success");
+
+				  if (command.isEmpty()) {
+
+					  // NO MATCH
+
+				  } else {
+
+					  // MATCH
+
+					  etRegistrationUsernameLayout.setEnabled(true);
+					  etRegistrationDobLayout.setEnabled(true);
+
+				  }
+
+			  })
+			  .addOnFailureListener(e -> {
+
+				  Log.e(TAG, "createUser: ", e);
+
+				  Toast.makeText(this, "Couldn't connect to the server. Please try again", Toast.LENGTH_LONG)
+				       .show();
+
+				  etRegistrationUsernameLayout.setEnabled(true);
+				  etRegistrationDobLayout.setEnabled(true);
+
+			  });
 
 		} else if (requestCode == REQUEST_EMAIL_PASSWORD) {
 
-			Log.d(TAG, "createUserWithEmailAndPassword: request code is email & password");
+			Log.d(TAG, "createUser: request code is email & password");
+
 			TextInputEditText etRegistrationEmailField = findViewById(R.id.entry_activity_registration_email_field);
 			TextInputEditText etRegistrationPasswordField = findViewById(R.id.entry_activity_registration_password_field);
 			TextInputEditText etRegistrationFirstNameField = findViewById(R.id.entry_activity_registration_first_name_field);
 			TextInputEditText etRegistrationFamilyNameField = findViewById(R.id.entry_activity_registration_family_name_field);
-			TextInputEditText etRegistrationDobField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
-			TextInputEditText etRegistrationUsernameField = findViewById(R.id.entry_activity_registration_username_field);
-			TextInputLayout etRegistrationUsernameLayout = findViewById(R.id.entry_activity_registration_username_layout);
-			TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
-			TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
-			TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
-			TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
-			TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
-			CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
-			FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 			String email = etRegistrationEmailField.getText()
 			                                       .toString();
 			String password = etRegistrationPasswordField.getText()
 			                                             .toString();
-			String username = etRegistrationUsernameField.getText()
-			                                             .toString();
 			String firstName = etRegistrationFirstNameField.getText()
 			                                               .toString();
 			String familyName = etRegistrationFamilyNameField.getText()
 			                                                 .toString();
-			String dob = etRegistrationDobField.getText()
-			                                   .toString();
 
 			setLayoutErrorsNull();
 
@@ -489,7 +562,7 @@ public class EntryActivity
 					              .createUserWithEmailAndPassword(email, password)
 					              .addOnSuccessListener(result -> {
 
-						              Log.d(TAG, "createUserWithEmailAndPassword: success");
+						              Log.d(TAG, "createUser: success");
 
 						              result.getUser()
 						                    .updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(etRegistrationUsernameField.getText()
@@ -501,8 +574,8 @@ public class EntryActivity
 					              })
 					              .addOnFailureListener(e -> {
 
-						              Log.d(TAG, "createUserWithEmailAndPassword: failure");
-						              Log.e(TAG, "createUserWithEmailAndPassword: ", e);
+						              Log.d(TAG, "createUser: failure");
+						              Log.e(TAG, "createUser: ", e);
 
 //					              btCheckOut.setEnabled(true);
 						              etRegistrationFirstNameField.setEnabled(true);
@@ -539,9 +612,6 @@ public class EntryActivity
 
 				  } else {
 
-//				  findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
-
-//				  btCheckOut.setEnabled(true);
 					  etRegistrationFirstNameField.setEnabled(true);
 					  etRegistrationFamilyNameField.setEnabled(true);
 					  etRegistrationUsernameField.setEnabled(true);
@@ -558,21 +628,18 @@ public class EntryActivity
 			  })
 			  .addOnFailureListener(e -> {
 
-				  Log.d(TAG, "createUserWithEmailAndPassword: query failure");
-				  Log.e(TAG, "createUserWithEmailAndPassword: ", e);
+				  Log.d(TAG, "createUser: query failure");
+				  Log.e(TAG, "createUser: ", e);
 
 				  Toast.makeText(this, "Something went wrong. Please try again", Toast.LENGTH_SHORT)
 				       .show();
 
-//			  btCheckOut.setEnabled(true);
 				  etRegistrationFirstNameField.setEnabled(true);
 				  etRegistrationFamilyNameField.setEnabled(true);
 				  etRegistrationUsernameField.setEnabled(true);
 				  etRegistrationEmailField.setEnabled(true);
 				  etRegistrationPasswordField.setEnabled(true);
 				  etRegistrationDobField.setEnabled(true);
-
-//			  findViewById(R.id.entry_activity_subscription_waiting_assistant_layout).setVisibility(View.INVISIBLE);
 
 			  });
 
@@ -683,7 +750,7 @@ public class EntryActivity
 			case R.id.entry_activity_login_google_button:
 				Log.d(TAG, "onClick: id = google login button");
 
-				requestCode = 13.1;
+				EntryActivity.requestCode = REQUEST_GOOGLE;
 
 				// Google login.
 				Intent googleLoginIntent = mGoogleSignInClient.getSignInIntent();
@@ -708,7 +775,7 @@ public class EntryActivity
 //			case R.id.entry_activity_subscription_check_out_button:
 //				Log.d(TAG, "onClick: id = check out button");
 //
-//				createUserWithEmailAndPassword();
+//				createUser();
 //
 //				break;
 
@@ -856,6 +923,8 @@ public class EntryActivity
 				// Google login failed. Update UI appropriately.
 				Log.e(TAG, "onActivityResult: ", e);
 
+				EntryActivity.requestCode = REQUEST_EMAIL_PASSWORD;
+
 				Toast.makeText(this, "Oops. Something went wrong. Please try again", Toast.LENGTH_SHORT)
 				     .show();
 
@@ -914,6 +983,8 @@ public class EntryActivity
 		     .addOnFailureListener(e -> {
 
 			     Log.e(TAG, "firebaseAuthWithGoogleAccount: ", e);
+
+			     EntryActivity.requestCode = REQUEST_EMAIL_PASSWORD;
 
 			     Toast.makeText(this, "Oops. Something went wrong. Please try again", Toast.LENGTH_SHORT)
 			          .show();
