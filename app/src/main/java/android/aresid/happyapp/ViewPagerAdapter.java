@@ -30,6 +30,7 @@ public class ViewPagerAdapter
 	private              List<String>                   mDescriptions;
 	private              List<String>                   mPrices;
 	private              OnViewPagerInteractionListener mListener;
+	private              int                            mRequestCode;
 
 	ViewPagerAdapter(Context context, List<String> titles, List<String> descriptions, List<String> prices, ViewPager2 viewPager2) {
 
@@ -65,7 +66,7 @@ public class ViewPagerAdapter
 
 			Log.d(TAG, "onCreateViewHolder: bt click");
 
-			mListener.createUserWithEmailAndPassword();
+			mListener.createUserWithEmailAndPassword(EntryActivity.requestCode);
 
 		});
 
@@ -99,7 +100,7 @@ public class ViewPagerAdapter
 
 	public interface OnViewPagerInteractionListener {
 
-		void createUserWithEmailAndPassword();
+		void createUserWithEmailAndPassword(double requestCode);
 
 	}
 
