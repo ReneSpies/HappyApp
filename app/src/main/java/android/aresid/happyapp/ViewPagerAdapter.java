@@ -66,7 +66,7 @@ public class ViewPagerAdapter
 
 			Log.d(TAG, "onCreateViewHolder: bt click");
 
-			mListener.createUser(EntryActivity.requestCode);
+			mListener.createUser();
 
 		});
 
@@ -100,7 +100,7 @@ public class ViewPagerAdapter
 
 	public interface OnViewPagerInteractionListener {
 
-		void createUser(double requestCode);
+		void createUser();
 
 	}
 
