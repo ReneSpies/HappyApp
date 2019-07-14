@@ -30,7 +30,7 @@
 				android:id="@+id/google_email_verification_activity_dob_field"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="@string/plain_date_of_birth"
+				android:hint="@string/plain_date_of_birth_star"
 				android:inputType="none" />
 		</com.google.android.material.textfield.TextInputLayout>
 

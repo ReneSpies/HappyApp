@@ -21,7 +21,7 @@
 			android:id="@+id/sign_up_first_name_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/first_name"
+			android:hint="@string/plain_first_name"
 			android:inputType="text" />
 	</com.google.android.material.textfield.TextInputLayout>
 
@@ -38,7 +38,7 @@
 			android:id="@+id/sign_up_surname_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/surname"
+			android:hint="@string/plain_username"
 			android:inputType="text" />
 	</com.google.android.material.textfield.TextInputLayout>
 

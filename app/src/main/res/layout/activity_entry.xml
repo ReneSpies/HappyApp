@@ -185,7 +185,7 @@
 					android:id="@+id/entry_activity_registration_first_name_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_first_name"
+					android:hint="@string/plain_first_name_star"
 					android:imeActionId="2"
 					android:imeOptions="actionNext"
 					android:inputType="text" />
@@ -204,7 +204,7 @@
 					android:id="@+id/entry_activity_registration_family_name_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_family_name"
+					android:hint="@string/plain_family_name_star"
 					android:imeActionId="3"
 					android:imeOptions="actionNext"
 					android:inputType="text" />
@@ -233,7 +233,7 @@
 					android:id="@+id/entry_activity_registration_username_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_username"
+					android:hint="@string/plain_username_star"
 					android:imeActionId="4"
 					android:imeOptions="actionNext"
 					android:inputType="text" />
@@ -252,7 +252,7 @@
 					android:id="@+id/entry_activity_registration_email_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/contraction_registration_email"
+					android:hint="@string/plain_email_star"
 					android:imeActionId="5"
 					android:imeOptions="actionNext"
 					android:inputType="textEmailAddress" />
@@ -272,7 +272,7 @@
 					android:id="@+id/entry_activity_registration_password_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/contraction_registration_password"
+					android:hint="@string/plain_password_star"
 					android:imeActionId="6"
 					android:imeOptions="actionNext"
 					android:inputType="textPassword" />
@@ -291,7 +291,7 @@
 					android:id="@+id/entry_activity_registration_date_of_birth_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_date_of_birth"
+					android:hint="@string/plain_date_of_birth_star"
 					android:imeActionId="7" />
 			</com.google.android.material.textfield.TextInputLayout>
 
