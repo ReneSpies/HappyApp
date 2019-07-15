@@ -394,7 +394,7 @@ public class EntryActivity
 
 		Log.d(TAG, "startGoogleEmailVerificationActivity:true");
 
-		Intent intent = new Intent(this, GoogleEmailVerificationActivity.class);
+		Intent intent = new Intent(this, EmailVerificationActivity.class);
 		intent.putExtra("user", user);
 
 		startActivity(intent);
@@ -404,14 +404,22 @@ public class EntryActivity
 	void startMainActivity(FirebaseUser user) {
 
 		Log.d(TAG, "startMainActivity:true");
-		// TODO
+
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("firebase_user", user);
+
+		startActivity(intent);
 
 	}
 
 	void startEmailVerificationActivity(FirebaseUser user) {
 
 		Log.d(TAG, "startEmailVerificationActivity:true");
-		// TODO
+
+		Intent intent = new Intent(this, EmailVerificationActivity.class);
+		intent.putExtra("firebase_user", user);
+
+		startActivity(intent);
 
 	}
 
@@ -858,19 +866,6 @@ public class EntryActivity
 		if (user != null) {
 
 			changeToLoadingScreen();
-
-			if (user.getProviderData()
-			        .get(1)
-			        .getProviderId()
-			        .equals(GOOGLE_COM)) {
-
-				Log.d(TAG, "updateUI: google user");
-
-				startGoogleEmailVerificationActivity(user);
-
-				return;
-
-			}
 
 			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
 			toast.show();

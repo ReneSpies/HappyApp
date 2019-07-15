@@ -26,7 +26,7 @@ import java.util.List;
  * Copyright: © 2019 Ares ID
  */
 
-public class GoogleEmailVerificationActivity
+public class EmailVerificationActivity
 		extends AppCompatActivity
 		implements View.OnClickListener,
 		           ViewPagerAdapter.OnViewPagerInteractionListener {
