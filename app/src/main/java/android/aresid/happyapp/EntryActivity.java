@@ -176,6 +176,7 @@ public class EntryActivity
 		                                .getCurrentUser();
 
 		updateUI(user);
+
 	}
 
 	@Override
@@ -859,6 +860,17 @@ public class EntryActivity
 
 	}
 
+	@Override
+	protected void onDestroy() {
+
+		Log.d(TAG, "onDestroy:true");
+
+		// TODO
+
+		super.onDestroy();
+
+	}
+
 	void updateUI(FirebaseUser user) {
 
 		Log.d(TAG, "updateUI:true");
@@ -975,6 +987,8 @@ public class EntryActivity
 
 				if (gsa != null) {
 
+					// TODO: auth user after he accepted all the things and subbed!
+
 					firebaseAuthWithGoogleAccount(gsa);
 
 				}
@@ -1013,8 +1027,6 @@ public class EntryActivity
 
 		}
 
-		changeToLoadingScreen();
-
 		AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 
 		mAuth.signInWithCredential(authCredential)
@@ -1035,6 +1047,8 @@ public class EntryActivity
 //				     saveUserInFirestore(user, account.getGivenName(), account.getFamilyName(), account.getDisplayName(), account.getEmail(), null);
 
 			     } else {
+
+				     changeToLoadingScreen();
 
 				     updateUI(user);
 
@@ -1057,6 +1071,8 @@ public class EntryActivity
 	private void changeToGoogleRegistration() {
 
 		Log.d(TAG, "changeToGoogleRegistration:true");
+
+		smoothScrollTo(findViewById(R.id.entry_activity_registration_seperator_view).getBottom());
 
 		findViewById(R.id.entry_activity_registration_first_name_layout).setEnabled(false);
 		findViewById(R.id.entry_activity_registration_family_name_layout).setEnabled(false);
