@@ -1,6 +1,7 @@
 package android.aresid.happyapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -792,9 +793,11 @@ public class EntryActivity
 
 	}
 
-	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username, String email, String dob, Object profilePicture) {
+	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username, String email, String dob, Uri profilePicture) {
 
 		Log.d(TAG, "saveUserInFirestore:true");
+
+		Log.d(TAG, "saveUserInFirestore: pic = " + profilePicture);
 
 		FirebaseFirestore db = FirebaseFirestore.getInstance();
 
