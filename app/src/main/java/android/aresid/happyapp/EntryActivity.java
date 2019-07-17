@@ -30,7 +30,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -39,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -55,22 +55,23 @@ public class EntryActivity
 		           BillingClientStateListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener {
 
-	static final         String             VP_TITLE_HAPPYAPP_FREE = "HappyApp Free";
-	static final         String             VP_TITLE_HAPPYAPP_GOLD = "HappyApp Gold";
-	static final         String             VP_DESC_HAPPYAPP_FREE  = "Desc for HappyApp Free";
-	static final         String             VP_DESC_HAPPYAPP_GOLD  = "Desc for HappyApp Gold";
-	static final         String             VP_PRICE_HAPPYAPP_FREE = "Free/Month";
-	static final         String             VP_PRICE_HAPPYAPP_GOLD = "$6.99/Month";
-	private static final String             TAG                    = "EntryActivity";
-	private static final String             GOOGLE_COM             = "google.com";
-	private static final int                REQUEST_CODE_LOGIN     = 13;
-	private              DBHelper           mDBHelper;
-	private              GoogleSignInClient mGoogleSignInClient;
-	private              FirebaseAuth       mAuth;
-	private              BillingClient      mBillingClient;
-	private              int                mCurrentTimeSyncHelper = 0;
-	private              int                mBackPressedHelper     = 0;
-	private              int                mCreateUserHelper      = 0;
+	static final         String VP_TITLE_HAPPYAPP_FREE = "HappyApp Free";
+	static final         String VP_TITLE_HAPPYAPP_GOLD = "HappyApp Gold";
+	static final         String VP_DESC_HAPPYAPP_FREE  = "Desc for HappyApp Free";
+	static final         String VP_DESC_HAPPYAPP_GOLD  = "Desc for HappyApp Gold";
+	static final         String VP_PRICE_HAPPYAPP_FREE = "Free/Month";
+	static final         String VP_PRICE_HAPPYAPP_GOLD = "$6.99/Month";
+	private static final String TAG                    = "EntryActivity";
+	private static final String GOOGLE_COM             = "google.com";
+	private static final int    REQUEST_CODE_LOGIN     = 13;
+	GoogleSignInAccount mGSA = null;
+	private DBHelper           mDBHelper;
+	private GoogleSignInClient mGoogleSignInClient;
+	private FirebaseAuth       mAuth;
+	private BillingClient      mBillingClient;
+	private int                mCurrentTimeSyncHelper = 0;
+	private int                mBackPressedHelper     = 0;
+	private int                mCreateUserHelper      = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +181,212 @@ public class EntryActivity
 	}
 
 	@Override
+	protected void onDestroy() {
+
+		Log.d(TAG, "onDestroy:true");
+
+		// TODO
+
+		super.onDestroy();
+
+	}
+
+	void updateUI(FirebaseUser user) {
+
+		Log.d(TAG, "updateUI:true");
+
+		if (user != null) {
+
+			changeToLoadingScreen();
+
+			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
+			toast.show();
+
+			user.reload()
+			    .addOnSuccessListener(command -> {
+
+				    Log.d(TAG, "updateUI: success");
+
+				    toast.cancel();
+
+				    Task<DocumentSnapshot> task = FirebaseFirestore.getInstance()
+				                                                   .collection(FirestoreNames.COLLECTION_USERS)
+				                                                   .document(user.getUid())
+				                                                   .get();
+
+				    try {
+
+					    DocumentSnapshot document = task.getResult();
+
+					    if (document != null) {
+
+						    if (document.getString(FirestoreNames.COLUMN_USERNAME) != null && document.getString(FirestoreNames.COLUMN_DATE_OF_BIRTH) != null) {
+
+							    if (user.isEmailVerified()) {
+
+								    startMainActivity(user);
+
+							    } else {
+
+								    startEmailVerificationActivity(user);
+
+							    }
+
+						    } else {
+
+							    changeFromLoadingScreen();
+
+							    changeToGoogleRegistration();
+
+						    }
+
+					    }
+
+				    } catch (Exception e) {
+
+					    Log.e(TAG, "updateUI: ", e);
+
+				    }
+
+			    })
+			    .addOnFailureListener(e -> {
+
+				    Log.d(TAG, "updateUI: failure");
+				    Log.e(TAG, "updateUI: ", e);
+
+				    // TODO
+
+				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
+
+					    Toast.makeText(this, getString(R.string.contraction_user_not_found), Toast.LENGTH_LONG)
+					         .show();
+
+					    mAuth.signOut();
+
+					    changeFromLoadingScreen();
+
+				    }
+
+			    });
+
+		} else {
+
+			Log.d(TAG, "updateUI: user == null");
+
+			// TODO
+
+		}
+
+	}
+
+	private void changeToLoadingScreen() {
+
+		Log.d(TAG, "changeToLoadingScreen:true");
+
+		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
+		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
+
+	}
+
+	void startMainActivity(FirebaseUser user) {
+
+		Log.d(TAG, "startMainActivity:true");
+
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("firebase_user", user);
+
+		startActivity(intent);
+
+	}
+
+	void startEmailVerificationActivity(FirebaseUser user) {
+
+		Log.d(TAG, "startEmailVerificationActivity:true");
+
+		Intent intent = new Intent(this, EmailVerificationActivity.class);
+		intent.putExtra("firebase_user", user);
+
+		startActivity(intent);
+
+	}
+
+	private void changeToGoogleRegistration() {
+
+		Log.d(TAG, "changeToGoogleRegistration:true");
+
+		smoothScrollTo(findViewById(R.id.entry_activity_registration_seperator_view).getBottom());
+
+		findViewById(R.id.entry_activity_registration_first_name_layout).setEnabled(false);
+		findViewById(R.id.entry_activity_registration_family_name_layout).setEnabled(false);
+		findViewById(R.id.entry_activity_registration_email_layout).setEnabled(false);
+		findViewById(R.id.entry_activity_registration_password_layout).setEnabled(false);
+
+	}
+
+	private void smoothScrollTo(float y) {
+
+		Log.d(TAG, "smoothScrollTo:true");
+
+		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
+
+		svParent.smoothScrollTo(0, (int) y);
+
+	}
+
+	private void changeFromLoadingScreen() {
+
+		Log.d(TAG, "changeFromLoadingScreen:true");
+
+		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.GONE);
+		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
+
+	}
+
+	private void loadGifInto(ImageView view) {
+
+		Log.d(TAG, "loadGifInto:true");
+
+		Glide.with(this)
+		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
+		     .into(view);
+
+	}
+
+	/**
+	 * Method populates the Subscriptions table in the db with the server data.
+	 */
+	private void populateSubscriptionsTable() {
+
+		Log.d(TAG, "populateSubscriptionsTable:true");
+		// TODO
+
+	}
+
+	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
+
+		Log.d(TAG, "updateGoogleUser:true");
+
+		HashMap<String, Object> info = new HashMap<>();
+		info.put(FirestoreNames.COLUMN_USERNAME, username);
+		info.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
+
+		FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+		db.collection(FirestoreNames.COLLECTION_USERS)
+		  .document(user.getUid())
+		  .update(info)
+		  .addOnSuccessListener(aVoid -> Log.d(TAG, "updateGoogleUser: success"))
+		  .addOnFailureListener(e -> {
+
+			  Log.d(TAG, "updateGoogleUser: failure");
+
+			  Log.e(TAG, "updateGoogleUser: ", e);
+
+		  });
+
+	}
+
+	@Override
 	public void createUser() {
 
 		Log.d(TAG, "createUser:true");
@@ -196,6 +403,7 @@ public class EntryActivity
 		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
 		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
 		TextInputLayout etRegistrationUsernameLayout = findViewById(R.id.entry_activity_registration_username_layout);
+		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
 
 		String email = etRegistrationEmailField.getText()
 		                                       .toString();
@@ -216,62 +424,46 @@ public class EntryActivity
 
 		if (user != null) {
 
-			if (user.getProviderData()
-			        .get(1)
-			        .getProviderId()
-			        .equals(GOOGLE_COM)) {
+			if (evaluateGoogleUserInfo(firstName, familyName, username, dob)) {
 
-				Log.d(TAG, "createUser: google user");
+				etRegistrationUsernameLayout.setEnabled(false);
+				etRegistrationDobLayout.setEnabled(false);
+				cbTermsConditionsPrivacyPolicy.setEnabled(false);
 
-				if (evaluateGoogleUserInfo(firstName, familyName, username, dob)) {
+				db.collection(FirestoreNames.COLLECTION_USERS)
+				  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
+				  .get()
+				  .addOnSuccessListener(command -> {
 
-					etRegistrationFirstNameLayout.setEnabled(false);
-					etRegistrationFamilyNameLayout.setEnabled(false);
-					etRegistrationUsernameLayout.setEnabled(false);
-					etRegistrationDobLayout.setEnabled(false);
+					  Log.d(TAG, "createUser:success");
 
-					db.collection(FirestoreNames.COLLECTION_USERS)
-					  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
-					  .get()
-					  .addOnSuccessListener(command -> {
+					  if (command.isEmpty()) {
 
-						  Log.d(TAG, "createUser:success");
+						  updateGoogleUser(user, username, dob);
 
-						  if (command.isEmpty()) {
+					  } else {
 
-							  // NO MATCH
+						  Log.d(TAG, "createUser: username already taken");
 
-							  saveUserInFirestore(user, firstName, familyName, username, user.getEmail(), dob);
+						  etRegistrationUsernameLayout.setError(getString(R.string.plain_username_is_already_taken));
 
-						  } else {
-
-							  Log.d(TAG, "createUser: username already taken");
-
-							  etRegistrationUsernameLayout.setError(getString(R.string.plain_username_is_already_taken));
-
-							  etRegistrationFirstNameLayout.setEnabled(true);
-							  etRegistrationFamilyNameLayout.setEnabled(true);
-							  etRegistrationUsernameLayout.setEnabled(true);
-							  etRegistrationDobLayout.setEnabled(true);
-
-						  }
-
-					  })
-					  .addOnFailureListener(e -> {
-
-						  Log.e(TAG, "createUser: ", e);
-
-						  Toast.makeText(this, getString(R.string.contraction_server_connection_failed), Toast.LENGTH_LONG)
-						       .show();
-
-						  etRegistrationFirstNameLayout.setEnabled(true);
-						  etRegistrationFamilyNameLayout.setEnabled(true);
 						  etRegistrationUsernameLayout.setEnabled(true);
 						  etRegistrationDobLayout.setEnabled(true);
 
-					  });
-				}
+					  }
 
+				  })
+				  .addOnFailureListener(e -> {
+
+					  Log.e(TAG, "createUser: ", e);
+
+					  Toast.makeText(this, getString(R.string.contraction_server_connection_failed), Toast.LENGTH_LONG)
+					       .show();
+
+					  etRegistrationUsernameLayout.setEnabled(true);
+					  etRegistrationDobLayout.setEnabled(true);
+
+				  });
 			}
 
 		} else {
@@ -280,12 +472,13 @@ public class EntryActivity
 
 			if (evaluateNewUserInfo(firstName, username, familyName, email, password, dob)) {
 
-				etRegistrationFirstNameField.setEnabled(false);
-				etRegistrationFamilyNameField.setEnabled(false);
-				etRegistrationUsernameField.setEnabled(false);
-				etRegistrationEmailField.setEnabled(false);
-				etRegistrationPasswordField.setEnabled(false);
-				etRegistrationDobField.setEnabled(false);
+				etRegistrationFirstNameLayout.setEnabled(false);
+				etRegistrationFamilyNameLayout.setEnabled(false);
+				etRegistrationUsernameLayout.setEnabled(false);
+				etRegistrationEmailLayout.setEnabled(false);
+				etRegistrationPasswordLayout.setEnabled(false);
+				etRegistrationDobLayout.setEnabled(false);
+				cbTermsConditionsPrivacyPolicy.setEnabled(false);
 
 				db.collection(FirestoreNames.COLLECTION_USERS)
 				  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
@@ -305,7 +498,7 @@ public class EntryActivity
 							                                                                                                                    .toString())
 							                                                                         .build());
 
-							              saveUserInFirestore(result.getUser(), firstName, familyName, username, email, dob);
+							              saveUserInFirestore(result.getUser(), firstName, familyName, username, email, dob, null);
 
 						              })
 						              .addOnFailureListener(e -> {
@@ -313,12 +506,12 @@ public class EntryActivity
 							              Log.d(TAG, "createUser: failure");
 							              Log.e(TAG, "createUser: ", e);
 
-							              etRegistrationFirstNameField.setEnabled(true);
-							              etRegistrationFamilyNameField.setEnabled(true);
-							              etRegistrationUsernameField.setEnabled(true);
-							              etRegistrationEmailField.setEnabled(true);
-							              etRegistrationPasswordField.setEnabled(true);
-							              etRegistrationDobField.setEnabled(true);
+							              etRegistrationFirstNameLayout.setEnabled(true);
+							              etRegistrationFamilyNameLayout.setEnabled(true);
+							              etRegistrationUsernameLayout.setEnabled(true);
+							              etRegistrationEmailLayout.setEnabled(true);
+							              etRegistrationPasswordLayout.setEnabled(true);
+							              etRegistrationDobLayout.setEnabled(true);
 
 							              // TODO
 
@@ -345,12 +538,12 @@ public class EntryActivity
 
 					  } else {
 
-						  etRegistrationFirstNameField.setEnabled(true);
-						  etRegistrationFamilyNameField.setEnabled(true);
-						  etRegistrationUsernameField.setEnabled(true);
-						  etRegistrationEmailField.setEnabled(true);
-						  etRegistrationPasswordField.setEnabled(true);
-						  etRegistrationDobField.setEnabled(true);
+						  etRegistrationFirstNameLayout.setEnabled(true);
+						  etRegistrationFamilyNameLayout.setEnabled(true);
+						  etRegistrationUsernameLayout.setEnabled(true);
+						  etRegistrationEmailLayout.setEnabled(true);
+						  etRegistrationPasswordLayout.setEnabled(true);
+						  etRegistrationDobLayout.setEnabled(true);
 
 						  smoothScrollTo(etRegistrationFamilyNameLayout.getBottom());
 
@@ -382,15 +575,6 @@ public class EntryActivity
 
 	}
 
-	private void changeToLoadingScreen() {
-
-		Log.d(TAG, "changeToLoadingScreen:true");
-
-		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
-		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
-
-	}
-
 	private void startGoogleEmailVerificationActivity(FirebaseUser user) {
 
 		Log.d(TAG, "startGoogleEmailVerificationActivity:true");
@@ -399,57 +583,6 @@ public class EntryActivity
 		intent.putExtra("user", user);
 
 		startActivity(intent);
-
-	}
-
-	void startMainActivity(FirebaseUser user) {
-
-		Log.d(TAG, "startMainActivity:true");
-
-		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra("firebase_user", user);
-
-		startActivity(intent);
-
-	}
-
-	void startEmailVerificationActivity(FirebaseUser user) {
-
-		Log.d(TAG, "startEmailVerificationActivity:true");
-
-		Intent intent = new Intent(this, EmailVerificationActivity.class);
-		intent.putExtra("firebase_user", user);
-
-		startActivity(intent);
-
-	}
-
-	private void changeFromLoadingScreen() {
-
-		Log.d(TAG, "changeFromLoadingScreen:true");
-
-		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.GONE);
-		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
-
-	}
-
-	private void loadGifInto(ImageView view) {
-
-		Log.d(TAG, "loadGifInto:true");
-
-		Glide.with(this)
-		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
-		     .into(view);
-
-	}
-
-	/**
-	 * Method populates the Subscriptions table in the db with the server data.
-	 */
-	private void populateSubscriptionsTable() {
-
-		Log.d(TAG, "populateSubscriptionsTable:true");
-		// TODO
 
 	}
 
@@ -659,7 +792,7 @@ public class EntryActivity
 
 	}
 
-	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username, String email, String dob) {
+	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username, String email, String dob, Object profilePicture) {
 
 		Log.d(TAG, "saveUserInFirestore:true");
 
@@ -667,12 +800,13 @@ public class EntryActivity
 
 		Toast toast = Toast.makeText(this, getString(R.string.contraction_standard_error_message_standby), Toast.LENGTH_SHORT);
 
-		HashMap<String, String> userInfo = new HashMap<>();
+		HashMap<String, Object> userInfo = new HashMap<>();
 		userInfo.put(FirestoreNames.COLUMN_FIRST_NAME, firstName);
 		userInfo.put(FirestoreNames.COLUMN_FAMILY_NAME, familyName);
 		userInfo.put(FirestoreNames.COLUMN_USERNAME, username);
 		userInfo.put(FirestoreNames.COLUMN_EMAIL, email);
 		userInfo.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
+		userInfo.put(FirestoreNames.COLUMN_PROFILE_PICTURE, profilePicture);
 
 		db.collection(FirestoreNames.COLLECTION_USERS)
 		  .document(user.getUid())
@@ -703,7 +837,7 @@ public class EntryActivity
 
 				  mCreateUserHelper++;
 
-				  saveUserInFirestore(user, firstName, familyName, username, email, dob);
+				  saveUserInFirestore(user, firstName, familyName, username, email, dob, profilePicture);
 
 			  }
 
@@ -749,6 +883,40 @@ public class EntryActivity
 		}
 
 		finishAffinity();
+
+	}
+
+	@Override
+	public void onClick(View v) {
+
+		Log.d(TAG, "onClick:true");
+
+		switch (v.getId()) {
+
+			case R.id.entry_activity_login_google_button:
+				Log.d(TAG, "onClick: id = google login button");
+
+				// Google login.
+				Intent googleLoginIntent = mGoogleSignInClient.getSignInIntent();
+				startActivityForResult(googleLoginIntent, REQUEST_CODE_LOGIN);
+
+				break;
+
+			case R.id.entry_activity_registration_date_of_birth_field:
+				Log.d(TAG, "onClick: id = dob field");
+
+				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
+
+				break;
+
+			case R.id.entry_activity_login_login_button:
+				Log.d(TAG, "onClick: id = login button");
+
+				loginUser();
+
+				break;
+
+		}
 
 	}
 
@@ -826,110 +994,6 @@ public class EntryActivity
 
 	}
 
-	@Override
-	public void onClick(View v) {
-
-		Log.d(TAG, "onClick:true");
-
-		switch (v.getId()) {
-
-			case R.id.entry_activity_login_google_button:
-				Log.d(TAG, "onClick: id = google login button");
-
-				// Google login.
-				Intent googleLoginIntent = mGoogleSignInClient.getSignInIntent();
-				startActivityForResult(googleLoginIntent, REQUEST_CODE_LOGIN);
-
-				break;
-
-			case R.id.entry_activity_registration_date_of_birth_field:
-				Log.d(TAG, "onClick: id = dob field");
-
-				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
-
-				break;
-
-			case R.id.entry_activity_login_login_button:
-				Log.d(TAG, "onClick: id = login button");
-
-				loginUser();
-
-				break;
-
-		}
-
-	}
-
-	@Override
-	protected void onDestroy() {
-
-		Log.d(TAG, "onDestroy:true");
-
-		// TODO
-
-		super.onDestroy();
-
-	}
-
-	void updateUI(FirebaseUser user) {
-
-		Log.d(TAG, "updateUI:true");
-
-		if (user != null) {
-
-			changeToLoadingScreen();
-
-			Toast toast = Toast.makeText(this, "Reloading user information", Toast.LENGTH_LONG);
-			toast.show();
-
-			user.reload()
-			    .addOnSuccessListener(command -> {
-
-				    Log.d(TAG, "updateUI: success");
-
-				    toast.cancel();
-
-				    if (user.isEmailVerified()) {
-
-					    startMainActivity(user);
-
-				    } else {
-
-					    startEmailVerificationActivity(user);
-
-				    }
-
-			    })
-			    .addOnFailureListener(e -> {
-
-				    Log.d(TAG, "updateUI: failure");
-				    Log.e(TAG, "updateUI: ", e);
-
-				    // TODO
-
-				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
-
-					    Toast.makeText(this, getString(R.string.contraction_user_not_found), Toast.LENGTH_LONG)
-					         .show();
-
-					    mAuth.signOut();
-
-					    changeFromLoadingScreen();
-
-				    }
-
-			    });
-
-		} else {
-
-			Log.d(TAG, "updateUI: user == null");
-
-			// TODO
-
-		}
-
-	}
-
 	private void setLayoutErrorsNull() {
 
 		Log.d(TAG, "setLayoutErrorsNull:true");
@@ -958,16 +1022,6 @@ public class EntryActivity
 
 	}
 
-	private void smoothScrollTo(float y) {
-
-		Log.d(TAG, "smoothScrollTo:true");
-
-		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
-
-		svParent.smoothScrollTo(0, (int) y);
-
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
@@ -985,13 +1039,7 @@ public class EntryActivity
 				// Google login was successful, login with Firebase.
 				GoogleSignInAccount gsa = task.getResult(ApiException.class);
 
-				if (gsa != null) {
-
-					// TODO: auth user after he accepted all the things and subbed!
-
-					firebaseAuthWithGoogleAccount(gsa);
-
-				}
+				if (gsa != null) { firebaseAuthWithGoogleAccount(gsa); }
 
 			} catch (ApiException e) {
 
@@ -1010,22 +1058,6 @@ public class EntryActivity
 	private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
 
 		Log.d(TAG, "firebaseAuthWithGoogleAccount:true");
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: id = " + account.getId());
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: email = " + account.getEmail());
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: given name = " + account.getGivenName());
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: family name = " + account.getFamilyName());
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: photo url = " + account.getPhotoUrl());
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: display name = " + account.getDisplayName());
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: id token = " + account.getIdToken());
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: auth code = " + account.getServerAuthCode());
-
-		for (Scope scope : account.getGrantedScopes()) {
-
-			Log.d(TAG, "firebaseAuthWithGoogleAccount: scope = " + scope.toString());
-			Log.d(TAG, "firebaseAuthWithGoogleAccount: scope uri = " + scope.getScopeUri());
-			Log.d(TAG, "firebaseAuthWithGoogleAccount: scope hashcode = " + scope.hashCode());
-
-		}
 
 		AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 
@@ -1035,20 +1067,16 @@ public class EntryActivity
 			     Log.d(TAG, "firebaseAuthWithGoogleAccount: success");
 
 			     // Login success.
-			     FirebaseUser user = mAuth.getCurrentUser();
+			     FirebaseUser user = command.getUser();
 
 			     if (command.getAdditionalUserInfo()
 			                .isNewUser()) {
 
 				     Log.d(TAG, "firebaseAuthWithGoogleAccount: user is new");
 
-				     changeToGoogleRegistration();
-
-//				     saveUserInFirestore(user, account.getGivenName(), account.getFamilyName(), account.getDisplayName(), account.getEmail(), null);
+				     saveUserInFirestore(user, account.getGivenName(), account.getFamilyName(), null, account.getEmail(), null, user.getPhotoUrl());
 
 			     } else {
-
-				     changeToLoadingScreen();
 
 				     updateUI(user);
 
@@ -1065,19 +1093,6 @@ public class EntryActivity
 			     changeFromLoadingScreen();
 
 		     });
-
-	}
-
-	private void changeToGoogleRegistration() {
-
-		Log.d(TAG, "changeToGoogleRegistration:true");
-
-		smoothScrollTo(findViewById(R.id.entry_activity_registration_seperator_view).getBottom());
-
-		findViewById(R.id.entry_activity_registration_first_name_layout).setEnabled(false);
-		findViewById(R.id.entry_activity_registration_family_name_layout).setEnabled(false);
-		findViewById(R.id.entry_activity_registration_email_layout).setEnabled(false);
-		findViewById(R.id.entry_activity_registration_password_layout).setEnabled(false);
 
 	}
 
@@ -1130,7 +1145,7 @@ public class EntryActivity
 	}
 
 	@Override
-	public void currentTime(Date time, String uid) {
+	public void addTimeToFirestoreEntry(Date time, String uid) {
 
 		FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -1140,18 +1155,18 @@ public class EntryActivity
 		db.collection(FirestoreNames.COLLECTION_USERS)
 		  .document(uid)
 		  .update(info)
-		  .addOnSuccessListener(aVoid -> Log.d(TAG, "currentTime: success"))
+		  .addOnSuccessListener(aVoid -> Log.d(TAG, "addTimeToFirestoreEntry: success"))
 		  .addOnFailureListener(e -> {
 
-			  Log.d(TAG, "currentTime: failure");
-			  Log.e(TAG, "currentTime: ", e);
+			  Log.d(TAG, "addTimeToFirestoreEntry: failure");
+			  Log.e(TAG, "addTimeToFirestoreEntry: ", e);
 
 			  if (mCurrentTimeSyncHelper <= 3) {
 
 				  Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_SHORT)
 				       .show();
 
-				  currentTime(time, uid);
+				  addTimeToFirestoreEntry(time, uid);
 
 				  mCurrentTimeSyncHelper++;
 

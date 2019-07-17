@@ -77,13 +77,13 @@ public class RetrieveInternetTime
 
 		Log.d(TAG, "onPostExecute:true");
 
-		mListener.currentTime(time, mUid);
+		mListener.addTimeToFirestoreEntry(time, mUid);
 
 	}
 
 	interface OnInternetTimeInteractionListener {
 
-		void currentTime(Date time, String uid);
+		void addTimeToFirestoreEntry(Date time, String uid);
 
 	}
 }

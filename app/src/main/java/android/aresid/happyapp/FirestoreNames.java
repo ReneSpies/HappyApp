@@ -16,6 +16,7 @@ public class FirestoreNames {
 	static final String COLUMN_EMAIL            = "email";
 	static final String COLUMN_DATE_OF_BIRTH    = "date of birth";
 	static final String COLUMN_DATE_OF_CREATION = "date of creation";
+	static final String COLUMN_PROFILE_PICTURE  = "profile picture";
 
 	// Collections
 	static final String COLLECTION_USERS = "users";
