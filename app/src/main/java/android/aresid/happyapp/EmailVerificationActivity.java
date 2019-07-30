@@ -1,23 +1,17 @@
 package android.aresid.happyapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created on: 21.06.2019
@@ -28,8 +22,7 @@ import java.util.List;
 
 public class EmailVerificationActivity
 		extends AppCompatActivity
-		implements View.OnClickListener,
-		           ViewPagerAdapter.OnViewPagerInteractionListener {
+		implements View.OnClickListener {
 
 	private static final String TAG                = "GmailVerificationAct";
 	private              int    mEmailErrorHelper  = 0;
@@ -41,43 +34,7 @@ public class EmailVerificationActivity
 		Log.d(TAG, "onCreate:true");
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_google_email_verification);
-
-		List<String> listOfTitles = new ArrayList<>();
-		List<String> listOfDescriptions = new ArrayList<>();
-		List<String> listOfPriceTags = new ArrayList<>();
-
-		// List population for HappyApp Free
-		listOfTitles.add(EntryActivity.VP_TITLE_HAPPYAPP_FREE);
-		listOfDescriptions.add(EntryActivity.VP_DESC_HAPPYAPP_FREE);
-		listOfPriceTags.add(EntryActivity.VP_PRICE_HAPPYAPP_FREE);
-
-		// List population for HappyApp Gold
-		listOfTitles.add(EntryActivity.VP_TITLE_HAPPYAPP_GOLD);
-		listOfDescriptions.add(EntryActivity.VP_DESC_HAPPYAPP_GOLD);
-		listOfPriceTags.add(EntryActivity.VP_PRICE_HAPPYAPP_GOLD);
-
-		ViewPager2 vpSubscriptions = findViewById(R.id.google_email_verification_activity_subscription_view_pager);
-		Button btSendAgain = findViewById(R.id.google_email_verification_activity_send_again_button);
-		TextInputEditText etGmailVerificationDobField = findViewById(R.id.google_email_verification_activity_dob_field);
-		Button btLogout = findViewById(R.id.google_email_verification_activity_logout_button);
-
-		etGmailVerificationDobField.setOnClickListener(this);
-		etGmailVerificationDobField.setOnFocusChangeListener((v, hasFocus) -> {
-
-			if (hasFocus) {
-
-				Log.d(TAG, "onCreate: has focus");
-
-				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
-
-			}
-
-		});
-		etGmailVerificationDobField.setKeyListener(null);
-		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPriceTags, vpSubscriptions));
-		btSendAgain.setOnClickListener(this);
-		btLogout.setOnClickListener(this);
+		setContentView(R.layout.activity_email_verification);
 
 		Bundle extras = getIntent().getExtras();
 
@@ -89,19 +46,25 @@ public class EmailVerificationActivity
 
 				checkUserStatus(user);
 
-			} else {
-
-				// TODO
-
 			}
 
 		} else {
 
-			// TODO
+			Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_LONG)
+			     .show();
 
 		}
 
-		sendEmailVerification();
+	}
+
+	private void startMainActivity(FirebaseUser user) {
+
+		Log.d(TAG, "startMainActivity:true");
+
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra("user", user);
+
+		startActivity(intent);
 
 	}
 
@@ -120,7 +83,7 @@ public class EmailVerificationActivity
 
 				    if (user.isEmailVerified()) {
 
-					    // TODO
+					    startMainActivity(user);
 
 				    } else {
 
@@ -138,74 +101,56 @@ public class EmailVerificationActivity
 
 			    });
 
-		}, 1130);
+		}, 1300);
 
 	}
 
-	private void sendEmailVerification() {
+	private void sendEmailVerification(FirebaseUser user) {
 
 		Log.d(TAG, "sendEmailVerification:true");
 
-		Toast toast = Toast.makeText(this, "Something went wrong sending the email. Retrying", Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_LONG);
 
-		Bundle extras = getIntent().getExtras();
+		if (user != null) {
 
-		if (extras != null) {
+			user.sendEmailVerification()
+			    .addOnSuccessListener(command -> {
 
-			FirebaseUser user = extras.getParcelable("user");
+				    Log.d(TAG, "sendEmailVerification: success");
 
-			if (user != null) {
+				    toast.cancel();
 
-				user.sendEmailVerification()
-				    .addOnSuccessListener(command -> {
+				    Toast.makeText(this, getString(R.string.plain_email_sent_to, user.getEmail()), Toast.LENGTH_LONG)
+				         .show();
 
-					    Log.d(TAG, "sendEmailVerification: success");
+			    })
+			    .addOnFailureListener(e -> {
 
-					    toast.cancel();
+				    Log.d(TAG, "sendEmailVerification: failure");
+				    Log.e(TAG, "sendEmailVerification: ", e);
 
-					    Toast.makeText(this, "Email verification sent to " + user.getEmail(), Toast.LENGTH_LONG)
+				    toast.cancel();
+
+				    if (e instanceof com.google.firebase.FirebaseTooManyRequestsException) {
+
+					    Toast.makeText(this, getString(R.string.contraction_donut_queue), Toast.LENGTH_SHORT)
 					         .show();
 
-				    })
-				    .addOnFailureListener(e -> {
+					    return;
 
-					    Log.d(TAG, "sendEmailVerification: failure");
-					    Log.e(TAG, "sendEmailVerification: ", e);
+				    }
 
-					    toast.cancel();
+				    if (mEmailErrorHelper <= 3) {
 
-					    if (e instanceof com.google.firebase.FirebaseTooManyRequestsException) {
+					    toast.show();
 
-						    toast.cancel();
+					    sendEmailVerification(user);
 
-						    Toast.makeText(this, "I never expected it would take so long to get donuts. Better be patient", Toast.LENGTH_SHORT)
-						         .show();
+					    mEmailErrorHelper++;
 
-						    return;
+				    }
 
-					    }
-
-					    if (mEmailErrorHelper <= 3) {
-
-						    toast.show();
-
-						    sendEmailVerification();
-
-						    mEmailErrorHelper++;
-
-					    }
-
-				    });
-
-			} else {
-
-				// TODO
-
-			}
-
-		} else {
-
-			// TODO
+			    });
 
 		}
 
@@ -216,7 +161,7 @@ public class EmailVerificationActivity
 
 		Log.d(TAG, "onBackPressed:true");
 
-		Toast toast = Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(this, getString(R.string.plain_press_again_to_exit), Toast.LENGTH_SHORT);
 
 		if (mBackPressedHelper == 0) {
 
@@ -259,10 +204,6 @@ public class EmailVerificationActivity
 
 		finish();
 
-//		Intent intent = new Intent(this, EntryActivity.class);
-//
-//		startActivity(intent);
-//
 	}
 
 	@Override
@@ -272,15 +213,21 @@ public class EmailVerificationActivity
 
 		switch (v.getId()) {
 
-			case R.id.google_email_verification_activity_send_again_button:
+			case R.id.buttong2:
 
 				Log.d(TAG, "onClick: send again button");
 
-				sendEmailVerification();
+				Bundle extras = getIntent().getExtras();
+
+				if (extras != null && extras.getParcelable("user") != null) {
+
+					sendEmailVerification(extras.getParcelable("user"));
+
+				}
 
 				break;
 
-			case R.id.google_email_verification_activity_logout_button:
+			case R.id.buttong1:
 
 				Log.d(TAG, "onClick: logout button");
 
@@ -288,21 +235,8 @@ public class EmailVerificationActivity
 
 				break;
 
-			case R.id.google_email_verification_activity_dob_field:
-
-				Log.d(TAG, "onClick: dob field");
-
-				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
-
-				break;
 		}
 
 	}
 
-	@Override
-	public void createUser() {
-
-		Log.d(TAG, "createUser:true");
-
-	}
 }

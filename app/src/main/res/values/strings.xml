@@ -118,6 +118,9 @@
 	<string name="contraction_check_internet_connection">Check your internet connection and try again</string>
 	<string name="plain_email_or_password_incorrect">Email or password incorrect</string>
 	<string name="contraction_user_not_found">There is no user record corresponding to this identifier. The user may have been deleted</string>
+	<string name="plain_reloading_user_info">Reloading User information</string>
+	<string name="plain_email_sent_to">Email sent to %1s</string>
+	<string name="contraction_donut_queue">I am in the queue for the donuts. Relax</string>
 
 
 </resources>

@@ -85,21 +85,21 @@ public class NtpV3Impl
 		return id.toString();
 	}
 
-	/***
-	 * Returns mode as defined in RFC-1305 which is a 3-bit integer
-	 * whose value is indicated by the MODE_xxx parameters.
-	 *
-	 * @return mode as defined in RFC-1305.
-	 */
-	@Override
-	public int getMode() {
-
-		return (ui(buf[MODE_INDEX]) >> MODE_SHIFT) & 0x7;
-	}
-
 	private String idAsHex() {
 
 		return Integer.toHexString(getReferenceId());
+	}
+
+	/***
+	 * Returns details of NTP packet as a string.
+	 *
+	 * @return details of NTP packet as a string.
+	 */
+	@Override
+	public String toString() {
+
+		return "[" + "version:" + getVersion() + ", mode:" + getMode() + ", poll:" + getPoll() + ", precision:" + getPrecision() + ", delay:" + getRootDelay() + ", dispersion(ms):" +
+		       getRootDispersionInMillisDouble() + ", id:" + getReferenceIdString() + ", xmitTime:" + getTransmitTimeStamp().toDateString() + " ]";
 	}
 
 	/***
@@ -113,17 +113,6 @@ public class NtpV3Impl
 	public int hashCode() {
 
 		return java.util.Arrays.hashCode(buf);
-	}
-
-	/***
-	 * Return human-readable name of message mode type as described in
-	 * RFC 1305.
-	 * @return mode name as string.
-	 */
-	@Override
-	public String getModeName() {
-
-		return NtpUtils.getModeName(getMode());
 	}
 
 	/***
@@ -151,16 +140,31 @@ public class NtpV3Impl
 	}
 
 	/***
-	 * Returns details of NTP packet as a string.
+	 * Returns mode as defined in RFC-1305 which is a 3-bit integer
+	 * whose value is indicated by the MODE_xxx parameters.
 	 *
-	 * @return details of NTP packet as a string.
+	 * @return mode as defined in RFC-1305.
 	 */
 	@Override
-	public String toString() {
+	public int getMode() {
 
-		return "[" + "version:" + getVersion() + ", mode:" + getMode() + ", poll:" + getPoll() + ", precision:" + getPrecision() + ", delay:" + getRootDelay() + ", dispersion(ms):" +
-		       getRootDispersionInMillisDouble() + ", id:" + getReferenceIdString() + ", xmitTime:" + getTransmitTimeStamp().toDateString() + " ]";
+		return (ui(buf[MODE_INDEX]) >> MODE_SHIFT) & 0x7;
 	}
+
+	/***
+	 * Return human-readable name of message mode type as described in
+	 * RFC 1305.
+	 * @return mode name as string.
+	 */
+	@Override
+	public String getModeName() {
+
+		return NtpUtils.getModeName(getMode());
+	}
+
+
+
+
 
 	/***
 	 * Set mode as defined in RFC-1305.

@@ -27,14 +27,6 @@
 		android:supportsRtl="true"
 		android:theme="@style/Theme.HappyApp">
 		<activity
-			android:name=".OnboardingActivity"
-			android:screenOrientation="portrait"
-			android:theme="@style/Theme.HappyApp">
-			<intent-filter>
-				<category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity
 			android:name=".MainActivity"
 			android:theme="@style/Theme.HappyApp">
 			<intent-filter>
@@ -52,7 +44,11 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".GoogleEmailVerificationActivity"
-			android:screenOrientation="portrait" />
+			android:name=".EmailVerificationActivity"
+			android:screenOrientation="portrait">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+			</intent-filter>
+		</activity>
 	</application>
 </manifest>
