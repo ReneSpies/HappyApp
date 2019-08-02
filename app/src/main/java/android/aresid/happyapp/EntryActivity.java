@@ -1022,11 +1022,14 @@ public class EntryActivity
 			})
 			    .addOnFailureListener(e -> {
 
-				    changeFromLoadingScreen();
-
 				    Log.d(TAG, "onActivityResult: failure");
 
 				    Log.e(TAG, "onActivityResult: ", e);
+
+				    changeFromLoadingScreen();
+
+				    Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_LONG)
+				         .show();
 
 			    });
 
