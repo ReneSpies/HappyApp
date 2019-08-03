@@ -6,7 +6,7 @@
 	android:layout_height="wrap_content"
 	android:gravity="center_horizontal"
 	android:padding="@dimen/fragment_padding_medium"
-	tools:context=".EntryActivity">
+	tools:context="com.aresid.happyapp.android.aresid.happyapp.EntryActivity">
 
 	<ImageView
 		android:id="@+id/progress_bar"

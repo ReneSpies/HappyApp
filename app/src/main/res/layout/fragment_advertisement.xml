@@ -5,7 +5,7 @@
 	android:layout_height="match_parent"
 	android:gravity="center"
 	android:orientation="vertical"
-	tools:context=".AdvertisementFragment">
+	tools:context="com.aresid.happyapp.android.aresid.happyapp.AdvertisementFragment">
 
 	<LinearLayout
 		android:layout_width="wrap_content"

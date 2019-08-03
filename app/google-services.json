@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:930375194703:android:ea886d1cc5770adb",
         "android_client_info": {
-          "package_name": "android.aresid.happyapp"
+          "package_name": "com.aresid.happyapp"
         }
       },
       "oauth_client": [

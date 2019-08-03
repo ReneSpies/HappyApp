@@ -4,7 +4,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	tools:context=".SearchFragment">
+	tools:context="com.aresid.happyapp.android.aresid.happyapp.SearchFragment">
 
 	<com.google.android.material.textfield.TextInputLayout
 		style="@style/Widget.HappyApp.TextInputLayout"
