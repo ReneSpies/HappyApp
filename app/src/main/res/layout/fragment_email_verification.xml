@@ -5,7 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:padding="@dimen/fragment_padding_medium"
-	tools:context=".EmailVerificationFragment">
+	tools:context="com.aresid.happyapp.android.aresid.happyapp.EmailVerificationFragment">
 
 	<LinearLayout
 		android:id="@+id/linearLayout"

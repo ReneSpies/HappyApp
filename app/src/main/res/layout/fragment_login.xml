@@ -6,12 +6,12 @@
 	android:layout_height="wrap_content"
 	android:gravity="center_horizontal"
 	android:padding="@dimen/fragment_padding_medium"
-	tools:context=".EntryActivity">
+	tools:context="com.aresid.happyapp.android.aresid.happyapp.EntryActivity">
 
 	<ImageView
 		android:id="@+id/progress_bar"
-		android:layout_width="@dimen/waiting_assistant_size"
-		android:layout_height="@dimen/waiting_assistant_size"
+		android:layout_width="@dimen/waiting_assistant_standard"
+		android:layout_height="@dimen/waiting_assistant_standard"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		android:contentDescription="Happy App logo"

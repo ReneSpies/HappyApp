@@ -91,18 +91,6 @@ public class NtpV3Impl
 	}
 
 	/***
-	 * Returns details of NTP packet as a string.
-	 *
-	 * @return details of NTP packet as a string.
-	 */
-	@Override
-	public String toString() {
-
-		return "[" + "version:" + getVersion() + ", mode:" + getMode() + ", poll:" + getPoll() + ", precision:" + getPrecision() + ", delay:" + getRootDelay() + ", dispersion(ms):" +
-		       getRootDispersionInMillisDouble() + ", id:" + getReferenceIdString() + ", xmitTime:" + getTransmitTimeStamp().toDateString() + " ]";
-	}
-
-	/***
 	 * Computes a hashcode for this object. The result is the exclusive
 	 * OR of the values of this object stored as a byte array.
 	 *
@@ -140,6 +128,18 @@ public class NtpV3Impl
 	}
 
 	/***
+	 * Returns details of NTP packet as a string.
+	 *
+	 * @return details of NTP packet as a string.
+	 */
+	@Override
+	public String toString() {
+
+		return "[" + "version:" + getVersion() + ", mode:" + getMode() + ", poll:" + getPoll() + ", precision:" + getPrecision() + ", delay:" + getRootDelay() + ", dispersion(ms):" +
+		       getRootDispersionInMillisDouble() + ", id:" + getReferenceIdString() + ", xmitTime:" + getTransmitTimeStamp().toDateString() + " ]";
+	}
+
+	/***
 	 * Returns mode as defined in RFC-1305 which is a 3-bit integer
 	 * whose value is indicated by the MODE_xxx parameters.
 	 *
@@ -161,10 +161,6 @@ public class NtpV3Impl
 
 		return NtpUtils.getModeName(getMode());
 	}
-
-
-
-
 
 	/***
 	 * Set mode as defined in RFC-1305.

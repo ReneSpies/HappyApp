@@ -5,7 +5,7 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical"
 	android:padding="@dimen/fragment_padding_medium"
-	tools:context=".LegalFragment">
+	tools:context="com.aresid.happyapp.android.aresid.happyapp.LegalFragment">
 
 	<TextView
 		android:id="@+id/legal_fragment_header"

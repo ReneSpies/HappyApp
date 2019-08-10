@@ -4,7 +4,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	tools:context=".MyAccountFragment">
+	tools:context="com.aresid.happyapp.android.aresid.happyapp.MyAccountFragment">
 
 	<GridLayout
 		android:layout_width="match_parent"

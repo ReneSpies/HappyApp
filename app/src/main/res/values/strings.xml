@@ -121,6 +121,5 @@
 	<string name="plain_reloading_user_info">Reloading User information</string>
 	<string name="plain_email_sent_to">Email sent to %1s</string>
 	<string name="contraction_donut_queue">I am in the queue for the donuts. Relax</string>
-
-
+	<string name="plain_processing_checkout">Processing checkout</string>
 </resources>
