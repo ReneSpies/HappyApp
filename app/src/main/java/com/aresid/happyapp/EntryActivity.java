@@ -72,6 +72,7 @@ public class EntryActivity
 	private int                mCurrentTimeSyncHelper = 0;
 	private int                mBackPressedHelper     = 0;
 	private int                mCreateUserHelper      = 0;
+	private int                mSubVariantHelper      = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +101,12 @@ public class EntryActivity
 		// Load waiting assistant into ImageViews.
 		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
 		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
+//		loadGifInto(findViewById(R.id.entry_activity_checkout_waiting_assistant));
 //		loadGifInto(findViewById(R.id.entry_activity_subscription_waiting_assistant));
 
 		mBillingClient = BillingClient.newBuilder(this)
 		                              .setListener(this)
+		                              .enablePendingPurchases()
 		                              .build();
 		mBillingClient.startConnection(this);
 
@@ -370,7 +373,7 @@ public class EntryActivity
 		info.put(FirestoreNames.COLUMN_USERNAME, username);
 		info.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
 
-		FirebaseFirestore db = FirebaseFirestore.getInstance();
+		FirebaseFirestore db = getFirestoreInstance();
 
 		db.collection(FirestoreNames.COLLECTION_USERS)
 		  .document(user.getUid())
@@ -392,8 +395,41 @@ public class EntryActivity
 
 	}
 
+	private void addSubscriptionVariantToFirestore(FirebaseUser user, int variant) {
+
+		Log.d(TAG, "addSubscriptionVariantToFirestore:true");
+
+		FirebaseFirestore db = getFirestoreInstance();
+
+		db.collection(FirestoreNames.COLLECTION_USERS)
+		  .document(user.getUid())
+		  .update(FirestoreNames.COLUMN_SUBSCRIPTION_VARIANT, variant == 13 ? VP_TITLE_HAPPYAPP_GOLD : VP_TITLE_HAPPYAPP_FREE)
+		  .addOnFailureListener(e -> {
+
+			  Log.e(TAG, "addSubscriptionVariantToFirestore: ", e);
+
+			  if (mSubVariantHelper < 3) {
+
+				  Log.d(TAG, "addSubscriptionVariantToFirestore: retrying " + mSubVariantHelper++);
+
+				  addSubscriptionVariantToFirestore(user, variant);
+
+			  }
+
+		  });
+
+	}
+
+	private FirebaseFirestore getFirestoreInstance() {
+
+		Log.d(TAG, "getFirestoreInstance:true");
+
+		return FirebaseFirestore.getInstance();
+
+	}
+
 	@Override
-	public void createUser() {
+	public void createUser(int variant) {
 
 		Log.d(TAG, "createUser:true");
 
@@ -424,7 +460,7 @@ public class EntryActivity
 		String dob = etRegistrationDobField.getText()
 		                                   .toString();
 
-		FirebaseFirestore db = FirebaseFirestore.getInstance();
+		FirebaseFirestore db = getFirestoreInstance();
 
 		FirebaseUser user = mAuth.getCurrentUser();
 
@@ -446,6 +482,8 @@ public class EntryActivity
 					  Log.d(TAG, "createUser: success");
 
 					  if (command.isEmpty()) {
+
+						  addSubscriptionVariantToFirestore(user, variant);
 
 						  updateGoogleUser(user, username, dob);
 
@@ -1111,12 +1149,18 @@ public class EntryActivity
 
 			List<String> skuList = new ArrayList<>();
 			skuList.add("subscriptions.happyapp.gold");
+
 			SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+
 			params.setSkusList(skuList)
 			      .setType(BillingClient.SkuType.INAPP);
+
 			mBillingClient.querySkuDetailsAsync(params.build(), (billingResult1, skuDetailsList) -> {
 
 				Log.d(TAG, "onBillingSetupFinished:queried");
+
+				Log.d(TAG, "onBillingSetupFinished: sku details = " + skuDetailsList);
+				Log.d(TAG, "onBillingSetupFinished: billing result = " + billingResult1);
 
 			});
 
@@ -1152,9 +1196,6 @@ public class EntryActivity
 			  Log.e(TAG, "addTimeToFirestoreEntry: ", e);
 
 			  if (mCurrentTimeSyncHelper <= 3) {
-
-				  Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_SHORT)
-				       .show();
 
 				  addTimeToFirestoreEntry(time, uid);
 

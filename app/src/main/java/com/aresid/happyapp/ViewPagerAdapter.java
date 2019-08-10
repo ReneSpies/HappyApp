@@ -30,7 +30,7 @@ public class ViewPagerAdapter
 	private              List<String>                   mDescriptions;
 	private              List<String>                   mPrices;
 	private              OnViewPagerInteractionListener mListener;
-	private              int                            mRequestCode;
+	private              int                            mVariant;
 
 	ViewPagerAdapter(Context context, List<String> titles, List<String> descriptions, List<String> prices, ViewPager2 viewPager2) {
 
@@ -40,6 +40,7 @@ public class ViewPagerAdapter
 		mTitles = titles;
 		mDescriptions = descriptions;
 		mPrices = prices;
+		mVariant = 0;
 
 		if (context instanceof OnViewPagerInteractionListener) {
 
@@ -66,7 +67,9 @@ public class ViewPagerAdapter
 
 			Log.d(TAG, "onCreateViewHolder: bt click");
 
-			mListener.createUser();
+			Log.d(TAG, "onCreateViewHolder: variant is " + mVariant);
+
+			mListener.createUser(mVariant);
 
 		});
 
@@ -82,6 +85,16 @@ public class ViewPagerAdapter
 		String title = mTitles.get(position);
 		String description = mDescriptions.get(position);
 		String price = mPrices.get(position);
+
+		if (position == 0) {
+
+			mVariant = 26;
+
+		} else if (position == 1) {
+
+			mVariant = 13;
+
+		}
 
 		holder.mTVTitle.setText(title);
 		holder.mTVDescription.setText(description);
@@ -100,7 +113,7 @@ public class ViewPagerAdapter
 
 	public interface OnViewPagerInteractionListener {
 
-		void createUser();
+		void createUser(int variantCode);
 
 	}
 
