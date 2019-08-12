@@ -107,7 +107,6 @@ public class EntryActivity
 		                              .setListener(this)
 		                              .enablePendingPurchases()
 		                              .build();
-		mBillingClient.startConnection(this);
 
 		// Configure Google Sign In.
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getResources().getString(R.string.default_web_client_id))
