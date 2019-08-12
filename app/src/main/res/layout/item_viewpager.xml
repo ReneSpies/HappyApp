@@ -44,23 +44,24 @@
 		app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_description" />
 
 	<LinearLayout
-		android:id="@+id/entry_activity_checkout_waiting_assistant_layout"
+		android:id="@+id/view_pager_checkout_waiting_assistant_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:orientation="horizontal"
-		android:visibility="visible"
+		android:visibility="invisible"
 		app:layout_constraintBottom_toTopOf="@+id/view_pager_bt_confirm"
+		app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_price"
 		tools:ignore="UseCompoundDrawables">
 
 		<ImageView
-			android:id="@+id/entry_activity_checkout_waiting_assistant"
+			android:id="@+id/view_pager_checkout_waiting_assistant"
 			android:layout_width="@dimen/waiting_assistant_small"
 			android:layout_height="@dimen/waiting_assistant_small"
 			android:contentDescription="@string/plain_processing_login" />
 
 		<TextView
-			android:id="@+id/entry_activity_checkout_waiting_assistant_text_view"
+			android:id="@+id/view_pager_checkout_waiting_assistant_text_view"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/plain_logging_in"

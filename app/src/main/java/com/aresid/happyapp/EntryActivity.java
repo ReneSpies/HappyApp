@@ -65,7 +65,6 @@ public class EntryActivity
 	private static final String GOOGLE_COM             = "google.com";
 	private static final int    REQUEST_CODE_LOGIN     = 13;
 	GoogleSignInAccount mGSA = null;
-	private DBHelper           mDBHelper;
 	private GoogleSignInClient mGoogleSignInClient;
 	private FirebaseAuth       mAuth;
 	private BillingClient      mBillingClient;
@@ -155,15 +154,6 @@ public class EntryActivity
 
 		});
 		etRegistrationDateOfBirthField.setKeyListener(null);
-
-		if (mDBHelper == null) {
-
-			// Create new database if not exists.
-			mDBHelper = new DBHelper(this);
-
-			Log.d(TAG, "onCreate: db = " + mDBHelper);
-
-		}
 
 		populateSubscriptionsTable();
 
@@ -391,6 +381,8 @@ public class EntryActivity
 
 			  Log.e(TAG, "updateGoogleUser: ", e);
 
+			  ViewPagerAdapter.setLoadingLayoutVisibility(View.INVISIBLE);
+
 		  });
 
 	}
@@ -413,6 +405,10 @@ public class EntryActivity
 				  Log.d(TAG, "addSubscriptionVariantToFirestore: retrying " + mSubVariantHelper++);
 
 				  addSubscriptionVariantToFirestore(user, variant);
+
+			  } else {
+
+			  	ViewPagerAdapter.setLoadingLayoutVisibility(View.INVISIBLE);
 
 			  }
 
@@ -483,6 +479,8 @@ public class EntryActivity
 
 					  if (command.isEmpty()) {
 
+					  	ViewPagerAdapter.setLoadingLayoutVisibility(View.VISIBLE);
+
 						  addSubscriptionVariantToFirestore(user, variant);
 
 						  updateGoogleUser(user, username, dob);
@@ -525,6 +523,8 @@ public class EntryActivity
 				etRegistrationPasswordLayout.setEnabled(false);
 				etRegistrationDobLayout.setEnabled(false);
 				cbTermsConditionsPrivacyPolicy.setEnabled(false);
+
+				ViewPagerAdapter.setLoadingLayoutVisibility(View.VISIBLE);
 
 				db.collection(FirestoreNames.COLLECTION_USERS)
 				  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)

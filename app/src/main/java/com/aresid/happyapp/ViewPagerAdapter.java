@@ -6,12 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -25,12 +28,14 @@ public class ViewPagerAdapter
 		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder> {
 
 	private static final String                         TAG = "ViewPagerAdapter";
+	private static       View                           mLoadingLayout;
 	private              List<String>                   mTitles;
 	private              LayoutInflater                 mInflater;
 	private              List<String>                   mDescriptions;
 	private              List<String>                   mPrices;
 	private              OnViewPagerInteractionListener mListener;
 	private              int                            mVariant;
+	private              Context                        mContext;
 
 	ViewPagerAdapter(Context context, List<String> titles, List<String> descriptions, List<String> prices, ViewPager2 viewPager2) {
 
@@ -41,6 +46,7 @@ public class ViewPagerAdapter
 		mDescriptions = descriptions;
 		mPrices = prices;
 		mVariant = 0;
+		mContext = context;
 
 		if (context instanceof OnViewPagerInteractionListener) {
 
@@ -54,6 +60,14 @@ public class ViewPagerAdapter
 
 	}
 
+	static void setLoadingLayoutVisibility(int visibility) {
+
+		Log.d(TAG, "setLoadingLayoutVisibility:true");
+
+		mLoadingLayout.setVisibility(visibility);
+
+	}
+
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,6 +76,11 @@ public class ViewPagerAdapter
 
 		View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
 		Button viewPagerBtConfirm = view.findViewById(R.id.view_pager_bt_confirm);
+		mLoadingLayout = parent.findViewById(R.id.view_pager_checkout_waiting_assistant_layout);
+
+		Glide.with(mContext)
+		     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
+		     .into((ImageView) view.findViewById(R.id.view_pager_checkout_waiting_assistant));
 
 		viewPagerBtConfirm.setOnClickListener(v -> {
 
