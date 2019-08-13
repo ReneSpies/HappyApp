@@ -108,6 +108,8 @@ public class EntryActivity
 		                              .enablePendingPurchases()
 		                              .build();
 
+		mBillingClient.startConnection(this);
+
 		// Configure Google Sign In.
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getResources().getString(R.string.default_web_client_id))
 		                                                                                              .requestEmail()
@@ -380,7 +382,7 @@ public class EntryActivity
 
 			  Log.e(TAG, "updateGoogleUser: ", e);
 
-			  ViewPagerAdapter.setLoadingLayoutVisibility(View.INVISIBLE);
+			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 
 		  });
 
@@ -407,7 +409,7 @@ public class EntryActivity
 
 			  } else {
 
-			  	ViewPagerAdapter.setLoadingLayoutVisibility(View.INVISIBLE);
+				  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 
 			  }
 
@@ -478,7 +480,7 @@ public class EntryActivity
 
 					  if (command.isEmpty()) {
 
-					  	ViewPagerAdapter.setLoadingLayoutVisibility(View.VISIBLE);
+						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
 						  addSubscriptionVariantToFirestore(user, variant);
 
@@ -523,7 +525,7 @@ public class EntryActivity
 				etRegistrationDobLayout.setEnabled(false);
 				cbTermsConditionsPrivacyPolicy.setEnabled(false);
 
-				ViewPagerAdapter.setLoadingLayoutVisibility(View.VISIBLE);
+				ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
 				db.collection(FirestoreNames.COLLECTION_USERS)
 				  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
@@ -1155,7 +1157,7 @@ public class EntryActivity
 			SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
 
 			params.setSkusList(skuList)
-			      .setType(BillingClient.SkuType.INAPP);
+			      .setType(BillingClient.SkuType.SUBS);
 
 			mBillingClient.querySkuDetailsAsync(params.build(), (billingResult1, skuDetailsList) -> {
 
