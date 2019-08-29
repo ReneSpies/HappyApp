@@ -103,13 +103,6 @@ public class EntryActivity
 //		loadGifInto(findViewById(R.id.entry_activity_checkout_waiting_assistant));
 //		loadGifInto(findViewById(R.id.entry_activity_subscription_waiting_assistant));
 
-		mBillingClient = BillingClient.newBuilder(this)
-		                              .setListener(this)
-		                              .enablePendingPurchases()
-		                              .build();
-
-		mBillingClient.startConnection(this);
-
 		// Configure Google Sign In.
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getResources().getString(R.string.default_web_client_id))
 		                                                                                              .requestEmail()
@@ -140,7 +133,6 @@ public class EntryActivity
 		listOfPriceTags.add(VP_PRICE_HAPPYAPP_GOLD);
 
 		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPriceTags, vpSubscriptions));
-//		btCheckOut.setOnClickListener(this);
 		btLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
 		btGoogleLogin.setOnClickListener(this);
@@ -460,6 +452,11 @@ public class EntryActivity
 		FirebaseFirestore db = getFirestoreInstance();
 
 		FirebaseUser user = mAuth.getCurrentUser();
+
+		BillingClient billingClient = BillingClient.newBuilder(this)
+		                                           .setListener(this)
+		                                           .build();
+		billingClient.startConnection(this);
 
 		if (user != null) {
 
