@@ -28,7 +28,8 @@ public class ViewPagerAdapter
 		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder> {
 
 	private static final String                         TAG = "ViewPagerAdapter";
-	private static       View                           mLoadingLayout;
+	private static       View                           mCheckoutProcessingLayout;
+	private static       View                           mProcessingLayout;
 	private              List<String>                   mTitles;
 	private              LayoutInflater                 mInflater;
 	private              List<String>                   mDescriptions;
@@ -60,11 +61,19 @@ public class ViewPagerAdapter
 
 	}
 
-	static void setLoadingLayoutVisibility(int visibility) {
+	static void setCheckoutProcessingLayoutVisibility(int visibility) {
 
-		Log.d(TAG, "setLoadingLayoutVisibility:true");
+		Log.d(TAG, "setCheckoutProcessingLayoutVisibility:true");
 
-		mLoadingLayout.setVisibility(visibility);
+		mCheckoutProcessingLayout.setVisibility(visibility);
+
+	}
+
+	static void setProcessingLayoutVisibility(int visibility) {
+
+		Log.d(TAG, "setProcessingLayoutVisibility:true");
+
+		mProcessingLayout.setVisibility(visibility);
 
 	}
 
@@ -76,11 +85,16 @@ public class ViewPagerAdapter
 
 		View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
 		Button viewPagerBtConfirm = view.findViewById(R.id.view_pager_bt_confirm);
-		mLoadingLayout = parent.findViewById(R.id.view_pager_checkout_waiting_assistant_layout);
+		mCheckoutProcessingLayout = parent.findViewById(R.id.view_pager_checkout_waiting_assistant_layout);
+		mProcessingLayout = parent.findViewById(R.id.view_pager_waiting_assistant_layout);
 
 		Glide.with(mContext)
 		     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
 		     .into((ImageView) view.findViewById(R.id.view_pager_checkout_waiting_assistant));
+
+		Glide.with(mContext)
+		     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
+		     .into((ImageView) view.findViewById(R.id.view_pager_waiting_assistant));
 
 		viewPagerBtConfirm.setOnClickListener(v -> {
 
