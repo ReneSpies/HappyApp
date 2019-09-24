@@ -18,8 +18,18 @@ class FirestoreNames {
 	static final String COLUMN_DATE_OF_CREATION     = "date of creation";
 	static final String COLUMN_PROFILE_PICTURE      = "profile picture";
 	static final String COLUMN_SUBSCRIPTION_VARIANT = "subscription variant";
+	static final String COLUMN_TITLE_FREE           = "title free";
+	static final String COLUMN_TITLE_GOLD           = "title gold";
+	static final String COLUMN_DESC_FREE            = "desc free";
+	static final String COLUMN_DESC_GOLD            = "desc gold";
+	static final String COLUMN_PRICE_FREE           = "price free";
+	static final String COLUMN_PRICE_GOLD           = "price gold";
+
+	// Documents
+	static final String DOCUMENT_INFO = "info";
 
 	// Collections
-	static final String COLLECTION_USERS = "users";
+	static final String COLLECTION_USERS         = "users";
+	static final String COLLECTION_SUBSCRIPTIONS = "subscriptions";
 
 }

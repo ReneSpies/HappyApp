@@ -143,24 +143,24 @@ public class AccountLevelFragment
 		//		diamondPackage.get(Source.SERVER)
 		//		              .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
 		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
-		listOfTitles.add("Free package");
-		listOfTitles.add("Silver package");
-		listOfTitles.add("Gold package");
-		listOfTitles.add("Platinum package");
-		listOfTitles.add("Diamond package");
-		listOfDescriptions.add("This is the description for the free package");
-		listOfDescriptions.add("This is the description for the silver package");
-		listOfDescriptions.add("This is the description for the gold package");
-		listOfDescriptions.add("This is the description for the platinum package");
-		listOfDescriptions.add("This is the description for the diamond package");
-		listOfPrices.add("Free/Month");
-		listOfPrices.add("4.99 $/Month");
-		listOfPrices.add("9.99 $/Month");
-		listOfPrices.add("14.99 $/Month");
-		listOfPrices.add("Prestige");
-		ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(mContext, listOfTitles, listOfDescriptions, listOfPrices, viewPager2);
-		viewPager2.setAdapter(mViewPagerAdapter);
-		viewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer(viewPager2));
+//		listOfTitles.add("Free package");
+//		listOfTitles.add("Silver package");
+//		listOfTitles.add("Gold package");
+//		listOfTitles.add("Platinum package");
+//		listOfTitles.add("Diamond package");
+//		listOfDescriptions.add("This is the description for the free package");
+//		listOfDescriptions.add("This is the description for the silver package");
+//		listOfDescriptions.add("This is the description for the gold package");
+//		listOfDescriptions.add("This is the description for the platinum package");
+//		listOfDescriptions.add("This is the description for the diamond package");
+//		listOfPrices.add("Free/Month");
+//		listOfPrices.add("4.99 $/Month");
+//		listOfPrices.add("9.99 $/Month");
+//		listOfPrices.add("14.99 $/Month");
+//		listOfPrices.add("Prestige");
+//		ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(mContext, listOfTitles, listOfDescriptions, listOfPrices, viewPager2);
+//		viewPager2.setAdapter(mViewPagerAdapter);
+//		viewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer(viewPager2));
 		return rootView;
 	}
 

@@ -30,22 +30,24 @@ public class ViewPagerAdapter
 	private static final String                         TAG = "ViewPagerAdapter";
 	private static       View                           mCheckoutProcessingLayout;
 	private static       View                           mProcessingLayout;
-	private              List<String>                   mTitles;
 	private              LayoutInflater                 mInflater;
+	private              List<String>                   mTitles;
 	private              List<String>                   mDescriptions;
 	private              List<String>                   mPrices;
 	private              OnViewPagerInteractionListener mListener;
 	private              int                            mVariant;
 	private              Context                        mContext;
 
-	ViewPagerAdapter(Context context, List<String> titles, List<String> descriptions, List<String> prices, ViewPager2 viewPager2) {
+	ViewPagerAdapter(Context context, List<List<String>> listOfSubInfo, ViewPager2 viewPager2) {
 
 		Log.d(TAG, "ViewPagerAdapter:true");
 
 		mInflater = LayoutInflater.from(context);
-		mTitles = titles;
-		mDescriptions = descriptions;
-		mPrices = prices;
+
+		mTitles = listOfSubInfo.get(0);
+		mDescriptions = listOfSubInfo.get(1);
+		mPrices = listOfSubInfo.get(2);
+
 		mVariant = 0;
 		mContext = context;
 

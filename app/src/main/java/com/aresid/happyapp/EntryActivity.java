@@ -40,6 +40,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -116,23 +117,7 @@ public class EntryActivity
 		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
 //		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
-		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
 
-		List<String> listOfTitles = new ArrayList<>();
-		List<String> listOfDescriptions = new ArrayList<>();
-		List<String> listOfPriceTags = new ArrayList<>();
-
-		// List population for HappyApp Free
-		listOfTitles.add(VP_TITLE_HAPPYAPP_FREE);
-		listOfDescriptions.add(VP_DESC_HAPPYAPP_FREE);
-		listOfPriceTags.add(VP_PRICE_HAPPYAPP_FREE);
-
-		// List population for HappyApp Gold
-		listOfTitles.add(VP_TITLE_HAPPYAPP_GOLD);
-		listOfDescriptions.add(VP_DESC_HAPPYAPP_GOLD);
-		listOfPriceTags.add(VP_PRICE_HAPPYAPP_GOLD);
-
-		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, listOfTitles, listOfDescriptions, listOfPriceTags, vpSubscriptions));
 		btLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
 		btGoogleLogin.setOnClickListener(this);
@@ -148,7 +133,9 @@ public class EntryActivity
 		});
 		etRegistrationDateOfBirthField.setKeyListener(null);
 
-		populateSubscriptionsTable();
+		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
+
+		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, getSubscriptionsInfoArray(), vpSubscriptions));
 
 	}
 
@@ -339,12 +326,51 @@ public class EntryActivity
 	}
 
 	/**
-	 * Method populates the Subscriptions table in the db with the server data.
+	 * Loads the available subscriptions information from the server into lists.
 	 */
-	private void populateSubscriptionsTable() {
+	private List<List<String>>getSubscriptionsInfoArray() {
 
-		Log.d(TAG, "populateSubscriptionsTable:true");
-		// TODO
+		Log.d(TAG, "getSubscriptionsInfoArray:true");
+
+		FirebaseFirestore db = getFirestoreInstance();
+
+		List<List<String>> listOfSubInfo = new ArrayList<>();
+		List<String> listOfTitles = new ArrayList<>();
+		List<String> listOfDescs = new ArrayList<>();
+		List<String> listOfPrices = new ArrayList<>();
+
+		db.collection(FirestoreNames.COLLECTION_SUBSCRIPTIONS)
+		  .document(FirestoreNames.DOCUMENT_INFO)
+		  .get(Source.SERVER)
+		  .addOnSuccessListener(command -> {
+
+			  Log.d(TAG, "getSubscriptionsInfoArray: success");
+
+			  listOfTitles.add(command.getString(FirestoreNames.COLUMN_TITLE_FREE));
+			  listOfTitles.add(command.getString(FirestoreNames.COLUMN_TITLE_GOLD));
+
+			  listOfDescs.add(command.getString(FirestoreNames.COLUMN_DESC_FREE));
+			  listOfDescs.add(command.getString(FirestoreNames.COLUMN_DESC_GOLD));
+
+			  listOfPrices.add(command.getString(FirestoreNames.COLUMN_PRICE_FREE));
+			  listOfPrices.add(command.getString(FirestoreNames.COLUMN_PRICE_GOLD));
+
+			  listOfSubInfo.add(listOfTitles);
+			  listOfSubInfo.add(listOfDescs);
+			  listOfSubInfo.add(listOfPrices);
+
+			  return listOfSubInfo;
+
+		  }).addOnFailureListener(e -> {
+
+			Log.d(TAG, "getSubscriptionsInfoArray: failure");
+			Log.e(TAG, "getSubscriptionsInfoArray: ", e);
+
+		});
+
+		Log.d(TAG, "getSubscriptionsInfoArray: is asynchronous");
+
+		return listOfSubInfo;
 
 	}
 
@@ -380,9 +406,9 @@ public class EntryActivity
 
 	}
 
-	private void addSubscriptionVariantToFirestore(FirebaseUser user, int variant) {
+	private void addUsersSubscriptionVariantToFirestore(FirebaseUser user, int variant) {
 
-		Log.d(TAG, "addSubscriptionVariantToFirestore:true");
+		Log.d(TAG, "addUsersSubscriptionVariantToFirestore:true");
 
 		FirebaseFirestore db = getFirestoreInstance();
 
@@ -391,13 +417,13 @@ public class EntryActivity
 		  .update(FirestoreNames.COLUMN_SUBSCRIPTION_VARIANT, variant == 13 ? VP_TITLE_HAPPYAPP_GOLD : VP_TITLE_HAPPYAPP_FREE)
 		  .addOnFailureListener(e -> {
 
-			  Log.e(TAG, "addSubscriptionVariantToFirestore: ", e);
+			  Log.e(TAG, "addUsersSubscriptionVariantToFirestore: ", e);
 
 			  if (mSubVariantHelper < 3) {
 
-				  Log.d(TAG, "addSubscriptionVariantToFirestore: retrying " + mSubVariantHelper++);
+				  Log.d(TAG, "addUsersSubscriptionVariantToFirestore: retrying " + mSubVariantHelper++);
 
-				  addSubscriptionVariantToFirestore(user, variant);
+				  addUsersSubscriptionVariantToFirestore(user, variant);
 
 			  } else {
 
@@ -453,7 +479,7 @@ public class EntryActivity
 
 		FirebaseUser user = mAuth.getCurrentUser();
 
-		BillingClient billingClient = BillingClient.newBuilder(this)
+		BillingClient billingClient = BillingClient.newBuilder(this).enablePendingPurchases()
 		                                           .setListener(this)
 		                                           .build();
 		billingClient.startConnection(this);
@@ -479,7 +505,7 @@ public class EntryActivity
 
 						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
-						  addSubscriptionVariantToFirestore(user, variant);
+						  addUsersSubscriptionVariantToFirestore(user, variant);
 
 						  updateGoogleUser(user, username, dob);
 
@@ -506,6 +532,7 @@ public class EntryActivity
 					  etRegistrationDobLayout.setEnabled(true);
 
 				  });
+
 			}
 
 		} else {
