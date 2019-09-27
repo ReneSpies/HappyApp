@@ -40,7 +40,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -118,6 +117,10 @@ public class EntryActivity
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
 //		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
 
+		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
+
+		vpSubscriptions.setAdapter(new ViewPagerAdapter(this));
+
 		btLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
 		btGoogleLogin.setOnClickListener(this);
@@ -132,10 +135,6 @@ public class EntryActivity
 
 		});
 		etRegistrationDateOfBirthField.setKeyListener(null);
-
-		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
-
-		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, getSubscriptionsInfoArray(), vpSubscriptions));
 
 	}
 
@@ -325,52 +324,11 @@ public class EntryActivity
 
 	}
 
-	/**
-	 * Loads the available subscriptions information from the server into lists.
-	 */
-	private List<List<String>>getSubscriptionsInfoArray() {
+	private FirebaseFirestore getFirestoreInstance() {
 
-		Log.d(TAG, "getSubscriptionsInfoArray:true");
+		Log.d(TAG, "getFirestoreInstance:true");
 
-		FirebaseFirestore db = getFirestoreInstance();
-
-		List<List<String>> listOfSubInfo = new ArrayList<>();
-		List<String> listOfTitles = new ArrayList<>();
-		List<String> listOfDescs = new ArrayList<>();
-		List<String> listOfPrices = new ArrayList<>();
-
-		db.collection(FirestoreNames.COLLECTION_SUBSCRIPTIONS)
-		  .document(FirestoreNames.DOCUMENT_INFO)
-		  .get(Source.SERVER)
-		  .addOnSuccessListener(command -> {
-
-			  Log.d(TAG, "getSubscriptionsInfoArray: success");
-
-			  listOfTitles.add(command.getString(FirestoreNames.COLUMN_TITLE_FREE));
-			  listOfTitles.add(command.getString(FirestoreNames.COLUMN_TITLE_GOLD));
-
-			  listOfDescs.add(command.getString(FirestoreNames.COLUMN_DESC_FREE));
-			  listOfDescs.add(command.getString(FirestoreNames.COLUMN_DESC_GOLD));
-
-			  listOfPrices.add(command.getString(FirestoreNames.COLUMN_PRICE_FREE));
-			  listOfPrices.add(command.getString(FirestoreNames.COLUMN_PRICE_GOLD));
-
-			  listOfSubInfo.add(listOfTitles);
-			  listOfSubInfo.add(listOfDescs);
-			  listOfSubInfo.add(listOfPrices);
-
-			  return listOfSubInfo;
-
-		  }).addOnFailureListener(e -> {
-
-			Log.d(TAG, "getSubscriptionsInfoArray: failure");
-			Log.e(TAG, "getSubscriptionsInfoArray: ", e);
-
-		});
-
-		Log.d(TAG, "getSubscriptionsInfoArray: is asynchronous");
-
-		return listOfSubInfo;
+		return FirebaseFirestore.getInstance();
 
 	}
 
@@ -435,14 +393,6 @@ public class EntryActivity
 
 	}
 
-	private FirebaseFirestore getFirestoreInstance() {
-
-		Log.d(TAG, "getFirestoreInstance:true");
-
-		return FirebaseFirestore.getInstance();
-
-	}
-
 	@Override
 	public void createUser(int variant) {
 
@@ -479,7 +429,8 @@ public class EntryActivity
 
 		FirebaseUser user = mAuth.getCurrentUser();
 
-		BillingClient billingClient = BillingClient.newBuilder(this).enablePendingPurchases()
+		BillingClient billingClient = BillingClient.newBuilder(this)
+		                                           .enablePendingPurchases()
 		                                           .setListener(this)
 		                                           .build();
 		billingClient.startConnection(this);

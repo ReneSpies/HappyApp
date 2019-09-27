@@ -12,10 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Source;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -38,15 +41,18 @@ public class ViewPagerAdapter
 	private              int                            mVariant;
 	private              Context                        mContext;
 
-	ViewPagerAdapter(Context context, List<List<String>> listOfSubInfo, ViewPager2 viewPager2) {
+	ViewPagerAdapter(Context context) {
 
 		Log.d(TAG, "ViewPagerAdapter:true");
 
 		mInflater = LayoutInflater.from(context);
 
-		mTitles = listOfSubInfo.get(0);
-		mDescriptions = listOfSubInfo.get(1);
-		mPrices = listOfSubInfo.get(2);
+		Collection<String> collection = new ArrayList<>();
+		collection.add(context.getString(R.string.plain_processing));
+
+		mTitles = new ArrayList<>(collection);
+		mDescriptions = new ArrayList<>(collection);
+		mPrices = new ArrayList<>(collection);
 
 		mVariant = 0;
 		mContext = context;
@@ -60,14 +66,6 @@ public class ViewPagerAdapter
 			throw new RuntimeException(context.toString() + " must implement OnViewPagerInteractionListener");
 
 		}
-
-	}
-
-	static void setCheckoutProcessingLayoutVisibility(int visibility) {
-
-		Log.d(TAG, "setCheckoutProcessingLayoutVisibility:true");
-
-		mCheckoutProcessingLayout.setVisibility(visibility);
 
 	}
 
@@ -143,6 +141,75 @@ public class ViewPagerAdapter
 		Log.d(TAG, "getItemCount:true");
 
 		return mTitles.size();
+
+	}
+
+	@Override
+	public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+
+		Log.d(TAG, "onViewAttachedToWindow:true");
+
+		fetchSubscriptionInfoFromServer();
+
+	}
+
+	private void fetchSubscriptionInfoFromServer() {
+
+		Log.d(TAG, "fetchSubscriptionInfoFromServer:true");
+
+		FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+		List<String> listOfTitles = new ArrayList<>();
+		List<String> listOfDescs = new ArrayList<>();
+		List<String> listOfPrices = new ArrayList<>();
+
+//		setCheckoutProcessingLayoutVisibility(View.VISIBLE);
+
+		setProcessingLayoutVisibility(View.VISIBLE);
+
+		db.collection(FirestoreNames.COLLECTION_SUBSCRIPTIONS)
+		  .document(FirestoreNames.DOCUMENT_INFO)
+		  .get(Source.SERVER)
+		  .addOnSuccessListener(command -> {
+
+			  Log.d(TAG, "getSubscriptionsInfoArray: success");
+
+			  listOfTitles.add(command.getString(FirestoreNames.COLUMN_TITLE_FREE));
+			  listOfTitles.add(command.getString(FirestoreNames.COLUMN_TITLE_GOLD));
+
+			  listOfDescs.add(command.getString(FirestoreNames.COLUMN_DESC_FREE));
+			  listOfDescs.add(command.getString(FirestoreNames.COLUMN_DESC_GOLD));
+
+			  listOfPrices.add(command.getString(FirestoreNames.COLUMN_PRICE_FREE));
+			  listOfPrices.add(command.getString(FirestoreNames.COLUMN_PRICE_GOLD));
+
+			  mTitles = listOfTitles;
+			  mDescriptions = listOfDescs;
+			  mPrices = listOfPrices;
+
+			  synchronized (this) {
+
+				  Log.d(TAG, "fetchSubscriptionInfoFromServer: notifying");
+
+				  notifyDataSetChanged();
+
+			  }
+
+		  })
+		  .addOnFailureListener(e -> {
+
+			  Log.d(TAG, "getSubscriptionsInfoArray: failure");
+			  Log.e(TAG, "getSubscriptionsInfoArray: ", e);
+
+		  });
+
+	}
+
+	static void setCheckoutProcessingLayoutVisibility(int visibility) {
+
+		Log.d(TAG, "setCheckoutProcessingLayoutVisibility:true");
+
+		mCheckoutProcessingLayout.setVisibility(visibility);
 
 	}
 
