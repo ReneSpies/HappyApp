@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,12 +40,15 @@ public class ViewPagerAdapter
 	private              OnViewPagerInteractionListener mListener;
 	private              int                            mVariant;
 	private              Context                        mContext;
+	private              ViewPager2                     mViewPager2;
+	private static       View                           mMainView;
 
-	ViewPagerAdapter(Context context) {
+	ViewPagerAdapter(Context context, ViewPager2 viewPager2) {
 
 		Log.d(TAG, "ViewPagerAdapter:true");
 
 		mInflater = LayoutInflater.from(context);
+		mViewPager2 = viewPager2;
 
 		Collection<String> collection = new ArrayList<>();
 		collection.add(context.getString(R.string.plain_processing));
@@ -69,11 +72,43 @@ public class ViewPagerAdapter
 
 	}
 
-	static void setProcessingLayoutVisibility(int visibility) {
+	private static void setProcessingLayoutVisibility(int visibility) {
 
 		Log.d(TAG, "setProcessingLayoutVisibility:true");
 
-		mProcessingLayout.setVisibility(visibility);
+		switch (visibility) {
+
+			case View.INVISIBLE:
+
+				Log.d(TAG, "setProcessingLayoutVisibility: invisible");
+
+				mProcessingLayout.setVisibility(visibility);
+
+				mMainView.setVisibility(View.VISIBLE);
+
+				break;
+
+			case View.VISIBLE:
+
+				Log.d(TAG, "setProcessingLayoutVisibility: visible");
+
+				mProcessingLayout.setVisibility(visibility);
+
+				mMainView.setVisibility(View.INVISIBLE);
+
+				break;
+
+			case View.GONE:
+
+				Log.d(TAG, "setProcessingLayoutVisibility: gone");
+
+				mProcessingLayout.setVisibility(visibility);
+
+				mMainView.setVisibility(View.VISIBLE);
+
+				break;
+
+		}
 
 	}
 
@@ -85,8 +120,15 @@ public class ViewPagerAdapter
 
 		View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
 		Button viewPagerBtConfirm = view.findViewById(R.id.view_pager_bt_confirm);
-		mCheckoutProcessingLayout = parent.findViewById(R.id.view_pager_checkout_waiting_assistant_layout);
-		mProcessingLayout = parent.findViewById(R.id.view_pager_waiting_assistant_layout);
+		mCheckoutProcessingLayout = view.findViewById(R.id.view_pager_checkout_waiting_assistant_layout);
+		mProcessingLayout = view.findViewById(R.id.view_pager_waiting_assistant_layout);
+		mMainView = view.findViewById(R.id.view_pager_main_view);
+
+		Log.d(TAG, "onCreateViewHolder: parent = " + parent.toString());
+
+		Log.d(TAG, "onCreateViewHolder: checkout layout = " + mCheckoutProcessingLayout);
+
+		fetchSubscriptionInfoFromServer();
 
 		Glide.with(mContext)
 		     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
@@ -100,9 +142,9 @@ public class ViewPagerAdapter
 
 			Log.d(TAG, "onCreateViewHolder: bt click");
 
-			Log.d(TAG, "onCreateViewHolder: variant is " + mVariant);
+			Log.d(TAG, "onCreateViewHolder: variant is " + (mViewPager2.getCurrentItem() == 1 ? 13 : 26));
 
-			mListener.createUser(mVariant);
+			mListener.createUser((mViewPager2.getCurrentItem() == 1 ? 13 : 26));
 
 		});
 
@@ -119,21 +161,13 @@ public class ViewPagerAdapter
 		String description = mDescriptions.get(position);
 		String price = mPrices.get(position);
 
-		if (position == 0) {
-
-			mVariant = 26;
-
-		} else if (position == 1) {
-
-			mVariant = 13;
-
-		}
-
 		holder.mTVTitle.setText(title);
 		holder.mTVDescription.setText(description);
 		holder.mTVPrice.setText(price);
 
 	}
+
+
 
 	@Override
 	public int getItemCount() {
@@ -141,15 +175,6 @@ public class ViewPagerAdapter
 		Log.d(TAG, "getItemCount:true");
 
 		return mTitles.size();
-
-	}
-
-	@Override
-	public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
-
-		Log.d(TAG, "onViewAttachedToWindow:true");
-
-		fetchSubscriptionInfoFromServer();
 
 	}
 
@@ -162,8 +187,6 @@ public class ViewPagerAdapter
 		List<String> listOfTitles = new ArrayList<>();
 		List<String> listOfDescs = new ArrayList<>();
 		List<String> listOfPrices = new ArrayList<>();
-
-//		setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
 		setProcessingLayoutVisibility(View.VISIBLE);
 
@@ -193,6 +216,8 @@ public class ViewPagerAdapter
 
 				  notifyDataSetChanged();
 
+				  setProcessingLayoutVisibility(View.GONE);
+
 			  }
 
 		  })
@@ -200,6 +225,8 @@ public class ViewPagerAdapter
 
 			  Log.d(TAG, "getSubscriptionsInfoArray: failure");
 			  Log.e(TAG, "getSubscriptionsInfoArray: ", e);
+
+			  setProcessingLayoutVisibility(View.GONE);
 
 		  });
 
@@ -222,10 +249,9 @@ public class ViewPagerAdapter
 	class ViewHolder
 			extends RecyclerView.ViewHolder {
 
-		TextView         mTVTitle;
-		TextView         mTVDescription;
-		TextView         mTVPrice;
-		ConstraintLayout mConstraintLayout;
+		TextView       mTVTitle;
+		TextView       mTVDescription;
+		TextView       mTVPrice;
 
 		ViewHolder(View itemView) {
 
@@ -234,7 +260,6 @@ public class ViewPagerAdapter
 			mTVTitle = itemView.findViewById(R.id.view_pager_tv_title);
 			mTVDescription = itemView.findViewById(R.id.view_pager_tv_description);
 			mTVPrice = itemView.findViewById(R.id.view_pager_tv_price);
-			mConstraintLayout = itemView.findViewById(R.id.container2);
 
 		}
 	}

@@ -11,7 +11,7 @@
 		android:layout_height="match_parent"
 		android:gravity="center"
 		android:orientation="vertical"
-		android:visibility="gone">
+		android:visibility="visible">
 
 		<ImageView
 			android:id="@+id/view_pager_waiting_assistant"
@@ -25,84 +25,83 @@
 			android:textAlignment="center" />
 	</LinearLayout>
 
-	<androidx.constraintlayout.widget.ConstraintLayout
-		android:id="@+id/container2"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:visibility="visible">
-
-		<LinearLayout
-			android:id="@+id/view_pager_checkout_waiting_assistant_layout"
+		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:orientation="horizontal"
-			android:visibility="invisible"
-			app:layout_constraintTop_toBottomOf="@id/view_pager_tv_price"
-			app:layout_constraintBottom_toBottomOf="parent"
-			tools:ignore="UseCompoundDrawables">
+			android:id="@+id/view_pager_main_view"
+			android:layout_height="match_parent">
 
-			<ImageView
-				android:id="@+id/view_pager_checkout_waiting_assistant"
-				android:layout_width="@dimen/waiting_assistant_small"
-				android:layout_height="@dimen/waiting_assistant_small"
-				android:contentDescription="@string/plain_processing_login" />
-
-			<TextView
-				android:id="@+id/view_pager_checkout_waiting_assistant_text_view"
-				android:layout_width="wrap_content"
+			<LinearLayout
+				android:id="@+id/view_pager_checkout_waiting_assistant_layout"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="@string/plain_logging_in"
-				android:textAppearance="?attr/textAppearanceCaption" />
-		</LinearLayout>
+				android:gravity="center"
+				android:orientation="horizontal"
+				android:visibility="invisible"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/view_pager_tv_price"
+				tools:ignore="UseCompoundDrawables">
 
-		<androidx.appcompat.widget.AppCompatImageView
-			android:layout_width="@dimen/image_view_app_logo_size"
-			android:layout_height="@dimen/image_view_app_logo_size"
-			android:antialias="true"
-			android:src="@drawable/ic_app_logo"
-			app:layout_constraintBottom_toTopOf="@id/view_pager_tv_title"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+				<ImageView
+					android:id="@+id/view_pager_checkout_waiting_assistant"
+					android:layout_width="@dimen/waiting_assistant_small"
+					android:layout_height="@dimen/waiting_assistant_small"
+					android:contentDescription="@string/plain_processing_login" />
 
-		<androidx.appcompat.widget.AppCompatTextView
-			android:id="@+id/view_pager_tv_description"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:textAppearance="?attr/textAppearanceSubtitle2"
-			app:layout_constraintBottom_toBottomOf="@+id/view_pager_tv_price"
-			app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_title" />
+				<TextView
+					android:id="@+id/view_pager_checkout_waiting_assistant_text_view"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/plain_logging_in"
+					android:textAppearance="?attr/textAppearanceCaption" />
+			</LinearLayout>
 
-		<androidx.appcompat.widget.AppCompatTextView
-			android:id="@+id/view_pager_tv_price"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:textAppearance="?attr/textAppearanceSubtitle1"
-			app:layout_constraintBottom_toTopOf="@+id/view_pager_bt_confirm"
-			app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_description" />
+			<androidx.appcompat.widget.AppCompatImageView
+				android:layout_width="@dimen/image_view_app_logo_size"
+				android:layout_height="@dimen/image_view_app_logo_size"
+				android:antialias="true"
+				android:src="@drawable/ic_app_logo"
+				app:layout_constraintBottom_toTopOf="@id/view_pager_tv_title"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
 
-		<androidx.appcompat.widget.AppCompatTextView
-			android:id="@+id/view_pager_tv_title"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:textAppearance="?attr/textAppearanceHeadline5"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintTop_toTopOf="parent" />
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/view_pager_tv_description"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textAppearance="?attr/textAppearanceSubtitle2"
+				app:layout_constraintBottom_toBottomOf="@+id/view_pager_tv_price"
+				app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_title" />
+
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/view_pager_tv_price"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textAppearance="?attr/textAppearanceSubtitle1"
+				app:layout_constraintBottom_toTopOf="@+id/view_pager_bt_confirm"
+				app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_description" />
+
+			<androidx.appcompat.widget.AppCompatTextView
+				android:id="@+id/view_pager_tv_title"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textAppearance="?attr/textAppearanceHeadline5"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
 
 
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/view_pager_bt_confirm"
-			style="@style/Widget.HappyApp.ContainedButton"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="Check this out"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_price" />
-	</androidx.constraintlayout.widget.ConstraintLayout>
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/view_pager_bt_confirm"
+				style="@style/Widget.HappyApp.ContainedButton"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Check this out"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_price" />
+		</androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

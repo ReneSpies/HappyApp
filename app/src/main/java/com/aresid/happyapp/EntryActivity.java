@@ -119,7 +119,7 @@ public class EntryActivity
 
 		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
 
-		vpSubscriptions.setAdapter(new ViewPagerAdapter(this));
+		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, vpSubscriptions));
 
 		btLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
