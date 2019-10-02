@@ -19,9 +19,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -136,6 +138,13 @@ public class EntryActivity
 		});
 		etRegistrationDateOfBirthField.setKeyListener(null);
 
+		mBillingClient = BillingClient.newBuilder(this)
+		                              .enablePendingPurchases()
+		                              .setListener(this)
+		                              .build();
+
+		mBillingClient.startConnection(this);
+		
 	}
 
 	@Override
@@ -429,12 +438,6 @@ public class EntryActivity
 
 		FirebaseUser user = mAuth.getCurrentUser();
 
-		BillingClient billingClient = BillingClient.newBuilder(this)
-		                                           .enablePendingPurchases()
-		                                           .setListener(this)
-		                                           .build();
-		billingClient.startConnection(this);
-
 		if (user != null) {
 
 			Log.d(TAG, "createUser: user != null");
@@ -456,9 +459,9 @@ public class EntryActivity
 
 						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
-						  addUsersSubscriptionVariantToFirestore(user, variant);
+//						  addUsersSubscriptionVariantToFirestore(user, variant);
 
-						  updateGoogleUser(user, username, dob);
+//						  updateGoogleUser(user, username, dob);
 
 					  } else {
 
@@ -1124,26 +1127,53 @@ public class EntryActivity
 
 		Log.d(TAG, "onBillingSetupFinished:true");
 
-		if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+		List<String> skuList = new ArrayList<>();
+		skuList.add("subscription.happyapp.gold");
 
-			List<String> skuList = new ArrayList<>();
-			skuList.add("subscriptions.happyapp.gold");
+		SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
 
-			SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+		params.setSkusList(skuList)
+		      .setType(BillingClient.SkuType.SUBS);
 
-			params.setSkusList(skuList)
-			      .setType(BillingClient.SkuType.SUBS);
+		mBillingClient.querySkuDetailsAsync(params.build(), (billingResult1, skuDetailsList) -> {
 
-			mBillingClient.querySkuDetailsAsync(params.build(), (billingResult1, skuDetailsList) -> {
+			Log.d(TAG, "onBillingSetupFinished: " + (billingResult1.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null));
 
-				Log.d(TAG, "onBillingSetupFinished:queried");
+			if (billingResult1.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
 
-				Log.d(TAG, "onBillingSetupFinished: sku details = " + skuDetailsList);
-				Log.d(TAG, "onBillingSetupFinished: billing result = " + billingResult1);
+				Log.d(TAG, "onBillingSetupFinished: sku details list = " + skuDetailsList);
 
-			});
+				for (SkuDetails skuDetails : skuDetailsList) {
 
-		}
+					String sku = skuDetails.getSku();
+					String price = skuDetails.getPrice();
+
+					BillingFlowParams flowParams = BillingFlowParams.newBuilder()
+					                                                .setSkuDetails(skuDetails)
+					                                                .build();
+
+					BillingResult responseCode = mBillingClient.launchBillingFlow(this, flowParams);
+
+					if ("subscriptions.happyapp.gold".equals(sku)) {
+
+						Log.d(TAG, "onBillingSetupFinished: sku = " + sku);
+						Log.d(TAG, "onBillingSetupFinished: sku price = " + price);
+
+						// subscriptionPrice = price
+
+					}
+
+				}
+
+			}
+
+			Log.d(TAG, "onBillingSetupFinished:queried");
+
+			Log.d(TAG, "onBillingSetupFinished: sku details = " + skuDetailsList);
+			Log.d(TAG, "onBillingSetupFinished: billing result = " + billingResult1);
+
+		});
+
 
 	}
 
