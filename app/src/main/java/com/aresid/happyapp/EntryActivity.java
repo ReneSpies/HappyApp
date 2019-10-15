@@ -12,49 +12,39 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class EntryActivity
 		extends AppCompatActivity
-		implements GoogleApiClient.OnConnectionFailedListener,
-		           ViewPagerAdapter.OnViewPagerInteractionListener,
+		implements ViewPagerAdapter.OnViewPagerInteractionListener,
 		           View.OnClickListener,
-		           PurchasesUpdatedListener,
-		           BillingClientStateListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener {
 
 	static final         String VP_TITLE_HAPPYAPP_FREE = "HappyApp Free";
@@ -74,6 +64,8 @@ public class EntryActivity
 	private int                mBackPressedHelper     = 0;
 	private int                mCreateUserHelper      = 0;
 	private int                mSubVariantHelper      = 0;
+	private BillingManager     mBillingManager;
+	private List<SkuDetails> mSkuDetailsList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -138,13 +130,38 @@ public class EntryActivity
 		});
 		etRegistrationDateOfBirthField.setKeyListener(null);
 
-		mBillingClient = BillingClient.newBuilder(this)
-		                              .enablePendingPurchases()
-		                              .setListener(this)
-		                              .build();
+		mBillingManager = new BillingManager(this);
 
-		mBillingClient.startConnection(this);
-		
+		handleManagerAndUiReady();
+
+	}
+
+	private void handleManagerAndUiReady() {
+
+		Log.d(TAG, "handleManagerAndUiReady:true");
+
+		List<String> skus = mBillingManager.getSkus(BillingClient.SkuType.SUBS);
+
+		SkuDetailsResponseListener responseListener = (billingResult, skuDetailsList) -> {
+
+			Log.d(TAG, "onSkuDetailsResponse:true");
+
+			if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
+
+				for (SkuDetails detail : skuDetailsList) {
+
+					Log.w(TAG, "onSkuDetailsResponse: got a sku: " + detail);
+
+					mSkuDetailsList.add(detail);
+
+				}
+
+			}
+
+		};
+
+		mBillingManager.querySkuDetailsAsync(BillingClient.SkuType.SUBS, skus, responseListener);
+
 	}
 
 	@Override
@@ -333,14 +350,6 @@ public class EntryActivity
 
 	}
 
-	private FirebaseFirestore getFirestoreInstance() {
-
-		Log.d(TAG, "getFirestoreInstance:true");
-
-		return FirebaseFirestore.getInstance();
-
-	}
-
 	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
 
 		Log.d(TAG, "updateGoogleUser:true");
@@ -370,6 +379,14 @@ public class EntryActivity
 			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 
 		  });
+
+	}
+
+	private FirebaseFirestore getFirestoreInstance() {
+
+		Log.d(TAG, "getFirestoreInstance:true");
+
+		return FirebaseFirestore.getInstance();
 
 	}
 
@@ -493,6 +510,12 @@ public class EntryActivity
 
 			Log.d(TAG, "createUser: new user");
 
+			if (mSkuDetailsList != null) {
+
+				mBillingManager.startPurchaseFlow(mSkuDetailsList.get(0));
+
+			}
+
 			if (evaluateNewUserInfo(firstName, username, familyName, email, password, dob)) {
 
 				etRegistrationFirstNameLayout.setEnabled(false);
@@ -511,6 +534,14 @@ public class EntryActivity
 				  .addOnSuccessListener(command -> {
 
 					  if (command.isEmpty()) {
+
+						  if (variant == 13) {
+
+							  Log.d(TAG, "createUser: variant is " + variant);
+
+							  mBillingManager.startPurchaseFlow(mSkuDetailsList.get(0));
+
+						  }
 
 						  FirebaseAuth.getInstance()
 						              .createUserWithEmailAndPassword(email, password)
@@ -540,13 +571,13 @@ public class EntryActivity
 
 							              // TODO
 
-							              if (e instanceof com.google.firebase.auth.FirebaseAuthUserCollisionException) {
+							              if (e instanceof FirebaseAuthUserCollisionException) {
 
 								              smoothScrollTo(etRegistrationUsernameLayout.getBottom());
 
 								              etRegistrationEmailLayout.setError(getString(R.string.plain_this_email_is_already_in_use));
 
-							              } else if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
+							              } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
 
 								              smoothScrollTo(etRegistrationUsernameLayout.getBottom());
 
@@ -1105,85 +1136,6 @@ public class EntryActivity
 		findViewById(R.id.entry_activity_registration_family_name_layout).setEnabled(true);
 		findViewById(R.id.entry_activity_registration_email_layout).setEnabled(true);
 		findViewById(R.id.entry_activity_registration_password_layout).setEnabled(true);
-
-	}
-
-	@Override
-	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-		Log.d(TAG, "onConnectionFailed:true");
-
-	}
-
-	@Override
-	public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
-
-		Log.d(TAG, "onPurchasesUpdated:true");
-
-	}
-
-	@Override
-	public void onBillingSetupFinished(BillingResult billingResult) {
-
-		Log.d(TAG, "onBillingSetupFinished:true");
-
-		List<String> skuList = new ArrayList<>();
-		skuList.add("subscription.happyapp.gold");
-
-		SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-
-		params.setSkusList(skuList)
-		      .setType(BillingClient.SkuType.SUBS);
-
-		mBillingClient.querySkuDetailsAsync(params.build(), (billingResult1, skuDetailsList) -> {
-
-			Log.d(TAG, "onBillingSetupFinished: " + (billingResult1.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null));
-
-			if (billingResult1.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
-
-				Log.d(TAG, "onBillingSetupFinished: sku details list = " + skuDetailsList);
-
-				for (SkuDetails skuDetails : skuDetailsList) {
-
-					String sku = skuDetails.getSku();
-					String price = skuDetails.getPrice();
-
-					BillingFlowParams flowParams = BillingFlowParams.newBuilder()
-					                                                .setSkuDetails(skuDetails)
-					                                                .build();
-
-					BillingResult responseCode = mBillingClient.launchBillingFlow(this, flowParams);
-
-					if ("subscriptions.happyapp.gold".equals(sku)) {
-
-						Log.d(TAG, "onBillingSetupFinished: sku = " + sku);
-						Log.d(TAG, "onBillingSetupFinished: sku price = " + price);
-
-						// subscriptionPrice = price
-
-					}
-
-				}
-
-			}
-
-			Log.d(TAG, "onBillingSetupFinished:queried");
-
-			Log.d(TAG, "onBillingSetupFinished: sku details = " + skuDetailsList);
-			Log.d(TAG, "onBillingSetupFinished: billing result = " + billingResult1);
-
-		});
-
-
-	}
-
-	@Override
-	public void onBillingServiceDisconnected() {
-
-		Log.d(TAG, "onBillingServiceDisconnected:true");
-
-		// Try to restart the connection on the next request to
-		// Google Play by calling the startConnection() method.
 
 	}
 
