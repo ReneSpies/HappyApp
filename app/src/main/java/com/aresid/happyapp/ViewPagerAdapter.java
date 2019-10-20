@@ -33,6 +33,7 @@ public class ViewPagerAdapter
 	private static final String                         TAG = "ViewPagerAdapter";
 	private static       View                           mCheckoutProcessingLayout;
 	private static       View                           mProcessingLayout;
+	private static       View                           mMainView;
 	private              LayoutInflater                 mInflater;
 	private              List<String>                   mTitles;
 	private              List<String>                   mDescriptions;
@@ -41,7 +42,6 @@ public class ViewPagerAdapter
 	private              int                            mVariant;
 	private              Context                        mContext;
 	private              ViewPager2                     mViewPager2;
-	private static       View                           mMainView;
 
 	ViewPagerAdapter(Context context, ViewPager2 viewPager2) {
 
@@ -72,43 +72,11 @@ public class ViewPagerAdapter
 
 	}
 
-	private static void setProcessingLayoutVisibility(int visibility) {
+	static void setCheckoutProcessingLayoutVisibility(int visibility) {
 
-		Log.d(TAG, "setProcessingLayoutVisibility:true");
+		Log.d(TAG, "setCheckoutProcessingLayoutVisibility:true");
 
-		switch (visibility) {
-
-			case View.INVISIBLE:
-
-				Log.d(TAG, "setProcessingLayoutVisibility: invisible");
-
-				mProcessingLayout.setVisibility(visibility);
-
-				mMainView.setVisibility(View.VISIBLE);
-
-				break;
-
-			case View.VISIBLE:
-
-				Log.d(TAG, "setProcessingLayoutVisibility: visible");
-
-				mProcessingLayout.setVisibility(visibility);
-
-				mMainView.setVisibility(View.INVISIBLE);
-
-				break;
-
-			case View.GONE:
-
-				Log.d(TAG, "setProcessingLayoutVisibility: gone");
-
-				mProcessingLayout.setVisibility(visibility);
-
-				mMainView.setVisibility(View.VISIBLE);
-
-				break;
-
-		}
+		mCheckoutProcessingLayout.setVisibility(visibility);
 
 	}
 
@@ -166,8 +134,6 @@ public class ViewPagerAdapter
 		holder.mTVPrice.setText(price);
 
 	}
-
-
 
 	@Override
 	public int getItemCount() {
@@ -232,11 +198,43 @@ public class ViewPagerAdapter
 
 	}
 
-	static void setCheckoutProcessingLayoutVisibility(int visibility) {
+	private static void setProcessingLayoutVisibility(int visibility) {
 
-		Log.d(TAG, "setCheckoutProcessingLayoutVisibility:true");
+		Log.d(TAG, "setProcessingLayoutVisibility:true");
 
-		mCheckoutProcessingLayout.setVisibility(visibility);
+		switch (visibility) {
+
+			case View.INVISIBLE:
+
+				Log.d(TAG, "setProcessingLayoutVisibility: invisible");
+
+				mProcessingLayout.setVisibility(visibility);
+
+				mMainView.setVisibility(View.VISIBLE);
+
+				break;
+
+			case View.VISIBLE:
+
+				Log.d(TAG, "setProcessingLayoutVisibility: visible");
+
+				mProcessingLayout.setVisibility(visibility);
+
+				mMainView.setVisibility(View.INVISIBLE);
+
+				break;
+
+			case View.GONE:
+
+				Log.d(TAG, "setProcessingLayoutVisibility: gone");
+
+				mProcessingLayout.setVisibility(visibility);
+
+				mMainView.setVisibility(View.VISIBLE);
+
+				break;
+
+		}
 
 	}
 
@@ -249,9 +247,9 @@ public class ViewPagerAdapter
 	class ViewHolder
 			extends RecyclerView.ViewHolder {
 
-		TextView       mTVTitle;
-		TextView       mTVDescription;
-		TextView       mTVPrice;
+		TextView mTVTitle;
+		TextView mTVDescription;
+		TextView mTVPrice;
 
 		ViewHolder(View itemView) {
 

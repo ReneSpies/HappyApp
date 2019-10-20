@@ -65,7 +65,7 @@ public class EntryActivity
 	private int                mCreateUserHelper      = 0;
 	private int                mSubVariantHelper      = 0;
 	private BillingManager     mBillingManager;
-	private List<SkuDetails> mSkuDetailsList;
+	private List<SkuDetails>   mSkuDetailsList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -131,36 +131,6 @@ public class EntryActivity
 		etRegistrationDateOfBirthField.setKeyListener(null);
 
 		mBillingManager = new BillingManager(this);
-
-		handleManagerAndUiReady();
-
-	}
-
-	private void handleManagerAndUiReady() {
-
-		Log.d(TAG, "handleManagerAndUiReady:true");
-
-		List<String> skus = mBillingManager.getSkus(BillingClient.SkuType.SUBS);
-
-		SkuDetailsResponseListener responseListener = (billingResult, skuDetailsList) -> {
-
-			Log.d(TAG, "onSkuDetailsResponse:true");
-
-			if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
-
-				for (SkuDetails detail : skuDetailsList) {
-
-					Log.w(TAG, "onSkuDetailsResponse: got a sku: " + detail);
-
-					mSkuDetailsList.add(detail);
-
-				}
-
-			}
-
-		};
-
-		mBillingManager.querySkuDetailsAsync(BillingClient.SkuType.SUBS, skus, responseListener);
 
 	}
 
@@ -350,6 +320,44 @@ public class EntryActivity
 
 	}
 
+	void handleManagerAndUiReady() {
+
+		Log.d(TAG, "handleManagerAndUiReady:true");
+
+		List<String> skus = mBillingManager.getSkus(BillingClient.SkuType.SUBS);
+
+		SkuDetailsResponseListener responseListener = (billingResult, skuDetailsList) -> {
+
+			Log.d(TAG, "onSkuDetailsResponse:true");
+
+			if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
+
+				Log.d(TAG, "handleManagerAndUiReady: billing result is ok");
+				Log.d(TAG, "handleManagerAndUiReady: detail list = " + skuDetailsList);
+
+				for (SkuDetails detail : skuDetailsList) {
+
+					Log.w(TAG, "onSkuDetailsResponse: got a sku: " + detail);
+
+					mSkuDetailsList.add(detail);
+
+				}
+
+			} else {
+
+				Log.w(TAG, "handleManagerAndUiReady: result or list not ok");
+
+				Log.d(TAG, "handleManagerAndUiReady: result = " + billingResult.getResponseCode());
+				Log.d(TAG, "handleManagerAndUiReady: details list = " + skuDetailsList);
+
+			}
+
+		};
+
+		mBillingManager.querySkuDetailsAsync(BillingClient.SkuType.SUBS, skus, responseListener);
+
+	}
+
 	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
 
 		Log.d(TAG, "updateGoogleUser:true");
@@ -511,6 +519,9 @@ public class EntryActivity
 			Log.d(TAG, "createUser: new user");
 
 			if (mSkuDetailsList != null) {
+
+				Log.d(TAG, "createUser: rip details list");
+				Log.d(TAG, "createUser: details list = " + mSkuDetailsList);
 
 				mBillingManager.startPurchaseFlow(mSkuDetailsList.get(0));
 

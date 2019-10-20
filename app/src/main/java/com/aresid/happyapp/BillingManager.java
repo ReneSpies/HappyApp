@@ -29,7 +29,7 @@ import java.util.List;
 public class BillingManager
 		implements PurchasesUpdatedListener {
 
-	private static final String        TAG = "BillingManager";
+	private static final String                        TAG = "BillingManager";
 	private static final HashMap<String, List<String>> SKUS;
 
 	static {
@@ -41,8 +41,8 @@ public class BillingManager
 
 	}
 
-	private              Activity      mActivity;
-	private              BillingClient mBillingClient;
+	private Activity      mActivity;
+	private BillingClient mBillingClient;
 
 	BillingManager(Activity activity) {
 
@@ -64,11 +64,11 @@ public class BillingManager
 
 				if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 
-					Log.i(TAG, "onBillingSetupFinished: result = " + billingResult);
+					Log.i(TAG, "onBillingSetupFinished: result = " + billingResult.getResponseCode());
 
 				} else {
 
-					Log.w(TAG, "onBillingSetupFinished: result = " + billingResult);
+					Log.w(TAG, "onBillingSetupFinished: result = " + billingResult.getResponseCode());
 
 				}
 
@@ -93,7 +93,8 @@ public class BillingManager
 		                                            .setSkuDetails(skuDetails)
 		                                            .build();
 
-		int responseCode = mBillingClient.launchBillingFlow(mActivity, params).getResponseCode();
+		int responseCode = mBillingClient.launchBillingFlow(mActivity, params)
+		                                 .getResponseCode();
 
 	}
 
@@ -116,7 +117,13 @@ public class BillingManager
 		                                          .setType(skuType)
 		                                          .build();
 
-		mBillingClient.querySkuDetailsAsync(params, listener);
+		Log.d(TAG, "querySkuDetailsAsync: is ready " + mBillingClient.isReady());
+
+		if (mBillingClient.isReady()) {
+
+			mBillingClient.querySkuDetailsAsync(params, listener);
+
+		}
 
 	}
 
