@@ -78,6 +78,7 @@ public class EntryActivity
 		// Instantiate FirebaseAuth.
 		mAuth = FirebaseAuth.getInstance();
 		mAuth.addAuthStateListener(firebaseAuth -> {
+			// this is to reset the loading screen when a user logs out.
 
 			Log.d(TAG, "onCreate: auth state changed");
 
@@ -94,8 +95,6 @@ public class EntryActivity
 		// Load waiting assistant into ImageViews.
 		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
 		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
-//		loadGifInto(findViewById(R.id.entry_activity_checkout_waiting_assistant));
-//		loadGifInto(findViewById(R.id.entry_activity_subscription_waiting_assistant));
 
 		// Configure Google Sign In.
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getResources().getString(R.string.default_web_client_id))
@@ -109,16 +108,18 @@ public class EntryActivity
 		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
 		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
-//		Button btCheckOut = findViewById(R.id.entry_activity_subscription_check_out_button);
-
 		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
 
 		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, vpSubscriptions));
 
 		btLogin.setOnClickListener(this);
-		sv.setSmoothScrollingEnabled(true);
 		btGoogleLogin.setOnClickListener(this);
+		sv.setSmoothScrollingEnabled(true);
+
+		// the click listener is required to let the datepicker pop up when its clicked.
 		etRegistrationDateOfBirthField.setOnClickListener(this);
+
+		// the focus listener is required to let the datepicker pop up when its focused.
 		etRegistrationDateOfBirthField.setOnFocusChangeListener((v, hasFocus) -> {
 
 			if (hasFocus) {
@@ -128,6 +129,8 @@ public class EntryActivity
 			}
 
 		});
+
+		// this is required so the keyboard wont show up.
 		etRegistrationDateOfBirthField.setKeyListener(null);
 
 		mBillingManager = new BillingManager(this);
@@ -141,6 +144,7 @@ public class EntryActivity
 
 		super.onStart();
 
+		// checks if user has signed in before.
 		FirebaseUser user = FirebaseAuth.getInstance()
 		                                .getCurrentUser();
 
@@ -175,8 +179,10 @@ public class EntryActivity
 
 				    Log.d(TAG, "updateUI: success");
 
+				    // cancels the toast after user has been reloaded.
 				    toast.cancel();
 
+				    // checks if user already has a username and date of birth set.
 				    Task<DocumentSnapshot> task = FirebaseFirestore.getInstance()
 				                                                   .collection(FirestoreNames.COLLECTION_USERS)
 				                                                   .document(user.getUid())
@@ -191,9 +197,15 @@ public class EntryActivity
 
 							    startMainActivity(user);
 
+							    // changes from loading screen after user has been directed to the main activity.
+							    changeFromLoadingScreen();
+
 						    } else {
 
 							    startEmailVerificationActivity(user);
+
+							    // changes from loading screen after user has been directed to the email verification.
+							    changeFromLoadingScreen();
 
 						    }
 
@@ -208,6 +220,8 @@ public class EntryActivity
 				    })
 				        .addOnFailureListener(e -> {
 
+					        // if user is not found somehow.
+
 					        Log.d(TAG, "updateUI: failure");
 
 					        Log.e(TAG, "updateUI: ", e);
@@ -217,6 +231,8 @@ public class EntryActivity
 			    })
 			    .addOnFailureListener(e -> {
 
+				    // if user info cannot be reloaded somehow.
+
 				    Log.d(TAG, "updateUI: failure");
 				    Log.e(TAG, "updateUI: ", e);
 
@@ -224,11 +240,15 @@ public class EntryActivity
 
 				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
 
+					    // if user has been deleted in the meantime.
+
 					    Toast.makeText(this, getString(R.string.contraction_user_not_found), Toast.LENGTH_LONG)
 					         .show();
 
+					    // log non-existing user out.
 					    mAuth.signOut();
 
+					    // change to normal screen after logout.
 					    changeFromLoadingScreen();
 
 				    }
@@ -239,6 +259,8 @@ public class EntryActivity
 
 			Log.d(TAG, "updateUI: user == null");
 
+			// no user logged in.
+
 			// TODO
 
 			changeFromLoadingScreen();
@@ -247,6 +269,9 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Changes to loading screen.
+	 */
 	private void changeToLoadingScreen() {
 
 		Log.d(TAG, "changeToLoadingScreen:true");
@@ -256,6 +281,10 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Starts main activity.
+	 * @param user Firebase user.
+	 */
 	void startMainActivity(FirebaseUser user) {
 
 		Log.d(TAG, "startMainActivity:true");
@@ -267,6 +296,10 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Starts new activity to tell the user to verify his email.
+	 * @param user Firebase user.
+	 */
 	void startEmailVerificationActivity(FirebaseUser user) {
 
 		Log.d(TAG, "startEmailVerificationActivity:true");
@@ -278,6 +311,9 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Changes EditTexts to Google registration input since Google account do not have a username or date of birth yet.
+	 */
 	private void changeToGoogleRegistration() {
 
 		Log.d(TAG, "changeToGoogleRegistration:true");
@@ -291,6 +327,10 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Moves the screen to the desired position y.
+	 * @param y Desired position to be at. Mostly view.getTop();
+	 */
 	private void smoothScrollTo(float y) {
 
 		Log.d(TAG, "smoothScrollTo:true");
@@ -301,6 +341,9 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Changes from loading screen back to normal.
+	 */
 	private void changeFromLoadingScreen() {
 
 		Log.d(TAG, "changeFromLoadingScreen:true");
@@ -310,6 +353,10 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Loads drawable waiting assistant into @param view.
+	 * @param view the view to display the gif.
+	 */
 	private void loadGifInto(ImageView view) {
 
 		Log.d(TAG, "loadGifInto:true");
@@ -320,6 +367,9 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Some fancy stuff I got from the internet that does Google billing flow.
+	 */
 	void handleManagerAndUiReady() {
 
 		Log.d(TAG, "handleManagerAndUiReady:true");
@@ -358,6 +408,12 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Updates Google's user account in the Firestore.
+	 * @param user The user to load the user.getUid() into the database.
+	 * @param username The username to load into the database.
+	 * @param dob The Date of birth to load into the database.
+	 */
 	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
 
 		Log.d(TAG, "updateGoogleUser:true");
@@ -390,6 +446,10 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Returns fresh new firestore instance.
+	 * @return Fresh new firestore instance.
+	 */
 	private FirebaseFirestore getFirestoreInstance() {
 
 		Log.d(TAG, "getFirestoreInstance:true");
@@ -398,6 +458,11 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Adds users subscription variant to his account info in the database.
+	 * @param user The corresponding user.
+	 * @param variant The variant he subscribed.
+	 */
 	private void addUsersSubscriptionVariantToFirestore(FirebaseUser user, int variant) {
 
 		Log.d(TAG, "addUsersSubscriptionVariantToFirestore:true");
@@ -427,6 +492,10 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Now this does some fancy stuff. Checks if all the data is correct and then proceeds to Google billing flow.
+	 * @param variant The subscription variant.
+	 */
 	@Override
 	public void createUser(int variant) {
 
@@ -642,6 +711,10 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Starts email verification activity to tell the Google user to verify his email.
+	 * @param user The corresponding user.
+	 */
 	private void startGoogleEmailVerificationActivity(FirebaseUser user) {
 
 		Log.d(TAG, "startGoogleEmailVerificationActivity:true");
@@ -653,6 +726,12 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * This method checks if the given input is correct to create a Google user.
+	 * @param username The username.
+	 * @param dob The date of birth.
+	 * @return True if data is fitting.
+	 */
 	private boolean evaluateGoogleUserInfo(String username, String dob) {
 
 		Log.d(TAG, "evaluateGoogleUserInfo:true");
@@ -703,6 +782,16 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * This method checks if the given input is correct to create a new user.
+	 * @param firstName Users first name. Must be > 0 and cannot start with space.
+	 * @param username Users username. Must be > 0 and cannot start with space.
+	 * @param familyName Users family name. Must be > 0 and cannot start with space.
+	 * @param email Users email. Must be > 0 and cannot start with space.
+	 * @param password Users password. Must be > 6 and cannot start with space.
+	 * @param dob Users date of birth. Must be > 0.
+	 * @return True if everything is fitting.
+	 */
 	private boolean evaluateNewUserInfo(String firstName, String username, String familyName, String email, String password, String dob) {
 
 		Log.d(TAG, "evaluateNewUserInfo:true");
@@ -827,6 +916,16 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * This method saves users info in firestore upon registration.
+	 * @param user The user to save the Uid.
+	 * @param firstName Users first name.
+	 * @param familyName Users family name.
+	 * @param username Users username.
+	 * @param email Users email.
+	 * @param dob Users date of birth.
+	 * @param profilePicture Users profile picture.
+	 */
 	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username, String email, String dob, String profilePicture) {
 
 		Log.d(TAG, "saveUserInFirestore:true");
@@ -882,8 +981,13 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * This method handles what happens on back pressed.
+	 */
 	@Override
 	public void onBackPressed() {
+
+		// I want to have the user click 2 times back when he wants to leave the app.
 
 		Log.d(TAG, "onBackPressed:true");
 
@@ -923,6 +1027,10 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Handles all the on click methods.
+	 * @param v The view that called this.
+	 */
 	@Override
 	public void onClick(View v) {
 
@@ -957,6 +1065,9 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * This method logs the user in.
+	 */
 	public void loginUser() {
 
 		Log.d(TAG, "loginWithUser:true");
@@ -1031,6 +1142,9 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * This method resets all the layout errors in the registration form.
+	 */
 	private void setLayoutErrorsNull() {
 
 		Log.d(TAG, "setLayoutErrorsNull:true");
@@ -1097,6 +1211,10 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Registers a new firebase user via Google sign in.
+	 * @param account The Google account.
+	 */
 	private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
 
 		Log.d(TAG, "firebaseAuthWithGoogleAccount:true");
@@ -1139,6 +1257,9 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * Changes the view from Google registration restriction.
+	 */
 	private void changeFromGoogleRegistration() {
 
 		Log.d(TAG, "changeFromGoogleRegistration:true");
@@ -1150,7 +1271,11 @@ public class EntryActivity
 
 	}
 
-	@Override
+	/**
+	 * This method evaluates an online time and saves it to the users account in the database.
+	 * @param time Timestamp to save.
+	 * @param uid Corresponding user.
+	 */
 	public void addTimeToFirestoreEntry(Date time, String uid) {
 
 		FirebaseFirestore db = FirebaseFirestore.getInstance();
