@@ -283,6 +283,7 @@ public class EntryActivity
 
 	/**
 	 * Starts main activity.
+	 *
 	 * @param user Firebase user.
 	 */
 	void startMainActivity(FirebaseUser user) {
@@ -298,6 +299,7 @@ public class EntryActivity
 
 	/**
 	 * Starts new activity to tell the user to verify his email.
+	 *
 	 * @param user Firebase user.
 	 */
 	void startEmailVerificationActivity(FirebaseUser user) {
@@ -329,6 +331,7 @@ public class EntryActivity
 
 	/**
 	 * Moves the screen to the desired position y.
+	 *
 	 * @param y Desired position to be at. Mostly view.getTop();
 	 */
 	private void smoothScrollTo(float y) {
@@ -355,6 +358,7 @@ public class EntryActivity
 
 	/**
 	 * Loads drawable waiting assistant into @param view.
+	 *
 	 * @param view the view to display the gif.
 	 */
 	private void loadGifInto(ImageView view) {
@@ -410,9 +414,10 @@ public class EntryActivity
 
 	/**
 	 * Updates Google's user account in the Firestore.
-	 * @param user The user to load the user.getUid() into the database.
+	 *
+	 * @param user     The user to load the user.getUid() into the database.
 	 * @param username The username to load into the database.
-	 * @param dob The Date of birth to load into the database.
+	 * @param dob      The Date of birth to load into the database.
 	 */
 	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
 
@@ -448,6 +453,7 @@ public class EntryActivity
 
 	/**
 	 * Returns fresh new firestore instance.
+	 *
 	 * @return Fresh new firestore instance.
 	 */
 	private FirebaseFirestore getFirestoreInstance() {
@@ -460,7 +466,8 @@ public class EntryActivity
 
 	/**
 	 * Adds users subscription variant to his account info in the database.
-	 * @param user The corresponding user.
+	 *
+	 * @param user    The corresponding user.
 	 * @param variant The variant he subscribed.
 	 */
 	private void addUsersSubscriptionVariantToFirestore(FirebaseUser user, int variant) {
@@ -494,6 +501,7 @@ public class EntryActivity
 
 	/**
 	 * Now this does some fancy stuff. Checks if all the data is correct and then proceeds to Google billing flow.
+	 *
 	 * @param variant The subscription variant.
 	 */
 	@Override
@@ -713,6 +721,7 @@ public class EntryActivity
 
 	/**
 	 * Starts email verification activity to tell the Google user to verify his email.
+	 *
 	 * @param user The corresponding user.
 	 */
 	private void startGoogleEmailVerificationActivity(FirebaseUser user) {
@@ -728,8 +737,9 @@ public class EntryActivity
 
 	/**
 	 * This method checks if the given input is correct to create a Google user.
+	 *
 	 * @param username The username.
-	 * @param dob The date of birth.
+	 * @param dob      The date of birth.
 	 * @return True if data is fitting.
 	 */
 	private boolean evaluateGoogleUserInfo(String username, String dob) {
@@ -784,12 +794,13 @@ public class EntryActivity
 
 	/**
 	 * This method checks if the given input is correct to create a new user.
-	 * @param firstName Users first name. Must be > 0 and cannot start with space.
-	 * @param username Users username. Must be > 0 and cannot start with space.
+	 *
+	 * @param firstName  Users first name. Must be > 0 and cannot start with space.
+	 * @param username   Users username. Must be > 0 and cannot start with space.
 	 * @param familyName Users family name. Must be > 0 and cannot start with space.
-	 * @param email Users email. Must be > 0 and cannot start with space.
-	 * @param password Users password. Must be > 6 and cannot start with space.
-	 * @param dob Users date of birth. Must be > 0.
+	 * @param email      Users email. Must be > 0 and cannot start with space.
+	 * @param password   Users password. Must be > 6 and cannot start with space.
+	 * @param dob        Users date of birth. Must be > 0.
 	 * @return True if everything is fitting.
 	 */
 	private boolean evaluateNewUserInfo(String firstName, String username, String familyName, String email, String password, String dob) {
@@ -918,12 +929,13 @@ public class EntryActivity
 
 	/**
 	 * This method saves users info in firestore upon registration.
-	 * @param user The user to save the Uid.
-	 * @param firstName Users first name.
-	 * @param familyName Users family name.
-	 * @param username Users username.
-	 * @param email Users email.
-	 * @param dob Users date of birth.
+	 *
+	 * @param user           The user to save the Uid.
+	 * @param firstName      Users first name.
+	 * @param familyName     Users family name.
+	 * @param username       Users username.
+	 * @param email          Users email.
+	 * @param dob            Users date of birth.
 	 * @param profilePicture Users profile picture.
 	 */
 	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username, String email, String dob, String profilePicture) {
@@ -1029,6 +1041,7 @@ public class EntryActivity
 
 	/**
 	 * Handles all the on click methods.
+	 *
 	 * @param v The view that called this.
 	 */
 	@Override
@@ -1213,6 +1226,7 @@ public class EntryActivity
 
 	/**
 	 * Registers a new firebase user via Google sign in.
+	 *
 	 * @param account The Google account.
 	 */
 	private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
@@ -1273,8 +1287,9 @@ public class EntryActivity
 
 	/**
 	 * This method evaluates an online time and saves it to the users account in the database.
+	 *
 	 * @param time Timestamp to save.
-	 * @param uid Corresponding user.
+	 * @param uid  Corresponding user.
 	 */
 	public void addTimeToFirestoreEntry(Date time, String uid) {
 
