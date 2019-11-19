@@ -1,8 +1,10 @@
 package com.aresid.happyapp;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +28,8 @@ public class SubscriptionPool {
 
 		// Constructor
 
+		mSubscriptions = new ArrayList<>();
+
 	}
 
 	/**
@@ -36,11 +40,27 @@ public class SubscriptionPool {
 	 * @param price       How much will your subscription cost?
 	 * @param icon        A beautiful picture for this subscription.
 	 */
-	void addSubscription(String title, String description, float price, Bitmap icon) {
+	void addSubscription(String title, String description, double price, Drawable icon) {
 
 		Log.d(TAG, "addSubscription:true");
 
-		Subscription subscription = new Subscription(title, description, price);
+		mSubscriptions.add(new Subscription(title, description, price, icon));
+
+	}
+
+	/**
+	 * This method lets you add a new subscription object to the subscription pool with bulletpoints.
+	 *
+	 * @param title        How you call your subscription.
+	 * @param price        How much will your subscription cost?
+	 * @param icon         A beautiful picture for this subscription.
+	 * @param bulletpoints What does your subscription do in bulletpoints.
+	 */
+	void addSubscription(String title, double price, Drawable icon, String... bulletpoints) {
+
+		Log.d(TAG, "addSubscriptoin: with bulletpoints");
+
+		mSubscriptions.add(new Subscription(title, price, icon, bulletpoints));
 
 	}
 
@@ -59,7 +79,7 @@ public class SubscriptionPool {
 	}
 
 	/**
-	 * Getter for count of all subscriptions in the pool.
+	 * Getter for count of all subscriptions in the pool starting at 0.
 	 *
 	 * @return Int count.
 	 */
@@ -67,7 +87,7 @@ public class SubscriptionPool {
 
 		Log.d(TAG, "getSubscriptions:true");
 
-		return 0;
+		return mSubscriptions.size();
 
 	}
 
@@ -81,7 +101,7 @@ public class SubscriptionPool {
 
 		Log.d(TAG, "getSubscription:true");
 
-		return null;
+		return mSubscriptions.get(index);
 
 	}
 

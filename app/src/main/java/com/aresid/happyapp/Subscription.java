@@ -1,5 +1,6 @@
 package com.aresid.happyapp;
 
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -19,7 +20,7 @@ class Subscription {
 	private String       mPrice;
 	private boolean      mHasBulletpoints;
 	private List<String> mBulletspoints;
-	// TODO: Icon needed. Bitmap or Image.
+	private Drawable     mIcon;
 
 	// TODO: subscription object. think rené, think!
 
@@ -62,13 +63,62 @@ class Subscription {
 
 	}
 
-	Subscription(String title, String description, float price) {
+	Subscription(String title, String description, double price, Drawable icon) {
 
 		Log.d(TAG, "Subscription: constructor without bulletpoints");
 
 		setTitle(title);
-		setBulletpoints(description);
+		setDescription(description);
 		setPrice(price);
+		setIcon(icon);
+
+	}
+
+	/**
+	 * Sets the subscriptions title to the given String.
+	 *
+	 * @param title Your desired title name.
+	 */
+	void setTitle(String title) {
+
+		Log.d(TAG, "setTitle:true");
+
+		mTitle = title;
+
+	}
+
+	Subscription(String title, double price, Drawable icon, String... bulletpoints) {
+
+		Log.d(TAG, "Subscription: constructor with bulletpoints");
+
+		setTitle(title);
+		setPrice(price);
+		setIcon(icon);
+		setBulletpoints(bulletpoints);
+
+	}
+
+	/**
+	 * Sets the subscriptions description to the given String as bulletpoints.
+	 * Throws IllegalStateException if subscription already has a description.
+	 *
+	 * @param bulletpoints Your desired bulletpoints.
+	 */
+	void setBulletpoints(String... bulletpoints) {
+
+		Log.d(TAG, "setBulletpoints:true");
+
+		if (getDescription() == null) {
+
+			mBulletspoints.addAll(Arrays.asList(bulletpoints));
+
+			setHasBulletpoints(true);
+
+		} else {
+
+			throw new IllegalStateException("Subscription already has bulletpoints");
+
+		}
 
 	}
 
@@ -86,51 +136,52 @@ class Subscription {
 	}
 
 	/**
-	 * Sets the subscriptions title to the given String.
-	 *
-	 * @param title Your desired title name.
-	 */
-	void setTitle(String title) {
-
-		Log.d(TAG, "setTitle:true");
-
-		mTitle = title;
-
-	}
-
-	/**
 	 * Sets the subscriptions description to the given String as a single text.
+	 * Throws IllegalStateException if subscription already has bulletpoints.
 	 *
 	 * @param description Your desired description as text.
 	 */
-	void setBulletpoints(String description) {
+	void setDescription(String description) {
 
-		Log.d(TAG, "setBulletpoints:true");
+		Log.d(TAG, "setDescription:true");
 
-		mDescription = description;
+		if (mBulletspoints == null || !mHasBulletpoints) {
+
+			mDescription = description;
+
+			setHasBulletpoints(false);
+
+		} else {
+
+			throw new IllegalStateException("Subscription already has bulletpoints");
+
+		}
 
 	}
 
 	/**
-	 * Sets the subscriptions price to the given float and converts it to a String.
+	 * Returns the subscriptions icon.
 	 *
-	 * @param price Your desired price.
+	 * @return Icon.
 	 */
-	void setPrice(float price) {
+	Drawable getIcon() {
 
-		Log.d(TAG, "setPrice:true");
+		Log.d(TAG, "getIcon:true");
 
-		mPrice = price + "$";
+		return mIcon;
 
 	}
 
-	Subscription(String title, float price, String... bulletpoints) {
+	/**
+	 * Sets the subscriptions icon to the given drawable.
+	 *
+	 * @param icon Your desired icon.
+	 */
+	void setIcon(Drawable icon) {
 
-		Log.d(TAG, "Subscription: constructor with bulletpoints");
+		Log.d(TAG, "setIcon:true");
 
-		setTitle(title);
-		setPrice(price);
-		setBulletpoints(bulletpoints);
+		mIcon = icon;
 
 	}
 
@@ -148,15 +199,15 @@ class Subscription {
 	}
 
 	/**
-	 * Sets the subscriptions description to the given String as bulletpoints.
+	 * Sets the subscriptions price to the given float and converts it to a String.
 	 *
-	 * @param bulletpoints Your desired bulletpoints.
+	 * @param price Your desired price.
 	 */
-	void setBulletpoints(String... bulletpoints) {
+	void setPrice(double price) {
 
-		Log.d(TAG, "setBulletpoints:true");
+		Log.d(TAG, "setPrice:true");
 
-		mBulletspoints.addAll(Arrays.asList(bulletpoints));
+		mPrice = price + "$";
 
 	}
 

@@ -42,6 +42,7 @@ public class ViewPagerAdapter
 	private              int                            mVariant;
 	private              Context                        mContext;
 	private              ViewPager2                     mViewPager2;
+	private              SubscriptionPool               mSubscriptionPool;
 
 	ViewPagerAdapter(Context context, ViewPager2 viewPager2) {
 
@@ -49,6 +50,10 @@ public class ViewPagerAdapter
 
 		mInflater = LayoutInflater.from(context);
 		mViewPager2 = viewPager2;
+
+		mSubscriptionPool = new SubscriptionPool();
+		mSubscriptionPool.addSubscription("HappyApp Free", "dis shit free", 0.00, context.getResources()
+		                                                                                 .getDrawable(R.drawable.ic_app_logo));
 
 		Collection<String> collection = new ArrayList<>();
 		collection.add(context.getString(R.string.plain_processing));
@@ -125,9 +130,16 @@ public class ViewPagerAdapter
 
 		Log.d(TAG, "onBindViewHolder:true");
 
-		String title = mTitles.get(position);
-		String description = mDescriptions.get(position);
-		String price = mPrices.get(position);
+		String title = mSubscriptionPool.getSubscription(position)
+		                                .getTitle();
+		String description = mSubscriptionPool.getSubscription(position)
+		                                      .getDescription();
+		String price = mSubscriptionPool.getSubscription(position)
+		                                .getPrice();
+
+		Log.d(TAG, "onBindViewHolder: title = " + title);
+		Log.d(TAG, "onBindViewHolder: description = " + description);
+		Log.d(TAG, "onBindViewHolder: price = " + price);
 
 		holder.mTVTitle.setText(title);
 		holder.mTVDescription.setText(description);
@@ -140,7 +152,8 @@ public class ViewPagerAdapter
 
 		Log.d(TAG, "getItemCount:true");
 
-		return mTitles.size();
+		Log.d(TAG, "getItemCount: " + mSubscriptionPool.getSubscriptionCount());
+		return mSubscriptionPool.getSubscriptionCount();
 
 	}
 
