@@ -3,6 +3,8 @@ package com.aresid.happyapp;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.util.List;
+
 /**
  * Created on: 13/11/2019
  * For Project: HappyApp
@@ -11,6 +13,8 @@ import android.util.Log;
  */
 
 public class SubscriptionPool {
+
+	private List<Subscription> mSubscriptions;
 
 	// TODO: think what i wanna do here lol
 
@@ -32,9 +36,11 @@ public class SubscriptionPool {
 	 * @param price       How much will your subscription cost?
 	 * @param icon        A beautiful picture for this subscription.
 	 */
-	void addSubscription(String title, String description, String price, Bitmap icon) {
+	void addSubscription(String title, String description, float price, Bitmap icon) {
 
 		Log.d(TAG, "addSubscription:true");
+
+		Subscription subscription = new Subscription(title, description, price);
 
 	}
 

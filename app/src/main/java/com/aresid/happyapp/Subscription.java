@@ -2,6 +2,7 @@ package com.aresid.happyapp;
 
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -11,13 +12,14 @@ import java.util.List;
  * Copyright: © 2019 Ares ID
  */
 
-public class Subscription {
+class Subscription {
 
 	private String       mTitle;
 	private String       mDescription;
 	private String       mPrice;
 	private boolean      mHasBulletpoints;
 	private List<String> mBulletspoints;
+	// TODO: Icon needed. Bitmap or Image.
 
 	// TODO: subscription object. think rené, think!
 
@@ -28,7 +30,7 @@ public class Subscription {
 	 */
 	Subscription() {
 
-		Log.d(TAG, "Subscription:true");
+		Log.d(TAG, "Subscription: empty constructor");
 
 		// constructor!
 
@@ -60,14 +62,13 @@ public class Subscription {
 
 	}
 
-	/**
-	 * Sets the subscriptions title to the given String.
-	 *
-	 * @param title Your desired title name.
-	 */
-	void setTitle(String title) {
+	Subscription(String title, String description, float price) {
 
-		Log.d(TAG, "setTitle:true");
+		Log.d(TAG, "Subscription: constructor without bulletpoints");
+
+		setTitle(title);
+		setBulletpoints(description);
+		setPrice(price);
 
 	}
 
@@ -85,24 +86,51 @@ public class Subscription {
 	}
 
 	/**
-	 * Sets the subscriptions description to the given String as a single text.
+	 * Sets the subscriptions title to the given String.
 	 *
-	 * @param description Your desired description as text.
+	 * @param title Your desired title name.
 	 */
-	void setDescription(String description) {
+	void setTitle(String title) {
 
-		Log.d(TAG, "setDescription:true");
+		Log.d(TAG, "setTitle:true");
+
+		mTitle = title;
 
 	}
 
 	/**
-	 * Sets the subscriptions description to the given String as bulletpoints.
+	 * Sets the subscriptions description to the given String as a single text.
 	 *
-	 * @param bulletpoints Your desired bulletpoints.
+	 * @param description Your desired description as text.
 	 */
-	void setDescription(String... bulletpoints) {
+	void setBulletpoints(String description) {
 
-		Log.d(TAG, "setDescription:true");
+		Log.d(TAG, "setBulletpoints:true");
+
+		mDescription = description;
+
+	}
+
+	/**
+	 * Sets the subscriptions price to the given float and converts it to a String.
+	 *
+	 * @param price Your desired price.
+	 */
+	void setPrice(float price) {
+
+		Log.d(TAG, "setPrice:true");
+
+		mPrice = price + "$";
+
+	}
+
+	Subscription(String title, float price, String... bulletpoints) {
+
+		Log.d(TAG, "Subscription: constructor with bulletpoints");
+
+		setTitle(title);
+		setPrice(price);
+		setBulletpoints(bulletpoints);
 
 	}
 
@@ -120,13 +148,15 @@ public class Subscription {
 	}
 
 	/**
-	 * Sets the subscriptions price to the given float and converts it to a String.
+	 * Sets the subscriptions description to the given String as bulletpoints.
 	 *
-	 * @param price Your desired price.
+	 * @param bulletpoints Your desired bulletpoints.
 	 */
-	void setPrice(float price) {
+	void setBulletpoints(String... bulletpoints) {
 
-		Log.d(TAG, "setPrice:true");
+		Log.d(TAG, "setBulletpoints:true");
+
+		mBulletspoints.addAll(Arrays.asList(bulletpoints));
 
 	}
 
