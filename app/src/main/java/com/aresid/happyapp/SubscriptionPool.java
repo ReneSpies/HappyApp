@@ -1,10 +1,10 @@
 package com.aresid.happyapp;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -14,7 +14,7 @@ import java.util.List;
  * Copyright: © 2019 Ares ID
  */
 
-public class SubscriptionPool {
+class SubscriptionPool {
 
 	private List<Subscription> mSubscriptions;
 
@@ -40,11 +40,19 @@ public class SubscriptionPool {
 	 * @param price       How much will your subscription cost?
 	 * @param icon        A beautiful picture for this subscription.
 	 */
-	void addSubscription(String title, String description, double price, Drawable icon) {
+	void addSubscription(String title, String description, String price, Drawable icon) {
 
 		Log.d(TAG, "addSubscription:true");
 
 		mSubscriptions.add(new Subscription(title, description, price, icon));
+
+	}
+
+	void addSubscriptions(Collection<? extends Subscription> subscriptions) {
+
+		Log.d(TAG, "addSubscriptions:true");
+
+		mSubscriptions.addAll(subscriptions);
 
 	}
 
@@ -56,25 +64,11 @@ public class SubscriptionPool {
 	 * @param icon         A beautiful picture for this subscription.
 	 * @param bulletpoints What does your subscription do in bulletpoints.
 	 */
-	void addSubscription(String title, double price, Drawable icon, String... bulletpoints) {
+	void addSubscription(String title, String price, Drawable icon, String... bulletpoints) {
 
 		Log.d(TAG, "addSubscriptoin: with bulletpoints");
 
 		mSubscriptions.add(new Subscription(title, price, icon, bulletpoints));
-
-	}
-
-	/**
-	 * This method lets you add a new subscription object to the subscription pool with bulletpoint description.
-	 *
-	 * @param title        How you call the subscription.
-	 * @param bulletpoints What does your subscription do?
-	 * @param price        How much will your subscription cost?
-	 * @param icon         A beautiful picture for this subscription.
-	 */
-	void addSubscription(String title, String price, Bitmap icon, String... bulletpoints) {
-
-		Log.d(TAG, "addSubscription:true");
 
 	}
 

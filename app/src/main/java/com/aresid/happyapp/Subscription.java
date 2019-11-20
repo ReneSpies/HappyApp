@@ -63,7 +63,7 @@ class Subscription {
 
 	}
 
-	Subscription(String title, String description, double price, Drawable icon) {
+	Subscription(String title, String description, String price, Drawable icon) {
 
 		Log.d(TAG, "Subscription: constructor without bulletpoints");
 
@@ -87,14 +87,16 @@ class Subscription {
 
 	}
 
-	Subscription(String title, double price, Drawable icon, String... bulletpoints) {
+	/**
+	 * Sets the subscriptions price to the given float and converts it to a String.
+	 *
+	 * @param price Your desired price.
+	 */
+	void setPrice(String price) {
 
-		Log.d(TAG, "Subscription: constructor with bulletpoints");
+		Log.d(TAG, "setPrice:true");
 
-		setTitle(title);
-		setPrice(price);
-		setIcon(icon);
-		setBulletpoints(bulletpoints);
+		mPrice = price;
 
 	}
 
@@ -198,16 +200,14 @@ class Subscription {
 
 	}
 
-	/**
-	 * Sets the subscriptions price to the given float and converts it to a String.
-	 *
-	 * @param price Your desired price.
-	 */
-	void setPrice(double price) {
+	Subscription(String title, String price, Drawable icon, String... bulletpoints) {
 
-		Log.d(TAG, "setPrice:true");
+		Log.d(TAG, "Subscription: constructor with bulletpoints");
 
-		mPrice = price + "$";
+		setTitle(title);
+		setPrice(price);
+		setIcon(icon);
+		setBulletpoints(bulletpoints);
 
 	}
 

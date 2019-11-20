@@ -1,6 +1,7 @@
 package com.aresid.happyapp;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,9 +52,14 @@ public class ViewPagerAdapter
 		mInflater = LayoutInflater.from(context);
 		mViewPager2 = viewPager2;
 
+		Drawable appIhrLogo = context.getDrawable(R.drawable.ic_app_logo);
+
 		mSubscriptionPool = new SubscriptionPool();
-		mSubscriptionPool.addSubscription("HappyApp Free", "dis shit free", 0.00, context.getResources()
-		                                                                                 .getDrawable(R.drawable.ic_app_logo));
+		mSubscriptionPool.addSubscription("HappyApp Bronze", "dis shit bronze", "$ 50", appIhrLogo);
+		mSubscriptionPool.addSubscription("HappyApp Silver", "dis shit silver", "$ 100", appIhrLogo);
+		mSubscriptionPool.addSubscription("HappyApp Gold", "dis shit gold", "$ 200", appIhrLogo);
+		mSubscriptionPool.addSubscription("HappyApp Platinum", "dis shit platinum", "$ 1000", appIhrLogo);
+		mSubscriptionPool.addSubscription("HappyApp Stempel", "dis shit stempel", "free", appIhrLogo);
 
 		Collection<String> collection = new ArrayList<>();
 		collection.add(context.getString(R.string.plain_processing));
