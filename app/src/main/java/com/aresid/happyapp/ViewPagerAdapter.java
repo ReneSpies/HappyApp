@@ -49,17 +49,21 @@ public class ViewPagerAdapter
 
 		Log.d(TAG, "ViewPagerAdapter:true");
 
+		Drawable bronzeIcon, silverIcon, goldIcon, platinumIcon;
+
 		mInflater = LayoutInflater.from(context);
 		mViewPager2 = viewPager2;
 
-		Drawable appIhrLogo = context.getDrawable(R.drawable.ic_app_logo);
+		bronzeIcon = context.getDrawable(R.drawable.bronze_icon);
+		silverIcon = context.getDrawable(R.drawable.silver_icon);
+		goldIcon = context.getDrawable(R.drawable.gold_icon);
+		platinumIcon = context.getDrawable(R.drawable.platinum_icon);
 
 		mSubscriptionPool = new SubscriptionPool();
-		mSubscriptionPool.addSubscription("HappyApp Bronze", "dis shit bronze", "$ 50", appIhrLogo);
-		mSubscriptionPool.addSubscription("HappyApp Silver", "dis shit silver", "$ 100", appIhrLogo);
-		mSubscriptionPool.addSubscription("HappyApp Gold", "dis shit gold", "$ 200", appIhrLogo);
-		mSubscriptionPool.addSubscription("HappyApp Platinum", "dis shit platinum", "$ 1000", appIhrLogo);
-		mSubscriptionPool.addSubscription("HappyApp Stempel", "dis shit stempel", "free", appIhrLogo);
+		mSubscriptionPool.addSubscription("HappyApp Bronze", "dis shit bronze", "$ 50", bronzeIcon);
+		mSubscriptionPool.addSubscription("HappyApp Silver", "dis shit silver", "$ 100", silverIcon);
+		mSubscriptionPool.addSubscription("HappyApp Gold", "dis shit gold", "$ 200", goldIcon);
+		mSubscriptionPool.addSubscription("HappyApp Platinum", "dis shit platinum", "$ 1000", platinumIcon);
 
 		Collection<String> collection = new ArrayList<>();
 		collection.add(context.getString(R.string.plain_processing));
@@ -142,6 +146,8 @@ public class ViewPagerAdapter
 		                                      .getDescription();
 		String price = mSubscriptionPool.getSubscription(position)
 		                                .getPrice();
+		Drawable icon = mSubscriptionPool.getSubscription(position)
+		                                 .getIcon();
 
 		Log.d(TAG, "onBindViewHolder: title = " + title);
 		Log.d(TAG, "onBindViewHolder: description = " + description);
@@ -150,6 +156,7 @@ public class ViewPagerAdapter
 		holder.mTVTitle.setText(title);
 		holder.mTVDescription.setText(description);
 		holder.mTVPrice.setText(price);
+		holder.mSubIcon.setImageDrawable(icon);
 
 	}
 
@@ -266,9 +273,10 @@ public class ViewPagerAdapter
 	class ViewHolder
 			extends RecyclerView.ViewHolder {
 
-		TextView mTVTitle;
-		TextView mTVDescription;
-		TextView mTVPrice;
+		TextView  mTVTitle;
+		TextView  mTVDescription;
+		TextView  mTVPrice;
+		ImageView mSubIcon;
 
 		ViewHolder(View itemView) {
 
@@ -277,7 +285,10 @@ public class ViewPagerAdapter
 			mTVTitle = itemView.findViewById(R.id.view_pager_tv_title);
 			mTVDescription = itemView.findViewById(R.id.view_pager_tv_description);
 			mTVPrice = itemView.findViewById(R.id.view_pager_tv_price);
+			mSubIcon = itemView.findViewById(R.id.view_pager_subscription_icon);
 
 		}
+
 	}
+
 }
