@@ -75,6 +75,9 @@ public class EntryActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_entry);
 
+		// Test the constructor behaviour.
+//		User user = new User();
+
 		// Instantiate FirebaseAuth.
 		mAuth = FirebaseAuth.getInstance();
 		mAuth.addAuthStateListener(firebaseAuth -> {
