@@ -13,9 +13,9 @@ import java.util.HashMap;
  * Copyright: © 2019 Ares ID
  */
 
-public class User {
+public class HappyAppUser {
 
-	private static final String TAG = "User";
+	private static final String TAG = "HappyAppUser";
 
 	private Drawable                 mProfilePicture;
 	private String                   mFirstName;
@@ -25,13 +25,14 @@ public class User {
 	private int                      mSubscriptionVariant = 0;
 	private HashMap<Integer, String> mSubscriptionVariants;
 	private String                   mDateOfCreation;
+	private String                   mUid;
 
 	/**
 	 * Empty Constructor.
 	 */
-	User() {
+	HappyAppUser() {
 
-		Log.d(TAG, "User: empty constructor");
+		Log.d(TAG, "HappyAppUser: empty constructor");
 
 		init();
 
@@ -54,6 +55,7 @@ public class User {
 	/**
 	 * Constructor 1.
 	 *
+	 * @param uid Users unique id.
 	 * @param firstName           Users first name.
 	 * @param familyName          Users family name.
 	 * @param dateOfBirth         Users date of birth.
@@ -61,9 +63,11 @@ public class User {
 	 * @param subscriptionVariant Users subscription variant.
 	 * @param profilePicture      Users profile picture.
 	 */
-	User(String firstName, String familyName, String dateOfBirth, String username, int subscriptionVariant, Drawable profilePicture) {
+	HappyAppUser(String uid, String firstName, String familyName, String dateOfBirth, String username, int subscriptionVariant, Drawable profilePicture) {
 
-		Log.d(TAG, "User: constructor 1");
+		Log.d(TAG, "HappyAppUser: constructor 1");
+
+		mUid = uid;
 
 		init();
 
@@ -217,4 +221,23 @@ public class User {
 		mDateOfCreation = dateOfCreation;
 	}
 
+	/**
+	 * Getter for users unique id.
+	 *
+	 * @return Guess.
+	 */
+	public String getUid() {
+
+		return mUid;
+	}
+
+	/**
+	 * Setter for users unique id.
+	 *
+	 * @param uid Guess.
+	 */
+	public void setUid(String uid) {
+
+		mUid = uid;
+	}
 }

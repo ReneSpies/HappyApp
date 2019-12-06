@@ -76,7 +76,7 @@ public class EntryActivity
 		setContentView(R.layout.activity_entry);
 
 		// Test the constructor behaviour.
-//		User user = new User();
+		HappyAppUser user = new HappyAppUser();
 
 		// Instantiate FirebaseAuth.
 		mAuth = FirebaseAuth.getInstance();
@@ -563,6 +563,10 @@ public class EntryActivity
 					  if (command.isEmpty()) {
 
 						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
+
+						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, username, variant, null);
+
+
 
 //						  addUsersSubscriptionVariantToFirestore(user, variant);
 

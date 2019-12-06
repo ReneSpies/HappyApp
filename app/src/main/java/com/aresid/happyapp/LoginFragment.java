@@ -210,7 +210,7 @@ public class LoginFragment
 				mFragmentInteractionListener.startOnboardingActivity(null, account);
 				//			mFragmentInteractionListener.startMainActivity(null, account);
 			} else {
-				// User && Account == null
+				// HappyAppUser && Account == null
 			}
 		}
 	}

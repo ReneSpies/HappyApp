@@ -104,7 +104,7 @@
 	<string name="plain_i_didn_t_get_an_email">I didn\'t get an email</string>
 	<string name="plain_logout">Logout</string>
 
-	<!-- Error messages / User feedback -->
+	<!-- Error messages / HappyAppUser feedback -->
 	<string name="contraction_server_connection_failed">Failed to connect to the server. Please try again</string>
 	<string name="contraction_empty_credentials_field">You forgot me</string>
 	<string name="plain_username_is_already_taken">Username is already taken</string>
