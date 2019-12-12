@@ -47,15 +47,9 @@ public class EntryActivity
 		           View.OnClickListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener {
 
-	static final         String VP_TITLE_HAPPYAPP_FREE = "HappyApp Free";
-	static final         String VP_TITLE_HAPPYAPP_GOLD = "HappyApp Gold";
-	static final         String VP_DESC_HAPPYAPP_FREE  = "Desc for HappyApp Free";
-	static final         String VP_DESC_HAPPYAPP_GOLD  = "Desc for HappyApp Gold";
-	static final         String VP_PRICE_HAPPYAPP_FREE = "Free/Month";
-	static final         String VP_PRICE_HAPPYAPP_GOLD = "$6.99/Month";
-	private static final String TAG                    = "EntryActivity";
-	private static final String GOOGLE_COM             = "google.com";
-	private static final int    REQUEST_CODE_LOGIN     = 13;
+	private static final String TAG                = "EntryActivity";
+	private static final String GOOGLE_COM         = "google.com";
+	private static final int    REQUEST_CODE_LOGIN = 13;
 	GoogleSignInAccount mGSA = null;
 	private GoogleSignInClient mGoogleSignInClient;
 	private FirebaseAuth       mAuth;
@@ -96,8 +90,8 @@ public class EntryActivity
 		});
 
 		// Load waiting assistant into ImageViews.
-		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
-		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
+//		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
+//		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
 
 		// Configure Google Sign In.
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getResources().getString(R.string.default_web_client_id))
@@ -107,7 +101,7 @@ public class EntryActivity
 		mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 		// Access all views that are needed.
-		Button btLogin = findViewById(R.id.entry_activity_login_login_button);
+//		Button btLogin = findViewById(R.id.entry_activity_login_login_button);
 		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
 		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
@@ -115,7 +109,7 @@ public class EntryActivity
 
 		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, vpSubscriptions));
 
-		btLogin.setOnClickListener(this);
+//		btLogin.setOnClickListener(this);
 		btGoogleLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
 
@@ -481,7 +475,7 @@ public class EntryActivity
 
 		db.collection(FirestoreNames.COLLECTION_USERS)
 		  .document(user.getUid())
-		  .update(FirestoreNames.COLUMN_SUBSCRIPTION_VARIANT, variant == 13 ? VP_TITLE_HAPPYAPP_GOLD : VP_TITLE_HAPPYAPP_FREE)
+		  .update(FirestoreNames.COLUMN_SUBSCRIPTION_VARIANT, variant == 13 ? "gold" : "no gold")
 		  .addOnFailureListener(e -> {
 
 			  Log.e(TAG, "addUsersSubscriptionVariantToFirestore: ", e);
@@ -565,8 +559,6 @@ public class EntryActivity
 						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
 						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, username, variant, null);
-
-
 
 //						  addUsersSubscriptionVariantToFirestore(user, variant);
 
@@ -1074,12 +1066,12 @@ public class EntryActivity
 
 				break;
 
-			case R.id.entry_activity_login_login_button:
-				Log.d(TAG, "onClick: id = login button");
-
-				loginUser();
-
-				break;
+//			case R.id.entry_activity_login_login_button:
+//				Log.d(TAG, "onClick: id = login button");
+//
+//				loginUser();
+//
+//				break;
 
 		}
 
@@ -1123,7 +1115,7 @@ public class EntryActivity
 		}
 
 		// Show loading assistant.
-		findViewById(R.id.entry_activity_login_waiting_assistant_layout).setVisibility(View.VISIBLE);
+//		findViewById(R.id.entry_activity_login_waiting_assistant_layout).setVisibility(View.VISIBLE);
 
 		mAuth.signInWithEmailAndPassword(email, password)
 		     .addOnSuccessListener(command -> {
@@ -1140,7 +1132,7 @@ public class EntryActivity
 
 			     setLayoutErrorsNull();
 
-			     findViewById(R.id.entry_activity_login_waiting_assistant_layout).setVisibility(View.GONE);
+//			     findViewById(R.id.entry_activity_login_waiting_assistant_layout).setVisibility(View.GONE);
 
 			     // TODO
 
