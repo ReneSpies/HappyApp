@@ -1216,14 +1216,6 @@ public class EntryActivity
 			  Log.d(TAG, "addTimeToFirestoreEntry: failure");
 			  Log.e(TAG, "addTimeToFirestoreEntry: ", e);
 
-			  if (mCurrentTimeSyncHelper <= 3) {
-
-				  addTimeToFirestoreEntry(time, uid);
-
-				  mCurrentTimeSyncHelper++;
-
-			  }
-
 		  });
 
 	}
