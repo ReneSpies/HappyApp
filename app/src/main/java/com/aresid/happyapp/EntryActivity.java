@@ -16,9 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -39,7 +36,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class EntryActivity
 		extends AppCompatActivity
@@ -48,18 +44,12 @@ public class EntryActivity
 		           RetrieveInternetTime.OnInternetTimeInteractionListener {
 
 	private static final String TAG                = "EntryActivity";
-	private static final String GOOGLE_COM         = "google.com";
 	private static final int    REQUEST_CODE_LOGIN = 13;
 	GoogleSignInAccount mGSA = null;
 	private GoogleSignInClient mGoogleSignInClient;
 	private FirebaseAuth       mAuth;
-	private BillingClient      mBillingClient;
-	private int                mCurrentTimeSyncHelper = 0;
-	private int                mBackPressedHelper     = 0;
-	private int                mCreateUserHelper      = 0;
-	private int                mSubVariantHelper      = 0;
+	private int                mBackPressCounter = 0;
 	private BillingManager     mBillingManager;
-	private List<SkuDetails>   mSkuDetailsList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +81,7 @@ public class EntryActivity
 
 		// Load waiting assistant into ImageViews.
 //		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
-//		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
+		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
 
 		// Configure Google Sign In.
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getResources().getString(R.string.default_web_client_id))
@@ -369,47 +359,6 @@ public class EntryActivity
 	}
 
 	/**
-	 * Some fancy stuff I got from the internet that does Google billing flow.
-	 */
-	void handleManagerAndUiReady() {
-
-		Log.d(TAG, "handleManagerAndUiReady:true");
-
-		List<String> skus = mBillingManager.getSkus(BillingClient.SkuType.SUBS);
-
-		SkuDetailsResponseListener responseListener = (billingResult, skuDetailsList) -> {
-
-			Log.d(TAG, "onSkuDetailsResponse:true");
-
-			if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
-
-				Log.d(TAG, "handleManagerAndUiReady: billing result is ok");
-				Log.d(TAG, "handleManagerAndUiReady: detail list = " + skuDetailsList);
-
-				for (SkuDetails detail : skuDetailsList) {
-
-					Log.w(TAG, "onSkuDetailsResponse: got a sku: " + detail);
-
-					mSkuDetailsList.add(detail);
-
-				}
-
-			} else {
-
-				Log.w(TAG, "handleManagerAndUiReady: result or list not ok");
-
-				Log.d(TAG, "handleManagerAndUiReady: result = " + billingResult.getResponseCode());
-				Log.d(TAG, "handleManagerAndUiReady: details list = " + skuDetailsList);
-
-			}
-
-		};
-
-		mBillingManager.querySkuDetailsAsync(BillingClient.SkuType.SUBS, skus, responseListener);
-
-	}
-
-	/**
 	 * Updates Google's user account in the Firestore.
 	 *
 	 * @param user     The user to load the user.getUid() into the database.
@@ -480,17 +429,7 @@ public class EntryActivity
 
 			  Log.e(TAG, "addUsersSubscriptionVariantToFirestore: ", e);
 
-			  if (mSubVariantHelper < 3) {
-
-				  Log.d(TAG, "addUsersSubscriptionVariantToFirestore: retrying " + mSubVariantHelper++);
-
-				  addUsersSubscriptionVariantToFirestore(user, variant);
-
-			  } else {
-
-				  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
-
-			  }
+			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 
 		  });
 
@@ -594,15 +533,6 @@ public class EntryActivity
 
 			Log.d(TAG, "createUser: new user");
 
-			if (mSkuDetailsList != null) {
-
-				Log.d(TAG, "createUser: rip details list");
-				Log.d(TAG, "createUser: details list = " + mSkuDetailsList);
-
-				mBillingManager.startPurchaseFlow(mSkuDetailsList.get(0));
-
-			}
-
 			if (evaluateNewUserInfo(firstName, username, familyName, email, password, dob)) {
 
 				etRegistrationFirstNameLayout.setEnabled(false);
@@ -621,14 +551,6 @@ public class EntryActivity
 				  .addOnSuccessListener(command -> {
 
 					  if (command.isEmpty()) {
-
-						  if (variant == 13) {
-
-							  Log.d(TAG, "createUser: variant is " + variant);
-
-							  mBillingManager.startPurchaseFlow(mSkuDetailsList.get(0));
-
-						  }
 
 						  FirebaseAuth.getInstance()
 						              .createUserWithEmailAndPassword(email, password)
@@ -964,8 +886,6 @@ public class EntryActivity
 
 			  toast.cancel();
 
-			  mCreateUserHelper = 0;
-
 			  new RetrieveInternetTime(this, user.getUid()).execute("time.google.com");
 
 			  updateUI(user);
@@ -977,16 +897,6 @@ public class EntryActivity
 			  Log.e(TAG, "saveUserInFirestore: ", e);
 
 			  toast.cancel();
-
-			  if (mCreateUserHelper <= 3) {
-
-				  toast.show();
-
-				  mCreateUserHelper++;
-
-				  saveUserInFirestore(user, firstName, familyName, username, email, dob, profilePicture);
-
-			  }
 
 		  });
 
@@ -1004,25 +914,25 @@ public class EntryActivity
 
 		Toast toast = Toast.makeText(this, getString(R.string.plain_press_again_to_exit), Toast.LENGTH_SHORT);
 
-		if (mBackPressedHelper == 0) {
+		if (mBackPressCounter == 0) {
 
 			Log.d(TAG, "onBackPressed: helper == 0");
 
 			toast.show();
 
-			mBackPressedHelper = 1;
+			mBackPressCounter = 1;
 
 			new Handler().postDelayed(() -> {
 
 				Log.d(TAG, "run:true");
 
-				mBackPressedHelper = 0;
+				mBackPressCounter = 0;
 
 			}, 6130);
 
 		} else {
 
-			if (mBackPressedHelper == 1) {
+			if (mBackPressCounter == 1) {
 
 				Log.d(TAG, "onBackPressed: helper == 1");
 
