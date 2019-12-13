@@ -41,7 +41,8 @@ public class EntryActivity
 		extends AppCompatActivity
 		implements ViewPagerAdapter.OnViewPagerInteractionListener,
 		           View.OnClickListener,
-		           RetrieveInternetTime.OnInternetTimeInteractionListener {
+		           RetrieveInternetTime.OnInternetTimeInteractionListener,
+		           ButtonlessLogin.OnButtonlessLoginInteractionListener {
 
 	private static final String TAG                = "EntryActivity";
 	private static final int    REQUEST_CODE_LOGIN = 13;
@@ -96,8 +97,14 @@ public class EntryActivity
 		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
 		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
+		TextInputEditText loginEmailField = findViewById(R.id.entry_activity_login_email_field);
+		TextInputEditText loginPasswordField = findViewById(R.id.entry_activity_login_password_field);
 
 		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, vpSubscriptions));
+
+		// Beginning of buttonless login process.
+		// Register a listener for the email and password field.
+		loginPasswordField.addTextChangedListener(new ButtonlessLogin(this));
 
 //		btLogin.setOnClickListener(this);
 		btGoogleLogin.setOnClickListener(this);
@@ -497,7 +504,7 @@ public class EntryActivity
 
 						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
-						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, username, variant, null);
+						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, username, variant, user.getPhotoUrl());
 
 //						  addUsersSubscriptionVariantToFirestore(user, variant);
 
@@ -912,11 +919,13 @@ public class EntryActivity
 
 		Log.d(TAG, "onBackPressed:true");
 
-		Toast toast = Toast.makeText(this, getString(R.string.plain_press_again_to_exit), Toast.LENGTH_SHORT);
+		int time = 5130;
+
+		Toast toast = Toast.makeText(this, getString(R.string.plain_press_again_to_exit), Toast.LENGTH_LONG);
 
 		if (mBackPressCounter == 0) {
 
-			Log.d(TAG, "onBackPressed: helper == 0");
+			Log.d(TAG, "onBackPressed: counter == 0");
 
 			toast.show();
 
@@ -928,13 +937,15 @@ public class EntryActivity
 
 				mBackPressCounter = 0;
 
-			}, 6130);
+			}, time);
+
+			return;
 
 		} else {
 
 			if (mBackPressCounter == 1) {
 
-				Log.d(TAG, "onBackPressed: helper == 1");
+				Log.d(TAG, "onBackPressed: counter == 1");
 
 				toast.cancel();
 
@@ -976,91 +987,16 @@ public class EntryActivity
 
 				break;
 
-//			case R.id.entry_activity_login_login_button:
-//				Log.d(TAG, "onClick: id = login button");
-//
-//				loginUser();
-//
-//				break;
-
 		}
 
 	}
 
-	/**
-	 * This method logs the user in.
-	 */
-	public void loginUser() {
+	@Override
+	public void onFinishedTyping() {
 
-		Log.d(TAG, "loginWithUser:true");
+		Log.d(TAG, "onFinishedTyping:true");
 
-		EditText etEmailField = findViewById(R.id.entry_activity_login_email_field);
-		EditText etPasswordField = findViewById(R.id.entry_activity_login_password_field);
-		TextInputLayout etEmailFieldLayout = findViewById(R.id.entry_activity_login_email_layout);
-		TextInputLayout etPasswordFieldLayout = findViewById(R.id.entry_activity_login_password_layout);
-
-		String email = etEmailField.getText()
-		                           .toString();
-		String password = etPasswordField.getText()
-		                                 .toString();
-
-		setLayoutErrorsNull();
-
-		if (email.length() == 0) {
-
-			smoothScrollTo(etEmailFieldLayout.getTop());
-
-			etEmailFieldLayout.setError(getString(R.string.contraction_empty_credentials_field));
-
-			return;
-
-		} else if (password.length() == 0) {
-
-			smoothScrollTo(etEmailFieldLayout.getBottom());
-
-			etPasswordFieldLayout.setError(getString(R.string.contraction_empty_credentials_field));
-
-			return;
-
-		}
-
-		// Show loading assistant.
-//		findViewById(R.id.entry_activity_login_waiting_assistant_layout).setVisibility(View.VISIBLE);
-
-		mAuth.signInWithEmailAndPassword(email, password)
-		     .addOnSuccessListener(command -> {
-
-			     Log.d(TAG, "loginUser: success");
-
-			     updateUI(command.getUser());
-
-		     })
-		     .addOnFailureListener(e -> {
-
-			     Log.d(TAG, "loginUser: failure");
-			     Log.e(TAG, "loginUser: ", e);
-
-			     setLayoutErrorsNull();
-
-//			     findViewById(R.id.entry_activity_login_waiting_assistant_layout).setVisibility(View.GONE);
-
-			     // TODO
-
-			     if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
-
-				     smoothScrollTo(etEmailFieldLayout.getTop());
-
-				     etEmailFieldLayout.setError(getString(R.string.plain_email_or_password_incorrect));
-
-			     } else if (e instanceof com.google.firebase.FirebaseNetworkException) {
-
-				     smoothScrollTo(etEmailFieldLayout.getTop());
-
-				     etEmailFieldLayout.setError(getString(R.string.contraction_check_internet_connection));
-
-			     }
-
-		     });
+		loginUser();
 
 	}
 
@@ -1220,4 +1156,94 @@ public class EntryActivity
 
 	}
 
+	/**
+	 * This method logs the user in.
+	 */
+	public void loginUser() {
+
+		Log.d(TAG, "loginWithUser:true");
+
+		EditText etEmailField = findViewById(R.id.entry_activity_login_email_field);
+		EditText etPasswordField = findViewById(R.id.entry_activity_login_password_field);
+		TextInputLayout etEmailFieldLayout = findViewById(R.id.entry_activity_login_email_layout);
+		TextInputLayout etPasswordFieldLayout = findViewById(R.id.entry_activity_login_password_layout);
+
+		ScrollView scrollView = findViewById(R.id.entry_activity_scroll_view);
+
+		String email = etEmailField.getText()
+		                           .toString();
+		String password = etPasswordField.getText()
+		                                 .toString();
+
+		setLayoutErrorsNull();
+
+		if (email.length() == 0) {
+
+			if (scrollView.getY() > etEmailFieldLayout.getTop()) {
+
+				smoothScrollTo(etEmailFieldLayout.getTop());
+
+			}
+
+			etEmailFieldLayout.setError(getString(R.string.contraction_empty_credentials_field));
+
+			return;
+
+		} else if (password.length() == 0) {
+
+			if (scrollView.getY() > etPasswordFieldLayout.getTop()) {
+
+				smoothScrollTo(etPasswordFieldLayout.getTop());
+
+			}
+
+			etPasswordFieldLayout.setError(getString(R.string.contraction_empty_credentials_field));
+
+			return;
+
+		}
+
+		// Show loading assistant.
+		findViewById(R.id.entry_activity_login_waiting_assistant).setVisibility(View.VISIBLE);
+
+		// Disable the email and password field.
+		findViewById(R.id.entry_activity_login_email_layout).setEnabled(false);
+		findViewById(R.id.entry_activity_login_password_layout).setEnabled(false);
+
+		mAuth.signInWithEmailAndPassword(email, password)
+		     .addOnSuccessListener(command -> {
+
+			     Log.d(TAG, "loginUser: success");
+
+			     updateUI(command.getUser());
+
+		     })
+		     .addOnFailureListener(e -> {
+
+			     Log.d(TAG, "loginUser: failure");
+			     Log.e(TAG, "loginUser: ", e);
+
+			     setLayoutErrorsNull();
+
+			     findViewById(R.id.entry_activity_login_waiting_assistant).setVisibility(View.GONE);
+
+			     // TODO
+
+			     if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
+
+				     smoothScrollTo(etEmailFieldLayout.getTop());
+
+				     etEmailFieldLayout.setError(getString(R.string.plain_email_or_password_incorrect));
+
+			     } else if (e instanceof com.google.firebase.FirebaseNetworkException) {
+
+				     smoothScrollTo(etEmailFieldLayout.getTop());
+
+				     etEmailFieldLayout.setError(getString(R.string.contraction_check_internet_connection));
+
+			     }
+
+		     });
+
+	}
 }

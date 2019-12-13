@@ -1,7 +1,7 @@
 package com.aresid.happyapp;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -17,7 +17,7 @@ public class HappyAppUser {
 
 	private static final String TAG = "HappyAppUser";
 
-	private Drawable                 mProfilePicture;
+	private Uri                      mProfilePictureUrl;
 	private String                   mFirstName;
 	private String                   mFamilyName;
 	private String                   mDateOfBirth;
@@ -38,6 +38,34 @@ public class HappyAppUser {
 
 	}
 
+	/**
+	 * Constructor 1.
+	 *
+	 * @param uid Users unique id.
+	 * @param firstName           Users first name.
+	 * @param familyName          Users family name.
+	 * @param dateOfBirth         Users date of birth.
+	 * @param username            Users username.
+	 * @param subscriptionVariant Users subscription variant.
+	 * @param profilePictureUrl      Users profile picture.
+	 */
+	HappyAppUser(String uid, String firstName, String familyName, String dateOfBirth, String username, int subscriptionVariant, Uri profilePictureUrl) {
+
+		Log.d(TAG, "HappyAppUser: constructor 1");
+
+		mUid = uid;
+
+		init();
+
+		mFirstName = firstName;
+		mFamilyName = familyName;
+		mDateOfBirth = dateOfBirth;
+		mUsername = username;
+		mSubscriptionVariant = subscriptionVariant;
+		mProfilePictureUrl = profilePictureUrl;
+
+	}
+
 	@SuppressLint ("UseSparseArrays")
 	private void init() {
 
@@ -53,30 +81,11 @@ public class HappyAppUser {
 	}
 
 	/**
-	 * Constructor 1.
-	 *
-	 * @param uid Users unique id.
-	 * @param firstName           Users first name.
-	 * @param familyName          Users family name.
-	 * @param dateOfBirth         Users date of birth.
-	 * @param username            Users username.
-	 * @param subscriptionVariant Users subscription variant.
-	 * @param profilePicture      Users profile picture.
+	 * Saves the current user information to the firestore.
 	 */
-	HappyAppUser(String uid, String firstName, String familyName, String dateOfBirth, String username, int subscriptionVariant, Drawable profilePicture) {
+	void saveToFirestore() {
 
-		Log.d(TAG, "HappyAppUser: constructor 1");
-
-		mUid = uid;
-
-		init();
-
-		mFirstName = firstName;
-		mFamilyName = familyName;
-		mDateOfBirth = dateOfBirth;
-		mUsername = username;
-		mSubscriptionVariant = subscriptionVariant;
-		mProfilePicture = profilePicture;
+		Log.d(TAG, "saveToFirestore:true");
 
 	}
 
@@ -106,19 +115,20 @@ public class HappyAppUser {
 	 *
 	 * @return Guess.
 	 */
-	public Drawable getProfilePicture() {
+	public Uri getProfilePictureUrl() {
 
-		return mProfilePicture;
+		return mProfilePictureUrl;
+
 	}
 
 	/**
 	 * Setter for profile picture.
 	 *
-	 * @param profilePicture Guess.
+	 * @param profilePictureUrl Guess.
 	 */
-	public void setProfilePicture(Drawable profilePicture) {
+	public void setProfilePictureUrl(Uri profilePictureUrl) {
 
-		mProfilePicture = profilePicture;
+		mProfilePictureUrl = profilePictureUrl;
 	}
 
 	/**
