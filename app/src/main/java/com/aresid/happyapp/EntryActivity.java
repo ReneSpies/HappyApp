@@ -368,7 +368,7 @@ public class EntryActivity
 	/**
 	 * Updates Google's user account in the Firestore.
 	 *
-	 * @param user     The user to load the user.getUid() into the database.
+	 * @param user     Used to load the user.getUid() into the database.
 	 * @param username The username to load into the database.
 	 * @param dob      The Date of birth to load into the database.
 	 */
@@ -504,7 +504,7 @@ public class EntryActivity
 
 						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
-						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, username, variant, user.getPhotoUrl());
+						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, user.getDisplayName(), variant, user.getPhotoUrl());
 
 //						  addUsersSubscriptionVariantToFirestore(user, variant);
 

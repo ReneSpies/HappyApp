@@ -17,15 +17,15 @@ public class HappyAppUser {
 
 	private static final String TAG = "HappyAppUser";
 
-	private Uri                      mProfilePictureUrl;
-	private String                   mFirstName;
-	private String                   mFamilyName;
-	private String                   mDateOfBirth;
-	private String                   mUsername;
-	private int                      mSubscriptionVariant = 0;
-	private HashMap<Integer, String> mSubscriptionVariants;
-	private String                   mDateOfCreation;
-	private String                   mUid;
+	private Uri                           mProfilePictureUrl;
+	private String                        mFirstName;
+	private String                        mFamilyName;
+	private String                        mDateOfBirth;
+	private String                        mUsername;
+	private Subscription                  mSubscriptionVariant;
+	private HashMap<Subscription, String> mSubscriptionVariants;
+	private String                        mDateOfCreation;
+	private String                        mUid;
 
 	/**
 	 * Empty Constructor.
@@ -41,15 +41,15 @@ public class HappyAppUser {
 	/**
 	 * Constructor 1.
 	 *
-	 * @param uid Users unique id.
+	 * @param uid                 Users unique id.
 	 * @param firstName           Users first name.
 	 * @param familyName          Users family name.
 	 * @param dateOfBirth         Users date of birth.
 	 * @param username            Users username.
 	 * @param subscriptionVariant Users subscription variant.
-	 * @param profilePictureUrl      Users profile picture.
+	 * @param profilePictureUrl   Users profile picture.
 	 */
-	HappyAppUser(String uid, String firstName, String familyName, String dateOfBirth, String username, int subscriptionVariant, Uri profilePictureUrl) {
+	HappyAppUser(String uid, String firstName, String familyName, String dateOfBirth, String username, Subscription subscriptionVariant, Uri profilePictureUrl) {
 
 		Log.d(TAG, "HappyAppUser: constructor 1");
 
