@@ -129,6 +129,9 @@ public class EntryActivity
 
 		mBillingManager = new BillingManager(this);
 
+		SubscriptionPool pool = new SubscriptionPool.Builder().addOnSuccessListener(() -> Log.d(TAG, "onSuccess:true"))
+		                                                      .build();
+
 	}
 
 	@Override
@@ -504,7 +507,7 @@ public class EntryActivity
 
 						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
-						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, user.getDisplayName(), variant, user.getPhotoUrl());
+						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, user.getDisplayName(), new Subscription(), user.getPhotoUrl());
 
 //						  addUsersSubscriptionVariantToFirestore(user, variant);
 

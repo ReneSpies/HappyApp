@@ -14,31 +14,12 @@ import java.util.List;
 
 class SubscriptionPool {
 
-	private List<Subscription> mSubscriptions;
-	private static final String TAG = "SubscriptionPool";
+	private static final String             TAG = "SubscriptionPool";
+	private              List<Subscription> mSubscriptions;
 
-	SubscriptionPool() {
+	private SubscriptionPool(List<Subscription> subscriptions) {
 
-		Log.d(TAG, "SubscriptionPool:true");
-
-		// Constructor
-
-		mSubscriptions = new ArrayList<>();
-
-	}
-
-	void addOnSuccessListener(OnSuccessListener listener) {
-
-		Log.d(TAG, "addOnSuccessListener:true");
-
-	}
-
-	/**
-	 * Here I init my pool. I grab the subscriptions from the google play console and load them into here when it is done.
-	 */
-	void initialize() {
-
-		Log.d(TAG, "initialize:true");
+		mSubscriptions = subscriptions;
 
 	}
 
@@ -66,6 +47,42 @@ class SubscriptionPool {
 		Log.d(TAG, "getSubscription:true");
 
 		return mSubscriptions.get(index);
+
+	}
+
+	static class Builder {
+
+		private static final String                                TAG = "Builder";
+		private              OnSubscriptionPopulateSuccessListener mSuccessListener;
+
+		/**
+		 * Here I build the pool. Retrieve the available subscriptions from the console and save it in the pool.
+		 *
+		 * @return Built pool.
+		 */
+		SubscriptionPool build() {
+
+			Log.d(TAG, "build:true");
+
+			return new SubscriptionPool(new ArrayList<>());
+
+		}
+
+		/**
+		 * Adds a new listener that is called when the build was successful!
+		 *
+		 * @param listener Listener that's called upon success.
+		 * @return This.
+		 */
+		Builder addOnSuccessListener(OnSubscriptionPopulateSuccessListener listener) {
+
+			Log.d(TAG, "addOnSuccessListener:true");
+
+			mSuccessListener = listener;
+
+			return this;
+
+		}
 
 	}
 

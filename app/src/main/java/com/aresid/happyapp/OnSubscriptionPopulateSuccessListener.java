@@ -7,6 +7,8 @@ package com.aresid.happyapp;
  * Copyright: © 2019 Ares ID
  */
 
-public class OnSuccessListener {
+public interface OnSubscriptionPopulateSuccessListener {
+
+	void onSuccess();
 
 }
