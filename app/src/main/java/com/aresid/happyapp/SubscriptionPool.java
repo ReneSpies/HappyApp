@@ -14,12 +14,40 @@ import java.util.List;
 
 class SubscriptionPool {
 
-	private static final String             TAG = "SubscriptionPool";
-	private              List<Subscription> mSubscriptions;
+	private static final String                                TAG = "SubscriptionPool";
+	private              List<Subscription>                    mSubscriptions;
+	private              OnSubscriptionPopulateSuccessListener mSuccessListener;
+	private              BillingManager                        mBillingManager;
 
-	private SubscriptionPool(List<Subscription> subscriptions) {
+	SubscriptionPool(List<Subscription> subscriptions) {
 
 		mSubscriptions = subscriptions;
+
+	}
+
+	/**
+	 * Adds a new listener that is called when the build was successful!
+	 *
+	 * @param listener Listener that's called upon success.
+	 */
+	void addOnSuccessListener(OnSubscriptionPopulateSuccessListener listener) {
+
+		Log.d(TAG, "addOnSuccessListener:true");
+
+		mSuccessListener = listener;
+
+	}
+
+	/**
+	 * In here I call the server and retrieve the available subscriptions and load them into the pool.
+	 *
+	 * @return This.
+	 */
+	SubscriptionPool populatePool() {
+
+		Log.d(TAG, "populatePool:true");
+
+		return this;
 
 	}
 
@@ -65,22 +93,6 @@ class SubscriptionPool {
 			Log.d(TAG, "build:true");
 
 			return new SubscriptionPool(new ArrayList<>());
-
-		}
-
-		/**
-		 * Adds a new listener that is called when the build was successful!
-		 *
-		 * @param listener Listener that's called upon success.
-		 * @return This.
-		 */
-		Builder addOnSuccessListener(OnSubscriptionPopulateSuccessListener listener) {
-
-			Log.d(TAG, "addOnSuccessListener:true");
-
-			mSuccessListener = listener;
-
-			return this;
 
 		}
 

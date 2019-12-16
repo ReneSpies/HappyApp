@@ -59,11 +59,10 @@ public class ViewPagerAdapter
 		goldIcon = context.getDrawable(R.drawable.gold_icon);
 		platinumIcon = context.getDrawable(R.drawable.platinum_icon);
 
-		mSubscriptionPool = new SubscriptionPool();
-		mSubscriptionPool.addSubscription("HappyApp Bronze", "dis shit bronze", "$ 50", bronzeIcon);
-		mSubscriptionPool.addSubscription("HappyApp Silver", "dis shit silver", "$ 100", silverIcon);
-		mSubscriptionPool.addSubscription("HappyApp Gold", "dis shit gold", "$ 200", goldIcon);
-		mSubscriptionPool.addSubscription("HappyApp Platinum", "dis shit platinum", "$ 1000", platinumIcon);
+		List<Subscription> subscriptions = new ArrayList<>();
+		subscriptions.add(new Subscription());
+
+		mSubscriptionPool = new SubscriptionPool(subscriptions);
 
 		Collection<String> collection = new ArrayList<>();
 		collection.add(context.getString(R.string.plain_processing));

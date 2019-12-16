@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.SkuDetails;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -34,8 +36,10 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class EntryActivity
 		extends AppCompatActivity
@@ -92,12 +96,10 @@ public class EntryActivity
 		mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 		// Access all views that are needed.
-//		Button btLogin = findViewById(R.id.entry_activity_login_login_button);
 		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
 		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
 		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
-		TextInputEditText loginEmailField = findViewById(R.id.entry_activity_login_email_field);
 		TextInputEditText loginPasswordField = findViewById(R.id.entry_activity_login_password_field);
 
 		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, vpSubscriptions));
@@ -106,7 +108,6 @@ public class EntryActivity
 		// Register a listener for the email and password field.
 		loginPasswordField.addTextChangedListener(new ButtonlessLogin(this));
 
-//		btLogin.setOnClickListener(this);
 		btGoogleLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
 
@@ -129,8 +130,37 @@ public class EntryActivity
 
 		mBillingManager = new BillingManager(this);
 
-		SubscriptionPool pool = new SubscriptionPool.Builder().addOnSuccessListener(() -> Log.d(TAG, "onSuccess:true"))
-		                                                      .build();
+		List<String> skus = new ArrayList<>();
+		skus.add("happyapp.subscription.bronze");
+		skus.add("happyapp.subscription.silver");
+		skus.add("happyapp.subscription.gold");
+		skus.add("happyapp.subscription.platinum");
+
+		mBillingManager.querySkuDetailsAsync(BillingClient.SkuType.SUBS, skus, (result, list) -> {
+
+			Log.d(TAG, "onCreate: skudetailresponselistener");
+
+			Log.d(TAG, "onCreate: result = " + result);
+			Log.d(TAG, "onCreate: list = " + list);
+
+			for (SkuDetails sku : list) {
+
+				Log.d(TAG, "onCreate: sku = " + sku.getTitle());
+
+			}
+
+		});
+
+		SubscriptionPool pool = new SubscriptionPool.Builder().build();
+		pool.populatePool()
+		    .addOnSuccessListener((populatedPool) -> {
+
+			    Log.d(TAG, "onSuccess:true");
+
+			    int count = populatedPool.getSubscriptionCount();
+			    Subscription sub = populatedPool.getSubscription(1);
+
+		    });
 
 	}
 

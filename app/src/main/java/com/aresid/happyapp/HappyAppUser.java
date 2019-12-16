@@ -72,11 +72,6 @@ public class HappyAppUser {
 		Log.d(TAG, "init:true");
 
 		mSubscriptionVariants = new HashMap<>();
-		mSubscriptionVariants.put(1, "HappyApp Bronze");
-		mSubscriptionVariants.put(2, "HappyApp Silver");
-		mSubscriptionVariants.put(3, "HappyApp Gold");
-		mSubscriptionVariants.put(4, "HappyApp Platinum");
-		mSubscriptionVariants.put(13, "HappyApp Diamond");
 
 	}
 
@@ -196,7 +191,7 @@ public class HappyAppUser {
 	 *
 	 * @return Guess.
 	 */
-	public int getSubscriptionVariant() {
+	public Subscription getSubscriptionVariant() {
 
 		return mSubscriptionVariant;
 	}
@@ -206,7 +201,7 @@ public class HappyAppUser {
 	 *
 	 * @param subscriptionVariant Guess.
 	 */
-	public void setSubscriptionVariant(int subscriptionVariant) {
+	public void setSubscriptionVariant(Subscription subscriptionVariant) {
 
 		mSubscriptionVariant = subscriptionVariant;
 	}

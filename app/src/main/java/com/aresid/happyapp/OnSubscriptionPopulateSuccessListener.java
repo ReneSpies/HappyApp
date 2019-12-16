@@ -9,6 +9,6 @@ package com.aresid.happyapp;
 
 public interface OnSubscriptionPopulateSuccessListener {
 
-	void onSuccess();
+	void onSuccess(SubscriptionPool populatedPool);
 
 }
