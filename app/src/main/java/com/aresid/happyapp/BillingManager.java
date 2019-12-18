@@ -37,7 +37,10 @@ public class BillingManager
 		Log.d(TAG, "static initializer:true");
 
 		SKUS = new HashMap<>();
-		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList("subscription.happyapp.gold"));
+		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList("happyapp.subscription.bronze"));
+		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList("happyapp.subscription.silver"));
+		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList("happyapp.subscription.gold"));
+		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList("happyapp.subscription.platinum"));
 
 	}
 

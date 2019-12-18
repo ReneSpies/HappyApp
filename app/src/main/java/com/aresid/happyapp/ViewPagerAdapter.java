@@ -11,9 +11,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
@@ -29,7 +38,10 @@ import java.util.List;
  * Copyright: © 2019 Ares ID
  */
 public class ViewPagerAdapter
-		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder> {
+		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
+		implements BillingClientStateListener,
+		           PurchasesUpdatedListener,
+		           SkuDetailsResponseListener {
 
 	private static final String                         TAG = "ViewPagerAdapter";
 	private static       View                           mCheckoutProcessingLayout;
@@ -44,25 +56,23 @@ public class ViewPagerAdapter
 	private              Context                        mContext;
 	private              ViewPager2                     mViewPager2;
 	private              SubscriptionPool               mSubscriptionPool;
+	private              BillingClient                  mBillingClient;
 
 	ViewPagerAdapter(Context context, ViewPager2 viewPager2) {
 
 		Log.d(TAG, "ViewPagerAdapter:true");
 
-		Drawable bronzeIcon, silverIcon, goldIcon, platinumIcon;
+		mBillingClient = BillingClient.newBuilder(context)
+		                              .enablePendingPurchases()
+		                              .setListener(this)
+		                              .build();
+
+		mBillingClient.startConnection(this);
+
+		mSubscriptionPool = new SubscriptionPool();
 
 		mInflater = LayoutInflater.from(context);
 		mViewPager2 = viewPager2;
-
-		bronzeIcon = context.getDrawable(R.drawable.bronze_icon);
-		silverIcon = context.getDrawable(R.drawable.silver_icon);
-		goldIcon = context.getDrawable(R.drawable.gold_icon);
-		platinumIcon = context.getDrawable(R.drawable.platinum_icon);
-
-		List<Subscription> subscriptions = new ArrayList<>();
-		subscriptions.add(new Subscription());
-
-		mSubscriptionPool = new SubscriptionPool(subscriptions);
 
 		Collection<String> collection = new ArrayList<>();
 		collection.add(context.getString(R.string.plain_processing));
@@ -109,8 +119,6 @@ public class ViewPagerAdapter
 		Log.d(TAG, "onCreateViewHolder: parent = " + parent.toString());
 
 		Log.d(TAG, "onCreateViewHolder: checkout layout = " + mCheckoutProcessingLayout);
-
-		fetchSubscriptionInfoFromServer();
 
 		Glide.with(mContext)
 		     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
@@ -165,6 +173,7 @@ public class ViewPagerAdapter
 		Log.d(TAG, "getItemCount:true");
 
 		Log.d(TAG, "getItemCount: " + mSubscriptionPool.getSubscriptionCount());
+
 		return mSubscriptionPool.getSubscriptionCount();
 
 	}
@@ -201,15 +210,7 @@ public class ViewPagerAdapter
 			  mDescriptions = listOfDescs;
 			  mPrices = listOfPrices;
 
-			  synchronized (this) {
-
-				  Log.d(TAG, "fetchSubscriptionInfoFromServer: notifying");
-
-				  notifyDataSetChanged();
-
-				  setProcessingLayoutVisibility(View.GONE);
-
-			  }
+			  updateUI();
 
 		  })
 		  .addOnFailureListener(e -> {
@@ -258,6 +259,101 @@ public class ViewPagerAdapter
 				mMainView.setVisibility(View.VISIBLE);
 
 				break;
+
+		}
+
+	}
+
+	void updateUI() {
+
+		Log.d(TAG, "updateUI:true");
+
+		synchronized (this) {
+
+			Log.d(TAG, "updateUI: synchronized");
+
+			notifyDataSetChanged();
+
+//			setProcessingLayoutVisibility(View.GONE);
+
+		}
+
+	}
+
+	@Override
+	public void onBillingSetupFinished(BillingResult result) {
+
+		Log.d(TAG, "onBillingSetupFinished:true");
+
+		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+
+			// The client is ready. Query purchases here!
+
+			List<String> skus = new ArrayList<>();
+			skus.add("happyapp.subscription.bronze");
+			skus.add("happyapp.subscription.silver");
+			skus.add("happyapp.subscription.gold");
+			skus.add("happyapp.subscription.platinum");
+
+			mBillingClient.querySkuDetailsAsync(SkuDetailsParams.newBuilder()
+			                                                    .setSkusList(skus)
+			                                                    .setType(BillingClient.SkuType.SUBS)
+			                                                    .build(), this);
+
+		} else {
+
+			Log.d(TAG, "onBillingSetupFinished: response code = " + result.getResponseCode());
+			Log.w(TAG, "onBillingSetupFinished: response message = " + result.getDebugMessage());
+
+		}
+
+	}
+
+	@Override
+	public void onBillingServiceDisconnected() {
+
+		Log.d(TAG, "onBillingServiceDisconnected:true");
+
+		// TODO: Implement own connection failed policy!
+
+	}
+
+	@Override
+	public void onPurchasesUpdated(BillingResult result, @Nullable List<Purchase> list) {
+
+		Log.d(TAG, "onPurchasesUpdated:true");
+
+	}
+
+	@Override
+	public void onSkuDetailsResponse(BillingResult result, List<SkuDetails> list) {
+
+		Log.d(TAG, "onSkuDetailsResponse:true");
+
+		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+
+			SubscriptionPool pool = new SubscriptionPool();
+
+			for (SkuDetails sku : list) {
+
+				Log.d(TAG, "onSkuDetailsResponse: got a sku: " + sku.getTitle());
+
+				Subscription sub = new Subscription();
+				sub.setId(sku.getSku());
+				sub.setTitle(sku.getTitle());
+				sub.setPrice(sku.getPrice());
+				sub.setDescription(sku.getDescription());
+
+				pool.addSubscription(sub);
+
+				updateUI();
+
+			}
+
+		} else {
+
+			Log.d(TAG, "onSkuDetailsResponse: response code = " + result.getResponseCode());
+			Log.w(TAG, "onSkuDetailsResponse: response message = " + result.getDebugMessage());
 
 		}
 

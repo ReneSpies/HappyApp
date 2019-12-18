@@ -3,6 +3,7 @@ package com.aresid.happyapp;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -14,40 +15,25 @@ import java.util.List;
 
 class SubscriptionPool {
 
-	private static final String                                TAG = "SubscriptionPool";
-	private              List<Subscription>                    mSubscriptions;
-	private              OnSubscriptionPopulateSuccessListener mSuccessListener;
-	private              BillingManager                        mBillingManager;
+	private static final String                        TAG = "SubscriptionPool";
+	private              HashMap<String, Subscription> mSubscriptions;
 
-	SubscriptionPool(List<Subscription> subscriptions) {
+	SubscriptionPool() {
 
-		mSubscriptions = subscriptions;
+		Log.d(TAG, "SubscriptionPool: empty constructor");
 
-	}
-
-	/**
-	 * Adds a new listener that is called when the build was successful!
-	 *
-	 * @param listener Listener that's called upon success.
-	 */
-	void addOnSuccessListener(OnSubscriptionPopulateSuccessListener listener) {
-
-		Log.d(TAG, "addOnSuccessListener:true");
-
-		mSuccessListener = listener;
+		mSubscriptions = new HashMap<>();
 
 	}
 
-	/**
-	 * In here I call the server and retrieve the available subscriptions and load them into the pool.
-	 *
-	 * @return This.
-	 */
-	SubscriptionPool populatePool() {
+	void addSubscription(Subscription subscription) {
 
-		Log.d(TAG, "populatePool:true");
+		Log.d(TAG, "addSubscription:true");
 
-		return this;
+		mSubscriptions.put(subscription.getId(), subscription);
+
+		Log.d(TAG, "addSubscription: size = " + mSubscriptions.size());
+		Log.d(TAG, "addSubscription: count = " + getSubscriptionCount());
 
 	}
 
@@ -58,7 +44,7 @@ class SubscriptionPool {
 	 */
 	int getSubscriptionCount() {
 
-		Log.d(TAG, "getSubscriptions:true");
+		Log.d(TAG, "getSubscriptionCount = " + mSubscriptions.size());
 
 		return mSubscriptions.size();
 
@@ -74,27 +60,17 @@ class SubscriptionPool {
 
 		Log.d(TAG, "getSubscription:true");
 
-		return mSubscriptions.get(index);
+		List<Subscription> listOfSubscriptions = new ArrayList<>(mSubscriptions.values());
+
+		return listOfSubscriptions.get(index);
 
 	}
 
-	static class Builder {
+	Subscription getSubscription(String subscriptoinId) {
 
-		private static final String                                TAG = "Builder";
-		private              OnSubscriptionPopulateSuccessListener mSuccessListener;
+		Log.d(TAG, "getSubscription:true");
 
-		/**
-		 * Here I build the pool. Retrieve the available subscriptions from the console and save it in the pool.
-		 *
-		 * @return Built pool.
-		 */
-		SubscriptionPool build() {
-
-			Log.d(TAG, "build:true");
-
-			return new SubscriptionPool(new ArrayList<>());
-
-		}
+		return mSubscriptions.get(subscriptoinId);
 
 	}
 

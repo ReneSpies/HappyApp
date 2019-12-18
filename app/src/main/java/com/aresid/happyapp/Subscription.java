@@ -21,6 +21,7 @@ class Subscription {
 	private boolean      mHasBulletpoints;
 	private List<String> mBulletspoints;
 	private Drawable     mIcon;
+	private String       mId;
 
 	// TODO: subscription object. think rené, think!
 
@@ -208,6 +209,28 @@ class Subscription {
 		setPrice(price);
 		setIcon(icon);
 		setBulletpoints(bulletpoints);
+
+	}
+
+	/**
+	 * Getter for subscriptions id.
+	 *
+	 * @return Guess.
+	 */
+	String getId() {
+
+		return mId;
+
+	}
+
+	/**
+	 * Setter for subscriptions id.
+	 *
+	 * @param id Guess.
+	 */
+	void setId(String id) {
+
+		mId = id;
 
 	}
 

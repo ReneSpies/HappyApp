@@ -17,7 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -46,7 +51,9 @@ public class EntryActivity
 		implements ViewPagerAdapter.OnViewPagerInteractionListener,
 		           View.OnClickListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener,
-		           ButtonlessLogin.OnButtonlessLoginInteractionListener {
+		           ButtonlessLogin.OnButtonlessLoginInteractionListener,
+		           BillingClientStateListener,
+		           PurchasesUpdatedListener {
 
 	private static final String TAG                = "EntryActivity";
 	private static final int    REQUEST_CODE_LOGIN = 13;
@@ -54,7 +61,7 @@ public class EntryActivity
 	private GoogleSignInClient mGoogleSignInClient;
 	private FirebaseAuth       mAuth;
 	private int                mBackPressCounter = 0;
-	private BillingManager     mBillingManager;
+	private BillingClient      mBillingClient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,39 +135,11 @@ public class EntryActivity
 		// this is required so the keyboard wont show up.
 		etRegistrationDateOfBirthField.setKeyListener(null);
 
-		mBillingManager = new BillingManager(this);
-
-		List<String> skus = new ArrayList<>();
-		skus.add("happyapp.subscription.bronze");
-		skus.add("happyapp.subscription.silver");
-		skus.add("happyapp.subscription.gold");
-		skus.add("happyapp.subscription.platinum");
-
-		mBillingManager.querySkuDetailsAsync(BillingClient.SkuType.SUBS, skus, (result, list) -> {
-
-			Log.d(TAG, "onCreate: skudetailresponselistener");
-
-			Log.d(TAG, "onCreate: result = " + result);
-			Log.d(TAG, "onCreate: list = " + list);
-
-			for (SkuDetails sku : list) {
-
-				Log.d(TAG, "onCreate: sku = " + sku.getTitle());
-
-			}
-
-		});
-
-		SubscriptionPool pool = new SubscriptionPool.Builder().build();
-		pool.populatePool()
-		    .addOnSuccessListener((populatedPool) -> {
-
-			    Log.d(TAG, "onSuccess:true");
-
-			    int count = populatedPool.getSubscriptionCount();
-			    Subscription sub = populatedPool.getSubscription(1);
-
-		    });
+		mBillingClient = BillingClient.newBuilder(this)
+		                              .setListener(this)
+		                              .enablePendingPurchases()
+		                              .build();
+		mBillingClient.startConnection(this);
 
 	}
 
@@ -1277,6 +1256,58 @@ public class EntryActivity
 			     }
 
 		     });
+
+	}
+
+	@Override
+	public void onBillingSetupFinished(BillingResult result) {
+
+		Log.d(TAG, "onBillingSetupFinished:true");
+
+		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+
+			List<String> skus = new ArrayList<>();
+			skus.add("happyapp.subscription.bronze");
+			skus.add("happyapp.subscription.silver");
+			skus.add("happyapp.subscription.gold");
+			skus.add("happyapp.subscription.platinum");
+
+			mBillingClient.querySkuDetailsAsync(SkuDetailsParams.newBuilder()
+			                                                    .setSkusList(skus)
+			                                                    .setType(BillingClient.SkuType.SUBS)
+			                                                    .build(), (result1, list) -> {
+
+				Log.d(TAG, "onBillingSetupFinished: listener");
+				Log.d(TAG, "onBillingSetupFinished: result code = " + result1.getResponseCode());
+
+				for (SkuDetails sku : list) {
+
+					Log.d(TAG, "onBillingSetupFinished: got a sku: " + sku.getTitle());
+
+				}
+
+			});
+
+		} else {
+
+			Log.w(TAG, "onBillingSetupFinished: result = " + result.getDebugMessage());
+			Log.d(TAG, "onBillingSetupFinished: result code = " + result.getResponseCode());
+
+		}
+
+	}
+
+	@Override
+	public void onBillingServiceDisconnected() {
+
+		Log.d(TAG, "onBillingServiceDisconnected:true");
+
+	}
+
+	@Override
+	public void onPurchasesUpdated(BillingResult result, @Nullable List<Purchase> list) {
+
+		Log.d(TAG, "onPurchasesUpdated:true");
 
 	}
 }
