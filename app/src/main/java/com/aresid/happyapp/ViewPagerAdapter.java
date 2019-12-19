@@ -224,7 +224,7 @@ public class ViewPagerAdapter
 
 	}
 
-	private static void setProcessingLayoutVisibility(int visibility) {
+	private void setProcessingLayoutVisibility(int visibility) {
 
 		Log.d(TAG, "setProcessingLayoutVisibility:true");
 
@@ -264,17 +264,33 @@ public class ViewPagerAdapter
 
 	}
 
-	void updateUI() {
+	@Override
+	public void onSkuDetailsResponse(BillingResult result, List<SkuDetails> list) {
 
-		Log.d(TAG, "updateUI:true");
+		Log.d(TAG, "onSkuDetailsResponse:true");
 
-		synchronized (this) {
+		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 
-			Log.d(TAG, "updateUI: synchronized");
+			for (SkuDetails sku : list) {
 
-			notifyDataSetChanged();
+				Log.d(TAG, "onSkuDetailsResponse: got a sku: " + sku.getTitle());
 
-//			setProcessingLayoutVisibility(View.GONE);
+				Subscription sub = new Subscription();
+				sub.setId(sku.getSku());
+				sub.setTitle(sku.getTitle());
+				sub.setPrice(sku.getPrice());
+				sub.setDescription(sku.getDescription());
+
+				mSubscriptionPool.addSubscription(sub);
+
+				updateUI();
+
+			}
+
+		} else {
+
+			Log.d(TAG, "onSkuDetailsResponse: response code = " + result.getResponseCode());
+			Log.w(TAG, "onSkuDetailsResponse: response message = " + result.getDebugMessage());
 
 		}
 
@@ -325,35 +341,17 @@ public class ViewPagerAdapter
 
 	}
 
-	@Override
-	public void onSkuDetailsResponse(BillingResult result, List<SkuDetails> list) {
+	private void updateUI() {
 
-		Log.d(TAG, "onSkuDetailsResponse:true");
+		Log.d(TAG, "updateUI:true");
 
-		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+		synchronized (this) {
 
-			SubscriptionPool pool = new SubscriptionPool();
+			Log.d(TAG, "updateUI: synchronized");
 
-			for (SkuDetails sku : list) {
+			notifyDataSetChanged();
 
-				Log.d(TAG, "onSkuDetailsResponse: got a sku: " + sku.getTitle());
-
-				Subscription sub = new Subscription();
-				sub.setId(sku.getSku());
-				sub.setTitle(sku.getTitle());
-				sub.setPrice(sku.getPrice());
-				sub.setDescription(sku.getDescription());
-
-				pool.addSubscription(sub);
-
-				updateUI();
-
-			}
-
-		} else {
-
-			Log.d(TAG, "onSkuDetailsResponse: response code = " + result.getResponseCode());
-			Log.w(TAG, "onSkuDetailsResponse: response message = " + result.getDebugMessage());
+//			setProcessingLayoutVisibility(View.GONE);
 
 		}
 
