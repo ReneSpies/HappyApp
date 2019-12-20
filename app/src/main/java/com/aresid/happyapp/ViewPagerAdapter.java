@@ -24,8 +24,6 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.bumptech.glide.Glide;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Source;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -178,52 +176,6 @@ public class ViewPagerAdapter
 
 	}
 
-	private void fetchSubscriptionInfoFromServer() {
-
-		Log.d(TAG, "fetchSubscriptionInfoFromServer:true");
-
-		FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-		List<String> listOfTitles = new ArrayList<>();
-		List<String> listOfDescs = new ArrayList<>();
-		List<String> listOfPrices = new ArrayList<>();
-
-		setProcessingLayoutVisibility(View.VISIBLE);
-
-		db.collection(FirestoreNames.COLLECTION_SUBSCRIPTIONS)
-		  .document(FirestoreNames.DOCUMENT_INFO)
-		  .get(Source.SERVER)
-		  .addOnSuccessListener(command -> {
-
-			  Log.d(TAG, "getSubscriptionsInfoArray: success");
-
-			  listOfTitles.add(command.getString(FirestoreNames.COLUMN_TITLE_FREE));
-			  listOfTitles.add(command.getString(FirestoreNames.COLUMN_TITLE_GOLD));
-
-			  listOfDescs.add(command.getString(FirestoreNames.COLUMN_DESC_FREE));
-			  listOfDescs.add(command.getString(FirestoreNames.COLUMN_DESC_GOLD));
-
-			  listOfPrices.add(command.getString(FirestoreNames.COLUMN_PRICE_FREE));
-			  listOfPrices.add(command.getString(FirestoreNames.COLUMN_PRICE_GOLD));
-
-			  mTitles = listOfTitles;
-			  mDescriptions = listOfDescs;
-			  mPrices = listOfPrices;
-
-			  updateUI();
-
-		  })
-		  .addOnFailureListener(e -> {
-
-			  Log.d(TAG, "getSubscriptionsInfoArray: failure");
-			  Log.e(TAG, "getSubscriptionsInfoArray: ", e);
-
-			  setProcessingLayoutVisibility(View.GONE);
-
-		  });
-
-	}
-
 	private void setProcessingLayoutVisibility(int visibility) {
 
 		Log.d(TAG, "setProcessingLayoutVisibility:true");
@@ -275,7 +227,7 @@ public class ViewPagerAdapter
 
 				Log.d(TAG, "onSkuDetailsResponse: got a sku: " + sku.getTitle());
 
-				Subscription sub = new Subscription();
+				Subscription sub = new Subscription(mContext);
 				sub.setId(sku.getSku());
 				sub.setTitle(sku.getTitle());
 				sub.setPrice(sku.getPrice());
@@ -283,9 +235,11 @@ public class ViewPagerAdapter
 
 				mSubscriptionPool.addSubscription(sub);
 
-				updateUI();
-
 			}
+
+			mSubscriptionPool.sort();
+
+			updateUI();
 
 		} else {
 

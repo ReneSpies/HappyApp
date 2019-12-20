@@ -59,8 +59,8 @@
 			<androidx.constraintlayout.widget.ConstraintLayout
 				android:id="@+id/entry_activity_login_parent"
 				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_seperator_view"
+				android:layout_height="wrap_content"
+				app:layout_constraintBottom_toTopOf="@id/entry_activity_email_login_seperator_view"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_app_logo">
 
 				<com.google.android.material.textfield.TextInputLayout
@@ -307,7 +307,8 @@
 				android:id="@+id/entry_activity_subscription_view_pager_caption"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginBottom="8.13dp"
+				android:layout_marginTop="8dp"
+				android:layout_marginBottom="16dp"
 				android:text="@string/plain_subscribe"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"

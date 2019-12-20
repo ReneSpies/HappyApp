@@ -3,7 +3,7 @@ package com.aresid.happyapp;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,14 +15,25 @@ import java.util.List;
 
 class SubscriptionPool {
 
-	private static final String                        TAG = "SubscriptionPool";
-	private              HashMap<String, Subscription> mSubscriptions;
+	private static final String             TAG = "SubscriptionPool";
+	private              List<Subscription> mSubscriptions;
 
 	SubscriptionPool() {
 
 		Log.d(TAG, "SubscriptionPool: empty constructor");
 
-		mSubscriptions = new HashMap<>();
+		mSubscriptions = new ArrayList<>();
+
+	}
+
+	/**
+	 * As the query returns the subs in some weird sequence I sort the subs here and add their icons.
+	 */
+	void sort() {
+
+		Log.d(TAG, "sort:true");
+
+		Collections.sort(mSubscriptions, (o1, o2) -> o1.getPriority() - (o2.getPriority()));
 
 	}
 
@@ -30,10 +41,7 @@ class SubscriptionPool {
 
 		Log.d(TAG, "addSubscription:true");
 
-		mSubscriptions.put(subscription.getId(), subscription);
-
-		Log.d(TAG, "addSubscription: size = " + mSubscriptions.size());
-		Log.d(TAG, "addSubscription: count = " + getSubscriptionCount());
+		mSubscriptions.add(subscription);
 
 	}
 
@@ -60,17 +68,7 @@ class SubscriptionPool {
 
 		Log.d(TAG, "getSubscription:true");
 
-		List<Subscription> listOfSubscriptions = new ArrayList<>(mSubscriptions.values());
-
-		return listOfSubscriptions.get(index);
-
-	}
-
-	Subscription getSubscription(String subscriptoinId) {
-
-		Log.d(TAG, "getSubscription:true");
-
-		return mSubscriptions.get(subscriptoinId);
+		return mSubscriptions.get(index);
 
 	}
 

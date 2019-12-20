@@ -1,10 +1,8 @@
 package com.aresid.happyapp;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created on: 13/11/2019
@@ -15,39 +13,28 @@ import java.util.List;
 
 class Subscription {
 
-	private String       mTitle;
-	private String       mDescription;
-	private String       mPrice;
-	private boolean      mHasBulletpoints;
-	private List<String> mBulletspoints;
-	private Drawable     mIcon;
-	private String       mId;
-
-	// TODO: subscription object. think rené, think!
-
-	private static final String TAG = "Subscription";
+	private static final int      PRIO_BRONZE   = 0;
+	private static final int      PRIO_SILVER   = 1;
+	private static final int      PRIO_GOLD     = 2;
+	private static final int      PRIO_PLATINUM = 3;
+	private static final int      PRIO_DEFAULT  = -1;
+	private static final String   TAG           = "Subscription";
+	private              String   mTitle;
+	private              String   mDescription;
+	private              String   mPrice;
+	private              Drawable mIcon;
+	private              String   mId;
+	private              Context  mContext;
+	private              int      mPriority;
 
 	/**
 	 * Constructor.
 	 */
-	Subscription() {
+	Subscription(Context context) {
 
 		Log.d(TAG, "Subscription: empty constructor");
 
-		// constructor!
-
-	}
-
-	/**
-	 * Sets the bool if bulletpoints are used.
-	 *
-	 * @param hasBulletpoints True if bulletpoints are used.
-	 */
-	private void setHasBulletpoints(boolean hasBulletpoints) {
-
-		Log.d(TAG, "setHasBulletpoints:true");
-
-		mHasBulletpoints = hasBulletpoints;
+		mContext = context;
 
 	}
 
@@ -64,17 +51,6 @@ class Subscription {
 
 	}
 
-	Subscription(String title, String description, String price, Drawable icon) {
-
-		Log.d(TAG, "Subscription: constructor without bulletpoints");
-
-		setTitle(title);
-		setDescription(description);
-		setPrice(price);
-		setIcon(icon);
-
-	}
-
 	/**
 	 * Sets the subscriptions title to the given String.
 	 *
@@ -84,7 +60,16 @@ class Subscription {
 
 		Log.d(TAG, "setTitle:true");
 
-		mTitle = title;
+		if (title.contains("(HappyApp)")) {
+
+			mTitle = title.replace("(HappyApp)", "")
+			              .trim();
+
+		} else {
+
+			mTitle = title.trim();
+
+		}
 
 	}
 
@@ -98,30 +83,6 @@ class Subscription {
 		Log.d(TAG, "setPrice:true");
 
 		mPrice = price;
-
-	}
-
-	/**
-	 * Sets the subscriptions description to the given String as bulletpoints.
-	 * Throws IllegalStateException if subscription already has a description.
-	 *
-	 * @param bulletpoints Your desired bulletpoints.
-	 */
-	void setBulletpoints(String... bulletpoints) {
-
-		Log.d(TAG, "setBulletpoints:true");
-
-		if (getDescription() == null) {
-
-			mBulletspoints.addAll(Arrays.asList(bulletpoints));
-
-			setHasBulletpoints(true);
-
-		} else {
-
-			throw new IllegalStateException("Subscription already has bulletpoints");
-
-		}
 
 	}
 
@@ -148,17 +109,7 @@ class Subscription {
 
 		Log.d(TAG, "setDescription:true");
 
-		if (mBulletspoints == null || !mHasBulletpoints) {
-
-			mDescription = description;
-
-			setHasBulletpoints(false);
-
-		} else {
-
-			throw new IllegalStateException("Subscription already has bulletpoints");
-
-		}
+		mDescription = description;
 
 	}
 
@@ -201,17 +152,6 @@ class Subscription {
 
 	}
 
-	Subscription(String title, String price, Drawable icon, String... bulletpoints) {
-
-		Log.d(TAG, "Subscription: constructor with bulletpoints");
-
-		setTitle(title);
-		setPrice(price);
-		setIcon(icon);
-		setBulletpoints(bulletpoints);
-
-	}
-
 	/**
 	 * Getter for subscriptions id.
 	 *
@@ -230,7 +170,61 @@ class Subscription {
 	 */
 	void setId(String id) {
 
+		if ((id.contains("bronze"))) {
+
+			setIcon(mContext.getDrawable(R.drawable.bronze_icon));
+
+			setPriority(PRIO_BRONZE);
+
+		} else if ((id.contains("silver"))) {
+
+			setIcon(mContext.getDrawable(R.drawable.silver_icon));
+
+			setPriority(PRIO_SILVER);
+
+		} else if ((id.contains("gold"))) {
+
+			setIcon(mContext.getDrawable(R.drawable.gold_icon));
+
+			setPriority(PRIO_GOLD);
+
+		} else if ((id.contains("platinum"))) {
+
+			setIcon(mContext.getDrawable(R.drawable.platinum_icon));
+
+			setPriority(PRIO_PLATINUM);
+
+		} else {
+
+			setPriority(PRIO_DEFAULT);
+
+		}
+
 		mId = id;
+
+	}
+
+	/**
+	 * Getter for subscriptions priority.
+	 *
+	 * @return Guess.
+	 */
+	int getPriority() {
+
+		return mPriority;
+
+	}
+
+	/**
+	 * Setter for subscriptions priority.
+	 *
+	 * @param priority Guess.
+	 */
+	private void setPriority(int priority) {
+
+		Log.d(TAG, "setPriority:true");
+
+		mPriority = priority;
 
 	}
 

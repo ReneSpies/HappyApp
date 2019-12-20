@@ -516,7 +516,7 @@ public class EntryActivity
 
 						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
-						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, user.getDisplayName(), new Subscription(), user.getPhotoUrl());
+						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, user.getDisplayName(), new Subscription(this), user.getPhotoUrl());
 
 //						  addUsersSubscriptionVariantToFirestore(user, variant);
 
