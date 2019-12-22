@@ -26,7 +26,6 @@ import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -42,9 +41,9 @@ public class ViewPagerAdapter
 		           SkuDetailsResponseListener {
 
 	private static final String                         TAG = "ViewPagerAdapter";
-	private static       View                           mCheckoutProcessingLayout;
-	private static       View                           mProcessingLayout;
-	private static       View                           mMainView;
+	private static       View                           mCheckoutProcessingLayout; // do not use. bad!
+	private              View                           mProcessingLayout;
+	private              View                           mMainView;
 	private              LayoutInflater                 mInflater;
 	private              List<String>                   mTitles;
 	private              List<String>                   mDescriptions;
@@ -72,14 +71,10 @@ public class ViewPagerAdapter
 		mInflater = LayoutInflater.from(context);
 		mViewPager2 = viewPager2;
 
-		Collection<String> collection = new ArrayList<>();
-		collection.add(context.getString(R.string.plain_processing));
+		mTitles = new ArrayList<>();
+		mDescriptions = new ArrayList<>();
+		mPrices = new ArrayList<>();
 
-		mTitles = new ArrayList<>(collection);
-		mDescriptions = new ArrayList<>(collection);
-		mPrices = new ArrayList<>(collection);
-
-		mVariant = 0;
 		mContext = context;
 
 		if (context instanceof OnViewPagerInteractionListener) {
@@ -98,7 +93,7 @@ public class ViewPagerAdapter
 
 		Log.d(TAG, "setCheckoutProcessingLayoutVisibility:true");
 
-		mCheckoutProcessingLayout.setVisibility(visibility);
+		// TODO: refactor this very very bad programming!
 
 	}
 
@@ -110,33 +105,34 @@ public class ViewPagerAdapter
 
 		View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
 		Button viewPagerBtConfirm = view.findViewById(R.id.view_pager_bt_confirm);
-		mCheckoutProcessingLayout = view.findViewById(R.id.view_pager_checkout_waiting_assistant_layout);
 		mProcessingLayout = view.findViewById(R.id.view_pager_waiting_assistant_layout);
 		mMainView = view.findViewById(R.id.view_pager_main_view);
 
-		Log.d(TAG, "onCreateViewHolder: parent = " + parent.toString());
-
-		Log.d(TAG, "onCreateViewHolder: checkout layout = " + mCheckoutProcessingLayout);
-
-		Glide.with(mContext)
-		     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
-		     .into((ImageView) view.findViewById(R.id.view_pager_checkout_waiting_assistant));
-
-		Glide.with(mContext)
-		     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
-		     .into((ImageView) view.findViewById(R.id.view_pager_waiting_assistant));
+		loadGifInto(view.findViewById(R.id.view_pager_checkout_waiting_assistant), view.findViewById(R.id.view_pager_waiting_assistant));
 
 		viewPagerBtConfirm.setOnClickListener(v -> {
 
 			Log.d(TAG, "onCreateViewHolder: bt click");
 
-			Log.d(TAG, "onCreateViewHolder: variant is " + (mViewPager2.getCurrentItem() == 1 ? 13 : 26));
-
-			mListener.createUser((mViewPager2.getCurrentItem() == 1 ? 13 : 26));
+			mListener.createUser(0);
 
 		});
 
 		return new ViewHolder(view);
+
+	}
+
+	private void loadGifInto(ImageView... gifHolder) {
+
+		Log.d(TAG, "loadGifInto:true");
+
+		for (int i = 0; i <= gifHolder.length - 1; i++) {
+
+			Glide.with(mContext)
+			     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
+			     .into(gifHolder[i]);
+
+		}
 
 	}
 
@@ -154,10 +150,6 @@ public class ViewPagerAdapter
 		Drawable icon = mSubscriptionPool.getSubscription(position)
 		                                 .getIcon();
 
-		Log.d(TAG, "onBindViewHolder: title = " + title);
-		Log.d(TAG, "onBindViewHolder: description = " + description);
-		Log.d(TAG, "onBindViewHolder: price = " + price);
-
 		holder.mTVTitle.setText(title);
 		holder.mTVDescription.setText(description);
 		holder.mTVPrice.setText(price);
@@ -170,47 +162,21 @@ public class ViewPagerAdapter
 
 		Log.d(TAG, "getItemCount:true");
 
-		Log.d(TAG, "getItemCount: " + mSubscriptionPool.getSubscriptionCount());
-
 		return mSubscriptionPool.getSubscriptionCount();
 
 	}
 
-	private void setProcessingLayoutVisibility(int visibility) {
+	private void updateUI() {
 
-		Log.d(TAG, "setProcessingLayoutVisibility:true");
+		Log.d(TAG, "updateUI:true");
 
-		switch (visibility) {
+		synchronized (this) {
 
-			case View.INVISIBLE:
+			Log.d(TAG, "updateUI: synchronized");
 
-				Log.d(TAG, "setProcessingLayoutVisibility: invisible");
+			notifyDataSetChanged();
 
-				mProcessingLayout.setVisibility(visibility);
-
-				mMainView.setVisibility(View.VISIBLE);
-
-				break;
-
-			case View.VISIBLE:
-
-				Log.d(TAG, "setProcessingLayoutVisibility: visible");
-
-				mProcessingLayout.setVisibility(visibility);
-
-				mMainView.setVisibility(View.INVISIBLE);
-
-				break;
-
-			case View.GONE:
-
-				Log.d(TAG, "setProcessingLayoutVisibility: gone");
-
-				mProcessingLayout.setVisibility(visibility);
-
-				mMainView.setVisibility(View.VISIBLE);
-
-				break;
+			setProcessingLayoutVisibility(View.GONE);
 
 		}
 
@@ -295,17 +261,29 @@ public class ViewPagerAdapter
 
 	}
 
-	private void updateUI() {
+	private void setProcessingLayoutVisibility(int visibility) {
 
-		Log.d(TAG, "updateUI:true");
+		Log.d(TAG, "setProcessingLayoutVisibility:true");
 
-		synchronized (this) {
+		if (mProcessingLayout == null) {
 
-			Log.d(TAG, "updateUI: synchronized");
+			return;
 
-			notifyDataSetChanged();
+		}
 
-//			setProcessingLayoutVisibility(View.GONE);
+		if (visibility == View.VISIBLE) {
+
+			Log.d(TAG, "setProcessingLayoutVisibility: visible");
+
+			mProcessingLayout.setVisibility(visibility);
+
+			mMainView.setVisibility(View.INVISIBLE);
+
+		} else {
+
+			mProcessingLayout.setVisibility(visibility);
+
+			mMainView.setVisibility(View.VISIBLE);
 
 		}
 

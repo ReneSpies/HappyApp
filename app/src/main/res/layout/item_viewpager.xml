@@ -8,27 +8,23 @@
 	<LinearLayout
 		android:id="@+id/view_pager_waiting_assistant_layout"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:orientation="vertical"
-		android:visibility="gone">
+		android:visibility="visible">
 
 		<ImageView
 			android:id="@+id/view_pager_waiting_assistant"
 			android:layout_width="@dimen/waiting_assistant_standard"
-			android:layout_height="@dimen/waiting_assistant_standard" />
-
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/plain_processing"
-			android:textAlignment="center" />
+			android:layout_height="@dimen/waiting_assistant_standard"
+			android:contentDescription="@string/plain_processing" />
 	</LinearLayout>
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
 			android:id="@+id/view_pager_main_view"
-			android:layout_height="match_parent">
+			android:layout_height="match_parent"
+			android:visibility="gone">
 
 			<LinearLayout
 				android:id="@+id/view_pager_checkout_waiting_assistant_layout"
@@ -98,7 +94,7 @@
 				style="@style/Widget.HappyApp.ContainedButton"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="Check this out"
+				android:text="@string/plain_check_this_out"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
