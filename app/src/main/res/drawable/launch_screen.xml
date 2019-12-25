@@ -5,9 +5,9 @@
 	<item android:drawable="@color/fragment_background_color" />
 
 	<!-- My product entry_activity_app_logo -->
-	<item
-		android:width="@dimen/image_view_app_logo_size"
-		android:height="@dimen/image_view_app_logo_size">
-		<bitmap android:src="@drawable/ic_app_logo" />
+	<item>
+		<bitmap
+			android:gravity="center"
+			android:src="@drawable/ic_app_logo" />
 	</item>
 </layer-list>

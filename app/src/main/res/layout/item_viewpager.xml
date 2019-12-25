@@ -8,10 +8,10 @@
 	<LinearLayout
 		android:id="@+id/view_pager_waiting_assistant_layout"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="match_parent"
 		android:gravity="center"
 		android:orientation="vertical"
-		android:visibility="visible">
+		android:visibility="invisible">
 
 		<ImageView
 			android:id="@+id/view_pager_waiting_assistant"
@@ -24,7 +24,7 @@
 			android:layout_width="match_parent"
 			android:id="@+id/view_pager_main_view"
 			android:layout_height="match_parent"
-			android:visibility="gone">
+			android:visibility="visible">
 
 			<LinearLayout
 				android:id="@+id/view_pager_checkout_waiting_assistant_layout"
