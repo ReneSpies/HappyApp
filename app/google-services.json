@@ -8,31 +8,19 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:930375194703:android:ea886d1cc5770adb",
+        "mobilesdk_app_id": "1:930375194703:android:c3a3b1da41870c8f",
         "android_client_info": {
           "package_name": "com.aresid.happyapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "930375194703-ul5nkco1hicurot53r12hu7e58j9epou.apps.googleusercontent.com",
+          "client_id": "930375194703-46iffc0tnj36lrese9tgg7h8afc4l2uo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "android.aresid.happyapp",
-            "certificate_hash": "c8f3c89acb6440b851b1dfff1563690e84a6ced9"
-          }
-        },
-        {
-          "client_id": "930375194703-j1bpgau8p8g7nea729qfgprjcpvgmjag.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "android.aresid.happyapp",
+            "package_name": "com.aresid.happyapp",
             "certificate_hash": "ec432f2f0b568c9e762c3c9f3ab5067b4f597720"
           }
-        },
-        {
-          "client_id": "930375194703-fpfg0920mmm8dsjuqnrt4cbt16ibq87f.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
@@ -44,7 +32,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "930375194703-fpfg0920mmm8dsjuqnrt4cbt16ibq87f.apps.googleusercontent.com",
+              "client_id": "930375194703-o6q02lgud4ofnlb5qcbpmkatkc2q575r.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
