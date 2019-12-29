@@ -50,7 +50,7 @@
 				android:layout_marginTop="30dp"
 				android:layout_marginBottom="50dp"
 				android:contentDescription="@string/plain_happy_app_logo"
-				android:src="@drawable/ic_app_logo"
+				app:srcCompat="@drawable/ic_app_logo"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_login_parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"

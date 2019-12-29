@@ -2,7 +2,7 @@
 <resources>
 
 	<style name="Widget.HappyApp.Spinner" parent="Widget.AppCompat.Spinner">
-		<item name="android:elevation">13dp</item>
+		<item name="elevation">13dp</item>
 		<item name="android:buttonCornerRadius">25.13dp</item>
 	</style>
 </resources>

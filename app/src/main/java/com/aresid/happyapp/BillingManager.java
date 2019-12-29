@@ -1,9 +1,9 @@
 package com.aresid.happyapp;
 
-import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
@@ -44,10 +44,10 @@ public class BillingManager
 
 	}
 
-	private Activity      mActivity;
-	private BillingClient mBillingClient;
+	private AppCompatActivity mActivity;
+	private BillingClient     mBillingClient;
 
-	BillingManager(Activity activity) {
+	BillingManager(AppCompatActivity activity) {
 
 		Log.d(TAG, "BillingManager:true");
 
