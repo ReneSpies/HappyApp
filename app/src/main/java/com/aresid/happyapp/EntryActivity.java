@@ -109,7 +109,7 @@ public class EntryActivity
 		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
 		TextInputEditText loginPasswordField = findViewById(R.id.entry_activity_login_password_field);
 
-		vpSubscriptions.setAdapter(new ViewPagerAdapter(this, vpSubscriptions));
+		vpSubscriptions.setAdapter(new ViewPagerAdapter(this));
 
 		// Beginning of buttonless login process.
 		// Register a listener for the email and password field.
@@ -410,7 +410,7 @@ public class EntryActivity
 
 			  Log.e(TAG, "updateGoogleUser: ", e);
 
-			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
+//			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 
 		  });
 
@@ -448,7 +448,7 @@ public class EntryActivity
 
 			  Log.e(TAG, "addUsersSubscriptionVariantToFirestore: ", e);
 
-			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
+//			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 
 		  });
 
@@ -457,12 +457,14 @@ public class EntryActivity
 	/**
 	 * Now this does some fancy stuff. Checks if all the data is correct and then proceeds to Google billing flow.
 	 *
-	 * @param variant The subscription variant.
+	 * @param subscription The subscription.
 	 */
 	@Override
-	public void createUser(int variant) {
+	public void createUser(Subscription subscription) {
 
 		Log.d(TAG, "createUser:true");
+
+		Log.d(TAG, "createUser: subscription = " + subscription.getTitle());
 
 		TextInputEditText etRegistrationEmailField = findViewById(R.id.entry_activity_registration_email_field);
 		TextInputEditText etRegistrationPasswordField = findViewById(R.id.entry_activity_registration_password_field);
@@ -514,7 +516,7 @@ public class EntryActivity
 
 					  if (command.isEmpty()) {
 
-						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
+//						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
 						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, user.getDisplayName(), new Subscription(this), user.getPhotoUrl());
 
@@ -562,7 +564,7 @@ public class EntryActivity
 				etRegistrationDobLayout.setEnabled(false);
 				cbTermsConditionsPrivacyPolicy.setEnabled(false);
 
-				ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
+//				ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 
 				db.collection(FirestoreNames.COLLECTION_USERS)
 				  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)

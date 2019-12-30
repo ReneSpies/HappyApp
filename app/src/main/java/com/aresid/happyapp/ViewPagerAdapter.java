@@ -41,21 +41,15 @@ public class ViewPagerAdapter
 		           SkuDetailsResponseListener {
 
 	private static final String                         TAG = "ViewPagerAdapter";
-	private static       View                           mCheckoutProcessingLayout; // do not use. bad!
 	private              View                           mProcessingLayout;
 	private              View                           mMainView;
 	private              LayoutInflater                 mInflater;
-	private              List<String>                   mTitles;
-	private              List<String>                   mDescriptions;
-	private              List<String>                   mPrices;
 	private              OnViewPagerInteractionListener mListener;
-	private              int                            mVariant;
 	private              Context                        mContext;
-	private              ViewPager2                     mViewPager2;
 	private              SubscriptionPool               mSubscriptionPool;
 	private              BillingClient                  mBillingClient;
 
-	ViewPagerAdapter(Context context, ViewPager2 viewPager2) {
+	ViewPagerAdapter(Context context) {
 
 		Log.d(TAG, "ViewPagerAdapter:true");
 
@@ -69,11 +63,6 @@ public class ViewPagerAdapter
 		mSubscriptionPool = new SubscriptionPool();
 
 		mInflater = LayoutInflater.from(context);
-		mViewPager2 = viewPager2;
-
-		mTitles = new ArrayList<>();
-		mDescriptions = new ArrayList<>();
-		mPrices = new ArrayList<>();
 
 		mContext = context;
 
@@ -86,14 +75,6 @@ public class ViewPagerAdapter
 			throw new RuntimeException(context.toString() + " must implement OnViewPagerInteractionListener");
 
 		}
-
-	}
-
-	static void setCheckoutProcessingLayoutVisibility(int visibility) {
-
-		Log.d(TAG, "setCheckoutProcessingLayoutVisibility:true");
-
-		// TODO: refactor this very very bad programming!
 
 	}
 
@@ -114,7 +95,10 @@ public class ViewPagerAdapter
 
 			Log.d(TAG, "onCreateViewHolder: bt click");
 
-			mListener.createUser(0);
+			ViewPager2 viewPager2 = (ViewPager2) view.getParent()
+			                                         .getParent();
+
+			mListener.createUser(mSubscriptionPool.getSubscription(viewPager2.getCurrentItem()));
 
 		});
 
@@ -291,7 +275,7 @@ public class ViewPagerAdapter
 
 	public interface OnViewPagerInteractionListener {
 
-		void createUser(int variantCode);
+		void createUser(Subscription subscription);
 
 	}
 
