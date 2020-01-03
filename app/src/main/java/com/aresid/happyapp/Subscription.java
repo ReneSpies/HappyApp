@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.android.billingclient.api.SkuDetails;
+
 /**
  * Created on: 13/11/2019
  * For Project: HappyApp
@@ -13,19 +15,20 @@ import android.util.Log;
 
 class Subscription {
 
-	private static final int      PRIO_BRONZE   = 0;
-	private static final int      PRIO_SILVER   = 1;
-	private static final int      PRIO_GOLD     = 2;
-	private static final int      PRIO_PLATINUM = 3;
-	private static final int      PRIO_DEFAULT  = -1;
-	private static final String   TAG           = "Subscription";
-	private              String   mTitle;
-	private              String   mDescription;
-	private              String   mPrice;
-	private              Drawable mIcon;
-	private              String   mId;
-	private              Context  mContext;
-	private              int      mPriority;
+	private static final int        PRIO_BRONZE   = 0;
+	private static final int        PRIO_SILVER   = 1;
+	private static final int        PRIO_GOLD     = 2;
+	private static final int        PRIO_PLATINUM = 3;
+	private static final int        PRIO_DEFAULT  = -1;
+	private static final String     TAG           = "Subscription";
+	private              String     mTitle;
+	private              String     mDescription;
+	private              String     mPrice;
+	private              Drawable   mIcon;
+	private              String     mId;
+	private              Context    mContext;
+	private              int        mPriority;
+	private              SkuDetails mSkuDetails;
 
 	/**
 	 * Constructor.
@@ -228,4 +231,25 @@ class Subscription {
 
 	}
 
+	/**
+	 * Getter for sku details.
+	 *
+	 * @return Guess.
+	 */
+	SkuDetails getSkuDetails() {
+
+		return mSkuDetails;
+
+	}
+
+	/**
+	 * Setter for sku details.
+	 *
+	 * @param skuDetails Guess.
+	 */
+	void setSkuDetails(SkuDetails skuDetails) {
+
+		mSkuDetails = skuDetails;
+
+	}
 }

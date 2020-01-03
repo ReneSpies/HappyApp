@@ -1,5 +1,6 @@
 package com.aresid.happyapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -17,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
@@ -98,7 +100,23 @@ public class ViewPagerAdapter
 			ViewPager2 viewPager2 = (ViewPager2) view.getParent()
 			                                         .getParent();
 
-			mListener.createUser(mSubscriptionPool.getSubscription(viewPager2.getCurrentItem()));
+			if (mBillingClient.isFeatureSupported(BillingClient.FeatureType.SUBSCRIPTIONS)
+			                  .getResponseCode() == BillingClient.BillingResponseCode.OK) {
+
+				SkuDetails details = mSubscriptionPool.getSubscription(viewPager2.getCurrentItem())
+				                                      .getSkuDetails();
+
+				Log.d(TAG, "onCreateViewHolder: sku details = " + details.getTitle());
+
+				BillingFlowParams params = BillingFlowParams.newBuilder()
+				                                            .setSkuDetails(details)
+				                                            .build();
+
+				mBillingClient.launchBillingFlow((Activity) mContext, params);
+
+			}
+
+//			mListener.createUser(mSubscriptionPool.getSubscription(viewPager2.getCurrentItem()));
 
 		});
 
@@ -182,6 +200,7 @@ public class ViewPagerAdapter
 				sub.setTitle(sku.getTitle());
 				sub.setPrice(sku.getPrice());
 				sub.setDescription(sku.getDescription());
+				sub.setSkuDetails(sku);
 
 				mSubscriptionPool.addSubscription(sub);
 
@@ -242,6 +261,20 @@ public class ViewPagerAdapter
 	public void onPurchasesUpdated(BillingResult result, @Nullable List<Purchase> list) {
 
 		Log.d(TAG, "onPurchasesUpdated:true");
+
+		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+
+			Log.d(TAG, "onPurchasesUpdated: response code is ok");
+
+		} else if (result.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+
+			Log.d(TAG, "onPurchasesUpdated: user cancelled");
+
+		} else {
+
+			Log.d(TAG, "onPurchasesUpdated: response code is " + result.getDebugMessage());
+
+		}
 
 	}
 
