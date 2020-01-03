@@ -1,7 +1,10 @@
 package com.aresid.loadingbutton;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.animation.Animation;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -14,6 +17,8 @@ import com.google.android.material.button.MaterialButton;
 
 public class LoadingButton
 		extends MaterialButton {
+
+	private final static String TAG = "LoadingButton";
 
 	public LoadingButton(Context context) {
 
@@ -33,4 +38,28 @@ public class LoadingButton
 
 	}
 
+	void finishLoading() {
+
+		Log.d(TAG, "finishLoading:true");
+
+	}
+
+	void startLoading(Drawable gif) {
+
+		Log.d(TAG, "startLoading: with gif");
+
+	}
+
+	void startLoading(Animation loadingAnimation) {
+
+		Log.d(TAG, "startLoading: with animation");
+
+	}
+
+	void startLoading() {
+
+		Log.d(TAG, "startLoading: with progressbar");
+
+	}
+	
 }
