@@ -40,6 +40,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.kusu.loadingbutton.LoadingButton;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,7 +97,7 @@ public class EntryActivity
 		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
 
 		// Configure Google Sign In.
-		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getResources().getString(R.string.default_web_client_id))
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("release")
 		                                                                                              .requestEmail()
 		                                                                                              .build();
 
@@ -108,7 +109,8 @@ public class EntryActivity
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
 		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
 		TextInputEditText loginPasswordField = findViewById(R.id.entry_activity_login_password_field);
-
+		Button loading = findViewById(R.id.loading);
+		loading.setOnClickListener(this);
 		vpSubscriptions.setAdapter(new ViewPagerAdapter(this));
 
 		// Beginning of buttonless login process.
@@ -1000,6 +1002,11 @@ public class EntryActivity
 				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
 
 				break;
+
+			case R.id.loading:
+				LoadingButton l = (LoadingButton) v;
+				l.showLoading();
+				l.setEnabled(false);
 
 		}
 

@@ -1,10 +1,8 @@
 package com.aresid.loadingbutton;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.animation.Animation;
 
 import com.google.android.material.button.MaterialButton;
 
@@ -44,15 +42,10 @@ public class LoadingButton
 
 	}
 
-	void startLoading(Drawable gif) {
+	@Override
+	public boolean callOnClick() {
 
-		Log.d(TAG, "startLoading: with gif");
-
-	}
-
-	void startLoading(Animation loadingAnimation) {
-
-		Log.d(TAG, "startLoading: with animation");
+		return super.callOnClick();
 
 	}
 
