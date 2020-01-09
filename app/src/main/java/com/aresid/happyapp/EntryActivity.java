@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class EntryActivity
 		extends AppCompatActivity
@@ -1005,8 +1007,19 @@ public class EntryActivity
 
 			case R.id.loading:
 				LoadingButton l = (LoadingButton) v;
+
 				l.showLoading();
-				l.setEnabled(false);
+
+				new Timer().schedule(new TimerTask() {
+
+					@Override
+					public void run() {
+
+						l.hideLoading();
+
+					}
+
+				}, 500);
 
 		}
 
