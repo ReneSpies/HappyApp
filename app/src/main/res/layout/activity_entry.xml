@@ -104,14 +104,6 @@
 						android:maxLines="1" />
 				</com.google.android.material.textfield.TextInputLayout>
 
-				<com.kusu.loadingbutton.LoadingButton
-					android:id="@+id/loading"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:text="henlo"
-					android:theme="@style/Widget.HappyApp.ContainedButton"
-					app:layout_constraintTop_toBottomOf="@+id/entry_activity_login_password_layout" />
-
 				<ProgressBar
 					android:id="@+id/entry_activity_login_waiting_assistant"
 					style="@android:style/Widget.Material.Light.ProgressBar.Small"
@@ -124,15 +116,6 @@
 					app:layout_constraintTop_toTopOf="parent" />
 
 			</androidx.constraintlayout.widget.ConstraintLayout>
-
-			<!--			<com.google.android.material.button.MaterialButton-->
-			<!--				android:id="@+id/entry_activity_login_login_button"-->
-			<!--				style="@style/Widget.HappyApp.ContainedButton"-->
-			<!--				android:layout_width="wrap_content"-->
-			<!--				android:layout_height="wrap_content"-->
-			<!--				android:text="@string/plain_login"-->
-			<!--				app:layout_constraintEnd_toEndOf="@+id/entry_activity_login_password_layout"-->
-			<!--				app:layout_constraintTop_toBottomOf="@+id/entry_activity_login_password_layout" />-->
 
 			<View
 				android:id="@+id/entry_activity_email_login_seperator_view"
