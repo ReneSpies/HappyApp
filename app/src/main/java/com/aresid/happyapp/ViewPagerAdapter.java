@@ -36,6 +36,7 @@ import java.util.List;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
+
 public class ViewPagerAdapter
 		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
 		implements BillingClientStateListener,
@@ -55,18 +56,18 @@ public class ViewPagerAdapter
 
 		Log.d(TAG, "ViewPagerAdapter:true");
 
+		mInflater = LayoutInflater.from(context);
+
+		mSubscriptionPool = new SubscriptionPool();
+
+		mContext = context;
+
 		mBillingClient = BillingClient.newBuilder(context)
 		                              .enablePendingPurchases()
 		                              .setListener(this)
 		                              .build();
 
 		mBillingClient.startConnection(this);
-
-		mSubscriptionPool = new SubscriptionPool();
-
-		mInflater = LayoutInflater.from(context);
-
-		mContext = context;
 
 		if (context instanceof OnViewPagerInteractionListener) {
 
@@ -91,7 +92,7 @@ public class ViewPagerAdapter
 		mProcessingLayout = view.findViewById(R.id.view_pager_waiting_assistant_layout);
 		mMainView = view.findViewById(R.id.view_pager_main_view);
 
-		loadGifInto(view.findViewById(R.id.view_pager_checkout_waiting_assistant), view.findViewById(R.id.view_pager_waiting_assistant));
+//		loadGifInto(view.findViewById(R.id.view_pager_checkout_waiting_assistant), view.findViewById(R.id.view_pager_waiting_assistant));
 
 		viewPagerBtConfirm.setOnClickListener(v -> {
 

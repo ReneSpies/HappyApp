@@ -11,20 +11,25 @@
 		android:layout_height="match_parent"
 		android:gravity="center"
 		android:orientation="vertical"
-		android:visibility="invisible">
+		android:visibility="visible">
 
 		<ImageView
 			android:id="@+id/view_pager_waiting_assistant"
 			android:layout_width="@dimen/waiting_assistant_standard"
 			android:layout_height="@dimen/waiting_assistant_standard"
+			android:visibility="gone"
 			android:contentDescription="@string/plain_processing" />
+
+		<ProgressBar
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
 	</LinearLayout>
 
 		<androidx.constraintlayout.widget.ConstraintLayout
 			android:layout_width="match_parent"
 			android:id="@+id/view_pager_main_view"
 			android:layout_height="match_parent"
-			android:visibility="visible">
+			android:visibility="invisible">
 
 			<LinearLayout
 				android:id="@+id/view_pager_checkout_waiting_assistant_layout"
