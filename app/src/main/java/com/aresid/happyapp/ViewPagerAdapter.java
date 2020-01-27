@@ -125,15 +125,15 @@ public class ViewPagerAdapter
 
 	}
 
-	private void loadGifInto(ImageView... gifHolder) {
+	private void loadGifInto(ImageView... gifHolders) {
 
 		Log.d(TAG, "loadGifInto:true");
 
-		for (int i = 0; i <= gifHolder.length - 1; i++) {
+		for (ImageView gifHolder : gifHolders) {
 
 			Glide.with(mContext)
 			     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
-			     .into(gifHolder[i]);
+			     .into(gifHolder);
 
 		}
 

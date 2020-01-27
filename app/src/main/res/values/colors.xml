@@ -12,6 +12,7 @@
 	<color name="gold">#FFD700</color>
 	<color name="platinum">#e5e4e2</color>
 	<color name="diamond">#cbe3f0</color>
+	<color name="rippleColor">#0fff33</color>
 
 	<color name="dark_overlay">#66000000</color>
 </resources>

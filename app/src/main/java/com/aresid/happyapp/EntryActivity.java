@@ -71,37 +71,6 @@ public class EntryActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_entry);
 
-		// Test the constructor behaviour.
-		HappyAppUser user = new HappyAppUser();
-
-		// Instantiate FirebaseAuth.
-		mAuth = FirebaseAuth.getInstance();
-		mAuth.addAuthStateListener(firebaseAuth -> {
-			// this is to reset the loading screen when a user logs out.
-
-			Log.d(TAG, "onCreate: auth state changed");
-
-			if (firebaseAuth.getCurrentUser() == null) {
-
-				Log.d(TAG, "onCreate: user = " + firebaseAuth.getCurrentUser());
-
-				changeFromLoadingScreen();
-
-			}
-
-		});
-
-		// Load waiting assistant into ImageViews.
-//		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
-		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
-
-		// Configure Google Sign In.
-		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("release")
-		                                                                                              .requestEmail()
-		                                                                                              .build();
-
-		mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
 		// Access all views that are needed.
 		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
 		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
@@ -133,6 +102,37 @@ public class EntryActivity
 
 		// this is required so the keyboard wont show up.
 		etRegistrationDateOfBirthField.setKeyListener(null);
+
+		// Test the constructor behaviour.
+		HappyAppUser user = new HappyAppUser();
+
+		// Instantiate FirebaseAuth.
+		mAuth = FirebaseAuth.getInstance();
+		mAuth.addAuthStateListener(firebaseAuth -> {
+			// this is to reset the loading screen when a user logs out.
+
+			Log.d(TAG, "onCreate: auth state changed");
+
+			if (firebaseAuth.getCurrentUser() == null) {
+
+				Log.d(TAG, "onCreate: user = " + firebaseAuth.getCurrentUser());
+
+				changeFromLoadingScreen();
+
+			}
+
+		});
+
+		// Load waiting assistant into ImageViews.
+//		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
+		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
+
+		// Configure Google Sign In.
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("release")
+		                                                                                              .requestEmail()
+		                                                                                              .build();
+
+		mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 		mBillingClient = BillingClient.newBuilder(this)
 		                              .setListener(this)
@@ -275,14 +275,14 @@ public class EntryActivity
 	}
 
 	/**
-	 * Changes to loading screen.
+	 * Changes from loading screen back to normal.
 	 */
-	private void changeToLoadingScreen() {
+	private void changeFromLoadingScreen() {
 
-		Log.d(TAG, "changeToLoadingScreen:true");
+		Log.d(TAG, "changeFromLoadingScreen:true");
 
-		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
-		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
+//		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.GONE);
+		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
 
 	}
 
@@ -350,29 +350,33 @@ public class EntryActivity
 	}
 
 	/**
-	 * Changes from loading screen back to normal.
+	 * Loads drawable waiting assistant into @param view.
+	 *
+	 * @param gifHolders
 	 */
-	private void changeFromLoadingScreen() {
+	private void loadGifInto(ImageView... gifHolders) {
 
-		Log.d(TAG, "changeFromLoadingScreen:true");
+		Log.d(TAG, "loadGifInto:true");
 
-		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.GONE);
-		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
+		for (ImageView holder : gifHolders) {
+
+			Glide.with(this)
+			     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
+			     .into(holder);
+
+		}
 
 	}
 
 	/**
-	 * Loads drawable waiting assistant into @param view.
-	 *
-	 * @param view the view to display the gif.
+	 * Changes to loading screen.
 	 */
-	private void loadGifInto(ImageView view) {
+	private void changeToLoadingScreen() {
 
-		Log.d(TAG, "loadGifInto:true");
+		Log.d(TAG, "changeToLoadingScreen:true");
 
-		Glide.with(this)
-		     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
-		     .into(view);
+//		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
+		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
 
 	}
 
@@ -1217,7 +1221,7 @@ public class EntryActivity
 		}
 
 		// Show loading assistant.
-		findViewById(R.id.entry_activity_login_waiting_assistant).setVisibility(View.VISIBLE);
+		findViewById(R.id.entry_activity_logging_in_waiting_assistant).setVisibility(View.VISIBLE);
 
 		// Disable the email and password field.
 		findViewById(R.id.entry_activity_login_email_layout).setEnabled(false);
@@ -1238,7 +1242,7 @@ public class EntryActivity
 
 			     setLayoutErrorsNull();
 
-			     findViewById(R.id.entry_activity_login_waiting_assistant).setVisibility(View.GONE);
+			     findViewById(R.id.entry_activity_logging_in_waiting_assistant).setVisibility(View.GONE);
 
 			     // TODO
 
