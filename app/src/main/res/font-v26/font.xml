@@ -3,5 +3,5 @@
 	<font
 		android:font="@font/linear_antiqua_din_1451_2"
 		android:fontStyle="normal"
-		android:fontWeight="400" />
+		android:fontWeight="400"/>
 </font-family>

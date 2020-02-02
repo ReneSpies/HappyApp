@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical"
-	android:padding="@dimen/fragment_padding_medium"
-	tools:context="com.aresid.happyapp.android.aresid.happyapp.LegalFragment">
-
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="@dimen/fragment_padding_medium"
+              tools:context="com.aresid.happyapp.android.aresid.happyapp.LegalFragment">
+	
 	<TextView
 		android:id="@+id/legal_fragment_header"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="This is the legal fragment for legal things"
-		android:textAppearance="?attr/textAppearanceHeadline5" />
-
+		android:textAppearance="?attr/textAppearanceHeadline5"/>
+	
 	<ScrollView
 		android:id="@+id/legal_conditions_newspaper_container"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layout_weight="1">
-
+		
 		<TableLayout
 			android:id="@+id/legal_conditions_newspaper"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
-
+			
 			<TableRow android:backgroundTint="@color/color_primary">
-
-				<TextView android:text="AGB" />
+				
+				<TextView android:text="AGB"/>
 			</TableRow>
-
+			
 			<TableRow android:backgroundTint="@color/color_primary">
-
-				<TextView android:text="Datenschutzhinweise" />
+				
+				<TextView android:text="Datenschutzhinweise"/>
 			</TableRow>
 		</TableLayout>
 	</ScrollView>
-
+	
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/legal_confirm_button"
 		style="@style/Widget.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="Confirm" />
+		android:text="Confirm"/>
 </LinearLayout>

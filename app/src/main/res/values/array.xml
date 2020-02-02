@@ -33,7 +33,6 @@
 		<item>30</item>
 		<item>31</item>
 	</string-array>
-
 	<string-array name="months_of_year_array">
 		<item>January</item>
 		<item>February</item>
@@ -48,7 +47,6 @@
 		<item>November</item>
 		<item>December</item>
 	</string-array>
-
 	<string-array name="years_since_1903_array">
 		<item>1903</item>
 	</string-array>

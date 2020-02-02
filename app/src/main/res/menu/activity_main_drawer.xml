@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	tools:showIn="navigation_view">
-
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
 	<group android:checkableBehavior="single">
 		<item
 			android:id="@+id/nav_home"
 			android:icon="@drawable/ic_home_black_24dp"
-			android:title="@string/home" />
+			android:title="@string/home"/>
 		<item
 			android:id="@+id/nav_search"
 			android:icon="@drawable/ic_search_black_24dp"
-			android:title="@string/search" />
+			android:title="@string/search"/>
 		<item
 			android:id="@+id/nav_favorites"
 			android:icon="@drawable/ic_star_black_24dp"
-			android:title="@string/favorites" />
+			android:title="@string/favorites"/>
 		<item
 			android:id="@+id/nav_place_ad"
 			android:icon="@drawable/ic_launch_black_24dp"
-			android:title="@string/place_ad" />
+			android:title="@string/place_ad"/>
 		<!--My Account wird beim klick auf Nav Header ausgelöst-->
 		<!--Escort Service hab ich zu der Suche hinzugefügt-->
 		<!--<item-->
 		<!--android:id="@+id/nav_escort_service"-->
 		<!--android:icon="@drawable/ic_person_add_black_24dp"-->
 		<!--android:title="@string/escort_service" />-->
-
 	</group>
 </menu>

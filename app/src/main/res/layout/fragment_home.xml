@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical"
-	tools:context="com.aresid.happyapp.android.aresid.happyapp.HomeFragment">
-
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.aresid.happyapp.android.aresid.happyapp.HomeFragment">
+	
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/close_to_you"
-		android:textAppearance="?attr/textAppearanceSubtitle2" />
-
+		android:textAppearance="?attr/textAppearanceSubtitle2"/>
+	
 	<ListView
 		android:id="@+id/home_list"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-
-	</ListView>
+		android:layout_height="wrap_content"></ListView>
 </LinearLayout>

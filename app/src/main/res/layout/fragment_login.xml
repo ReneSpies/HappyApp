@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:gravity="center_horizontal"
-	android:padding="@dimen/fragment_padding_medium"
-	tools:context="com.aresid.happyapp.android.aresid.happyapp.EntryActivity">
-
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:gravity="center_horizontal"
+                                                   android:padding="@dimen/fragment_padding_medium"
+                                                   tools:context="com.aresid.happyapp.android.aresid.happyapp.EntryActivity">
+	
 	<ImageView
 		android:id="@+id/progress_bar"
 		android:layout_width="@dimen/waiting_assistant_standard"
@@ -19,8 +19,8 @@
 		app:layout_constraintBottom_toTopOf="@+id/google_linear_layout"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="@+id/login_linear_layout" />
-
+		app:layout_constraintTop_toTopOf="@+id/login_linear_layout"/>
+	
 	<TextView
 		android:id="@+id/login_text_view"
 		android:layout_width="wrap_content"
@@ -34,8 +34,8 @@
 		app:layout_constraintBottom_toTopOf="@+id/google_linear_layout"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
-
+		app:layout_constraintTop_toBottomOf="@+id/progress_bar"/>
+	
 	<LinearLayout
 		android:id="@+id/login_linear_layout"
 		android:layout_width="match_parent"
@@ -44,14 +44,14 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent">
-
+		
 		<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/login_email_field_layout"
 			style="@style/Widget.HappyApp.TextInputLayout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			app:errorEnabled="true">
-
+			
 			<com.google.android.material.textfield.TextInputEditText
 				android:id="@+id/login_email_field"
 				android:layout_width="match_parent"
@@ -59,9 +59,9 @@
 				android:hint="@string/prompt_email"
 				android:inputType="textEmailAddress"
 				android:maxLines="1"
-				android:singleLine="true" />
+				android:singleLine="true"/>
 		</com.google.android.material.textfield.TextInputLayout>
-
+		
 		<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/login_password_field_layout"
 			style="@style/Widget.HappyApp.TextInputLayout"
@@ -69,7 +69,7 @@
 			android:layout_height="wrap_content"
 			app:errorEnabled="true"
 			app:passwordToggleEnabled="true">
-
+			
 			<com.google.android.material.textfield.TextInputEditText
 				android:id="@+id/login_password_field"
 				android:layout_width="match_parent"
@@ -80,10 +80,10 @@
 				android:imeOptions="actionUnspecified"
 				android:inputType="textPassword"
 				android:maxLines="1"
-				android:singleLine="true" />
+				android:singleLine="true"/>
 		</com.google.android.material.textfield.TextInputLayout>
 	</LinearLayout>
-
+	
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/login_login_button"
 		style="@style/Widget.HappyApp.ContainedButton"
@@ -92,8 +92,8 @@
 		android:text="@string/sign_me_in"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/login_linear_layout" />
-
+		app:layout_constraintTop_toBottomOf="@+id/login_linear_layout"/>
+	
 	<LinearLayout
 		android:id="@+id/google_linear_layout"
 		android:layout_width="match_parent"
@@ -103,18 +103,18 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/login_login_button">
-
+		
 		<View
 			android:layout_width="match_parent"
 			android:layout_height="0.8dp"
-			android:background="#808080" />
-
+			android:background="#808080"/>
+		
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/or_sign_in_using"
-			android:textAlignment="center" />
-
+			android:textAlignment="center"/>
+		
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/login_google_button"
 			style="@style/Widget.HappyApp.ContainedButton"
@@ -122,9 +122,9 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/button_margin_start_end"
 			android:layout_marginEnd="@dimen/button_margin_start_end"
-			android:text="@string/google" />
+			android:text="@string/google"/>
 	</LinearLayout>
-
+	
 	<LinearLayout
 		android:id="@+id/sign_up_linear_layout"
 		android:layout_width="match_parent"
@@ -134,18 +134,18 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/google_linear_layout">
-
+		
 		<View
 			android:layout_width="match_parent"
 			android:layout_height="0.8dp"
-			android:background="#808080" />
-
+			android:background="#808080"/>
+		
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/no_account"
-			android:textAlignment="center" />
-
+			android:textAlignment="center"/>
+		
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/login_sign_up_button"
 			style="@style/Widget.HappyApp.ContainedButton"
@@ -153,6 +153,6 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/button_margin_start_end"
 			android:layout_marginEnd="@dimen/button_margin_start_end"
-			android:text="@string/sign_me_up" />
+			android:text="@string/sign_me_up"/>
 	</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
