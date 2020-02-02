@@ -8,20 +8,12 @@ import android.util.Log;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
-
 public class FirestoreHelper {
-
 	private static final String TAG = "FirestoreHelper";
-
 	/**
 	 * Constructor 0 parameters.
 	 */
 	FirestoreHelper() {
-
 		Log.d(TAG, "FirestoreHelper: constructor 0 params");
-
 	}
-
-
-
 }

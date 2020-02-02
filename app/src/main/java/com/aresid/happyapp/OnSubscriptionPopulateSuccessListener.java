@@ -6,9 +6,6 @@ package com.aresid.happyapp;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
-
 public interface OnSubscriptionPopulateSuccessListener {
-
 	void onSuccess(SubscriptionPool populatedPool);
-
 }

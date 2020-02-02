@@ -9,25 +9,14 @@ import android.util.Log;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
-
 public class Cacher {
-
-	private static final String TAG = "Cacher";
-
-	private Context mContext;
-
+	private static final String  TAG = "Cacher";
+	private              Context mContext;
 	Cacher(Context context) {
-
 		Log.d(TAG, "Cacher:true");
-
 		mContext = context;
-
 	}
-
 	void cache() {
-
 		Log.d(TAG, "cache:true");
-
 	}
-
 }

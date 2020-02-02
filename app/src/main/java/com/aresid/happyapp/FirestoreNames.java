@@ -6,9 +6,7 @@ package com.aresid.happyapp;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
-
 class FirestoreNames {
-
 	// Columns
 	static final String COLUMN_FIRST_NAME           = "first name";
 	static final String COLUMN_FAMILY_NAME          = "family name";
@@ -24,12 +22,9 @@ class FirestoreNames {
 	static final String COLUMN_DESC_GOLD            = "desc gold";
 	static final String COLUMN_PRICE_FREE           = "price free";
 	static final String COLUMN_PRICE_GOLD           = "price gold";
-
 	// Documents
-	static final String DOCUMENT_INFO = "info";
-
+	static final String DOCUMENT_INFO               = "info";
 	// Collections
-	static final String COLLECTION_USERS         = "users";
-	static final String COLLECTION_SUBSCRIPTIONS = "subscriptions";
-
+	static final String COLLECTION_USERS            = "users";
+	static final String COLLECTION_SUBSCRIPTIONS    = "subscriptions";
 }

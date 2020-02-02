@@ -34,7 +34,6 @@ public class MainActivity
 		           HomeFragment.OnFragmentInteractionListener,
 		           OfferFragment.OnFragmentInteractionListener,
 		           LookFragment.OnFragmentInteractionListener {
-
 	private static final String              FIREBASE_USER_INTENT_KEY         = "firesbase_user";
 	private static final String              GOOGLE_SIGNIN_ACCOUNT_INTENT_KEY = "google_sign_in_account";
 	private static final String              USER_FIRESTORE_ID_INTENT_KEY     = "user_firestore_id";
@@ -44,10 +43,8 @@ public class MainActivity
 	private              String              mUserFirestoreID;
 	private              int                 doubleOnBackPressedHelper        = 0;
 	private              int                 mTimesLoggedIn;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		Log.d(TAG, "onCreate:true");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -82,13 +79,10 @@ public class MainActivity
 	//	                           .replace(R.id.fragment_container, OnboardingFragment.newInstance())
 	//	                           .commit();
 	//}
-
 	private void displayHomeFragment() {
-
 		Log.d(TAG, "displayHomeFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, HomeFragment.newInstance());
 	}
-
 	/**
 	 * Method gets called when the NavigationDrawer's header is clicked.
 	 * Planned to be replaced by onClick method.
@@ -96,7 +90,6 @@ public class MainActivity
 	 * @param view The view which called this method.
 	 */
 	public void onNavHeaderClick(View view) {
-
 		Log.d(TAG, "onNavHeaderClick:true");
 		NavigationView navigationView = findViewById(R.id.nav_view);
 		if (navigationView.getCheckedItem() != null) {
@@ -106,26 +99,20 @@ public class MainActivity
 		displayMyAccountFragment();
 		closeDrawer();
 	}
-
 	private void displayMyAccountFragment() {
-
 		Log.d(TAG, "displayMyAccountFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, MyAccountFragment.newInstance());
 	}
-
 	/**
 	 * Method simply closes the drawer.
 	 */
 	private void closeDrawer() {
-
 		Log.d(TAG, "closeDrawer:true");
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 	}
-
 	@Override
 	public void onBackPressed() {
-
 		Log.d(TAG, "onBackPressed:true");
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -137,10 +124,8 @@ public class MainActivity
 				doubleOnBackPressedHelper++;
 				// A Timer that resets my onBackPressed helper to 0 after 6.13 seconds.
 				new Timer().schedule(new TimerTask() {
-
 					@Override
 					public void run() {
-
 						Log.d(TAG, "run:true");
 						doubleOnBackPressedHelper = 0;
 					}
@@ -155,19 +140,15 @@ public class MainActivity
 			finishAffinity();
 		}
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		Log.d(TAG, "onCreateOptionsMenu:true");
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		Log.d(TAG, "onOptionsItemSelected:true");
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up mButton, so long
@@ -179,10 +160,8 @@ public class MainActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 	@Override
 	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
 		Log.d(TAG, "onNavigationItemSelected:true");
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
@@ -206,62 +185,46 @@ public class MainActivity
 		closeDrawer();
 		return true;
 	}
-
 	private void displaySearchFragment() {
-
 		Log.d(TAG, "displaySearchFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, SearchFragment.newInstance());
 	}
-
 	private void displayFavoritesFragment() {
-
 		Log.d(TAG, "displayFavoritesFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, FavoritesFragment.newInstance());
 	}
-
 	private void displayAdvertisementFragment() {
-
 		Log.d(TAG, "displayAdvertisementFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, AdvertisementFragment.newInstance());
 	}
-
 	// TODO: Delete method in all fragment interfaces.
 	@Override
 	public void onFragmentInteraction(Uri uri) {
-
 	}
-
 	/**
 	 * Method is called when the appropriate item in the NavigationDrawer was clicked.
 	 *
 	 * @param view View which called the method.
 	 */
 	public void onLookingClick(View view) {
-
 		Log.d(TAG, "onLookingClick:true");
 		// TODO: Delete this.
 		displayLookFragment();
 	}
-
 	private void displayLookFragment() {
-
 		Log.d(TAG, "displayLookFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, LookFragment.newInstance());
 	}
-
 	/**
 	 * Method is called when the appropriate item in the NavigationDrawer was clicked.
 	 *
 	 * @param view View which called the method.
 	 */
 	public void onOfferingClick(View view) {
-
 		Log.d(TAG, "onOfferingClick:true");
 		displayOfferFragment();
 	}
-
 	private void displayOfferFragment() {
-
 		Log.d(TAG, "displayOfferFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, OfferFragment.newInstance());
 	}

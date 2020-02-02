@@ -21,7 +21,6 @@ import java.util.List;
 
 public class AccountLevelFragment
 		extends Fragment {
-
 	private static final String                        TAG                                = "AccountLevelFragment";
 	private static final String                        FIRESTORE_PACKAGES_COLLECTION_NAME = "subscription packages";
 	private static final String                        FIRESTORE_FREE_PACKAGE             = "subscription packages";
@@ -34,29 +33,23 @@ public class AccountLevelFragment
 	private static final String                        FIRESTORE_PRICE                    = "price";
 	private              OnFragmentInteractionListener mListener;
 	private              Context                       mContext;
-
 	/**
 	 * Required empty constructor.
 	 */
 	private AccountLevelFragment() {
-
 		Log.d(TAG, "AccountLevelFragment:true");
 	}
-
 	/**
 	 * Use this factory method to create a new object of this instance.
 	 *
 	 * @return New instance of object.
 	 */
 	public static AccountLevelFragment newInstance() {
-
 		Log.d(TAG, "newInstance:true");
 		return new AccountLevelFragment();
 	}
-
 	@Override
 	public void onAttach(@NonNull Context context) {
-
 		Log.d(TAG, "onAttach:true");
 		super.onAttach(context);
 		mContext = context;
@@ -66,17 +59,13 @@ public class AccountLevelFragment
 			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
 		}
 	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
 		Log.d(TAG, "onCreate:true");
 		super.onCreate(savedInstanceState);
 	}
-
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		Log.d(TAG, "onCreateView:true");
 		// Inflate the layout for this fragment.
 		View rootView = inflater.inflate(R.layout.fragment_account_level, container, false);
@@ -163,36 +152,27 @@ public class AccountLevelFragment
 //		viewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer(viewPager2));
 		return rootView;
 	}
-
 	@Override
 	public void onDetach() {
-
 		Log.d(TAG, "onDetach:true");
 		super.onDetach();
 		mListener = null;
 	}
-
 	public interface OnFragmentInteractionListener {}
-
 	class BackgroundTransitionTransformer
 			extends OnPageChangeCallback {
-
 		private final String TAG = getClass().getSimpleName();
 		int[] arrayOfColors = new int[] {
 				getResources().getColor(R.color.white), getResources().getColor(R.color.silver), getResources().getColor(R.color.gold), getResources().getColor(R.color.platinum),
 				getResources().getColor(R.color.diamond)
 		};
 		private ViewPager2 mViewPager2;
-
 		BackgroundTransitionTransformer(ViewPager2 viewPager2) {
-
 			Log.d(TAG, "BackgroundTransitionTransformer:true");
 			this.mViewPager2 = viewPager2;
 		}
-
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
 			Log.d(TAG, "onPageScrolled:true");
 			Log.d(TAG, "onPageScrolled: position = " + position + "\npositionOffset = " + positionOffset + "\npositionOffsetPixels = " + positionOffsetPixels);
 			Log.d(TAG, "onPageScrolled: array length = " + arrayOfColors.length);
@@ -201,18 +181,14 @@ public class AccountLevelFragment
 				mViewPager2.setBackgroundColor((int) new ArgbEvaluator().evaluate(positionOffset, arrayOfColors[position], arrayOfColors[position + 1]));
 			}
 		}
-
 		@Override
 		public void onPageSelected(int position) {
-
 			Log.d(TAG, "onPageSelected:true");
 			Log.d(TAG, "onPageSelected: position = " + position);
 			super.onPageSelected(position);
 		}
-
 		@Override
 		public void onPageScrollStateChanged(int state) {
-
 			Log.d(TAG, "onPageScrollStateChanged:true");
 			Log.d(TAG, "onPageScrollStateChanged: state = " + state);
 			super.onPageScrollStateChanged(state);

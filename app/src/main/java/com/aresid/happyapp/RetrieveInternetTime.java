@@ -18,72 +18,43 @@ import java.util.Date;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
-
 public class RetrieveInternetTime
 		extends AsyncTask<String, Void, Date> {
-
 	private static final String                            TAG = "RetrieveInternetTime";
 	private              OnInternetTimeInteractionListener mListener;
 	private              String                            mUid;
-
 	RetrieveInternetTime(AppCompatActivity context, String uid) {
-
 		Log.d(TAG, "RetrieveInternetTime:true");
-
 		if (context instanceof OnInternetTimeInteractionListener) {
-
 			mListener = (OnInternetTimeInteractionListener) context;
-
 		} else {
-
 			throw new RuntimeException(context.toString() + " must implement OnInternetTimeInteractionListener");
-
 		}
-
 		mUid = uid;
-
 	}
-
 	@Override
 	protected Date doInBackground(String... strings) {
-
 		Log.d(TAG, "doInBackground:true");
-
 		String timeServer = strings[0];
-
 		try {
-
 			NTPUDPClient client = new NTPUDPClient();
 			InetAddress address = InetAddress.getByName(timeServer);
 			TimeInfo info = client.getTime(address);
 			long returnTime = info.getMessage()
 			                      .getTransmitTimeStamp()
 			                      .getTime();
-
 			return new Date(returnTime);
-
 		} catch (IOException e) {
-
 			Log.e(TAG, "doInBackground: ", e);
-
 			return null;
-
 		}
-
 	}
-
 	@Override
 	protected void onPostExecute(Date time) {
-
 		Log.d(TAG, "onPostExecute:true");
-
 		mListener.addTimeToFirestoreEntry(time, mUid);
-
 	}
-
 	interface OnInternetTimeInteractionListener {
-
 		void addTimeToFirestoreEntry(Date time, String uid);
-
 	}
 }

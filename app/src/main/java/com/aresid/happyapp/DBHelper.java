@@ -22,7 +22,6 @@ import java.util.HashMap;
  */
 public class DBHelper
 		extends SQLiteOpenHelper {
-
 	static final         String   TABLE_SUBSCRIPTIONS              = "Subscriptions";
 	static final         String   TABLE_USERDATA                   = "Userdata";
 	static final         String[] TABLE_USERDATA_COLUMN_NAMES      = new String[] {
@@ -34,20 +33,16 @@ public class DBHelper
 	private static final String   TAG                              = "DBHelper";
 	private static final String   DATABASE_NAME                    = "HappyApp_Database";
 	private static final int      DATABASE_VERSION                 = 1;
-
 	/**
 	 * Constructor matching super.
 	 *
 	 * @param context Context from the calling activity.
 	 */
 	DBHelper(@Nullable Context context) {
-
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
-
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-
 		Log.d(TAG, "onCreate:true");
 		try {
 			// Creating the Database.
@@ -68,20 +63,16 @@ public class DBHelper
 			Log.e(TAG, "onCreate: ", e);
 		}
 	}
-
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
 		Log.d(TAG, "onUpgrade:true");
 	}
-
 	/**
 	 * Get userdata from user with specified ID.
 	 *
 	 * @return HashMap of userdata from the database.
 	 */
 	HashMap<String, Object> getUserdata(String firestoreID) {
-
 		Log.d(TAG, "getUserdata:true");
 		// Get a readable DB object.
 		SQLiteDatabase db = getReadableDatabase();
@@ -104,12 +95,10 @@ public class DBHelper
 		cursor.close();
 		return mapOfUserInfo;
 	}
-
 	/**
 	 * Insert new userdata into the database.
 	 */
 	void insertUser(String firestoreID, String firstName, String surname, String email, String password, String birthdate, String acceptedLegalitiesVersion) {
-
 		Log.d(TAG, "insertUser:true");
 		Log.d(TAG, "insertUser: firestoreID = " + firestoreID);
 		Log.d(TAG, "insertUser: firstName = " + firstName);
@@ -136,14 +125,12 @@ public class DBHelper
 			db.close();
 		}
 	}
-
 	/**
 	 * Insert a new subscription into the database.
 	 * This is called from EntryActivity onCreate and checks the version code in SharedPrefs to see if it has changed.
 	 * If it has changed it gets updated from there only.
 	 */
 	void insertSubscription(Bitmap icon, String title, String description, String price) {
-
 		Log.d(TAG, "insertSubscription:true");
 		Log.d(TAG, "insertSubscription: icon = " + icon);
 		Log.d(TAG, "insertSubscription: title = " + title);
@@ -158,14 +145,12 @@ public class DBHelper
 		values.put(TABLE_SUBSCRIPTIONS_COLUMN_NAMES[2], description);
 		values.put(TABLE_SUBSCRIPTIONS_COLUMN_NAMES[3], price);
 	}
-
 	/**
 	 * Get subscriptions from the database.
 	 *
 	 * @return HashMap of subscriptions from the database.
 	 */
 	HashMap<String, String> getSubscriptions(String subscriptionName) {
-
 		Log.d(TAG, "getSubscriptions:true");
 		// String[] for columns to return.
 		String[] arrayOfColumns = new String[] {
@@ -184,14 +169,12 @@ public class DBHelper
 		cursor.close();
 		return mapOfSubscriptionData;
 	}
-
 	/**
 	 * Get subscription icon for specified subscription.
 	 *
 	 * @return Subscription icon as bitmap.
 	 */
 	Bitmap getSubscriptionIcon(String subscriptionName) {
-
 		Log.d(TAG, "getSubscriptionIcon:true");
 		// TODO: TODO!
 		return null;

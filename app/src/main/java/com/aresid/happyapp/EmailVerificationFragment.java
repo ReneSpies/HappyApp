@@ -18,7 +18,6 @@ import com.google.firebase.auth.FirebaseUser;
 public class EmailVerificationFragment
 		extends Fragment
 		implements View.OnClickListener {
-
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String                        ARG_FIREBASE_USER    = "firebaseUser";
 	private static final String                        PREFERENCES_ID       = "userID";
@@ -31,23 +30,18 @@ public class EmailVerificationFragment
 	private              Button                        mBackButton;
 	private              Button                        mSendEmailAgainButton;
 	private              OnFragmentInteractionListener mFragmentInteractionListener;
-
 	public EmailVerificationFragment() {
 		// Required empty public constructor
 	}
-
 	public static EmailVerificationFragment newInstance(FirebaseUser user) {
-
 		EmailVerificationFragment emailFragment = new EmailVerificationFragment();
 		Bundle args = new Bundle();
 		args.putParcelable(ARG_FIREBASE_USER, user);
 		emailFragment.setArguments(args);
 		return emailFragment;
 	}
-
 	@Override
 	public void onAttach(Context context) {
-
 		Log.d(TAG, "onAttach:true");
 		super.onAttach(context);
 		if (context instanceof OnFragmentInteractionListener) {
@@ -57,58 +51,40 @@ public class EmailVerificationFragment
 		}
 		this.mContext = context;
 	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 		// Init FirebaseUser and send him the verification email later
 		if (getArguments() != null) {
 			mFirebaseUser = getArguments().getParcelable(ARG_FIREBASE_USER);
 		}
 	}
-
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		Log.d(TAG, "onCreateView:true");
-
 		View rootView = inflater.inflate(R.layout.fragment_email_verification, container, false);
-
 		// Init all the views for this fragment
 		mBackButton = rootView.findViewById(R.id.emailverification_back_button);
 		mSendEmailAgainButton = rootView.findViewById(R.id.emailverification_send_again_button);
-
 		// Add onClick listener to the buttons
 		mBackButton.setOnClickListener(this);
 		mSendEmailAgainButton.setOnClickListener(this);
-
 		// Inflate the layout for this fragment
 		return rootView;
-
 	}
-
 	@Override
 	public void onStart() {
-
 		Log.d(TAG, "onStart:true");
-
 		super.onStart();
-
 		updateUI(mFirebaseUser);
-
 	}
-
 	@Override
 	public void onDetach() {
-
 		Log.d(TAG, "onDetach:true");
 		super.onDetach();
 		mFragmentInteractionListener = null;
 	}
-
 	private void updateUI(FirebaseUser user) {
-
 		Log.d(TAG, "updateUI:true");
 		if (user != null) {
 			final FirebaseUser fUser = user;
@@ -127,9 +103,7 @@ public class EmailVerificationFragment
 			// TODO: Implement user = null handling!
 		}
 	}
-
 	private void sendEmailVerification() {
-
 		Log.d(TAG, "sendEmailVerification:true");
 		// Send verification Email
 		final FirebaseUser user = mFirebaseUser;
@@ -152,10 +126,8 @@ public class EmailVerificationFragment
 			    }
 		    });
 	}
-
 	@Override
 	public void onClick(View v) {
-
 		Log.d(TAG, "onClick:true");
 		switch (v.getId()) {
 			case R.id.emailverification_back_button: {
@@ -172,11 +144,8 @@ public class EmailVerificationFragment
 			}
 		}
 	}
-
 	public interface OnFragmentInteractionListener {
-
 		void displayLoginFragment();
-
 		void onBackPressed();
 	}
 }
