@@ -43,6 +43,7 @@ public class MainActivity
 	private              String              mUserFirestoreID;
 	private              int                 doubleOnBackPressedHelper        = 0;
 	private              int                 mTimesLoggedIn;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate:true");
@@ -72,6 +73,7 @@ public class MainActivity
 		navigationView.setCheckedItem(R.id.nav_home);
 		navigationView.setNavigationItemSelectedListener(this);
 	}
+	
 	//private void displayOnboardingFragment()
 	//{
 	//	Log.d(TAG, "displayOnboardingFragment:true");
@@ -83,6 +85,7 @@ public class MainActivity
 		Log.d(TAG, "displayHomeFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, HomeFragment.newInstance());
 	}
+	
 	/**
 	 * Method gets called when the NavigationDrawer's header is clicked.
 	 * Planned to be replaced by onClick method.
@@ -99,10 +102,12 @@ public class MainActivity
 		displayMyAccountFragment();
 		closeDrawer();
 	}
+	
 	private void displayMyAccountFragment() {
 		Log.d(TAG, "displayMyAccountFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, MyAccountFragment.newInstance());
 	}
+	
 	/**
 	 * Method simply closes the drawer.
 	 */
@@ -111,6 +116,7 @@ public class MainActivity
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 	}
+	
 	@Override
 	public void onBackPressed() {
 		Log.d(TAG, "onBackPressed:true");
@@ -140,6 +146,7 @@ public class MainActivity
 			finishAffinity();
 		}
 	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Log.d(TAG, "onCreateOptionsMenu:true");
@@ -147,6 +154,7 @@ public class MainActivity
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.d(TAG, "onOptionsItemSelected:true");
@@ -160,6 +168,7 @@ public class MainActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 	@Override
 	public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 		Log.d(TAG, "onNavigationItemSelected:true");
@@ -185,22 +194,27 @@ public class MainActivity
 		closeDrawer();
 		return true;
 	}
+	
 	private void displaySearchFragment() {
 		Log.d(TAG, "displaySearchFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, SearchFragment.newInstance());
 	}
+	
 	private void displayFavoritesFragment() {
 		Log.d(TAG, "displayFavoritesFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, FavoritesFragment.newInstance());
 	}
+	
 	private void displayAdvertisementFragment() {
 		Log.d(TAG, "displayAdvertisementFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, AdvertisementFragment.newInstance());
 	}
+	
 	// TODO: Delete method in all fragment interfaces.
 	@Override
 	public void onFragmentInteraction(Uri uri) {
 	}
+	
 	/**
 	 * Method is called when the appropriate item in the NavigationDrawer was clicked.
 	 *
@@ -211,10 +225,12 @@ public class MainActivity
 		// TODO: Delete this.
 		displayLookFragment();
 	}
+	
 	private void displayLookFragment() {
 		Log.d(TAG, "displayLookFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, LookFragment.newInstance());
 	}
+	
 	/**
 	 * Method is called when the appropriate item in the NavigationDrawer was clicked.
 	 *
@@ -224,6 +240,7 @@ public class MainActivity
 		Log.d(TAG, "onOfferingClick:true");
 		displayOfferFragment();
 	}
+	
 	private void displayOfferFragment() {
 		Log.d(TAG, "displayOfferFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, OfferFragment.newInstance());

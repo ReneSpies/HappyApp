@@ -33,12 +33,14 @@ public class AccountLevelFragment
 	private static final String                        FIRESTORE_PRICE                    = "price";
 	private              OnFragmentInteractionListener mListener;
 	private              Context                       mContext;
+	
 	/**
 	 * Required empty constructor.
 	 */
 	private AccountLevelFragment() {
 		Log.d(TAG, "AccountLevelFragment:true");
 	}
+	
 	/**
 	 * Use this factory method to create a new object of this instance.
 	 *
@@ -48,6 +50,7 @@ public class AccountLevelFragment
 		Log.d(TAG, "newInstance:true");
 		return new AccountLevelFragment();
 	}
+	
 	@Override
 	public void onAttach(@NonNull Context context) {
 		Log.d(TAG, "onAttach:true");
@@ -59,11 +62,13 @@ public class AccountLevelFragment
 			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
 		}
 	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate:true");
 		super.onCreate(savedInstanceState);
 	}
+	
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView:true");
@@ -152,13 +157,16 @@ public class AccountLevelFragment
 //		viewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer(viewPager2));
 		return rootView;
 	}
+	
 	@Override
 	public void onDetach() {
 		Log.d(TAG, "onDetach:true");
 		super.onDetach();
 		mListener = null;
 	}
+	
 	public interface OnFragmentInteractionListener {}
+	
 	class BackgroundTransitionTransformer
 			extends OnPageChangeCallback {
 		private final String TAG = getClass().getSimpleName();
@@ -167,10 +175,12 @@ public class AccountLevelFragment
 				getResources().getColor(R.color.diamond)
 		};
 		private ViewPager2 mViewPager2;
+		
 		BackgroundTransitionTransformer(ViewPager2 viewPager2) {
 			Log.d(TAG, "BackgroundTransitionTransformer:true");
 			this.mViewPager2 = viewPager2;
 		}
+		
 		@Override
 		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 			Log.d(TAG, "onPageScrolled:true");
@@ -181,12 +191,14 @@ public class AccountLevelFragment
 				mViewPager2.setBackgroundColor((int) new ArgbEvaluator().evaluate(positionOffset, arrayOfColors[position], arrayOfColors[position + 1]));
 			}
 		}
+		
 		@Override
 		public void onPageSelected(int position) {
 			Log.d(TAG, "onPageSelected:true");
 			Log.d(TAG, "onPageSelected: position = " + position);
 			super.onPageSelected(position);
 		}
+		
 		@Override
 		public void onPageScrollStateChanged(int state) {
 			Log.d(TAG, "onPageScrollStateChanged:true");

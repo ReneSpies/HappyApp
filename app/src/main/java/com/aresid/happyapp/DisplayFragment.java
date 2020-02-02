@@ -14,10 +14,12 @@ import androidx.fragment.app.FragmentActivity;
 public class DisplayFragment {
 	private static final String           TAG = "DisplayFragment";
 	private              FragmentActivity mFragmentActivity;
+	
 	DisplayFragment(FragmentActivity fragmentActivity) {
 		Log.d(TAG, "DisplayFragment:true");
 		mFragmentActivity = fragmentActivity;
 	}
+	
 	void displayFragmentBackstack(int containerResource, Fragment fragment) {
 		Log.d(TAG, "displayFragmentBackstack:true");
 		mFragmentActivity.getSupportFragmentManager()
@@ -26,6 +28,7 @@ public class DisplayFragment {
 		                 .addToBackStack(null)
 		                 .commit();
 	}
+	
 	void displayFragment(int containerResource, Fragment fragment) {
 		Log.d(TAG, "displayFragment:true");
 		mFragmentActivity.getSupportFragmentManager()

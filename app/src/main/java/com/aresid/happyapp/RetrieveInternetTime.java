@@ -23,6 +23,7 @@ public class RetrieveInternetTime
 	private static final String                            TAG = "RetrieveInternetTime";
 	private              OnInternetTimeInteractionListener mListener;
 	private              String                            mUid;
+	
 	RetrieveInternetTime(AppCompatActivity context, String uid) {
 		Log.d(TAG, "RetrieveInternetTime:true");
 		if (context instanceof OnInternetTimeInteractionListener) {
@@ -32,6 +33,7 @@ public class RetrieveInternetTime
 		}
 		mUid = uid;
 	}
+	
 	@Override
 	protected Date doInBackground(String... strings) {
 		Log.d(TAG, "doInBackground:true");
@@ -49,11 +51,13 @@ public class RetrieveInternetTime
 			return null;
 		}
 	}
+	
 	@Override
 	protected void onPostExecute(Date time) {
 		Log.d(TAG, "onPostExecute:true");
 		mListener.addTimeToFirestoreEntry(time, mUid);
 	}
+	
 	interface OnInternetTimeInteractionListener {
 		void addTimeToFirestoreEntry(Date time, String uid);
 	}

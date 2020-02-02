@@ -14,6 +14,7 @@ public class OnboardingActivity
 		implements AccountLevelFragment.OnFragmentInteractionListener {
 	private static final String TAG                       = "OnboardingActivity";
 	private              double doubleOnBackPressedHelper = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate:true");
@@ -21,6 +22,7 @@ public class OnboardingActivity
 		setContentView(R.layout.activity_onboarding);
 		new DisplayFragment(this).displayFragment(R.id.onboarding_fragment_container, AccountLevelFragment.newInstance());
 	}
+	
 	@Override
 	public void onBackPressed() {
 		Log.d(TAG, "onBackPressed:true");

@@ -49,6 +49,7 @@ public class ViewPagerAdapter
 	private              Context                        mContext;
 	private              SubscriptionPool               mSubscriptionPool;
 	private              BillingClient                  mBillingClient;
+	
 	ViewPagerAdapter(Context context) {
 		Log.d(TAG, "ViewPagerAdapter:true");
 		mInflater = LayoutInflater.from(context);
@@ -65,6 +66,7 @@ public class ViewPagerAdapter
 			throw new RuntimeException(context.toString() + " must implement OnViewPagerInteractionListener");
 		}
 	}
+	
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -92,6 +94,7 @@ public class ViewPagerAdapter
 		});
 		return new ViewHolder(view);
 	}
+	
 	@Override
 	public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 		Log.d(TAG, "onBindViewHolder:true");
@@ -108,11 +111,13 @@ public class ViewPagerAdapter
 		holder.mTVPrice.setText(price);
 		holder.mSubIcon.setImageDrawable(icon);
 	}
+	
 	@Override
 	public int getItemCount() {
 		Log.d(TAG, "getItemCount:true");
 		return mSubscriptionPool.getSubscriptionCount();
 	}
+	
 	private void loadGifInto(ImageView... gifHolders) {
 		Log.d(TAG, "loadGifInto:true");
 		for (ImageView gifHolder : gifHolders) {
@@ -121,6 +126,7 @@ public class ViewPagerAdapter
 			     .into(gifHolder);
 		}
 	}
+	
 	@Override
 	public void onSkuDetailsResponse(BillingResult result, List<SkuDetails> list) {
 		Log.d(TAG, "onSkuDetailsResponse:true");
@@ -142,6 +148,7 @@ public class ViewPagerAdapter
 			Log.w(TAG, "onSkuDetailsResponse: response message = " + result.getDebugMessage());
 		}
 	}
+	
 	private void updateUI() {
 		Log.d(TAG, "updateUI:true");
 		synchronized (this) {
@@ -150,6 +157,7 @@ public class ViewPagerAdapter
 			setProcessingLayoutVisibility(View.GONE);
 		}
 	}
+	
 	private void setProcessingLayoutVisibility(int visibility) {
 		Log.d(TAG, "setProcessingLayoutVisibility:true");
 		if (mProcessingLayout == null) {
@@ -164,6 +172,7 @@ public class ViewPagerAdapter
 			mMainView.setVisibility(View.VISIBLE);
 		}
 	}
+	
 	@Override
 	public void onBillingSetupFinished(BillingResult result) {
 		Log.d(TAG, "onBillingSetupFinished:true");
@@ -183,11 +192,13 @@ public class ViewPagerAdapter
 			Log.w(TAG, "onBillingSetupFinished: response message = " + result.getDebugMessage());
 		}
 	}
+	
 	@Override
 	public void onBillingServiceDisconnected() {
 		Log.d(TAG, "onBillingServiceDisconnected:true");
 		// TODO: Implement own connection failed policy!
 	}
+	
 	@Override
 	public void onPurchasesUpdated(BillingResult result, @Nullable List<Purchase> list) {
 		Log.d(TAG, "onPurchasesUpdated:true");
@@ -199,15 +210,18 @@ public class ViewPagerAdapter
 			Log.d(TAG, "onPurchasesUpdated: response code is " + result.getDebugMessage());
 		}
 	}
+	
 	public interface OnViewPagerInteractionListener {
 		void createUser(Subscription subscription);
 	}
+	
 	class ViewHolder
 			extends RecyclerView.ViewHolder {
 		TextView  mTVTitle;
 		TextView  mTVDescription;
 		TextView  mTVPrice;
 		ImageView mSubIcon;
+		
 		ViewHolder(View itemView) {
 			super(itemView);
 			mTVTitle = itemView.findViewById(R.id.view_pager_tv_title);

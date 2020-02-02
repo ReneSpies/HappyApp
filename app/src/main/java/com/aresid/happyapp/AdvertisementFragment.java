@@ -27,18 +27,22 @@ public class AdvertisementFragment
 	private              String                        mParam1;
 	private              String                        mParam2;
 	private              OnFragmentInteractionListener mListener;
+	
 	public AdvertisementFragment() {
 		// Required empty public constructor
 	}
+	
 	public static AdvertisementFragment newInstance() {
 		return new AdvertisementFragment();
 	}
+	
 	// TODO: Rename method, update argument and hook method into UI event
 	public void onButtonPressed(Uri uri) {
 		if (mListener != null) {
 			mListener.onFragmentInteraction(uri);
 		}
 	}
+	
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
@@ -48,6 +52,7 @@ public class AdvertisementFragment
 			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
 		}
 	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,16 +61,19 @@ public class AdvertisementFragment
 			mParam2 = getArguments().getString(ARG_PARAM2);
 		}
 	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_advertisement, container, false);
 	}
+	
 	@Override
 	public void onDetach() {
 		super.onDetach();
 		mListener = null;
 	}
+	
 	/**
 	 * This interface must be implemented by activities that contain this
 	 * fragment to allow an interaction in this fragment to be communicated

@@ -23,6 +23,7 @@ public class HappyAppUser {
 	private              HashMap<Subscription, String> mSubscriptionVariants;
 	private              String                        mDateOfCreation;
 	private              String                        mUid;
+	
 	/**
 	 * Empty Constructor.
 	 */
@@ -30,11 +31,13 @@ public class HappyAppUser {
 		Log.d(TAG, "HappyAppUser: empty constructor");
 		init();
 	}
+	
 	@SuppressLint ("UseSparseArrays")
 	private void init() {
 		Log.d(TAG, "init:true");
 		mSubscriptionVariants = new HashMap<>();
 	}
+	
 	/**
 	 * Constructor 1.
 	 *
@@ -57,12 +60,14 @@ public class HappyAppUser {
 		mSubscriptionVariant = subscriptionVariant;
 		mProfilePictureUrl = profilePictureUrl;
 	}
+	
 	/**
 	 * Saves the current user information to the firestore.
 	 */
 	void saveToFirestore() {
 		Log.d(TAG, "saveToFirestore:true");
 	}
+	
 	/**
 	 * Getter for users first name.
 	 *
@@ -71,6 +76,7 @@ public class HappyAppUser {
 	public String getFirstName() {
 		return mFirstName;
 	}
+	
 	/**
 	 * Setter for users first name.
 	 *
@@ -79,6 +85,7 @@ public class HappyAppUser {
 	void setFirstName(String firstName) {
 		Log.d(TAG, "setFirstName:true");
 	}
+	
 	/**
 	 * Getter for users profile picture.
 	 *
@@ -87,6 +94,7 @@ public class HappyAppUser {
 	public Uri getProfilePictureUrl() {
 		return mProfilePictureUrl;
 	}
+	
 	/**
 	 * Setter for profile picture.
 	 *
@@ -95,6 +103,7 @@ public class HappyAppUser {
 	public void setProfilePictureUrl(Uri profilePictureUrl) {
 		mProfilePictureUrl = profilePictureUrl;
 	}
+	
 	/**
 	 * Getter for users family name.
 	 *
@@ -103,6 +112,7 @@ public class HappyAppUser {
 	public String getFamilyName() {
 		return mFamilyName;
 	}
+	
 	/**
 	 * Setter for users family name.
 	 *
@@ -111,6 +121,7 @@ public class HappyAppUser {
 	public void setFamilyName(String familyName) {
 		mFamilyName = familyName;
 	}
+	
 	/**
 	 * Getter for users date of birth.
 	 *
@@ -119,6 +130,7 @@ public class HappyAppUser {
 	public String getDateOfBirth() {
 		return mDateOfBirth;
 	}
+	
 	/**
 	 * Setter for users date of birth.
 	 *
@@ -127,6 +139,7 @@ public class HappyAppUser {
 	public void setDateOfBirth(String dateOfBirth) {
 		mDateOfBirth = dateOfBirth;
 	}
+	
 	/**
 	 * Getter for users username.
 	 *
@@ -135,6 +148,7 @@ public class HappyAppUser {
 	public String getUsername() {
 		return mUsername;
 	}
+	
 	/**
 	 * Setter for users username.
 	 *
@@ -143,6 +157,7 @@ public class HappyAppUser {
 	public void setUsername(String username) {
 		mUsername = username;
 	}
+	
 	/**
 	 * Getter for users subscription variant.
 	 *
@@ -151,6 +166,7 @@ public class HappyAppUser {
 	public Subscription getSubscriptionVariant() {
 		return mSubscriptionVariant;
 	}
+	
 	/**
 	 * Setter for users subscription variant.
 	 *
@@ -159,6 +175,7 @@ public class HappyAppUser {
 	public void setSubscriptionVariant(Subscription subscriptionVariant) {
 		mSubscriptionVariant = subscriptionVariant;
 	}
+	
 	/**
 	 * Getter for users date of creation.
 	 *
@@ -167,6 +184,7 @@ public class HappyAppUser {
 	public String getDateOfCreation() {
 		return mDateOfCreation;
 	}
+	
 	/**
 	 * Setter for users date of creation.
 	 *
@@ -175,6 +193,7 @@ public class HappyAppUser {
 	public void setDateOfCreation(String dateOfCreation) {
 		mDateOfCreation = dateOfCreation;
 	}
+	
 	/**
 	 * Getter for users unique id.
 	 *
@@ -183,6 +202,7 @@ public class HappyAppUser {
 	public String getUid() {
 		return mUid;
 	}
+	
 	/**
 	 * Setter for users unique id.
 	 *

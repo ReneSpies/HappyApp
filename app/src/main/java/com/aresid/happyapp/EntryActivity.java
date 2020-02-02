@@ -61,6 +61,7 @@ public class EntryActivity
 	private FirebaseAuth       mAuth;
 	private int                mBackPressCounter = 0;
 	private BillingClient      mBillingClient;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate:true");
@@ -114,6 +115,7 @@ public class EntryActivity
 		                              .build();
 		mBillingClient.startConnection(this);
 	}
+	
 	@Override
 	public void onStart() {
 		Log.d(TAG, "onStart:true");
@@ -123,12 +125,14 @@ public class EntryActivity
 		                                .getCurrentUser();
 		updateUI(user);
 	}
+	
 	@Override
 	protected void onDestroy() {
 		Log.d(TAG, "onDestroy:true");
 		// TODO
 		super.onDestroy();
 	}
+	
 	void updateUI(FirebaseUser user) {
 		Log.d(TAG, "updateUI:true");
 		if (user != null) {
@@ -190,6 +194,7 @@ public class EntryActivity
 			changeFromLoadingScreen();
 		}
 	}
+	
 	/**
 	 * Changes to loading screen.
 	 */
@@ -198,6 +203,7 @@ public class EntryActivity
 //		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
 		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
 	}
+	
 	/**
 	 * Starts main activity.
 	 *
@@ -209,6 +215,7 @@ public class EntryActivity
 		intent.putExtra("firebase_user", user);
 		startActivity(intent);
 	}
+	
 	/**
 	 * Starts new activity to tell the user to verify his email.
 	 *
@@ -220,6 +227,7 @@ public class EntryActivity
 		intent.putExtra("firebase_user", user);
 		startActivity(intent);
 	}
+	
 	/**
 	 * Changes EditTexts to Google registration input since Google account do not have a username or date of birth yet.
 	 */
@@ -231,6 +239,7 @@ public class EntryActivity
 		findViewById(R.id.entry_activity_registration_email_layout).setEnabled(false);
 		findViewById(R.id.entry_activity_registration_password_layout).setEnabled(false);
 	}
+	
 	/**
 	 * Moves the screen to the desired position y.
 	 *
@@ -241,6 +250,7 @@ public class EntryActivity
 		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
 		svParent.smoothScrollTo(0, (int) y);
 	}
+	
 	/**
 	 * Changes from loading screen back to normal.
 	 */
@@ -249,6 +259,7 @@ public class EntryActivity
 //		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.GONE);
 		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
 	}
+	
 	/**
 	 * Loads drawable waiting assistant into @param view.
 	 *
@@ -262,6 +273,7 @@ public class EntryActivity
 			     .into(holder);
 		}
 	}
+	
 	/**
 	 * Updates Google's user account in the Firestore.
 	 *
@@ -288,6 +300,7 @@ public class EntryActivity
 //			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 		  });
 	}
+	
 	/**
 	 * Returns fresh new firestore instance.
 	 *
@@ -297,6 +310,7 @@ public class EntryActivity
 		Log.d(TAG, "getFirestoreInstance:true");
 		return FirebaseFirestore.getInstance();
 	}
+	
 	/**
 	 * Adds users subscription variant to his account info in the database.
 	 *
@@ -314,6 +328,7 @@ public class EntryActivity
 //			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 		  });
 	}
+	
 	/**
 	 * Now this does some fancy stuff. Checks if all the data is correct and then proceeds to Google billing flow.
 	 *
@@ -454,6 +469,7 @@ public class EntryActivity
 			}
 		}
 	}
+	
 	/**
 	 * This method checks if the given input is correct to create a Google user.
 	 *
@@ -488,6 +504,7 @@ public class EntryActivity
 		}
 		return true;
 	}
+	
 	/**
 	 * This method checks if the given input is correct to create a new user.
 	 *
@@ -564,6 +581,7 @@ public class EntryActivity
 		}
 		return true;
 	}
+	
 	/**
 	 * This method saves users info in firestore upon registration.
 	 *
@@ -602,6 +620,33 @@ public class EntryActivity
 			  toast.cancel();
 		  });
 	}
+	
+	/**
+	 * This method resets all the layout errors in the registration form.
+	 */
+	private void setLayoutErrorsNull() {
+		Log.d(TAG, "setLayoutErrorsNull:true");
+		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
+		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
+		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
+		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
+		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_username_layout);
+		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+		TextInputLayout emailLayout = findViewById(R.id.entry_activity_login_email_layout);
+		TextInputLayout passwordLayout = findViewById(R.id.entry_activity_login_password_layout);
+		cbTermsConditionsPrivacyPolicy.clearFocus();
+		emailLayout.setError(null);
+		passwordLayout.setError(null);
+		etRegistrationFirstNameLayout.setError(null);
+		etRegistrationFamilyNameLayout.setError(null);
+		etRegistrationNicknameLayout.setError(null);
+		etRegistrationEmailLayout.setError(null);
+		etRegistrationPasswordLayout.setError(null);
+		etRegistrationDobLayout.setError(null);
+		cbTermsConditionsPrivacyPolicy.setError(null);
+	}
+	
 	/**
 	 * Starts email verification activity to tell the Google user to verify his email.
 	 *
@@ -613,6 +658,63 @@ public class EntryActivity
 		intent.putExtra("user", user);
 		startActivity(intent);
 	}
+	
+	/**
+	 * This method handles what happens on back pressed.
+	 */
+	@Override
+	public void onBackPressed() {
+		// I want to have the user click 2 times back when he wants to leave the app.
+		Log.d(TAG, "onBackPressed:true");
+		int time = 5130;
+		Toast toast = Toast.makeText(this, getString(R.string.plain_press_again_to_exit), Toast.LENGTH_LONG);
+		if (mBackPressCounter == 0) {
+			Log.d(TAG, "onBackPressed: counter == 0");
+			toast.show();
+			mBackPressCounter = 1;
+			new Handler().postDelayed(() -> {
+				Log.d(TAG, "run:true");
+				mBackPressCounter = 0;
+			}, time);
+			return;
+		} else {
+			if (mBackPressCounter == 1) {
+				Log.d(TAG, "onBackPressed: counter == 1");
+				toast.cancel();
+				finishAffinity();
+			}
+		}
+		finishAffinity();
+	}
+	
+	/**
+	 * Handles all the on click methods.
+	 *
+	 * @param v The view that called this.
+	 */
+	@Override
+	public void onClick(View v) {
+		Log.d(TAG, "onClick:true");
+		switch (v.getId()) {
+			case R.id.entry_activity_login_google_button:
+				Log.d(TAG, "onClick: id = google login button");
+				// Google login.
+				Intent googleLoginIntent = mGoogleSignInClient.getSignInIntent();
+				startActivityForResult(googleLoginIntent, REQUEST_CODE_LOGIN);
+				break;
+			case R.id.entry_activity_registration_date_of_birth_field:
+				Log.d(TAG, "onClick: id = dob field");
+				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
+				break;
+		}
+	}
+	
+	@Override
+	public void onFinishedTyping() {
+		Log.d(TAG, "onFinishedTyping:true");
+		loginUser();
+	}
+	
 	/**
 	 * This method logs the user in.
 	 */
@@ -666,84 +768,7 @@ public class EntryActivity
 			     }
 		     });
 	}
-	/**
-	 * This method handles what happens on back pressed.
-	 */
-	@Override
-	public void onBackPressed() {
-		// I want to have the user click 2 times back when he wants to leave the app.
-		Log.d(TAG, "onBackPressed:true");
-		int time = 5130;
-		Toast toast = Toast.makeText(this, getString(R.string.plain_press_again_to_exit), Toast.LENGTH_LONG);
-		if (mBackPressCounter == 0) {
-			Log.d(TAG, "onBackPressed: counter == 0");
-			toast.show();
-			mBackPressCounter = 1;
-			new Handler().postDelayed(() -> {
-				Log.d(TAG, "run:true");
-				mBackPressCounter = 0;
-			}, time);
-			return;
-		} else {
-			if (mBackPressCounter == 1) {
-				Log.d(TAG, "onBackPressed: counter == 1");
-				toast.cancel();
-				finishAffinity();
-			}
-		}
-		finishAffinity();
-	}
-	/**
-	 * Handles all the on click methods.
-	 *
-	 * @param v The view that called this.
-	 */
-	@Override
-	public void onClick(View v) {
-		Log.d(TAG, "onClick:true");
-		switch (v.getId()) {
-			case R.id.entry_activity_login_google_button:
-				Log.d(TAG, "onClick: id = google login button");
-				// Google login.
-				Intent googleLoginIntent = mGoogleSignInClient.getSignInIntent();
-				startActivityForResult(googleLoginIntent, REQUEST_CODE_LOGIN);
-				break;
-			case R.id.entry_activity_registration_date_of_birth_field:
-				Log.d(TAG, "onClick: id = dob field");
-				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
-				break;
-		}
-	}
-	@Override
-	public void onFinishedTyping() {
-		Log.d(TAG, "onFinishedTyping:true");
-		loginUser();
-	}
-	/**
-	 * This method resets all the layout errors in the registration form.
-	 */
-	private void setLayoutErrorsNull() {
-		Log.d(TAG, "setLayoutErrorsNull:true");
-		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
-		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
-		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
-		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
-		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
-		TextInputLayout etRegistrationNicknameLayout = findViewById(R.id.entry_activity_registration_username_layout);
-		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
-		TextInputLayout emailLayout = findViewById(R.id.entry_activity_login_email_layout);
-		TextInputLayout passwordLayout = findViewById(R.id.entry_activity_login_password_layout);
-		cbTermsConditionsPrivacyPolicy.clearFocus();
-		emailLayout.setError(null);
-		passwordLayout.setError(null);
-		etRegistrationFirstNameLayout.setError(null);
-		etRegistrationFamilyNameLayout.setError(null);
-		etRegistrationNicknameLayout.setError(null);
-		etRegistrationEmailLayout.setError(null);
-		etRegistrationPasswordLayout.setError(null);
-		etRegistrationDobLayout.setError(null);
-		cbTermsConditionsPrivacyPolicy.setError(null);
-	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		Log.d(TAG, "onActivityResult:true");
@@ -765,6 +790,7 @@ public class EntryActivity
 			    });
 		}
 	}
+	
 	/**
 	 * Registers a new firebase user via Google sign in.
 	 *
@@ -794,6 +820,7 @@ public class EntryActivity
 			     changeFromLoadingScreen();
 		     });
 	}
+	
 	/**
 	 * Changes the view from Google registration restriction.
 	 */
@@ -804,6 +831,7 @@ public class EntryActivity
 		findViewById(R.id.entry_activity_registration_email_layout).setEnabled(true);
 		findViewById(R.id.entry_activity_registration_password_layout).setEnabled(true);
 	}
+	
 	/**
 	 * This method evaluates an online time and saves it to the users account in the database.
 	 *
@@ -823,6 +851,7 @@ public class EntryActivity
 			  Log.e(TAG, "addTimeToFirestoreEntry: ", e);
 		  });
 	}
+	
 	@Override
 	public void onBillingSetupFinished(BillingResult result) {
 		Log.d(TAG, "onBillingSetupFinished:true");
@@ -847,10 +876,12 @@ public class EntryActivity
 			Log.d(TAG, "onBillingSetupFinished: result code = " + result.getResponseCode());
 		}
 	}
+	
 	@Override
 	public void onBillingServiceDisconnected() {
 		Log.d(TAG, "onBillingServiceDisconnected:true");
 	}
+	
 	@Override
 	public void onPurchasesUpdated(BillingResult result, @Nullable List<Purchase> list) {
 		Log.d(TAG, "onPurchasesUpdated:true");

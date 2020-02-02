@@ -30,9 +30,11 @@ public class EmailVerificationFragment
 	private              Button                        mBackButton;
 	private              Button                        mSendEmailAgainButton;
 	private              OnFragmentInteractionListener mFragmentInteractionListener;
+	
 	public EmailVerificationFragment() {
 		// Required empty public constructor
 	}
+	
 	public static EmailVerificationFragment newInstance(FirebaseUser user) {
 		EmailVerificationFragment emailFragment = new EmailVerificationFragment();
 		Bundle args = new Bundle();
@@ -40,6 +42,7 @@ public class EmailVerificationFragment
 		emailFragment.setArguments(args);
 		return emailFragment;
 	}
+	
 	@Override
 	public void onAttach(Context context) {
 		Log.d(TAG, "onAttach:true");
@@ -51,6 +54,7 @@ public class EmailVerificationFragment
 		}
 		this.mContext = context;
 	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,6 +63,7 @@ public class EmailVerificationFragment
 			mFirebaseUser = getArguments().getParcelable(ARG_FIREBASE_USER);
 		}
 	}
+	
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView:true");
@@ -72,18 +77,21 @@ public class EmailVerificationFragment
 		// Inflate the layout for this fragment
 		return rootView;
 	}
+	
 	@Override
 	public void onStart() {
 		Log.d(TAG, "onStart:true");
 		super.onStart();
 		updateUI(mFirebaseUser);
 	}
+	
 	@Override
 	public void onDetach() {
 		Log.d(TAG, "onDetach:true");
 		super.onDetach();
 		mFragmentInteractionListener = null;
 	}
+	
 	private void updateUI(FirebaseUser user) {
 		Log.d(TAG, "updateUI:true");
 		if (user != null) {
@@ -103,6 +111,7 @@ public class EmailVerificationFragment
 			// TODO: Implement user = null handling!
 		}
 	}
+	
 	private void sendEmailVerification() {
 		Log.d(TAG, "sendEmailVerification:true");
 		// Send verification Email
@@ -126,6 +135,7 @@ public class EmailVerificationFragment
 			    }
 		    });
 	}
+	
 	@Override
 	public void onClick(View v) {
 		Log.d(TAG, "onClick:true");
@@ -144,6 +154,7 @@ public class EmailVerificationFragment
 			}
 		}
 	}
+	
 	public interface OnFragmentInteractionListener {
 		void displayLoginFragment();
 		void onBackPressed();

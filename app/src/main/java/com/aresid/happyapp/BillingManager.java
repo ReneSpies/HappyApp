@@ -39,6 +39,7 @@ public class BillingManager
 	}
 	private AppCompatActivity mActivity;
 	private BillingClient     mBillingClient;
+	
 	BillingManager(AppCompatActivity activity) {
 		Log.d(TAG, "BillingManager:true");
 		mActivity = activity;
@@ -56,12 +57,14 @@ public class BillingManager
 					Log.w(TAG, "onBillingSetupFinished: result = " + billingResult.getResponseCode());
 				}
 			}
+			
 			@Override
 			public void onBillingServiceDisconnected() {
 				Log.d(TAG, "onBillingServiceDisconnected:true");
 			}
 		});
 	}
+	
 	void startPurchaseFlow(SkuDetails skuDetails) {
 		Log.d(TAG, "startPurchaseFlow:true");
 		BillingFlowParams params = BillingFlowParams.newBuilder()
@@ -70,11 +73,13 @@ public class BillingManager
 		int responseCode = mBillingClient.launchBillingFlow(mActivity, params)
 		                                 .getResponseCode();
 	}
+	
 	List<String> getSkus(@BillingClient.SkuType String type) {
 		Log.d(TAG, "getSkus:true");
 		Log.d(TAG, "getSkus: " + SKUS.get(type));
 		return SKUS.get(type);
 	}
+	
 	void querySkuDetailsAsync(@BillingClient.SkuType final String skuType, final List<String> skuList, final SkuDetailsResponseListener listener) {
 		Log.d(TAG, "querySkuDetailsAsync:true");
 		SkuDetailsParams params = SkuDetailsParams.newBuilder()
@@ -86,6 +91,7 @@ public class BillingManager
 			mBillingClient.querySkuDetailsAsync(params, listener);
 		}
 	}
+	
 	@Override
 	public void onPurchasesUpdated(BillingResult billingResult, @Nullable List<Purchase> purchases) {
 		Log.d(TAG, "onPurchasesUpdated:true");

@@ -10,6 +10,7 @@ import android.util.Log;
  */
 public class FirestoreHelper {
 	private static final String TAG = "FirestoreHelper";
+	
 	/**
 	 * Constructor 0 parameters.
 	 */

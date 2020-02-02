@@ -34,10 +34,12 @@ public class DatePickerFragment
 			mEditText.setText(getResources().getString(R.string.placeholder_date_of_birth_content, view.getDayOfMonth(), view.getMonth() + 1, view.getYear()));
 		}
 	};
+	
 	DatePickerFragment(@NonNull AppCompatActivity context, @NonNull EditText field) {
 		mContext = context;
 		mEditText = field;
 	}
+	
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

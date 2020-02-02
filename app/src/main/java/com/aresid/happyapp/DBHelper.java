@@ -33,6 +33,7 @@ public class DBHelper
 	private static final String   TAG                              = "DBHelper";
 	private static final String   DATABASE_NAME                    = "HappyApp_Database";
 	private static final int      DATABASE_VERSION                 = 1;
+	
 	/**
 	 * Constructor matching super.
 	 *
@@ -41,6 +42,7 @@ public class DBHelper
 	DBHelper(@Nullable Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
+	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Log.d(TAG, "onCreate:true");
@@ -63,10 +65,12 @@ public class DBHelper
 			Log.e(TAG, "onCreate: ", e);
 		}
 	}
+	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.d(TAG, "onUpgrade:true");
 	}
+	
 	/**
 	 * Get userdata from user with specified ID.
 	 *
@@ -95,6 +99,7 @@ public class DBHelper
 		cursor.close();
 		return mapOfUserInfo;
 	}
+	
 	/**
 	 * Insert new userdata into the database.
 	 */
@@ -125,6 +130,7 @@ public class DBHelper
 			db.close();
 		}
 	}
+	
 	/**
 	 * Insert a new subscription into the database.
 	 * This is called from EntryActivity onCreate and checks the version code in SharedPrefs to see if it has changed.
@@ -145,6 +151,7 @@ public class DBHelper
 		values.put(TABLE_SUBSCRIPTIONS_COLUMN_NAMES[2], description);
 		values.put(TABLE_SUBSCRIPTIONS_COLUMN_NAMES[3], price);
 	}
+	
 	/**
 	 * Get subscriptions from the database.
 	 *
@@ -169,6 +176,7 @@ public class DBHelper
 		cursor.close();
 		return mapOfSubscriptionData;
 	}
+	
 	/**
 	 * Get subscription icon for specified subscription.
 	 *

@@ -25,10 +25,12 @@ public class LegalFragment
 	private              FirebaseUser                  mFirebaseUser;
 	private              ListView                      mTermsAndConditionsListView;
 	private              ViewGroup                     mContainer;
+	
 	public LegalFragment() {
 		Log.d(TAG, "LegalFragment:empty");
 		// Required empty public constructor
 	}
+	
 	public static LegalFragment newInstance(FirebaseUser user, GoogleSignInAccount account, String userID) {
 		Log.d("static", "newInstance:true");
 		LegalFragment fragment = new LegalFragment();
@@ -39,6 +41,7 @@ public class LegalFragment
 		fragment.setArguments(args);
 		return fragment;
 	}
+	
 	@Override
 	public void onAttach(Context context) {
 		Log.d(TAG, "onAttach:true");
@@ -49,6 +52,7 @@ public class LegalFragment
 			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
 		}
 	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate:true");
@@ -57,6 +61,7 @@ public class LegalFragment
 			mFirebaseUser = getArguments().getParcelable(ARG_USER);
 		}
 	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView:true");
@@ -69,6 +74,7 @@ public class LegalFragment
 		confirmButton.setOnClickListener(this);
 		return rootView;
 	}
+	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		Log.d(TAG, "onActivityCreated:true");
@@ -84,12 +90,14 @@ public class LegalFragment
 		//
 		//		mTermsAndConditionsListView.setAdapter(legalListViewAdapter);
 	}
+	
 	@Override
 	public void onDetach() {
 		Log.d(TAG, "onDetach:true");
 		super.onDetach();
 		mFragmentInteractionListener = null;
 	}
+	
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.legal_confirm_button) {
@@ -103,6 +111,7 @@ public class LegalFragment
 			}
 		}
 	}
+	
 	public interface OnFragmentInteractionListener {
 		void startMainActivity(FirebaseUser user, GoogleSignInAccount account, String userID);
 		void displayPrivacyPolicyDialog();

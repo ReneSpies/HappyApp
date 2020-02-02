@@ -25,6 +25,7 @@ public class EmailVerificationActivity
 	private static final String TAG                = "GmailVerificationAct";
 	private              int    mEmailErrorHelper  = 0;
 	private              int    mBackPressedHelper = 0;
+	
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate:true");
@@ -41,12 +42,14 @@ public class EmailVerificationActivity
 			     .show();
 		}
 	}
+	
 	private void startMainActivity(FirebaseUser user) {
 		Log.d(TAG, "startMainActivity:true");
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra("user", user);
 		startActivity(intent);
 	}
+	
 	private void checkUserStatus(FirebaseUser user) {
 		Log.d(TAG, "checkUserStatus:true");
 		new Handler().postDelayed(() -> {
@@ -67,6 +70,7 @@ public class EmailVerificationActivity
 			    });
 		}, 1300);
 	}
+	
 	private void sendEmailVerification(FirebaseUser user) {
 		Log.d(TAG, "sendEmailVerification:true");
 		Toast toast = Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_LONG);
@@ -95,6 +99,7 @@ public class EmailVerificationActivity
 			    });
 		}
 	}
+	
 	@Override
 	public void onBackPressed() {
 		Log.d(TAG, "onBackPressed:true");
@@ -115,12 +120,14 @@ public class EmailVerificationActivity
 			}
 		}
 	}
+	
 	private void handleLogout() {
 		Log.d(TAG, "handleLogout:true");
 		FirebaseAuth.getInstance()
 		            .signOut();
 		finish();
 	}
+	
 	@Override
 	public void onClick(View v) {
 		Log.d(TAG, "onClick:true");

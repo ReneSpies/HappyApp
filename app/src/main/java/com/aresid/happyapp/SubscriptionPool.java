@@ -15,10 +15,12 @@ import java.util.List;
 class SubscriptionPool {
 	private static final String             TAG = "SubscriptionPool";
 	private              List<Subscription> mSubscriptions;
+	
 	SubscriptionPool() {
 		Log.d(TAG, "SubscriptionPool: empty constructor");
 		mSubscriptions = new ArrayList<>();
 	}
+	
 	/**
 	 * As the query returns the subs in some weird sequence I sort the subs here and add their icons.
 	 */
@@ -26,10 +28,12 @@ class SubscriptionPool {
 		Log.d(TAG, "sort:true");
 		Collections.sort(mSubscriptions, (o1, o2) -> o1.getPriority() - (o2.getPriority()));
 	}
+	
 	void addSubscription(Subscription subscription) {
 		Log.d(TAG, "addSubscription:true");
 		mSubscriptions.add(subscription);
 	}
+	
 	/**
 	 * Getter for count of all subscriptions in the pool starting at 0.
 	 *
@@ -39,6 +43,7 @@ class SubscriptionPool {
 		Log.d(TAG, "getSubscriptionCount = " + mSubscriptions.size());
 		return mSubscriptions.size();
 	}
+	
 	/**
 	 * Getter for a specific subscription object.
 	 *

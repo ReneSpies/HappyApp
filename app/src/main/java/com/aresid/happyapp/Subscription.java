@@ -27,6 +27,7 @@ class Subscription {
 	private              Context    mContext;
 	private              int        mPriority;
 	private              SkuDetails mSkuDetails;
+	
 	/**
 	 * Constructor.
 	 */
@@ -34,6 +35,7 @@ class Subscription {
 		Log.d(TAG, "Subscription: empty constructor");
 		mContext = context;
 	}
+	
 	/**
 	 * Returns the subscriptions title.
 	 *
@@ -43,6 +45,7 @@ class Subscription {
 		Log.d(TAG, "getTitle:true");
 		return mTitle;
 	}
+	
 	/**
 	 * Sets the subscriptions title to the given String.
 	 *
@@ -57,6 +60,7 @@ class Subscription {
 			mTitle = title.trim();
 		}
 	}
+	
 	/**
 	 * Returns the subscriptions description as single text if bulletpoints are not used.
 	 *
@@ -66,6 +70,7 @@ class Subscription {
 		Log.d(TAG, "getDescription:true");
 		return mDescription;
 	}
+	
 	/**
 	 * Sets the subscriptions description to the given String as a single text.
 	 * Throws IllegalStateException if subscription already has bulletpoints.
@@ -76,6 +81,7 @@ class Subscription {
 		Log.d(TAG, "setDescription:true");
 		mDescription = description;
 	}
+	
 	/**
 	 * Returns the subscriptions icon.
 	 *
@@ -85,6 +91,7 @@ class Subscription {
 		Log.d(TAG, "getIcon:true");
 		return mIcon;
 	}
+	
 	/**
 	 * Sets the subscriptions icon to the given drawable.
 	 *
@@ -94,6 +101,7 @@ class Subscription {
 		Log.d(TAG, "setIcon:true");
 		mIcon = icon;
 	}
+	
 	/**
 	 * Returns the subscriptions price as a formatted String.
 	 *
@@ -103,6 +111,7 @@ class Subscription {
 		Log.d(TAG, "getPrice:true");
 		return mPrice;
 	}
+	
 	/**
 	 * Sets the subscriptions price to the given float and converts it to a String.
 	 *
@@ -112,6 +121,7 @@ class Subscription {
 		Log.d(TAG, "setPrice:true");
 		mPrice = price;
 	}
+	
 	/**
 	 * Getter for subscriptions id.
 	 *
@@ -120,6 +130,7 @@ class Subscription {
 	String getId() {
 		return mId;
 	}
+	
 	/**
 	 * Setter for subscriptions id.
 	 *
@@ -143,6 +154,7 @@ class Subscription {
 		}
 		mId = id;
 	}
+	
 	/**
 	 * Getter for subscriptions priority.
 	 *
@@ -151,6 +163,7 @@ class Subscription {
 	int getPriority() {
 		return mPriority;
 	}
+	
 	/**
 	 * Setter for subscriptions priority.
 	 *
@@ -160,6 +173,7 @@ class Subscription {
 		Log.d(TAG, "setPriority:true");
 		mPriority = priority;
 	}
+	
 	/**
 	 * Getter for sku details.
 	 *
@@ -168,6 +182,7 @@ class Subscription {
 	SkuDetails getSkuDetails() {
 		return mSkuDetails;
 	}
+	
 	/**
 	 * Setter for sku details.
 	 *
