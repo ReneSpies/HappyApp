@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,7 +47,7 @@ import java.util.List;
 
 public class EntryActivity
 		extends AppCompatActivity
-		implements ViewPagerAdapter.OnViewPagerInteractionListener,
+		implements SubsPagerFinalAdapter.OnViewPagerInteractionListener,
 		           View.OnClickListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener,
 		           ButtonlessLogin.OnButtonlessLoginInteractionListener,
@@ -64,20 +63,18 @@ public class EntryActivity
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate:true");
+		Log.d(TAG, "onCreate: called");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_entry);
 		// Access all views that are needed.
 		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
-		Button btGoogleLogin = findViewById(R.id.entry_activity_login_google_button);
 		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
 		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
 		TextInputEditText loginPasswordField = findViewById(R.id.entry_activity_login_password_field);
-		vpSubscriptions.setAdapter(new ViewPagerAdapter(this));
+		vpSubscriptions.setAdapter(new SubsPagerInitAdapter(this));
 		// Beginning of buttonless login process.
 		// Register a listener for the email and password field.
 		loginPasswordField.addTextChangedListener(new ButtonlessLogin(this));
-		btGoogleLogin.setOnClickListener(this);
 		sv.setSmoothScrollingEnabled(true);
 		// the click listener is required to let the datepicker pop up when its clicked.
 		etRegistrationDateOfBirthField.setOnClickListener(this);
@@ -104,11 +101,6 @@ public class EntryActivity
 		// Load waiting assistant into ImageViews.
 //		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
 		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
-		// Configure Google Sign In.
-		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("release")
-		                                                                                              .requestEmail()
-		                                                                                              .build();
-		mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 		mBillingClient = BillingClient.newBuilder(this)
 		                              .setListener(this)
 		                              .enablePendingPurchases()
@@ -118,7 +110,7 @@ public class EntryActivity
 	
 	@Override
 	public void onStart() {
-		Log.d(TAG, "onStart:true");
+		Log.d(TAG, "onStart: called");
 		super.onStart();
 		// checks if user has signed in before.
 		FirebaseUser user = FirebaseAuth.getInstance()
@@ -128,16 +120,16 @@ public class EntryActivity
 	
 	@Override
 	protected void onDestroy() {
-		Log.d(TAG, "onDestroy:true");
+		Log.d(TAG, "onDestroy: called");
 		// TODO
 		super.onDestroy();
 	}
 	
 	void updateUI(FirebaseUser user) {
-		Log.d(TAG, "updateUI:true");
+		Log.d(TAG, "updateUI: called");
 		if (user != null) {
 			changeToLoadingScreen();
-			Toast toast = Toast.makeText(this, getString(R.string.plain_reloading_user_info), Toast.LENGTH_LONG);
+			Toast toast = Toast.makeText(this, getString(R.string.plainReloadingUserInformation), Toast.LENGTH_LONG);
 			toast.show();
 			user.reload()
 			    .addOnSuccessListener(command -> {
@@ -179,7 +171,7 @@ public class EntryActivity
 				    // TODO
 				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
 					    // if user has been deleted in the meantime.
-					    Toast.makeText(this, getString(R.string.contraction_user_not_found), Toast.LENGTH_LONG)
+					    Toast.makeText(this, getString(R.string.errorUserNotFound), Toast.LENGTH_LONG)
 					         .show();
 					    // log non-existing user out.
 					    mAuth.signOut();
@@ -199,7 +191,7 @@ public class EntryActivity
 	 * Changes to loading screen.
 	 */
 	private void changeToLoadingScreen() {
-		Log.d(TAG, "changeToLoadingScreen:true");
+		Log.d(TAG, "changeToLoadingScreen: called");
 //		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.VISIBLE);
 		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
 	}
@@ -210,7 +202,7 @@ public class EntryActivity
 	 * @param user Firebase user.
 	 */
 	void startMainActivity(FirebaseUser user) {
-		Log.d(TAG, "startMainActivity:true");
+		Log.d(TAG, "startMainActivity: called");
 		Intent intent = new Intent(this, MainActivity.class);
 		intent.putExtra("firebase_user", user);
 		startActivity(intent);
@@ -222,7 +214,7 @@ public class EntryActivity
 	 * @param user Firebase user.
 	 */
 	void startEmailVerificationActivity(FirebaseUser user) {
-		Log.d(TAG, "startEmailVerificationActivity:true");
+		Log.d(TAG, "startEmailVerificationActivity: called");
 		Intent intent = new Intent(this, EmailVerificationActivity.class);
 		intent.putExtra("firebase_user", user);
 		startActivity(intent);
@@ -232,7 +224,7 @@ public class EntryActivity
 	 * Changes EditTexts to Google registration input since Google account do not have a username or date of birth yet.
 	 */
 	private void changeToGoogleRegistration() {
-		Log.d(TAG, "changeToGoogleRegistration:true");
+		Log.d(TAG, "changeToGoogleRegistration: called");
 		smoothScrollTo(findViewById(R.id.entry_activity_registration_seperator_view).getBottom());
 		findViewById(R.id.entry_activity_registration_first_name_layout).setEnabled(false);
 		findViewById(R.id.entry_activity_registration_family_name_layout).setEnabled(false);
@@ -246,7 +238,7 @@ public class EntryActivity
 	 * @param y Desired position to be at. Mostly view.getTop();
 	 */
 	private void smoothScrollTo(float y) {
-		Log.d(TAG, "smoothScrollTo:true");
+		Log.d(TAG, "smoothScrollTo: called");
 		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
 		svParent.smoothScrollTo(0, (int) y);
 	}
@@ -255,7 +247,7 @@ public class EntryActivity
 	 * Changes from loading screen back to normal.
 	 */
 	private void changeFromLoadingScreen() {
-		Log.d(TAG, "changeFromLoadingScreen:true");
+		Log.d(TAG, "changeFromLoadingScreen: called");
 //		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View.GONE);
 		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
 	}
@@ -266,7 +258,7 @@ public class EntryActivity
 	 * @param gifHolders
 	 */
 	private void loadGifInto(ImageView... gifHolders) {
-		Log.d(TAG, "loadGifInto:true");
+		Log.d(TAG, "loadGifInto: called");
 		for (ImageView holder : gifHolders) {
 			Glide.with(this)
 			     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
@@ -282,7 +274,7 @@ public class EntryActivity
 	 * @param dob      The Date of birth to load into the database.
 	 */
 	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
-		Log.d(TAG, "updateGoogleUser:true");
+		Log.d(TAG, "updateGoogleUser: called");
 		HashMap<String, Object> info = new HashMap<>();
 		info.put(FirestoreNames.COLUMN_USERNAME, username);
 		info.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
@@ -297,7 +289,7 @@ public class EntryActivity
 		  .addOnFailureListener(e -> {
 			  Log.d(TAG, "updateGoogleUser: failure");
 			  Log.e(TAG, "updateGoogleUser: ", e);
-//			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
+//			  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 		  });
 	}
 	
@@ -307,7 +299,7 @@ public class EntryActivity
 	 * @return Fresh new firestore instance.
 	 */
 	private FirebaseFirestore getFirestoreInstance() {
-		Log.d(TAG, "getFirestoreInstance:true");
+		Log.d(TAG, "getFirestoreInstance: called");
 		return FirebaseFirestore.getInstance();
 	}
 	
@@ -318,14 +310,14 @@ public class EntryActivity
 	 * @param variant The variant he subscribed.
 	 */
 	private void addUsersSubscriptionVariantToFirestore(FirebaseUser user, int variant) {
-		Log.d(TAG, "addUsersSubscriptionVariantToFirestore:true");
+		Log.d(TAG, "addUsersSubscriptionVariantToFirestore: called");
 		FirebaseFirestore db = getFirestoreInstance();
 		db.collection(FirestoreNames.COLLECTION_USERS)
 		  .document(user.getUid())
 		  .update(FirestoreNames.COLUMN_SUBSCRIPTION_VARIANT, variant == 13 ? "gold" : "no gold")
 		  .addOnFailureListener(e -> {
 			  Log.e(TAG, "addUsersSubscriptionVariantToFirestore: ", e);
-//			  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
+//			  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View.INVISIBLE);
 		  });
 	}
 	
@@ -336,7 +328,7 @@ public class EntryActivity
 	 */
 	@Override
 	public void createUser(Subscription subscription) {
-		Log.d(TAG, "createUser:true");
+		Log.d(TAG, "createUser: called");
 		Log.d(TAG, "createUser: subscription = " + subscription.getTitle());
 		TextInputEditText etRegistrationEmailField = findViewById(R.id.entry_activity_registration_email_field);
 		TextInputEditText etRegistrationPasswordField = findViewById(R.id.entry_activity_registration_password_field);
@@ -377,20 +369,20 @@ public class EntryActivity
 				  .addOnSuccessListener(command -> {
 					  Log.d(TAG, "createUser: success");
 					  if (command.isEmpty()) {
-//						  ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
+//						  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, user.getDisplayName(), new Subscription(this), user.getPhotoUrl());
 //						  addUsersSubscriptionVariantToFirestore(user, variant);
 //						  updateGoogleUser(user, username, dob);
 					  } else {
 						  Log.d(TAG, "createUser: username already taken");
-						  etRegistrationUsernameLayout.setError(getString(R.string.plain_username_is_already_taken));
+						  etRegistrationUsernameLayout.setError(getString(R.string.errorUsernameIsAlreadyTaken));
 						  etRegistrationUsernameLayout.setEnabled(true);
 						  etRegistrationDobLayout.setEnabled(true);
 					  }
 				  })
 				  .addOnFailureListener(e -> {
 					  Log.e(TAG, "createUser: ", e);
-					  Toast.makeText(this, getString(R.string.contraction_server_connection_failed), Toast.LENGTH_LONG)
+					  Toast.makeText(this, getString(R.string.contractionServerConnectionFailed), Toast.LENGTH_LONG)
 					       .show();
 					  etRegistrationUsernameLayout.setEnabled(true);
 					  etRegistrationDobLayout.setEnabled(true);
@@ -406,7 +398,7 @@ public class EntryActivity
 				etRegistrationPasswordLayout.setEnabled(false);
 				etRegistrationDobLayout.setEnabled(false);
 				cbTermsConditionsPrivacyPolicy.setEnabled(false);
-//				ViewPagerAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
+//				SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
 				db.collection(FirestoreNames.COLLECTION_USERS)
 				  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
 				  .get()
@@ -434,12 +426,12 @@ public class EntryActivity
 							              // TODO
 							              if (e instanceof FirebaseAuthUserCollisionException) {
 								              smoothScrollTo(etRegistrationUsernameLayout.getBottom());
-								              etRegistrationEmailLayout.setError(getString(R.string.plain_this_email_is_already_in_use));
+								              etRegistrationEmailLayout.setError(getString(R.string.errorThisEmailIsAlreadyInUse));
 							              } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
 								              smoothScrollTo(etRegistrationUsernameLayout.getBottom());
-								              etRegistrationEmailLayout.setError(getString(R.string.plain_this_email_is_badly_formatted));
+								              etRegistrationEmailLayout.setError(getString(R.string.errorThisEmailIsBadlyFormatted));
 							              } else {
-								              Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_SHORT)
+								              Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_SHORT)
 								                   .show();
 							              }
 						              });
@@ -451,13 +443,13 @@ public class EntryActivity
 						  etRegistrationPasswordLayout.setEnabled(true);
 						  etRegistrationDobLayout.setEnabled(true);
 						  smoothScrollTo(etRegistrationFamilyNameLayout.getBottom());
-						  etRegistrationUsernameLayout.setError(getString(R.string.plain_username_is_already_taken));
+						  etRegistrationUsernameLayout.setError(getString(R.string.errorUsernameIsAlreadyTaken));
 					  }
 				  })
 				  .addOnFailureListener(e -> {
 					  Log.d(TAG, "createUser: query failure");
 					  Log.e(TAG, "createUser: ", e);
-					  Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_SHORT)
+					  Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_SHORT)
 					       .show();
 					  etRegistrationFirstNameField.setEnabled(true);
 					  etRegistrationFamilyNameField.setEnabled(true);
@@ -478,7 +470,7 @@ public class EntryActivity
 	 * @return True if data is fitting.
 	 */
 	private boolean evaluateGoogleUserInfo(String username, String dob) {
-		Log.d(TAG, "evaluateGoogleUserInfo:true");
+		Log.d(TAG, "evaluateGoogleUserInfo: called");
 		setLayoutErrorsNull();
 		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
 		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
@@ -486,19 +478,19 @@ public class EntryActivity
 		TextInputLayout etRegistrationUsernameLayout = findViewById(R.id.entry_activity_registration_username_layout);
 		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
 		if (username.length() == 0) {
-			etRegistrationUsernameLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etRegistrationUsernameLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			smoothScrollTo(etRegistrationUsernameLayout.getTop());
 			return false;
 		} else if (username.startsWith(" ")) {
-			etRegistrationUsernameLayout.setError(getString(R.string.contraction_field_whitespace, R.string.plain_username));
+			etRegistrationUsernameLayout.setError(getString(R.string.errorFieldCannotStartWithWhitespace, R.string.plainUsername));
 			smoothScrollTo(etRegistrationUsernameLayout.getTop());
 			return false;
 		} else if (dob.length() == 0) {
-			etRegistrationDobLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etRegistrationDobLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			smoothScrollTo(etRegistrationDobLayout.getTop());
 			return false;
 		} else if (!cbTermsConditionsPrivacyPolicy.isChecked()) {
-			cbTermsConditionsPrivacyPolicy.setError(getString(R.string.plain_please_confirm));
+			cbTermsConditionsPrivacyPolicy.setError(getString(R.string.plainPleaseConfirm));
 			smoothScrollTo(etRegistrationDobLayout.getBottom());
 			return false;
 		}
@@ -517,7 +509,7 @@ public class EntryActivity
 	 * @return True if everything is fitting.
 	 */
 	private boolean evaluateNewUserInfo(String firstName, String username, String familyName, String email, String password, String dob) {
-		Log.d(TAG, "evaluateNewUserInfo:true");
+		Log.d(TAG, "evaluateNewUserInfo: called");
 		setLayoutErrorsNull();
 		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
 		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
@@ -527,55 +519,55 @@ public class EntryActivity
 		TextInputLayout etRegistrationUsernameLayout = findViewById(R.id.entry_activity_registration_username_layout);
 		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
 		if (firstName.length() == 0) {
-			etRegistrationFirstNameLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etRegistrationFirstNameLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			smoothScrollTo(etRegistrationFirstNameLayout.getTop());
 			return false;
 		} else if (firstName.startsWith(" ")) {
-			etRegistrationFirstNameLayout.setError(getString(R.string.contraction_field_whitespace, R.string.plain_first_name));
+			etRegistrationFirstNameLayout.setError(getString(R.string.errorFieldCannotStartWithWhitespace, R.string.plainFirstName));
 			smoothScrollTo(etRegistrationFirstNameLayout.getTop());
 			return false;
 		} else if (familyName.length() == 0) {
-			etRegistrationFamilyNameLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etRegistrationFamilyNameLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			smoothScrollTo(etRegistrationFirstNameLayout.getBottom());
 			return false;
 		} else if (familyName.startsWith(" ")) {
-			etRegistrationFamilyNameLayout.setError(getString(R.string.contraction_field_whitespace, R.string.plain_family_name));
+			etRegistrationFamilyNameLayout.setError(getString(R.string.errorFieldCannotStartWithWhitespace, R.string.plainFamilyName));
 			smoothScrollTo(etRegistrationFirstNameLayout.getBottom());
 			return false;
 		} else if (username.length() == 0) {
-			etRegistrationUsernameLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etRegistrationUsernameLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			smoothScrollTo(etRegistrationFamilyNameLayout.getBottom());
 			return false;
 		} else if (username.startsWith(" ")) {
-			etRegistrationUsernameLayout.setError(getString(R.string.contraction_field_whitespace, R.string.plain_username));
+			etRegistrationUsernameLayout.setError(getString(R.string.errorFieldCannotStartWithWhitespace, R.string.plainUsername));
 			smoothScrollTo(etRegistrationFamilyNameLayout.getBottom());
 			return false;
 		} else if (email.length() == 0) {
-			etRegistrationEmailLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etRegistrationEmailLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			smoothScrollTo(etRegistrationUsernameLayout.getBottom());
 			return false;
 		} else if (email.startsWith(" ")) {
-			etRegistrationEmailLayout.setError(getString(R.string.contraction_field_whitespace, R.string.plain_email));
+			etRegistrationEmailLayout.setError(getString(R.string.errorFieldCannotStartWithWhitespace, R.string.plainEmail));
 			smoothScrollTo(etRegistrationUsernameLayout.getBottom());
 			return false;
 		} else if (password.length() == 0) {
-			etRegistrationPasswordLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etRegistrationPasswordLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			smoothScrollTo(etRegistrationEmailLayout.getBottom());
 			return false;
 		} else if (password.startsWith(" ")) {
-			etRegistrationPasswordLayout.setError(getString(R.string.contraction_field_whitespace, R.string.plain_password));
+			etRegistrationPasswordLayout.setError(getString(R.string.errorFieldCannotStartWithWhitespace, R.string.plainPassword));
 			smoothScrollTo(etRegistrationEmailLayout.getBottom());
 			return false;
 		} else if (password.length() < 6) {
-			etRegistrationPasswordLayout.setError(getString(R.string.contraction_password_length));
+			etRegistrationPasswordLayout.setError(getString(R.string.errorPasswordTooShort));
 			smoothScrollTo(etRegistrationEmailLayout.getBottom());
 			return false;
 		} else if (dob.length() == 0) {
-			etRegistrationDobLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etRegistrationDobLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			smoothScrollTo(etRegistrationPasswordLayout.getBottom());
 			return false;
 		} else if (!cbTermsConditionsPrivacyPolicy.isChecked()) {
-			cbTermsConditionsPrivacyPolicy.setError(getString(R.string.plain_please_confirm));
+			cbTermsConditionsPrivacyPolicy.setError(getString(R.string.plainPleaseConfirm));
 			smoothScrollTo(etRegistrationDobLayout.getBottom());
 			return false;
 		}
@@ -594,10 +586,10 @@ public class EntryActivity
 	 * @param profilePicture Users profile picture.
 	 */
 	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username, String email, String dob, String profilePicture) {
-		Log.d(TAG, "saveUserInFirestore:true");
+		Log.d(TAG, "saveUserInFirestore: called");
 		Log.d(TAG, "saveUserInFirestore: pic = " + profilePicture);
 		FirebaseFirestore db = FirebaseFirestore.getInstance();
-		Toast toast = Toast.makeText(this, getString(R.string.contraction_standard_error_message_standby), Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(this, getString(R.string.errorStandardMessageStandBy), Toast.LENGTH_SHORT);
 		HashMap<String, Object> userInfo = new HashMap<>();
 		userInfo.put(FirestoreNames.COLUMN_FIRST_NAME, firstName);
 		userInfo.put(FirestoreNames.COLUMN_FAMILY_NAME, familyName);
@@ -625,7 +617,7 @@ public class EntryActivity
 	 * This method resets all the layout errors in the registration form.
 	 */
 	private void setLayoutErrorsNull() {
-		Log.d(TAG, "setLayoutErrorsNull:true");
+		Log.d(TAG, "setLayoutErrorsNull: called");
 		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
 		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
 		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
@@ -653,7 +645,7 @@ public class EntryActivity
 	 * @param user The corresponding user.
 	 */
 	private void startGoogleEmailVerificationActivity(FirebaseUser user) {
-		Log.d(TAG, "startGoogleEmailVerificationActivity:true");
+		Log.d(TAG, "startGoogleEmailVerificationActivity: called");
 		Intent intent = new Intent(this, EmailVerificationActivity.class);
 		intent.putExtra("user", user);
 		startActivity(intent);
@@ -665,9 +657,9 @@ public class EntryActivity
 	@Override
 	public void onBackPressed() {
 		// I want to have the user click 2 times back when he wants to leave the app.
-		Log.d(TAG, "onBackPressed:true");
+		Log.d(TAG, "onBackPressed: called");
 		int time = 5130;
-		Toast toast = Toast.makeText(this, getString(R.string.plain_press_again_to_exit), Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(this, getString(R.string.plainPressAgainToExit), Toast.LENGTH_LONG);
 		if (mBackPressCounter == 0) {
 			Log.d(TAG, "onBackPressed: counter == 0");
 			toast.show();
@@ -694,24 +686,16 @@ public class EntryActivity
 	 */
 	@Override
 	public void onClick(View v) {
-		Log.d(TAG, "onClick:true");
-		switch (v.getId()) {
-			case R.id.entry_activity_login_google_button:
-				Log.d(TAG, "onClick: id = google login button");
-				// Google login.
-				Intent googleLoginIntent = mGoogleSignInClient.getSignInIntent();
-				startActivityForResult(googleLoginIntent, REQUEST_CODE_LOGIN);
-				break;
-			case R.id.entry_activity_registration_date_of_birth_field:
-				Log.d(TAG, "onClick: id = dob field");
-				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
-				break;
+		Log.d(TAG, "onClick: called");
+		if (v.getId() == R.id.entry_activity_registration_date_of_birth_field) {
+			Log.d(TAG, "onClick: id = dob field");
+			new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
 		}
 	}
 	
 	@Override
 	public void onFinishedTyping() {
-		Log.d(TAG, "onFinishedTyping:true");
+		Log.d(TAG, "onFinishedTyping: called");
 		loginUser();
 	}
 	
@@ -719,7 +703,7 @@ public class EntryActivity
 	 * This method logs the user in.
 	 */
 	public void loginUser() {
-		Log.d(TAG, "loginWithUser:true");
+		Log.d(TAG, "loginWithUser: called");
 		EditText etEmailField = findViewById(R.id.entry_activity_login_email_field);
 		EditText etPasswordField = findViewById(R.id.entry_activity_login_password_field);
 		TextInputLayout etEmailFieldLayout = findViewById(R.id.entry_activity_login_email_layout);
@@ -734,13 +718,13 @@ public class EntryActivity
 			if (scrollView.getY() > etEmailFieldLayout.getTop()) {
 				smoothScrollTo(etEmailFieldLayout.getTop());
 			}
-			etEmailFieldLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etEmailFieldLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			return;
 		} else if (password.length() == 0) {
 			if (scrollView.getY() > etPasswordFieldLayout.getTop()) {
 				smoothScrollTo(etPasswordFieldLayout.getTop());
 			}
-			etPasswordFieldLayout.setError(getString(R.string.contraction_empty_credentials_field));
+			etPasswordFieldLayout.setError(getString(R.string.contractionEmptyCredentialsField));
 			return;
 		}
 		// Show loading assistant.
@@ -761,17 +745,17 @@ public class EntryActivity
 			     // TODO
 			     if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
 				     smoothScrollTo(etEmailFieldLayout.getTop());
-				     etEmailFieldLayout.setError(getString(R.string.plain_email_or_password_incorrect));
+				     etEmailFieldLayout.setError(getString(R.string.errorEmailOrPasswordIncorrect));
 			     } else if (e instanceof com.google.firebase.FirebaseNetworkException) {
 				     smoothScrollTo(etEmailFieldLayout.getTop());
-				     etEmailFieldLayout.setError(getString(R.string.contraction_check_internet_connection));
+				     etEmailFieldLayout.setError(getString(R.string.errorCheckInternetConnection));
 			     }
 		     });
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-		Log.d(TAG, "onActivityResult:true");
+		Log.d(TAG, "onActivityResult: called");
 		super.onActivityResult(requestCode, resultCode, data);
 		// Result returned from launching the Intent.
 		if (requestCode == REQUEST_CODE_LOGIN) {
@@ -785,7 +769,7 @@ public class EntryActivity
 				    Log.d(TAG, "onActivityResult: failure");
 				    Log.e(TAG, "onActivityResult: ", e);
 				    changeFromLoadingScreen();
-				    Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_LONG)
+				    Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_LONG)
 				         .show();
 			    });
 		}
@@ -797,7 +781,7 @@ public class EntryActivity
 	 * @param account The Google account.
 	 */
 	private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
-		Log.d(TAG, "firebaseAuthWithGoogleAccount:true");
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: called");
 		AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 		mAuth.signInWithCredential(authCredential)
 		     .addOnSuccessListener(command -> {
@@ -815,7 +799,7 @@ public class EntryActivity
 		     })
 		     .addOnFailureListener(e -> {
 			     Log.e(TAG, "firebaseAuthWithGoogleAccount: ", e);
-			     Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_SHORT)
+			     Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_SHORT)
 			          .show();
 			     changeFromLoadingScreen();
 		     });
@@ -825,7 +809,7 @@ public class EntryActivity
 	 * Changes the view from Google registration restriction.
 	 */
 	private void changeFromGoogleRegistration() {
-		Log.d(TAG, "changeFromGoogleRegistration:true");
+		Log.d(TAG, "changeFromGoogleRegistration: called");
 		findViewById(R.id.entry_activity_registration_first_name_layout).setEnabled(true);
 		findViewById(R.id.entry_activity_registration_family_name_layout).setEnabled(true);
 		findViewById(R.id.entry_activity_registration_email_layout).setEnabled(true);
@@ -839,6 +823,7 @@ public class EntryActivity
 	 * @param uid  Corresponding user.
 	 */
 	public void addTimeToFirestoreEntry(Date time, String uid) {
+		Log.d(TAG, "addTimeToFirestoreEntry: called");
 		FirebaseFirestore db = FirebaseFirestore.getInstance();
 		HashMap<String, Object> info = new HashMap<>();
 		info.put(FirestoreNames.COLUMN_DATE_OF_CREATION, time.toString());
@@ -854,7 +839,7 @@ public class EntryActivity
 	
 	@Override
 	public void onBillingSetupFinished(BillingResult result) {
-		Log.d(TAG, "onBillingSetupFinished:true");
+		Log.d(TAG, "onBillingSetupFinished: called");
 		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 			List<String> skus = new ArrayList<>();
 			skus.add("happyapp.subscription.bronze");
@@ -879,11 +864,26 @@ public class EntryActivity
 	
 	@Override
 	public void onBillingServiceDisconnected() {
-		Log.d(TAG, "onBillingServiceDisconnected:true");
+		Log.d(TAG, "onBillingServiceDisconnected: called");
 	}
 	
 	@Override
 	public void onPurchasesUpdated(BillingResult result, @Nullable List<Purchase> list) {
-		Log.d(TAG, "onPurchasesUpdated:true");
+		Log.d(TAG, "onPurchasesUpdated: called");
+	}
+	
+	public void onLoginGoogleButtonClick(View view) {
+		Log.d(TAG, "onLoginGoogleButtonClick: called");
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("930375194703-ioc97apofqrtst7sf064h0tpi8qcgekv.apps.googleusercontent.com")
+		                                                                                              .requestProfile()
+		                                                                                              .requestEmail()
+		                                                                                              .build();
+		Intent googleLoginIntent = GoogleSignIn.getClient(this, gso)
+		                                       .getSignInIntent();
+		startActivityForResult(googleLoginIntent, REQUEST_CODE_LOGIN);
+	}
+	
+	public void onConfirmButtonClick(View view) {
+		Log.d(TAG, "onConfirmButtonClick: called");
 	}
 }

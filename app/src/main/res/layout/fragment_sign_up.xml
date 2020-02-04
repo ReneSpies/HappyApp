@@ -6,7 +6,7 @@
               android:layout_height="wrap_content"
               android:gravity="center_horizontal"
               android:orientation="vertical"
-              android:padding="@dimen/fragment_padding_medium">
+              android:padding="@dimen/fragmentPaddingMedium">
 	
 	<com.google.android.material.textfield.TextInputLayout
 		android:id="@+id/sign_up_first_name_field_layout"
@@ -20,7 +20,7 @@
 			android:id="@+id/sign_up_first_name_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/plain_first_name"
+			android:hint="@string/plainFirstName"
 			android:inputType="text"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	
@@ -37,7 +37,7 @@
 			android:id="@+id/sign_up_surname_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/plain_username"
+			android:hint="@string/plainUsername"
 			android:inputType="text"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	
@@ -54,7 +54,7 @@
 			android:id="@+id/sign_up_email_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/prompt_email"
+			android:hint="@string/promptEmail"
 			android:inputType="textEmailAddress"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	
@@ -72,7 +72,7 @@
 			android:id="@+id/sign_up_password_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/prompt_password"
+			android:hint="@string/promptPassword"
 			android:inputType="textPassword"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	
@@ -118,5 +118,5 @@
 		style="@style/Widget.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/sign_up_now"/>
+		android:text="@string/signUpNow"/>
 </LinearLayout>

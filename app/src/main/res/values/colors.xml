@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="color_primary">#DB2323</color>
-	<color name="color_primary_dark">#991818</color>
-	<color name="color_accent">#E97B7B</color>
-	<color name="hint_text_color">#DB2323</color>
-	<color name="ripple_color">#000</color>
+	<color name="colorPrimary">#DB2323</color>
+	<color name="colorPrimaryDark">#991818</color>
+	<color name="colorAccent">#FF6666</color>
+	<color name="hintTextColor">@color/colorPrimary</color>
 	<color name="black">#000</color>
 	<color name="white">#fff</color>
-	<color name="fragment_background_color">#fff</color>
+	<color name="fragmentBackgroundColor">#fff</color>
 	<color name="silver">#C0C0C0</color>
 	<color name="gold">#FFD700</color>
 	<color name="platinum">#e5e4e2</color>
 	<color name="diamond">#cbe3f0</color>
 	<color name="rippleColor">#0fff33</color>
-	<color name="dark_overlay">#66000000</color>
+	<color name="darkOverlay">#66000000</color>
 </resources>

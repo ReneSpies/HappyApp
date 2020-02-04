@@ -15,19 +15,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "930375194703-ioc97apofqrtst7sf064h0tpi8qcgekv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aresid.happyapp",
+            "certificate_hash": "b0f946e695b51ff8d5e2d27e0477d81f46f3795a"
+          }
+        },
+        {
           "client_id": "930375194703-ctve2toki8oi1ibr9itsjv5bqafqu3d8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.aresid.happyapp",
             "certificate_hash": "0de0b71927eda2753995f540a5d7eefa4c69f85e"
-          }
-        },
-        {
-          "client_id": "930375194703-icmcnl9mbmvukrum9brt2abvv116bmau.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.aresid.happyapp",
-            "certificate_hash": "b0f946e695b51ff8d5e2d27e0477d81f46f3795a"
           }
         }
       ],
@@ -38,12 +38,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "930375194703-o6q02lgud4ofnlb5qcbpmkatkc2q575r.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

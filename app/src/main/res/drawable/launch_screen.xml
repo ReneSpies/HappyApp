@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 	<!-- The Background color. Usually the same as your main theme. -->
-	<item android:drawable="@color/fragment_background_color"/>
+	<item android:drawable="@color/fragmentBackgroundColor"/>
 	<!-- My product entry_activity_app_logo -->
 	<item>
 		<bitmap

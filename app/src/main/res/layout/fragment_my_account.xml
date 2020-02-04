@@ -16,8 +16,8 @@
 		
 		<ImageView
 			android:id="@+id/account_image"
-			android:layout_width="@dimen/profile_picture_size"
-			android:layout_height="@dimen/profile_picture_size"
+			android:layout_width="@dimen/profilePictureSize"
+			android:layout_height="@dimen/profilePictureSize"
 			android:layout_row="0"
 			android:layout_rowSpan="3"
 			android:layout_rowWeight="1"

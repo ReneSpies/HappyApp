@@ -5,13 +5,13 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="wrap_content"
                                                    android:gravity="center_horizontal"
-                                                   android:padding="@dimen/fragment_padding_medium"
+                                                   android:padding="@dimen/fragmentPaddingMedium"
                                                    tools:context="com.aresid.happyapp.android.aresid.happyapp.EntryActivity">
 	
 	<ImageView
 		android:id="@+id/progress_bar"
-		android:layout_width="@dimen/waiting_assistant_standard"
-		android:layout_height="@dimen/waiting_assistant_standard"
+		android:layout_width="@dimen/waitingAssistantStandardSize"
+		android:layout_height="@dimen/waitingAssistantStandardSize"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		android:contentDescription="Happy App logo"
@@ -29,7 +29,7 @@
 		android:layout_marginTop="8dp"
 		android:layout_marginEnd="8dp"
 		android:layout_marginBottom="8dp"
-		android:text="@string/loggin_in"
+		android:text="@string/loggingIn3Dots"
 		android:visibility="invisible"
 		app:layout_constraintBottom_toTopOf="@+id/google_linear_layout"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +56,7 @@
 				android:id="@+id/login_email_field"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="@string/prompt_email"
+				android:hint="@string/promptEmail"
 				android:inputType="textEmailAddress"
 				android:maxLines="1"
 				android:singleLine="true"/>
@@ -74,7 +74,7 @@
 				android:id="@+id/login_password_field"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="@string/prompt_password"
+				android:hint="@string/promptPassword"
 				android:imeActionId="6"
 				android:imeActionLabel="@string/common_signin_button_text"
 				android:imeOptions="actionUnspecified"
@@ -89,7 +89,7 @@
 		style="@style/Widget.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/sign_me_in"
+		android:text="@string/signMeIn"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/login_linear_layout"/>
@@ -112,7 +112,7 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/or_sign_in_using"
+			android:text="@string/plainOrSignInUsing"
 			android:textAlignment="center"/>
 		
 		<com.google.android.material.button.MaterialButton
@@ -120,8 +120,8 @@
 			style="@style/Widget.HappyApp.ContainedButton"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/button_margin_start_end"
-			android:layout_marginEnd="@dimen/button_margin_start_end"
+			android:layout_marginStart="@dimen/buttonMarginStartEnd"
+			android:layout_marginEnd="@dimen/buttonMarginStartEnd"
 			android:text="@string/google"/>
 	</LinearLayout>
 	
@@ -143,7 +143,7 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/no_account"
+			android:text="@string/noAccount"
 			android:textAlignment="center"/>
 		
 		<com.google.android.material.button.MaterialButton
@@ -151,8 +151,8 @@
 			style="@style/Widget.HappyApp.ContainedButton"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/button_margin_start_end"
-			android:layout_marginEnd="@dimen/button_margin_start_end"
-			android:text="@string/sign_me_up"/>
+			android:layout_marginStart="@dimen/buttonMarginStartEnd"
+			android:layout_marginEnd="@dimen/buttonMarginStartEnd"
+			android:text="@string/signMeUp"/>
 	</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -152,7 +152,7 @@ public class AccountLevelFragment
 //		listOfPrices.add("9.99 $/Month");
 //		listOfPrices.add("14.99 $/Month");
 //		listOfPrices.add("Prestige");
-//		ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(mContext, listOfTitles, listOfDescriptions, listOfPrices, viewPager2);
+//		SubsPagerFinalAdapter mViewPagerAdapter = new SubsPagerFinalAdapter(mContext, listOfTitles, listOfDescriptions, listOfPrices, viewPager2);
 //		viewPager2.setAdapter(mViewPagerAdapter);
 //		viewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer(viewPager2));
 		return rootView;

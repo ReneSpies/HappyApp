@@ -13,7 +13,7 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/i_want_to_offer"
+			android:text="@string/iWantToOffer"
 			android:textAppearance="?attr/textAppearanceSubtitle2"/>
 		
 		<LinearLayout

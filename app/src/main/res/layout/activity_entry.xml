@@ -14,9 +14,9 @@
 		
 		<ImageView
 			android:id="@+id/entry_activity_logging_in_waiting_assistant"
-			android:layout_width="@dimen/waiting_assistant_standard"
-			android:layout_height="@dimen/waiting_assistant_standard"
-			android:contentDescription="@string/plain_processing_login"
+			android:layout_width="@dimen/waitingAssistantStandardSize"
+			android:layout_height="@dimen/waitingAssistantStandardSize"
+			android:contentDescription="@string/plainProcessingLogin"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
 			android:id="@+id/entry_activity_logging_in_waiting_assistant_text_view"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/plain_logging_in"
+			android:text="@string/plainLoggingIn"
 			android:textAlignment="center"
 			android:textAppearance="?attr/textAppearanceCaption"
 			app:layout_constraintTop_toBottomOf="@+id/entry_activity_logging_in_waiting_assistant"/>
@@ -44,11 +44,11 @@
 			
 			<ImageView
 				android:id="@+id/entry_activity_app_logo"
-				android:layout_width="@dimen/image_view_app_logo_size"
-				android:layout_height="@dimen/image_view_app_logo_size"
+				android:layout_width="@dimen/imageViewAppLogoSize"
+				android:layout_height="@dimen/imageViewAppLogoSize"
 				android:layout_marginTop="30dp"
 				android:layout_marginBottom="50dp"
-				android:contentDescription="@string/plain_happy_app_logo"
+				android:contentDescription="@string/plainHappyAppLogo"
 				android:src="@drawable/ic_app_logo"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_login_email_layout"
 				app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +60,7 @@
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="@string/plain_email"
+				android:hint="@string/plainEmail"
 				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_login_password_layout"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_app_logo">
@@ -80,7 +80,7 @@
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="@string/plain_password"
+				android:hint="@string/plainPassword"
 				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_google_login_seperator_text_view"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_login_email_layout"
@@ -100,7 +100,7 @@
 				android:id="@+id/entry_activity_google_login_seperator_text_view"
 				style="@style/Widget.HappyApp.Seperator.TextView"
 				android:layout_marginTop="100.13dp"
-				android:text="@string/plain_or_login_using"
+				android:text="@string/plainOrLoginUsing"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_login_password_layout"
 				tools:ignore="MissingConstraints"/>
 			
@@ -109,7 +109,8 @@
 				style="@style/Widget.HappyApp.ContainedButton"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:text="@string/plain_google"
+				android:onClick="onLoginGoogleButtonClick"
+				android:text="@string/plainGoogle"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_google_login_seperator_text_view"/>
 			
 			<View
@@ -125,7 +126,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="8.13dp"
 				android:layout_marginBottom="14.13dp"
-				android:text="@string/plain_register_an_account_for_happyapp"
+				android:text="@string/plainRegisterAnAccountForHappyApp"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"
 				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_first_name_layout"
@@ -144,7 +145,7 @@
 					android:id="@+id/entry_activity_registration_first_name_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_first_name_star"
+					android:hint="@string/firstNameWithStar"
 					android:imeActionId="2"
 					android:imeOptions="actionNext"
 					android:inputType="text"/>
@@ -163,7 +164,7 @@
 					android:id="@+id/entry_activity_registration_family_name_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_family_name_star"
+					android:hint="@string/familyNameWithStar"
 					android:imeActionId="3"
 					android:imeOptions="actionNext"
 					android:inputType="text"/>
@@ -173,7 +174,7 @@
 				android:id="@+id/entry_activity_registration_username_info_text_view"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:text="@string/contraction_displayed_name"
+				android:text="@string/contractionDisplayedName"
 				android:textAppearance="?attr/textAppearanceCaption"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_registration_username_layout"
 				app:layout_constraintEnd_toEndOf="@+id/entry_activity_registration_username_layout"
@@ -192,7 +193,7 @@
 					android:id="@+id/entry_activity_registration_username_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_username_star"
+					android:hint="@string/usernameWithStar"
 					android:imeActionId="4"
 					android:imeOptions="actionNext"
 					android:inputType="text"/>
@@ -211,7 +212,7 @@
 					android:id="@+id/entry_activity_registration_email_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_email_star"
+					android:hint="@string/emailWithStar"
 					android:imeActionId="5"
 					android:imeOptions="actionNext"
 					android:inputType="textEmailAddress"/>
@@ -231,7 +232,7 @@
 					android:id="@+id/entry_activity_registration_password_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_password_star"
+					android:hint="@string/passwordWithStar"
 					android:imeActionId="6"
 					android:imeOptions="actionNext"
 					android:inputType="textPassword"/>
@@ -250,7 +251,7 @@
 					android:id="@+id/entry_activity_registration_date_of_birth_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/plain_date_of_birth_star"
+					android:hint="@string/dateOfBirthWithStar"
 					android:imeActionId="7"/>
 			</com.google.android.material.textfield.TextInputLayout>
 			
@@ -258,9 +259,9 @@
 				android:id="@+id/entry_activity_registration_confirm_tc_privacy_policy_checkbox"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="@dimen/button_margin_all"
-				android:layout_marginEnd="@dimen/button_margin_all"
-				android:text="@string/contraction_confirm_tc_privacy_policy"
+				android:layout_marginStart="@dimen/buttonMarginAllSides"
+				android:layout_marginEnd="@dimen/buttonMarginAllSides"
+				android:text="@string/contractionConfirmTcAndPrivacyPolicy"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_view_pager_caption"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -272,7 +273,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="8dp"
 				android:layout_marginBottom="16dp"
-				android:text="@string/plain_subscribe"
+				android:text="@string/plainSubscribe"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_view_pager"

@@ -1,24 +1,20 @@
 package com.aresid.happyapp;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
@@ -36,12 +32,12 @@ import java.util.List;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
-public class ViewPagerAdapter
-		extends RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>
+public class SubsPagerFinalAdapter
+		extends RecyclerView.Adapter<SubsPagerFinalAdapter.ViewHolder>
 		implements BillingClientStateListener,
 		           PurchasesUpdatedListener,
 		           SkuDetailsResponseListener {
-	private static final String                         TAG = "ViewPagerAdapter";
+	private static final String                         TAG = "SubsPagerFinalAdapter";
 	private              View                           mProcessingLayout;
 	private              View                           mMainView;
 	private              LayoutInflater                 mInflater;
@@ -50,9 +46,8 @@ public class ViewPagerAdapter
 	private              SubscriptionPool               mSubscriptionPool;
 	private              BillingClient                  mBillingClient;
 	
-	ViewPagerAdapter(Context context) {
-		Log.d(TAG, "ViewPagerAdapter:true");
-		mInflater = LayoutInflater.from(context);
+	SubsPagerFinalAdapter(Context context) {
+		Log.d(TAG, "SubsPagerFinalAdapter: called");
 		mSubscriptionPool = new SubscriptionPool();
 		mContext = context;
 		mBillingClient = BillingClient.newBuilder(context)
@@ -70,34 +65,34 @@ public class ViewPagerAdapter
 	@NonNull
 	@Override
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-		Log.d(TAG, "onCreateViewHolder:true");
-		View view = mInflater.inflate(R.layout.item_viewpager, parent, false);
-		Button viewPagerBtConfirm = view.findViewById(R.id.view_pager_bt_confirm);
+		Log.d(TAG, "onCreateViewHolder: called");
+		View view = LayoutInflater.from(mContext)
+		                          .inflate(R.layout.item_viewpager, parent, false);
 		mProcessingLayout = view.findViewById(R.id.view_pager_waiting_assistant_layout);
 		mMainView = view.findViewById(R.id.view_pager_main_view);
-//		loadGifInto(view.findViewById(R.id.view_pager_checkout_waiting_assistant), view.findViewById(R.id.view_pager_waiting_assistant));
-		viewPagerBtConfirm.setOnClickListener(v -> {
-			Log.d(TAG, "onCreateViewHolder: bt click");
-			ViewPager2 viewPager2 = (ViewPager2) view.getParent()
-			                                         .getParent();
-			if (mBillingClient.isFeatureSupported(BillingClient.FeatureType.SUBSCRIPTIONS)
-			                  .getResponseCode() == BillingClient.BillingResponseCode.OK) {
-				SkuDetails details = mSubscriptionPool.getSubscription(viewPager2.getCurrentItem())
-				                                      .getSkuDetails();
-				Log.d(TAG, "onCreateViewHolder: sku details = " + details.getTitle());
-				BillingFlowParams params = BillingFlowParams.newBuilder()
-				                                            .setSkuDetails(details)
-				                                            .build();
-				mBillingClient.launchBillingFlow((Activity) mContext, params);
-			}
-//			mListener.createUser(mSubscriptionPool.getSubscription(viewPager2.getCurrentItem()));
-		});
+		// TODO: Using XML onClick attribute. The listener is called inside EntryActivity
+//		viewPagerBtConfirm.setOnClickListener(v -> {
+//			Log.d(TAG, "onCreateViewHolder: bt click");
+//			ViewPager2 viewPager2 = (ViewPager2) view.getParent()
+//			                                         .getParent();
+//			if (mBillingClient.isFeatureSupported(BillingClient.FeatureType.SUBSCRIPTIONS)
+//			                  .getResponseCode() == BillingClient.BillingResponseCode.OK) {
+//				SkuDetails details = mSubscriptionPool.getSubscription(viewPager2.getCurrentItem())
+//				                                      .getSkuDetails();
+//				Log.d(TAG, "onCreateViewHolder: sku details = " + details.getTitle());
+//				BillingFlowParams params = BillingFlowParams.newBuilder()
+//				                                            .setSkuDetails(details)
+//				                                            .build();
+//				mBillingClient.launchBillingFlow((Activity) mContext, params);
+//			}
+////			mListener.createUser(mSubscriptionPool.getSubscription(viewPager2.getCurrentItem()));
+//		});
 		return new ViewHolder(view);
 	}
 	
 	@Override
 	public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-		Log.d(TAG, "onBindViewHolder:true");
+		Log.d(TAG, "onBindViewHolder: called");
 		String title = mSubscriptionPool.getSubscription(position)
 		                                .getTitle();
 		String description = mSubscriptionPool.getSubscription(position)
@@ -114,12 +109,12 @@ public class ViewPagerAdapter
 	
 	@Override
 	public int getItemCount() {
-		Log.d(TAG, "getItemCount:true");
+		Log.d(TAG, "getItemCount: called");
 		return mSubscriptionPool.getSubscriptionCount();
 	}
 	
 	private void loadGifInto(ImageView... gifHolders) {
-		Log.d(TAG, "loadGifInto:true");
+		Log.d(TAG, "loadGifInto: called");
 		for (ImageView gifHolder : gifHolders) {
 			Glide.with(mContext)
 			     .load(mContext.getDrawable(R.drawable.waiting_assistant_content))
@@ -129,7 +124,7 @@ public class ViewPagerAdapter
 	
 	@Override
 	public void onSkuDetailsResponse(BillingResult result, List<SkuDetails> list) {
-		Log.d(TAG, "onSkuDetailsResponse:true");
+		Log.d(TAG, "onSkuDetailsResponse: called");
 		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 			for (SkuDetails sku : list) {
 				Log.d(TAG, "onSkuDetailsResponse: got a sku: " + sku.getTitle());
@@ -150,7 +145,7 @@ public class ViewPagerAdapter
 	}
 	
 	private void updateUI() {
-		Log.d(TAG, "updateUI:true");
+		Log.d(TAG, "updateUI: called");
 		synchronized (this) {
 			Log.d(TAG, "updateUI: synchronized");
 			notifyDataSetChanged();
@@ -159,7 +154,7 @@ public class ViewPagerAdapter
 	}
 	
 	private void setProcessingLayoutVisibility(int visibility) {
-		Log.d(TAG, "setProcessingLayoutVisibility:true");
+		Log.d(TAG, "setProcessingLayoutVisibility: called");
 		if (mProcessingLayout == null) {
 			return;
 		}
@@ -175,7 +170,7 @@ public class ViewPagerAdapter
 	
 	@Override
 	public void onBillingSetupFinished(BillingResult result) {
-		Log.d(TAG, "onBillingSetupFinished:true");
+		Log.d(TAG, "onBillingSetupFinished: called");
 		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 			// The client is ready. Query purchases here!
 			List<String> skus = new ArrayList<>();
@@ -195,13 +190,13 @@ public class ViewPagerAdapter
 	
 	@Override
 	public void onBillingServiceDisconnected() {
-		Log.d(TAG, "onBillingServiceDisconnected:true");
+		Log.d(TAG, "onBillingServiceDisconnected: called");
 		// TODO: Implement own connection failed policy!
 	}
 	
 	@Override
 	public void onPurchasesUpdated(BillingResult result, @Nullable List<Purchase> list) {
-		Log.d(TAG, "onPurchasesUpdated:true");
+		Log.d(TAG, "onPurchasesUpdated: called");
 		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 			Log.d(TAG, "onPurchasesUpdated: response code is ok");
 		} else if (result.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
@@ -209,6 +204,10 @@ public class ViewPagerAdapter
 		} else {
 			Log.d(TAG, "onPurchasesUpdated: response code is " + result.getDebugMessage());
 		}
+	}
+	
+	public void onConfirmButtonClick(View view) {
+		Log.d(TAG, "onConfirmButtonClick: called");
 	}
 	
 	public interface OnViewPagerInteractionListener {

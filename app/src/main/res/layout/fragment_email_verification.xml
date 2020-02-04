@@ -4,7 +4,7 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
-                                                   android:padding="@dimen/fragment_padding_medium"
+                                                   android:padding="@dimen/fragmentPaddingMedium"
                                                    tools:context="com.aresid.happyapp.android.aresid.happyapp.EmailVerificationFragment">
 	
 	<LinearLayout
@@ -64,7 +64,7 @@
 			style="@style/Widget.HappyApp.ContainedButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/nav_header_vertical_spacing"
+			android:layout_marginTop="@dimen/navigationHeaderVerticalSpacing"
 			android:text="Send Email again"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
@@ -76,7 +76,7 @@
 			style="@style/Widget.HappyApp.TextButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginTop="@dimen/nav_header_vertical_spacing"
+			android:layout_marginTop="@dimen/navigationHeaderVerticalSpacing"
 			android:layout_marginEnd="8dp"
 			android:text="back"
 			app:layout_constraintBottom_toBottomOf="parent"

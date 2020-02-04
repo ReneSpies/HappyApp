@@ -8,6 +8,6 @@
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/i_am_looking_for"
+		android:text="@string/iAmLookingFor"
 		android:textAppearance="?attr/textAppearanceSubtitle2"/>
 </FrameLayout>

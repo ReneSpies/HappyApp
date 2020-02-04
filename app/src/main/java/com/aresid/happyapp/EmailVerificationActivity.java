@@ -38,7 +38,7 @@ public class EmailVerificationActivity
 				checkUserStatus(user);
 			}
 		} else {
-			Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_LONG)
+			Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_LONG)
 			     .show();
 		}
 	}
@@ -73,13 +73,13 @@ public class EmailVerificationActivity
 	
 	private void sendEmailVerification(FirebaseUser user) {
 		Log.d(TAG, "sendEmailVerification:true");
-		Toast toast = Toast.makeText(this, getString(R.string.contraction_standard_error_message), Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_LONG);
 		if (user != null) {
 			user.sendEmailVerification()
 			    .addOnSuccessListener(command -> {
 				    Log.d(TAG, "sendEmailVerification: success");
 				    toast.cancel();
-				    Toast.makeText(this, getString(R.string.plain_email_sent_to, user.getEmail()), Toast.LENGTH_LONG)
+				    Toast.makeText(this, getString(R.string.plainEmailSentTo, user.getEmail()), Toast.LENGTH_LONG)
 				         .show();
 			    })
 			    .addOnFailureListener(e -> {
@@ -87,7 +87,7 @@ public class EmailVerificationActivity
 				    Log.e(TAG, "sendEmailVerification: ", e);
 				    toast.cancel();
 				    if (e instanceof com.google.firebase.FirebaseTooManyRequestsException) {
-					    Toast.makeText(this, getString(R.string.contraction_donut_queue), Toast.LENGTH_SHORT)
+					    Toast.makeText(this, getString(R.string.errorGettingDonuts), Toast.LENGTH_SHORT)
 					         .show();
 					    return;
 				    }
@@ -103,7 +103,7 @@ public class EmailVerificationActivity
 	@Override
 	public void onBackPressed() {
 		Log.d(TAG, "onBackPressed:true");
-		Toast toast = Toast.makeText(this, getString(R.string.plain_press_again_to_exit), Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(this, getString(R.string.plainPressAgainToExit), Toast.LENGTH_SHORT);
 		if (mBackPressedHelper == 0) {
 			Log.d(TAG, "onBackPressed: helper == 0");
 			toast.show();
