@@ -64,6 +64,7 @@ public class EntryActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "onCreate: called");
+		setTheme(R.style.Theme_HappyApp);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_entry);
 		// Access all views that are needed.

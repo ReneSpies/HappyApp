@@ -3,9 +3,7 @@
 	<!-- The Background color. Usually the same as your main theme. -->
 	<item android:drawable="@color/fragmentBackgroundColor"/>
 	<!-- My product entry_activity_app_logo -->
-	<item>
-		<bitmap
-			android:gravity="center"
-			android:src="@drawable/ic_app_logo"/>
-	</item>
+	<item
+		android:drawable="@drawable/ic_app_logo"
+		android:gravity="center"/>
 </layer-list>
