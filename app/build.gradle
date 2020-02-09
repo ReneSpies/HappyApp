@@ -4,10 +4,10 @@ apply plugin: 'com.google.gms.google-services'
 android {
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\renej\\GoogleDrive\\documents\\android\\keystore\\happyapp_keystore2.jks')
-            storePassword ''
+            storeFile file('C:\\Users\\renej\\Documents\\Keystore\\happyapp_keystore.jks')
+            storePassword 'q<1ZS$i0.Lk4-Qf9rN6:8,Pc'
             keyAlias = 'happyapp_release_key'
-            keyPassword ''
+            keyPassword 'q<1ZS$i0.Lk4-Qf9rN6:8,Pc'
         }
     }
     compileSdkVersion 29

@@ -22,6 +22,7 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -47,12 +48,12 @@ import java.util.List;
 
 public class EntryActivity
 		extends AppCompatActivity
-		implements SubsPagerFinalAdapter.OnViewPagerInteractionListener,
-		           View.OnClickListener,
+		implements View.OnClickListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener,
 		           ButtonlessLogin.OnButtonlessLoginInteractionListener,
-		           BillingClientStateListener,
-		           PurchasesUpdatedListener {
+		           PurchasesUpdatedListener,
+		           SkuDetailsResponseListener,
+		           BillingClientStateListener {
 	private static final String TAG                = "EntryActivity";
 	private static final int    REQUEST_CODE_LOGIN = 13;
 	GoogleSignInAccount mGSA = null;
@@ -67,46 +68,62 @@ public class EntryActivity
 		setTheme(R.style.Theme_HappyApp);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_entry);
-		// Access all views that are needed.
-		ScrollView sv = findViewById(R.id.entry_activity_scroll_view);
-		TextInputEditText etRegistrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
-		ViewPager2 vpSubscriptions = findViewById(R.id.entry_activity_subscription_view_pager);
-		TextInputEditText loginPasswordField = findViewById(R.id.entry_activity_login_password_field);
-		vpSubscriptions.setAdapter(new SubsPagerInitAdapter(this));
-		// Beginning of buttonless login process.
-		// Register a listener for the email and password field.
-		loginPasswordField.addTextChangedListener(new ButtonlessLogin(this));
-		sv.setSmoothScrollingEnabled(true);
-		// the click listener is required to let the datepicker pop up when its clicked.
-		etRegistrationDateOfBirthField.setOnClickListener(this);
-		// the focus listener is required to let the datepicker pop up when its focused.
-		etRegistrationDateOfBirthField.setOnFocusChangeListener((v, hasFocus) -> {
-			if (hasFocus) {
-				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
-			}
-		});
-		// this is required so the keyboard wont show up.
-		etRegistrationDateOfBirthField.setKeyListener(null);
-		// Test the constructor behaviour.
-		HappyAppUser user = new HappyAppUser();
-		// Instantiate FirebaseAuth.
-		mAuth = FirebaseAuth.getInstance();
-		mAuth.addAuthStateListener(firebaseAuth -> {
-			// this is to reset the loading screen when a user logs out.
-			Log.d(TAG, "onCreate: auth state changed");
-			if (firebaseAuth.getCurrentUser() == null) {
-				Log.d(TAG, "onCreate: user = " + firebaseAuth.getCurrentUser());
-				changeFromLoadingScreen();
-			}
-		});
-		// Load waiting assistant into ImageViews.
-//		loadGifInto(findViewById(R.id.entry_activity_login_waiting_assistant));
+		handleAllNeededViewsOnCreate();
+		instantiateFirebaseAuth();
 		loadGifInto(findViewById(R.id.entry_activity_logging_in_waiting_assistant));
+		establishBillingClientConnection();
+	}
+	
+	private void handleAllNeededViewsOnCreate() {
+		Log.d(TAG, "handleAllNeededViewsOnCreate: called");
+		ScrollView scrollView = findViewById(R.id.entry_activity_scroll_view);
+		TextInputEditText registrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
+		TextInputEditText loginPasswordField = findViewById(R.id.entry_activity_login_password_field);
+		ViewPager2 subscriptionsViewPager2 = findViewById(R.id.entry_activity_subscription_view_pager);
+		scrollView.setSmoothScrollingEnabled(true);
+		subscriptionsViewPager2.setAdapter(new SubsPagerInitAdapter(this));
+		loginPasswordField.addTextChangedListener(new ButtonlessLogin(this));
+		setUpDatePickerForRegistration(registrationDateOfBirthField);
+	}
+	
+	void instantiateFirebaseAuth() {
+		Log.d(TAG, "instantiateFirebaseAuth: called");
+		mAuth = FirebaseAuth.getInstance();
+		registerFirebaseAuthStateListener();
+	}
+	
+	private void establishBillingClientConnection() {
+		Log.d(TAG, "establishBillingClientConnection: called");
 		mBillingClient = BillingClient.newBuilder(this)
 		                              .setListener(this)
 		                              .enablePendingPurchases()
 		                              .build();
-		mBillingClient.startConnection(this);
+		mBillingClient.startConnection(this /* Continue with onBillingSetupFinished or onBillingServiceDisconnected */);
+	}
+	
+	private void setUpDatePickerForRegistration(TextInputEditText editText) {
+		Log.d(TAG, "setUpDatePickerForRegistration: called");
+		// ClickListener required to show the DatePicker when clicked.
+		editText.setOnClickListener(this);
+		// FocusListener required to show the DatePicker when focused.
+		editText.setOnFocusChangeListener((v, hasFocus) -> {
+			if (hasFocus) {
+				new DatePickerFragment(this, (EditText) v).show(getSupportFragmentManager(), "date picker");
+			}
+		});
+		// KeyListener required so the keyboard does not show up.
+		editText.setKeyListener(null);
+	}
+	
+	void registerFirebaseAuthStateListener() {
+		Log.d(TAG, "registerFirebaseAuthStateListener: called");
+		// Resets loading screen when user is logged out!
+		mAuth.addAuthStateListener(auth -> {
+			Log.d(TAG, "registerFirebaseAuthStateListener: auth state changed");
+			if (auth.getCurrentUser() == null) {
+				changeFromLoadingScreen();
+			}
+		});
 	}
 	
 	@Override
@@ -327,7 +344,6 @@ public class EntryActivity
 	 *
 	 * @param subscription The subscription.
 	 */
-	@Override
 	public void createUser(Subscription subscription) {
 		Log.d(TAG, "createUser: called");
 		Log.d(TAG, "createUser: subscription = " + subscription.getTitle());
@@ -839,36 +855,6 @@ public class EntryActivity
 	}
 	
 	@Override
-	public void onBillingSetupFinished(BillingResult result) {
-		Log.d(TAG, "onBillingSetupFinished: called");
-		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-			List<String> skus = new ArrayList<>();
-			skus.add("happyapp.subscription.bronze");
-			skus.add("happyapp.subscription.silver");
-			skus.add("happyapp.subscription.gold");
-			skus.add("happyapp.subscription.platinum");
-			mBillingClient.querySkuDetailsAsync(SkuDetailsParams.newBuilder()
-			                                                    .setSkusList(skus)
-			                                                    .setType(BillingClient.SkuType.SUBS)
-			                                                    .build(), (result1, list) -> {
-				Log.d(TAG, "onBillingSetupFinished: listener");
-				Log.d(TAG, "onBillingSetupFinished: result code = " + result1.getResponseCode());
-				for (SkuDetails sku : list) {
-					Log.d(TAG, "onBillingSetupFinished: got a sku: " + sku.getTitle());
-				}
-			});
-		} else {
-			Log.w(TAG, "onBillingSetupFinished: result = " + result.getDebugMessage());
-			Log.d(TAG, "onBillingSetupFinished: result code = " + result.getResponseCode());
-		}
-	}
-	
-	@Override
-	public void onBillingServiceDisconnected() {
-		Log.d(TAG, "onBillingServiceDisconnected: called");
-	}
-	
-	@Override
 	public void onPurchasesUpdated(BillingResult result, @Nullable List<Purchase> list) {
 		Log.d(TAG, "onPurchasesUpdated: called");
 	}
@@ -886,5 +872,51 @@ public class EntryActivity
 	
 	public void onConfirmButtonClick(View view) {
 		Log.d(TAG, "onConfirmButtonClick: called");
+	}
+	
+	@Override
+	public void onSkuDetailsResponse(BillingResult result, List<SkuDetails> list) {
+		Log.d(TAG, "onSkuDetailsResponse: called");
+		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+			SubscriptionPool pool = new SubscriptionPool();
+			for (SkuDetails detail : list) {
+				Log.d(TAG, "onSkuDetailsResponse: got a sku: " + detail.getTitle());
+				Subscription sub = new Subscription(this);
+				sub.setTitle(detail.getTitle());
+				sub.setId(detail.getSku());
+				sub.setPrice(detail.getPrice());
+				sub.setDescription(detail.getDescription());
+				sub.setSkuDetails(detail);
+				pool.addSubscription(sub);
+			}
+			ViewPager2 viewPager2 = findViewById(R.id.entry_activity_subscription_view_pager);
+			viewPager2.setAdapter(new SubsPagerFinalAdapter(this, pool.sort()));
+		}
+	}
+	
+	@Override
+	public void onBillingSetupFinished(BillingResult result) {
+		Log.d(TAG, "onBillingSetupFinished: called");
+		// The billing client is ready. Query SKUs here.
+		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+			List<String> skus = new ArrayList<>();
+			skus.add("happyapp.subscription.bronze");
+			skus.add("happyapp.subscription.silver");
+			skus.add("happyapp.subscription.gold");
+			skus.add("happyapp.subscription.platinum");
+			mBillingClient.querySkuDetailsAsync(SkuDetailsParams.newBuilder()
+			                                                    .setSkusList(skus)
+			                                                    .setType(BillingClient.SkuType.SUBS)
+			                                                    .build(), this /*Continue with SkuDetailsResponseListener*/);
+		} else {
+			Log.w(TAG, "onBillingSetupFinished: result = " + result.getDebugMessage());
+			Log.d(TAG, "onBillingSetupFinished: result code = " + result.getResponseCode());
+		}
+	}
+	
+	@Override
+	public void onBillingServiceDisconnected() {
+		Log.d(TAG, "onBillingServiceDisconnected: called");
+		// TODO: Implement own connection failed policy!
 	}
 }

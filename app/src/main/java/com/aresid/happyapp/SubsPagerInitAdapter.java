@@ -20,7 +20,7 @@ public class SubsPagerInitAdapter
 	private static final String  TAG = "SubsPagerInitAdapter";
 	private final        Context mContext;
 	
-	public SubsPagerInitAdapter(Context context) {
+	SubsPagerInitAdapter(Context context) {
 		mContext = context;
 	}
 	
