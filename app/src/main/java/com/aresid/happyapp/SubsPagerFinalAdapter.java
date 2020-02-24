@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.button.MaterialButton;
 
 /**
  * Created on: 26.05.2019
@@ -19,15 +22,22 @@ import androidx.recyclerview.widget.RecyclerView;
  * Copyright: © 2019 Ares ID
  */
 public class SubsPagerFinalAdapter
-		extends RecyclerView.Adapter<SubsPagerFinalAdapter.ViewHolder> {
-	private static final String                         TAG = "SubsPagerFinalAdapter";
-	private              Context                        mContext;
-	private              SubscriptionPool               mSubscriptionPool;
+		extends RecyclerView.Adapter<SubsPagerFinalAdapter.ViewHolder>
+		implements View.OnClickListener {
+	private static final String                            TAG = "SubsPagerFinalAdapter";
+	private              Context                           mContext;
+	private              SubscriptionPool                  mSubscriptionPool;
+	private              OnFinalAdapterInteractionListener mListener;
 	
 	SubsPagerFinalAdapter(Context context, SubscriptionPool pool) {
 		Log.d(TAG, "SubsPagerFinalAdapter: called");
 		mSubscriptionPool = pool;
 		mContext = context;
+		if (mContext instanceof OnFinalAdapterInteractionListener) {
+			mListener = (OnFinalAdapterInteractionListener) mContext;
+		} else {
+			throw new RuntimeException(mContext.toString() + " must implement OnFinalAdapterInteractionListener");
+		}
 	}
 	
 	@NonNull
@@ -36,6 +46,8 @@ public class SubsPagerFinalAdapter
 		Log.d(TAG, "onCreateViewHolder: called");
 		View view = LayoutInflater.from(mContext)
 		                          .inflate(R.layout.content_subspagerfinaladapter, parent, false);
+		MaterialButton confirmButton = view.findViewById(R.id.view_pager_bt_confirm);
+		confirmButton.setOnClickListener(this);
 		return new ViewHolder(view);
 	}
 	
@@ -62,6 +74,18 @@ public class SubsPagerFinalAdapter
 		return mSubscriptionPool.getSubscriptionCount();
 	}
 	
+	@Override
+	public void onClick(View v) {
+		Log.d(TAG, "onClick: called");
+		if (v.getId() == R.id.view_pager_bt_confirm) {
+			Log.d(TAG, "onClick: confirm button click");
+			ViewPager2 viewPager2 = (ViewPager2) v.getParent()
+			                                      .getParent()
+			                                      .getParent();
+			mListener.createUser(mSubscriptionPool.getSubscription(viewPager2.getCurrentItem()));
+		}
+	}
+	
 	class ViewHolder
 			extends RecyclerView.ViewHolder {
 		TextView  mTVTitle;
@@ -76,5 +100,9 @@ public class SubsPagerFinalAdapter
 			mTVPrice = itemView.findViewById(R.id.view_pager_tv_price);
 			mSubIcon = itemView.findViewById(R.id.view_pager_subscription_icon);
 		}
+	}
+	
+	public interface OnFinalAdapterInteractionListener {
+		void createUser(Subscription subscription);
 	}
 }

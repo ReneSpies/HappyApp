@@ -112,4 +112,7 @@
 	<string name="plainEmailSentTo">Email sent to %1s</string>
 	<string name="errorGettingDonuts">Never knew it would take so long to get some donuts.</string>
 	<string name="plainProcessingCheckout">Processing checkout</string>
+	<string name="noInternet">No internet connection</string>
+	<string name="retry">Retry</string>
+	<integer name="loginRequestCode">13</integer>
 </resources>

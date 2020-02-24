@@ -26,7 +26,6 @@ import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -53,11 +52,9 @@ public class EntryActivity
 		           ButtonlessLogin.OnButtonlessLoginInteractionListener,
 		           PurchasesUpdatedListener,
 		           SkuDetailsResponseListener,
-		           BillingClientStateListener {
+		           BillingClientStateListener,
+		           SubsPagerFinalAdapter.OnFinalAdapterInteractionListener {
 	private static final String TAG                = "EntryActivity";
-	private static final int    REQUEST_CODE_LOGIN = 13;
-	GoogleSignInAccount mGSA = null;
-	private GoogleSignInClient mGoogleSignInClient;
 	private FirebaseAuth       mAuth;
 	private int                mBackPressCounter = 0;
 	private BillingClient      mBillingClient;
@@ -131,8 +128,7 @@ public class EntryActivity
 		Log.d(TAG, "onStart: called");
 		super.onStart();
 		// checks if user has signed in before.
-		FirebaseUser user = FirebaseAuth.getInstance()
-		                                .getCurrentUser();
+		FirebaseUser user = mAuth.getCurrentUser();
 		updateUI(user);
 	}
 	
@@ -774,8 +770,9 @@ public class EntryActivity
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		Log.d(TAG, "onActivityResult: called");
 		super.onActivityResult(requestCode, resultCode, data);
+		int loginRequestCode = getResources().getInteger(R.integer.loginRequestCode);
 		// Result returned from launching the Intent.
-		if (requestCode == REQUEST_CODE_LOGIN) {
+		if (requestCode == loginRequestCode) {
 			changeToLoadingScreen();
 			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 			task.addOnSuccessListener(gsa -> {
@@ -861,13 +858,14 @@ public class EntryActivity
 	
 	public void onLoginGoogleButtonClick(View view) {
 		Log.d(TAG, "onLoginGoogleButtonClick: called");
+		int loginRequestCode = getResources().getInteger(R.integer.loginRequestCode);
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("930375194703-ioc97apofqrtst7sf064h0tpi8qcgekv.apps.googleusercontent.com")
 		                                                                                              .requestProfile()
 		                                                                                              .requestEmail()
 		                                                                                              .build();
 		Intent googleLoginIntent = GoogleSignIn.getClient(this, gso)
 		                                       .getSignInIntent();
-		startActivityForResult(googleLoginIntent, REQUEST_CODE_LOGIN);
+		startActivityForResult(googleLoginIntent, loginRequestCode);
 	}
 	
 	public void onConfirmButtonClick(View view) {
@@ -879,18 +877,24 @@ public class EntryActivity
 		Log.d(TAG, "onSkuDetailsResponse: called");
 		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 			SubscriptionPool pool = new SubscriptionPool();
-			for (SkuDetails detail : list) {
-				Log.d(TAG, "onSkuDetailsResponse: got a sku: " + detail.getTitle());
+			for (SkuDetails details : list) {
+				Log.d(TAG, "onSkuDetailsResponse: got a sku: " + details.getTitle());
 				Subscription sub = new Subscription(this);
-				sub.setTitle(detail.getTitle());
-				sub.setId(detail.getSku());
-				sub.setPrice(detail.getPrice());
-				sub.setDescription(detail.getDescription());
-				sub.setSkuDetails(detail);
+				sub.setTitle(details.getTitle());
+				sub.setId(details.getSku());
+				sub.setPrice(details.getPrice());
+				sub.setDescription(details.getDescription());
+				sub.setSkuDetails(details);
 				pool.addSubscription(sub);
 			}
 			ViewPager2 viewPager2 = findViewById(R.id.entry_activity_subscription_view_pager);
 			viewPager2.setAdapter(new SubsPagerFinalAdapter(this, pool.sort()));
+		} else {
+			Log.d(TAG, "onSkuDetailsResponse: " + result.getDebugMessage());
+			Log.d(TAG, "onSkuDetailsResponse: " + result.getResponseCode());
+			if (result.getResponseCode() == BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE) {
+				new SubsPagerInitAdapter(this).retry();
+			}
 		}
 	}
 	
@@ -918,5 +922,10 @@ public class EntryActivity
 	public void onBillingServiceDisconnected() {
 		Log.d(TAG, "onBillingServiceDisconnected: called");
 		// TODO: Implement own connection failed policy!
+	}
+	
+	public void onRetryClick(View view) {
+		Log.d(TAG, "onRetryClick: called");
+		// TODO: subscription view pager retry policy
 	}
 }

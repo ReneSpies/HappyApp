@@ -8,7 +8,9 @@
 		style="@style/Widget.HappyApp.ProgressBar"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:id="@+id/init_adapter_loading_screen"
 		app:layout_constraintBottom_toBottomOf="parent"
+		android:visibility="visible"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"/>
@@ -17,6 +19,8 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:gravity="center"
+		android:id="@+id/init_adapter_retry_screen"
+		android:visibility="invisible"
 		android:orientation="vertical"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -27,7 +31,7 @@
 			android:id="@+id/subspagerinitadapter_no_connection_image_view"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:contentDescription="No internet Connection"
+			android:contentDescription="@string/noInternet"
 			android:src="@drawable/ic_signal_wifi_off_36dp"/>
 		
 		<com.google.android.material.button.MaterialButton
@@ -35,6 +39,7 @@
 			style="@style/Widget.HappyApp.OutlinedButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Retry"/>
+			android:onClick="onRetryClick"
+			android:text="@string/retry"/>
 	</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
