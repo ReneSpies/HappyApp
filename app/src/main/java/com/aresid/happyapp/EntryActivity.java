@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -54,10 +55,10 @@ public class EntryActivity
 		           SkuDetailsResponseListener,
 		           BillingClientStateListener,
 		           SubsPagerFinalAdapter.OnFinalAdapterInteractionListener {
-	private static final String TAG                = "EntryActivity";
-	private FirebaseAuth       mAuth;
-	private int                mBackPressCounter = 0;
-	private BillingClient      mBillingClient;
+	private static final String        TAG               = "EntryActivity";
+	private              FirebaseAuth  mAuth;
+	private              int           mBackPressCounter = 0;
+	private              BillingClient mBillingClient;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -335,6 +336,10 @@ public class EntryActivity
 		  });
 	}
 	
+	private void createUserWithEmailAndPassword(String email, String password) {
+		Log.d(TAG, "createUserWithEmailAndPassword: called");
+	}
+	
 	/**
 	 * Now this does some fancy stuff. Checks if all the data is correct and then proceeds to Google billing flow.
 	 *
@@ -349,13 +354,13 @@ public class EntryActivity
 		TextInputEditText etRegistrationFamilyNameField = findViewById(R.id.entry_activity_registration_family_name_field);
 		TextInputEditText etRegistrationDobField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
 		TextInputEditText etRegistrationUsernameField = findViewById(R.id.entry_activity_registration_username_field);
-		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
-		TextInputLayout etRegistrationPasswordLayout = findViewById(R.id.entry_activity_registration_password_layout);
-		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
-		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
-		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
-		TextInputLayout etRegistrationUsernameLayout = findViewById(R.id.entry_activity_registration_username_layout);
-		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+		TextInputLayout registrationEmailFieldLayout = findViewById(R.id.entry_activity_registration_email_layout);
+		TextInputLayout registrationPasswordFieldLayout = findViewById(R.id.entry_activity_registration_password_layout);
+		TextInputLayout registrationFirstNameFieldLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
+		TextInputLayout registrationFamilyNameFieldLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
+		TextInputLayout registrationDateOfBirthFieldLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		TextInputLayout registrationUsernameFieldLayout = findViewById(R.id.entry_activity_registration_username_layout);
+		CheckBox termsAndConditionsCheckBox = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
 		String email = etRegistrationEmailField.getText()
 		                                       .toString();
 		String password = etRegistrationPasswordField.getText()
@@ -366,113 +371,77 @@ public class EntryActivity
 		                                             .toString();
 		String familyName = etRegistrationFamilyNameField.getText()
 		                                                 .toString();
-		String dob = etRegistrationDobField.getText()
-		                                   .toString();
+		String dateOfBirth = etRegistrationDobField.getText()
+		                                           .toString();
 		FirebaseFirestore db = getFirestoreInstance();
 		FirebaseUser user = mAuth.getCurrentUser();
-		if (user != null) {
-			Log.d(TAG, "createUser: user != null");
-			if (evaluateGoogleUserInfo(username, dob)) {
-				etRegistrationUsernameLayout.setEnabled(false);
-				etRegistrationDobLayout.setEnabled(false);
-				cbTermsConditionsPrivacyPolicy.setEnabled(false);
-				db.collection(FirestoreNames.COLLECTION_USERS)
-				  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
-				  .get()
-				  .addOnSuccessListener(command -> {
-					  Log.d(TAG, "createUser: success");
+		db.collection(FirestoreNames.COLLECTION_USERS)
+		  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
+		  .get()
+		  .addOnSuccessListener(command -> {
+			  Log.d(TAG, "createUser: success");
+			  if (user != null) {
+				  if (googleUserInfoIsOk(username, dateOfBirth)) {
+					  disableViews(registrationUsernameFieldLayout, registrationDateOfBirthFieldLayout, termsAndConditionsCheckBox);
 					  if (command.isEmpty()) {
-//						  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
-						  HappyAppUser happyAppUser = new HappyAppUser(user.getUid(), firstName, familyName, dob, user.getDisplayName(), new Subscription(this), user.getPhotoUrl());
-//						  addUsersSubscriptionVariantToFirestore(user, variant);
-//						  updateGoogleUser(user, username, dob);
+						  // Username is not taken but user is not null
+						  // TODO:
+						  saveUserInFirestore(user, user.getDisplayName(), user.getDisplayName(), username, user.getEmail(), dateOfBirth, user.getPhotoUrl()
+						                                                                                                                      .toString());
 					  } else {
-						  Log.d(TAG, "createUser: username already taken");
-						  etRegistrationUsernameLayout.setError(getString(R.string.errorUsernameIsAlreadyTaken));
-						  etRegistrationUsernameLayout.setEnabled(true);
-						  etRegistrationDobLayout.setEnabled(true);
+						  Log.d(TAG, "createUser: username is already taken");
+						  // Username is already taken
+						  registrationUsernameFieldLayout.setError(getString(R.string.errorUsernameIsAlreadyTaken));
+						  enableViews(registrationUsernameFieldLayout, registrationDateOfBirthFieldLayout);
 					  }
-				  })
-				  .addOnFailureListener(e -> {
-					  Log.e(TAG, "createUser: ", e);
-					  Toast.makeText(this, getString(R.string.contractionServerConnectionFailed), Toast.LENGTH_LONG)
-					       .show();
-					  etRegistrationUsernameLayout.setEnabled(true);
-					  etRegistrationDobLayout.setEnabled(true);
-				  });
-			}
-		} else {
-			Log.d(TAG, "createUser: new user");
-			if (evaluateNewUserInfo(firstName, username, familyName, email, password, dob)) {
-				etRegistrationFirstNameLayout.setEnabled(false);
-				etRegistrationFamilyNameLayout.setEnabled(false);
-				etRegistrationUsernameLayout.setEnabled(false);
-				etRegistrationEmailLayout.setEnabled(false);
-				etRegistrationPasswordLayout.setEnabled(false);
-				etRegistrationDobLayout.setEnabled(false);
-				cbTermsConditionsPrivacyPolicy.setEnabled(false);
-//				SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View.VISIBLE);
-				db.collection(FirestoreNames.COLLECTION_USERS)
-				  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
-				  .get()
-				  .addOnSuccessListener(command -> {
+				  }
+			  } else {
+				  if (newUserInfoIsOk(firstName, username, familyName, email, password, dateOfBirth)) {
+					  disableViews(registrationDateOfBirthFieldLayout, registrationFirstNameFieldLayout, registrationFamilyNameFieldLayout, registrationUsernameFieldLayout,
+					               registrationEmailFieldLayout, registrationPasswordFieldLayout, termsAndConditionsCheckBox);
 					  if (command.isEmpty()) {
+						  // Username is not taken but user is null
 						  FirebaseAuth.getInstance()
 						              .createUserWithEmailAndPassword(email, password)
 						              .addOnSuccessListener(result -> {
 							              Log.d(TAG, "createUser: success");
 							              result.getUser()
-							                    .updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(etRegistrationUsernameField.getText()
-							                                                                                                                    .toString())
+							                    .updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username)
 							                                                                         .build());
-							              saveUserInFirestore(result.getUser(), firstName, familyName, username, email, dob, null);
+							              saveUserInFirestore(result.getUser(), firstName, familyName, username, email, dateOfBirth, null);
 						              })
 						              .addOnFailureListener(e -> {
 							              Log.d(TAG, "createUser: failure");
 							              Log.e(TAG, "createUser: ", e);
-							              etRegistrationFirstNameLayout.setEnabled(true);
-							              etRegistrationFamilyNameLayout.setEnabled(true);
-							              etRegistrationUsernameLayout.setEnabled(true);
-							              etRegistrationEmailLayout.setEnabled(true);
-							              etRegistrationPasswordLayout.setEnabled(true);
-							              etRegistrationDobLayout.setEnabled(true);
+							              enableViews(registrationFirstNameFieldLayout, registrationFamilyNameFieldLayout, registrationUsernameFieldLayout, registrationEmailFieldLayout,
+							                          registrationPasswordFieldLayout, registrationDateOfBirthFieldLayout);
 							              // TODO
 							              if (e instanceof FirebaseAuthUserCollisionException) {
-								              smoothScrollTo(etRegistrationUsernameLayout.getBottom());
-								              etRegistrationEmailLayout.setError(getString(R.string.errorThisEmailIsAlreadyInUse));
+								              smoothScrollTo(registrationUsernameFieldLayout.getBottom());
+								              registrationEmailFieldLayout.setError(getString(R.string.errorThisEmailIsAlreadyInUse));
 							              } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
-								              smoothScrollTo(etRegistrationUsernameLayout.getBottom());
-								              etRegistrationEmailLayout.setError(getString(R.string.errorThisEmailIsBadlyFormatted));
+								              smoothScrollTo(registrationUsernameFieldLayout.getBottom());
+								              registrationEmailFieldLayout.setError(getString(R.string.errorThisEmailIsBadlyFormatted));
 							              } else {
 								              Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_SHORT)
 								                   .show();
 							              }
 						              });
 					  } else {
-						  etRegistrationFirstNameLayout.setEnabled(true);
-						  etRegistrationFamilyNameLayout.setEnabled(true);
-						  etRegistrationUsernameLayout.setEnabled(true);
-						  etRegistrationEmailLayout.setEnabled(true);
-						  etRegistrationPasswordLayout.setEnabled(true);
-						  etRegistrationDobLayout.setEnabled(true);
-						  smoothScrollTo(etRegistrationFamilyNameLayout.getBottom());
-						  etRegistrationUsernameLayout.setError(getString(R.string.errorUsernameIsAlreadyTaken));
+						  enableViews(registrationFirstNameFieldLayout, registrationFamilyNameFieldLayout, registrationUsernameFieldLayout, registrationEmailFieldLayout,
+						              registrationPasswordFieldLayout, registrationDateOfBirthFieldLayout);
+						  smoothScrollTo(registrationFamilyNameFieldLayout.getBottom());
+						  registrationUsernameFieldLayout.setError(getString(R.string.errorUsernameIsAlreadyTaken));
 					  }
-				  })
-				  .addOnFailureListener(e -> {
-					  Log.d(TAG, "createUser: query failure");
-					  Log.e(TAG, "createUser: ", e);
-					  Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_SHORT)
-					       .show();
-					  etRegistrationFirstNameField.setEnabled(true);
-					  etRegistrationFamilyNameField.setEnabled(true);
-					  etRegistrationUsernameField.setEnabled(true);
-					  etRegistrationEmailField.setEnabled(true);
-					  etRegistrationPasswordField.setEnabled(true);
-					  etRegistrationDobField.setEnabled(true);
-				  });
-			}
-		}
+				  }
+			  }
+		  })
+		  .addOnFailureListener(e -> {
+			  Log.d(TAG, "createUser: failure");
+			  Log.e(TAG, "createUser: ", e);
+			  enableViews(registrationFirstNameFieldLayout, registrationFamilyNameFieldLayout, registrationUsernameFieldLayout, registrationEmailFieldLayout, registrationPasswordFieldLayout,
+			              registrationDateOfBirthFieldLayout);
+		  });
 	}
 	
 	/**
@@ -482,11 +451,9 @@ public class EntryActivity
 	 * @param dob      The date of birth.
 	 * @return True if data is fitting.
 	 */
-	private boolean evaluateGoogleUserInfo(String username, String dob) {
+	private boolean googleUserInfoIsOk(String username, String dob) {
 		Log.d(TAG, "evaluateGoogleUserInfo: called");
 		setLayoutErrorsNull();
-		TextInputLayout etRegistrationFirstNameLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
-		TextInputLayout etRegistrationFamilyNameLayout = findViewById(R.id.entry_activity_registration_family_name_layout);
 		TextInputLayout etRegistrationDobLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
 		TextInputLayout etRegistrationUsernameLayout = findViewById(R.id.entry_activity_registration_username_layout);
 		CheckBox cbTermsConditionsPrivacyPolicy = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
@@ -510,6 +477,20 @@ public class EntryActivity
 		return true;
 	}
 	
+	private void disableViews(@NonNull View... views) {
+		Log.d(TAG, "disableViews: called");
+		for (View view : views) {
+			view.setEnabled(false);
+		}
+	}
+	
+	private void enableViews(@NonNull View... views) {
+		Log.d(TAG, "enableViews: called");
+		for (View view : views) {
+			view.setEnabled(true);
+		}
+	}
+	
 	/**
 	 * This method checks if the given input is correct to create a new user.
 	 *
@@ -521,7 +502,7 @@ public class EntryActivity
 	 * @param dob        Users date of birth. Must be > 0.
 	 * @return True if everything is fitting.
 	 */
-	private boolean evaluateNewUserInfo(String firstName, String username, String familyName, String email, String password, String dob) {
+	private boolean newUserInfoIsOk(String firstName, String username, String familyName, String email, String password, String dob) {
 		Log.d(TAG, "evaluateNewUserInfo: called");
 		setLayoutErrorsNull();
 		TextInputLayout etRegistrationEmailLayout = findViewById(R.id.entry_activity_registration_email_layout);
