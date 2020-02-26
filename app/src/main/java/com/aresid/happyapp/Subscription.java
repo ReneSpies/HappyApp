@@ -13,12 +13,12 @@ import com.android.billingclient.api.SkuDetails;
  * Copyright: © 2019 Ares ID
  */
 class Subscription {
-	private static final int        PRIO_BRONZE   = 0;
-	private static final int        PRIO_SILVER   = 1;
-	private static final int        PRIO_GOLD     = 2;
-	private static final int        PRIO_PLATINUM = 3;
-	private static final int        PRIO_DEFAULT  = -1;
-	private static final String     TAG           = "Subscription";
+	private static final int        PRIORITY_BRONZE   = 0;
+	private static final int        PRIORITY_SILVER   = 1;
+	private static final int        PRIORITY_GOLD     = 2;
+	private static final int        PRIORITY_PLATINUM = 3;
+	private static final int        PRIORITY_DEFAULT  = -1;
+	private static final String     TAG               = "Subscription";
 	private              String     mTitle;
 	private              String     mDescription;
 	private              String     mPrice;
@@ -31,9 +31,19 @@ class Subscription {
 	/**
 	 * Constructor.
 	 */
-	Subscription(Context context) {
+	Subscription(Context context, SkuDetails skuDetails) {
 		Log.d(TAG, "Subscription: empty constructor");
 		mContext = context;
+		mSkuDetails = skuDetails;
+		init();
+	}
+	
+	private void init() {
+		Log.d(TAG, "init: called");
+		setTitle(mSkuDetails.getTitle());
+		setId(mSkuDetails.getSku());
+		setDescription(mSkuDetails.getDescription());
+		setPrice(mSkuDetails.getPrice());
 	}
 	
 	/**
@@ -139,18 +149,18 @@ class Subscription {
 	void setId(String id) {
 		if ((id.contains("bronze"))) {
 			setIcon(mContext.getDrawable(R.drawable.bronze_icon));
-			setPriority(PRIO_BRONZE);
+			setPriority(PRIORITY_BRONZE);
 		} else if ((id.contains("silver"))) {
 			setIcon(mContext.getDrawable(R.drawable.silver_icon));
-			setPriority(PRIO_SILVER);
+			setPriority(PRIORITY_SILVER);
 		} else if ((id.contains("gold"))) {
 			setIcon(mContext.getDrawable(R.drawable.gold_icon));
-			setPriority(PRIO_GOLD);
+			setPriority(PRIORITY_GOLD);
 		} else if ((id.contains("platinum"))) {
 			setIcon(mContext.getDrawable(R.drawable.platinum_icon));
-			setPriority(PRIO_PLATINUM);
+			setPriority(PRIORITY_PLATINUM);
 		} else {
-			setPriority(PRIO_DEFAULT);
+			setPriority(PRIORITY_DEFAULT);
 		}
 		mId = id;
 	}

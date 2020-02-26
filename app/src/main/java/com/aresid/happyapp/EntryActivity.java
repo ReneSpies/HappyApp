@@ -336,10 +336,6 @@ public class EntryActivity
 		  });
 	}
 	
-	private void createUserWithEmailAndPassword(String email, String password) {
-		Log.d(TAG, "createUserWithEmailAndPassword: called");
-	}
-	
 	/**
 	 * Now this does some fancy stuff. Checks if all the data is correct and then proceeds to Google billing flow.
 	 *
@@ -348,12 +344,13 @@ public class EntryActivity
 	public void createUser(Subscription subscription) {
 		Log.d(TAG, "createUser: called");
 		Log.d(TAG, "createUser: subscription = " + subscription.getTitle());
-		TextInputEditText etRegistrationEmailField = findViewById(R.id.entry_activity_registration_email_field);
-		TextInputEditText etRegistrationPasswordField = findViewById(R.id.entry_activity_registration_password_field);
-		TextInputEditText etRegistrationFirstNameField = findViewById(R.id.entry_activity_registration_first_name_field);
-		TextInputEditText etRegistrationFamilyNameField = findViewById(R.id.entry_activity_registration_family_name_field);
-		TextInputEditText etRegistrationDobField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
-		TextInputEditText etRegistrationUsernameField = findViewById(R.id.entry_activity_registration_username_field);
+		// All these views are needed for the process
+		TextInputEditText registrationEmailField = findViewById(R.id.entry_activity_registration_email_field);
+		TextInputEditText registrationPasswordField = findViewById(R.id.entry_activity_registration_password_field);
+		TextInputEditText registrationFirstNameField = findViewById(R.id.entry_activity_registration_first_name_field);
+		TextInputEditText registrationFamilyNameField = findViewById(R.id.entry_activity_registration_family_name_field);
+		TextInputEditText registrationDateOfBirthField = findViewById(R.id.entry_activity_registration_date_of_birth_field);
+		TextInputEditText registrationUsernameField = findViewById(R.id.entry_activity_registration_username_field);
 		TextInputLayout registrationEmailFieldLayout = findViewById(R.id.entry_activity_registration_email_layout);
 		TextInputLayout registrationPasswordFieldLayout = findViewById(R.id.entry_activity_registration_password_layout);
 		TextInputLayout registrationFirstNameFieldLayout = findViewById(R.id.entry_activity_registration_first_name_layout);
@@ -361,33 +358,37 @@ public class EntryActivity
 		TextInputLayout registrationDateOfBirthFieldLayout = findViewById(R.id.entry_activity_registration_date_of_birth_layout);
 		TextInputLayout registrationUsernameFieldLayout = findViewById(R.id.entry_activity_registration_username_layout);
 		CheckBox termsAndConditionsCheckBox = findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
-		String email = etRegistrationEmailField.getText()
-		                                       .toString();
-		String password = etRegistrationPasswordField.getText()
-		                                             .toString();
-		String firstName = etRegistrationFirstNameField.getText()
-		                                               .toString();
-		String username = etRegistrationUsernameField.getText()
-		                                             .toString();
-		String familyName = etRegistrationFamilyNameField.getText()
-		                                                 .toString();
-		String dateOfBirth = etRegistrationDobField.getText()
+		// Extracting the content from the fields
+		String email = registrationEmailField.getText()
+		                                     .toString();
+		String password = registrationPasswordField.getText()
 		                                           .toString();
+		String firstName = registrationFirstNameField.getText()
+		                                             .toString();
+		String username = registrationUsernameField.getText()
+		                                           .toString();
+		String familyName = registrationFamilyNameField.getText()
+		                                               .toString();
+		String dateOfBirth = registrationDateOfBirthField.getText()
+		                                                 .toString();
 		FirebaseFirestore db = getFirestoreInstance();
 		FirebaseUser user = mAuth.getCurrentUser();
-		db.collection(FirestoreNames.COLLECTION_USERS)
-		  .whereEqualTo(FirestoreNames.COLUMN_USERNAME, username)
+		db.collection(getString(R.string.collectionUsers))
+		  .whereEqualTo(getString(R.string.columnUsername), username)
 		  .get()
 		  .addOnSuccessListener(command -> {
-			  Log.d(TAG, "createUser: success");
+			  Log.d(TAG, "createUser: great success");
 			  if (user != null) {
+				  // User != null means used first time google login
 				  if (googleUserInfoIsOk(username, dateOfBirth)) {
+					  // Provided information is ok
 					  disableViews(registrationUsernameFieldLayout, registrationDateOfBirthFieldLayout, termsAndConditionsCheckBox);
 					  if (command.isEmpty()) {
 						  // Username is not taken but user is not null
-						  // TODO:
-						  saveUserInFirestore(user, user.getDisplayName(), user.getDisplayName(), username, user.getEmail(), dateOfBirth, user.getPhotoUrl()
-						                                                                                                                      .toString());
+						  // TODO: Subscribe. When successful, create new user and log in
+						  saveUserInFirestore(user, getGoogleUserFirstName(user.getDisplayName()), getGoogleUserFamilyName(user.getDisplayName()), username, user.getEmail(), dateOfBirth,
+						                      user.getPhotoUrl()
+						                                                                                                                                                                       .toString());
 					  } else {
 						  Log.d(TAG, "createUser: username is already taken");
 						  // Username is already taken
@@ -396,15 +397,18 @@ public class EntryActivity
 					  }
 				  }
 			  } else {
+				  // User == null
 				  if (newUserInfoIsOk(firstName, username, familyName, email, password, dateOfBirth)) {
+					  // Provided info is ok
 					  disableViews(registrationDateOfBirthFieldLayout, registrationFirstNameFieldLayout, registrationFamilyNameFieldLayout, registrationUsernameFieldLayout,
 					               registrationEmailFieldLayout, registrationPasswordFieldLayout, termsAndConditionsCheckBox);
 					  if (command.isEmpty()) {
 						  // Username is not taken but user is null
+						  // TODO: Before creation, prompt user to subscribe and if successful, create new user
 						  FirebaseAuth.getInstance()
 						              .createUserWithEmailAndPassword(email, password)
 						              .addOnSuccessListener(result -> {
-							              Log.d(TAG, "createUser: success");
+							              Log.d(TAG, "createUser: great success");
 							              result.getUser()
 							                    .updateProfile(new UserProfileChangeRequest.Builder().setDisplayName(username)
 							                                                                         .build());
@@ -442,6 +446,28 @@ public class EntryActivity
 			  enableViews(registrationFirstNameFieldLayout, registrationFamilyNameFieldLayout, registrationUsernameFieldLayout, registrationEmailFieldLayout, registrationPasswordFieldLayout,
 			              registrationDateOfBirthFieldLayout);
 		  });
+	}
+	
+	private String getGoogleUserFirstName(String displayName) {
+		Log.d(TAG, "getGoogleUserFirstName: called");
+		Log.d(TAG, "getGoogleUserFirstName: display name = " + displayName);
+		if (displayName == null) {
+			return "Error 404";
+		}
+		String[] nameParts = displayName.split("\\s+");
+		Log.d(TAG, "getGoogleUserFirstName: nameParts = " + nameParts.toString());
+		return nameParts[0];
+	}
+	
+	private String getGoogleUserFamilyName(String displayName) {
+		Log.d(TAG, "getGoogleUserFamilyName: called");
+		Log.d(TAG, "getGoogleUserFamilyName: display name = " + displayName);
+		if (displayName == null) {
+			return "Error 404";
+		}
+		String[] nameParts = displayName.split("\\s+");
+		Log.d(TAG, "getGoogleUserFamilyName: nameParts = " + nameParts.toString());
+		return nameParts[nameParts.length - 1];
 	}
 	
 	/**
@@ -860,12 +886,7 @@ public class EntryActivity
 			SubscriptionPool pool = new SubscriptionPool();
 			for (SkuDetails details : list) {
 				Log.d(TAG, "onSkuDetailsResponse: got a sku: " + details.getTitle());
-				Subscription sub = new Subscription(this);
-				sub.setTitle(details.getTitle());
-				sub.setId(details.getSku());
-				sub.setPrice(details.getPrice());
-				sub.setDescription(details.getDescription());
-				sub.setSkuDetails(details);
+				Subscription sub = new Subscription(this, details);
 				pool.addSubscription(sub);
 			}
 			ViewPager2 viewPager2 = findViewById(R.id.entry_activity_subscription_view_pager);
@@ -885,14 +906,14 @@ public class EntryActivity
 		// The billing client is ready. Query SKUs here.
 		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
 			List<String> skus = new ArrayList<>();
-			skus.add("happyapp.subscription.bronze");
-			skus.add("happyapp.subscription.silver");
-			skus.add("happyapp.subscription.gold");
-			skus.add("happyapp.subscription.platinum");
+			skus.add(getString(R.string.subscriptionBronze));
+			skus.add(getString(R.string.subscriptionSilver));
+			skus.add(getString(R.string.subscriptionGold));
+			skus.add(getString(R.string.subscriptionPlatinum));
 			mBillingClient.querySkuDetailsAsync(SkuDetailsParams.newBuilder()
 			                                                    .setSkusList(skus)
 			                                                    .setType(BillingClient.SkuType.SUBS)
-			                                                    .build(), this /*Continue with SkuDetailsResponseListener*/);
+			                                                    .build(), this /*Continue with onSkuDetailsResponse*/);
 		} else {
 			Log.w(TAG, "onBillingSetupFinished: result = " + result.getDebugMessage());
 			Log.d(TAG, "onBillingSetupFinished: result code = " + result.getResponseCode());

@@ -115,4 +115,23 @@
 	<string name="noInternet">No internet connection</string>
 	<string name="retry">Retry</string>
 	<integer name="loginRequestCode">13</integer>
+	<!-- Firestore Names -->
+	<string name="collectionSubscriptions">subscriptions</string>
+	<string name="collectionUsers">users</string>
+	<string name="columnDateOfBirth">date of birth</string>
+	<string name="columnDateOfCreation">date of creation</string>
+	<string name="columnFamilyName">family name</string>
+	<string name="columnFirstName">first name</string>
+	<string name="columnEmail">email</string>
+	<string name="columnProfilePicture">profile picture</string>
+	<string name="columnSubscriptionVariant">subscription variant</string>
+	<string name="columnUsername">username</string>
+	<string name="documentInfo">info</string>
+	<!-- END -->
+	<!-- Subscription IDs -->
+	<string name="subscriptionBronze">happyapp.subscription.bronze</string>
+	<string name="subscriptionSilver">happyapp.subscription.silver</string>
+	<string name="subscriptionGold">happyapp.subscription.gold</string>
+	<string name="subscriptionPlatinum">happyapp.subscription.platinum</string>
+	<!--  -->
 </resources>
