@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
@@ -344,6 +345,15 @@ public class EntryActivity
 	public void createUser(Subscription subscription) {
 		Log.d(TAG, "createUser: called");
 		Log.d(TAG, "createUser: subscription = " + subscription.getTitle());
+		ViewPager2 pager2 = findViewById(R.id.entry_activity_subscription_view_pager);
+		SubsPagerFinalAdapter adapter = (SubsPagerFinalAdapter) pager2.getAdapter();
+		assert adapter != null;
+		BillingFlowParams params = BillingFlowParams.newBuilder()
+		                                            .setSkuDetails(adapter.getSubscriptionPool()
+		                                                                  .getSubscription(pager2.getCurrentItem())
+		                                                                  .getSkuDetails())
+		                                            .build();
+		mBillingClient.launchBillingFlow(this, params);
 		// All these views are needed for the process
 		TextInputEditText registrationEmailField = findViewById(R.id.entry_activity_registration_email_field);
 		TextInputEditText registrationPasswordField = findViewById(R.id.entry_activity_registration_password_field);
@@ -386,9 +396,18 @@ public class EntryActivity
 					  if (command.isEmpty()) {
 						  // Username is not taken but user is not null
 						  // TODO: Subscribe. When successful, create new user and log in
-						  saveUserInFirestore(user, getGoogleUserFirstName(user.getDisplayName()), getGoogleUserFamilyName(user.getDisplayName()), username, user.getEmail(), dateOfBirth,
-						                      user.getPhotoUrl()
-						                                                                                                                                                                       .toString());
+						  ViewPager2 pager3 = findViewById(R.id.entry_activity_subscription_view_pager);
+						  SubsPagerFinalAdapter adapter1 = (SubsPagerFinalAdapter) pager3.getAdapter();
+						  assert adapter1 != null;
+						  BillingFlowParams params1 = BillingFlowParams.newBuilder()
+						                                               .setSkuDetails(adapter1.getSubscriptionPool()
+						                                                                      .getSubscription(pager3.getCurrentItem())
+						                                                                      .getSkuDetails())
+						                                               .build();
+						  mBillingClient.launchBillingFlow(this, params1);
+//						  saveUserInFirestore(user, getGoogleUserFirstName(user.getDisplayName()), getGoogleUserFamilyName(user.getDisplayName()), username, user.getEmail(), dateOfBirth,
+//						                      user.getPhotoUrl()
+//						                                                                                                                                                                       .toString());
 					  } else {
 						  Log.d(TAG, "createUser: username is already taken");
 						  // Username is already taken

@@ -29,7 +29,7 @@ public class SubsPagerFinalAdapter
 	private              SubscriptionPool                  mSubscriptionPool;
 	private              OnFinalAdapterInteractionListener mListener;
 	
-	SubsPagerFinalAdapter(Context context, SubscriptionPool pool) {
+	SubsPagerFinalAdapter(@NonNull Context context, @NonNull SubscriptionPool pool) {
 		Log.d(TAG, "SubsPagerFinalAdapter: called");
 		mSubscriptionPool = pool;
 		mContext = context;
@@ -84,6 +84,11 @@ public class SubsPagerFinalAdapter
 			                                      .getParent();
 			mListener.createUser(mSubscriptionPool.getSubscription(viewPager2.getCurrentItem()));
 		}
+	}
+	
+	SubscriptionPool getSubscriptionPool() {
+		Log.d(TAG, "getSubscriptionPool: called");
+		return mSubscriptionPool;
 	}
 	
 	class ViewHolder
