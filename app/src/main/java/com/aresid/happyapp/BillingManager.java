@@ -32,10 +32,14 @@ public class BillingManager
 	static {
 		Log.d(TAG, "static initializer:true");
 		SKUS = new HashMap<>();
-		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList("happyapp.subscription.bronze"));
-		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList("happyapp.subscription.silver"));
-		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList("happyapp.subscription.gold"));
-		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList("happyapp.subscription.platinum"));
+		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList(
+				"happyapp" + ".subscription" + ".bronze"));
+		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList(
+				"happyapp" + ".subscription" + ".silver"));
+		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList(
+				"happyapp" + ".subscription" + ".gold"));
+		SKUS.put(BillingClient.SkuType.SUBS, Collections.singletonList(
+				"happyapp" + ".subscription" + ".platinum"));
 	}
 	private AppCompatActivity mActivity;
 	private BillingClient     mBillingClient;
@@ -51,10 +55,13 @@ public class BillingManager
 			@Override
 			public void onBillingSetupFinished(BillingResult billingResult) {
 				Log.d(TAG, "onBillingSetupFinished:true");
-				if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-					Log.i(TAG, "onBillingSetupFinished: result = " + billingResult.getResponseCode());
+				if (billingResult.getResponseCode() ==
+				    BillingClient.BillingResponseCode.OK) {
+					Log.i(TAG, "onBillingSetupFinished: result = " +
+					           billingResult.getResponseCode());
 				} else {
-					Log.w(TAG, "onBillingSetupFinished: result = " + billingResult.getResponseCode());
+					Log.w(TAG, "onBillingSetupFinished: result = " +
+					           billingResult.getResponseCode());
 				}
 			}
 			

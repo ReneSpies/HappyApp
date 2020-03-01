@@ -22,11 +22,13 @@ class SubscriptionPool {
 	}
 	
 	/**
-	 * As the query returns the subs in some weird sequence I sort the subs here and add their icons.
+	 * As the query returns the subs in some weird sequence I sort the subs here and add
+	 * their icons.
 	 */
 	SubscriptionPool sort() {
 		Log.d(TAG, "sort:true");
-		Collections.sort(mSubscriptions, (o1, o2) -> o1.getPriority() - (o2.getPriority()));
+		Collections.sort(mSubscriptions, (o1, o2) -> o1.getPriority() -
+		                                             (o2.getPriority()));
 		return this;
 	}
 	

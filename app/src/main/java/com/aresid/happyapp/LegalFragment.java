@@ -18,7 +18,8 @@ public class LegalFragment
 		extends Fragment
 		implements Button.OnClickListener {
 	private static final String                        ARG_USER    = "firebaseUser";
-	private static final String                        ARG_ACCOUNT = "googleSignInAccount";
+	private static final String                        ARG_ACCOUNT =
+			"googleSignInAccount";
 	private static final String                        ARG_USER_ID = "userID";
 	private final        String                        TAG         = getTag();
 	private              OnFragmentInteractionListener mFragmentInteractionListener;
@@ -31,7 +32,8 @@ public class LegalFragment
 		// Required empty public constructor
 	}
 	
-	public static LegalFragment newInstance(FirebaseUser user, GoogleSignInAccount account, String userID) {
+	public static LegalFragment newInstance(FirebaseUser user,
+	                                        GoogleSignInAccount account, String userID) {
 		Log.d("static", "newInstance:true");
 		LegalFragment fragment = new LegalFragment();
 		Bundle args = new Bundle();
@@ -49,7 +51,8 @@ public class LegalFragment
 		if (context instanceof OnFragmentInteractionListener) {
 			mFragmentInteractionListener = (OnFragmentInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+			throw new RuntimeException(context.toString() + " must implement " +
+			                           "OnFragmentInteractionListener");
 		}
 	}
 	
@@ -63,7 +66,8 @@ public class LegalFragment
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView:true");
 		// Inflate the layout for this fragment
 		View rootView = inflater.inflate(R.layout.fragment_legal, container, false);
@@ -83,10 +87,12 @@ public class LegalFragment
 		//		List<String> legalListViewContent = new ArrayList<>();
 		//		legalListViewContent.add("§ 1 We don't take any responsibility.");
 		//		legalListViewContent.add("§ 2 We only want money.");
-		//		legalListViewContent.add("§ 3 If you have any questions, keep it for you.");
+		//		legalListViewContent.add("§ 3 If you have any questions, keep it for you
+		//		.");
 		//		legalListViewContent.add("§ 5 jfdsklöfsdjkläösdfajklsdfajklsdfa");
 		//
-		//		ArrayAdapter<String> legalListViewAdapter = new ArrayAdapter<>(getContext(), R.layout.item_legalities, legalListViewContent);
+		//		ArrayAdapter<String> legalListViewAdapter = new ArrayAdapter<>
+		//		(getContext(), R.layout.item_legalities, legalListViewContent);
 		//
 		//		mTermsAndConditionsListView.setAdapter(legalListViewAdapter);
 	}
@@ -113,7 +119,8 @@ public class LegalFragment
 	}
 	
 	public interface OnFragmentInteractionListener {
-		void startMainActivity(FirebaseUser user, GoogleSignInAccount account, String userID);
+		void startMainActivity(FirebaseUser user, GoogleSignInAccount account,
+		                       String userID);
 		void displayPrivacyPolicyDialog();
 	}
 }

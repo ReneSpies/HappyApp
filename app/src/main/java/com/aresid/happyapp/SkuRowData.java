@@ -12,7 +12,8 @@ public class SkuRowData {
 	private static final String TAG = "SkuRowData";
 	private final        String mSku, mTitle, mDescription, mPrice, mBillingType;
 	
-	public SkuRowData(String sku, String title, String description, String price, String billingType) {
+	public SkuRowData(String sku, String title, String description, String price,
+	                  String billingType) {
 		Log.d(TAG, "SkuRowData:true");
 		mSku = sku;
 		mTitle = title;

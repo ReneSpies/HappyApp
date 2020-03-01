@@ -36,7 +36,8 @@ public class SubsPagerFinalAdapter
 		if (mContext instanceof OnFinalAdapterInteractionListener) {
 			mListener = (OnFinalAdapterInteractionListener) mContext;
 		} else {
-			throw new RuntimeException(mContext.toString() + " must implement OnFinalAdapterInteractionListener");
+			throw new RuntimeException(mContext.toString() + " must implement " +
+			                           "OnFinalAdapterInteractionListener");
 		}
 	}
 	
@@ -45,7 +46,8 @@ public class SubsPagerFinalAdapter
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		Log.d(TAG, "onCreateViewHolder: called");
 		View view = LayoutInflater.from(mContext)
-		                          .inflate(R.layout.content_subspagerfinaladapter, parent, false);
+		                          .inflate(R.layout.content_subspagerfinaladapter,
+		                                   parent, false);
 		MaterialButton confirmButton = view.findViewById(R.id.view_pager_bt_confirm);
 		confirmButton.setOnClickListener(this);
 		return new ViewHolder(view);
@@ -91,6 +93,10 @@ public class SubsPagerFinalAdapter
 		return mSubscriptionPool;
 	}
 	
+	public interface OnFinalAdapterInteractionListener {
+		void createUser(Subscription subscription);
+	}
+	
 	class ViewHolder
 			extends RecyclerView.ViewHolder {
 		TextView  mTVTitle;
@@ -105,9 +111,5 @@ public class SubsPagerFinalAdapter
 			mTVPrice = itemView.findViewById(R.id.view_pager_tv_price);
 			mSubIcon = itemView.findViewById(R.id.view_pager_subscription_icon);
 		}
-	}
-	
-	public interface OnFinalAdapterInteractionListener {
-		void createUser(Subscription subscription);
 	}
 }

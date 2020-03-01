@@ -20,7 +20,8 @@ public class OnboardingActivity
 		Log.d(TAG, "onCreate:true");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_onboarding);
-		new DisplayFragment(this).displayFragment(R.id.onboarding_fragment_container, AccountLevelFragment.newInstance());
+		new DisplayFragment(this).displayFragment(R.id.onboarding_fragment_container,
+		                                          AccountLevelFragment.newInstance());
 	}
 	
 	@Override

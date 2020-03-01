@@ -59,7 +59,8 @@ public class AccountLevelFragment
 		if (context instanceof OnFragmentInteractionListener) {
 			mListener = (OnFragmentInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+			throw new RuntimeException(context.toString() + " must implement " +
+			                           "OnFragmentInteractionListener");
 		}
 	}
 	
@@ -70,10 +71,12 @@ public class AccountLevelFragment
 	}
 	
 	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView:true");
 		// Inflate the layout for this fragment.
-		View rootView = inflater.inflate(R.layout.fragment_account_level, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_account_level, container,
+		                                 false);
 		// Access all necessary views.
 		ViewPager2 viewPager2 = rootView.findViewById(R.id.account_level_variants_holder);
 		FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -91,52 +94,73 @@ public class AccountLevelFragment
 		List<String> listOfDescriptions = new ArrayList<>();
 		List<String> listOfPrices = new ArrayList<>();
 		//		freePackage.get(Source.SERVER)
-		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command
+		//		           .getString(FIRESTORE_TITLE)))
 		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
 		//		silverPackage.get(Source.SERVER)
-		//		             .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
+		//		             .addOnSuccessListener(command -> listOfTitles.add(command
+		//		             .getString(FIRESTORE_TITLE)))
 		//		             .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
 		//		goldPackage.get(Source.SERVER)
-		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command
+		//		           .getString(FIRESTORE_TITLE)))
 		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
 		//		platinumPackage.get(Source.SERVER)
-		//		               .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
-		//		               .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		               .addOnSuccessListener(command -> listOfTitles.add(command
+		//		               .getString(FIRESTORE_TITLE)))
+		//		               .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ",
+		//		               e));
 		//		diamondPackage.get(Source.SERVER)
-		//		              .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_TITLE)))
-		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		              .addOnSuccessListener(command -> listOfTitles.add(command
+		//		              .getString(FIRESTORE_TITLE)))
+		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ",
+		//		              e));
 		//
 		//		freePackage.get(Source.SERVER)
-		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command
+		//		           .getString(FIRESTORE_DESCRIPTION)))
 		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
 		//		silverPackage.get(Source.SERVER)
-		//		             .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
+		//		             .addOnSuccessListener(command -> listOfTitles.add(command
+		//		             .getString(FIRESTORE_DESCRIPTION)))
 		//		             .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
 		//		goldPackage.get(Source.SERVER)
-		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command
+		//		           .getString(FIRESTORE_DESCRIPTION)))
 		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
 		//		platinumPackage.get(Source.SERVER)
-		//		               .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
-		//		               .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		               .addOnSuccessListener(command -> listOfTitles.add(command
+		//		               .getString(FIRESTORE_DESCRIPTION)))
+		//		               .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ",
+		//		               e));
 		//		diamondPackage.get(Source.SERVER)
-		//		              .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_DESCRIPTION)))
-		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		              .addOnSuccessListener(command -> listOfTitles.add(command
+		//		              .getString(FIRESTORE_DESCRIPTION)))
+		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ",
+		//		              e));
 		//
 		//		freePackage.get(Source.SERVER)
-		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command
+		//		           .getString(FIRESTORE_PRICE)))
 		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
 		//		silverPackage.get(Source.SERVER)
-		//		             .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
+		//		             .addOnSuccessListener(command -> listOfTitles.add(command
+		//		             .getString(FIRESTORE_PRICE)))
 		//		             .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
 		//		goldPackage.get(Source.SERVER)
-		//		           .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
+		//		           .addOnSuccessListener(command -> listOfTitles.add(command
+		//		           .getString(FIRESTORE_PRICE)))
 		//		           .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
 		//		platinumPackage.get(Source.SERVER)
-		//		               .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
-		//		               .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		               .addOnSuccessListener(command -> listOfTitles.add(command
+		//		               .getString(FIRESTORE_PRICE)))
+		//		               .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ",
+		//		               e));
 		//		diamondPackage.get(Source.SERVER)
-		//		              .addOnSuccessListener(command -> listOfTitles.add(command.getString(FIRESTORE_PRICE)))
-		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ", e));
+		//		              .addOnSuccessListener(command -> listOfTitles.add(command
+		//		              .getString(FIRESTORE_PRICE)))
+		//		              .addOnFailureListener(e -> Log.e(TAG, "onCreateView: ",
+		//		              e));
 //		listOfTitles.add("Free package");
 //		listOfTitles.add("Silver package");
 //		listOfTitles.add("Gold package");
@@ -152,9 +176,11 @@ public class AccountLevelFragment
 //		listOfPrices.add("9.99 $/Month");
 //		listOfPrices.add("14.99 $/Month");
 //		listOfPrices.add("Prestige");
-//		SubsPagerFinalAdapter mViewPagerAdapter = new SubsPagerFinalAdapter(mContext, listOfTitles, listOfDescriptions, listOfPrices, viewPager2);
+//		SubsPagerFinalAdapter mViewPagerAdapter = new SubsPagerFinalAdapter(mContext,
+//		listOfTitles, listOfDescriptions, listOfPrices, viewPager2);
 //		viewPager2.setAdapter(mViewPagerAdapter);
-//		viewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer(viewPager2));
+//		viewPager2.registerOnPageChangeCallback(new BackgroundTransitionTransformer
+//		(viewPager2));
 		return rootView;
 	}
 	
@@ -171,7 +197,10 @@ public class AccountLevelFragment
 			extends OnPageChangeCallback {
 		private final String TAG = getClass().getSimpleName();
 		int[] arrayOfColors = new int[] {
-				getResources().getColor(R.color.white), getResources().getColor(R.color.silver), getResources().getColor(R.color.gold), getResources().getColor(R.color.platinum),
+				getResources().getColor(R.color.white),
+				getResources().getColor(R.color.silver),
+				getResources().getColor(R.color.gold),
+				getResources().getColor(R.color.platinum),
 				getResources().getColor(R.color.diamond)
 		};
 		private ViewPager2 mViewPager2;
@@ -182,13 +211,17 @@ public class AccountLevelFragment
 		}
 		
 		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+		public void onPageScrolled(int position, float positionOffset,
+		                           int positionOffsetPixels) {
 			Log.d(TAG, "onPageScrolled:true");
-			Log.d(TAG, "onPageScrolled: position = " + position + "\npositionOffset = " + positionOffset + "\npositionOffsetPixels = " + positionOffsetPixels);
+			Log.d(TAG, "onPageScrolled: position = " + position + "\npositionOffset = " +
+			           positionOffset + "\npositionOffsetPixels = " +
+			           positionOffsetPixels);
 			Log.d(TAG, "onPageScrolled: array length = " + arrayOfColors.length);
 			if (position < arrayOfColors.length - 1) {
 				Log.d(TAG, "onPageScrolled: position < array length");
-				mViewPager2.setBackgroundColor((int) new ArgbEvaluator().evaluate(positionOffset, arrayOfColors[position], arrayOfColors[position + 1]));
+				mViewPager2.setBackgroundColor((int) new ArgbEvaluator().evaluate(positionOffset, arrayOfColors[position], arrayOfColors[
+						position + 1]));
 			}
 		}
 		

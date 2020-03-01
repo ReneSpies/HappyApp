@@ -54,7 +54,8 @@ public class FavoritesFragment
 		if (context instanceof OnFragmentInteractionListener) {
 			mListener = (OnFragmentInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+			throw new RuntimeException(context.toString() + " must implement " +
+			                           "OnFragmentInteractionListener");
 		}
 	}
 	
@@ -64,7 +65,8 @@ public class FavoritesFragment
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	                         Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_favorites, container, false);
 	}
@@ -82,7 +84,8 @@ public class FavoritesFragment
 			row.put("Name", name);
 			data.add(row);
 		}
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getBaseContext(), R.layout.item_favorites_list, R.id.favorites_name, names);
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getBaseContext()
+				, R.layout.item_favorites_list, R.id.favorites_name, names);
 		listView.setAdapter(adapter);
 	}
 	

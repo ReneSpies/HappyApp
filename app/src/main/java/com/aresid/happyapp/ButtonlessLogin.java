@@ -22,7 +22,8 @@ public class ButtonlessLogin
 		if (context instanceof OnButtonlessLoginInteractionListener) {
 			mListener = (OnButtonlessLoginInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement OnButtonlessInteractionListener");
+			throw new RuntimeException(context.toString() + " must implement " +
+			                           "OnButtonlessInteractionListener");
 		}
 	}
 	
