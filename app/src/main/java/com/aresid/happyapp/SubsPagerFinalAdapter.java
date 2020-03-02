@@ -84,7 +84,7 @@ public class SubsPagerFinalAdapter
 			ViewPager2 viewPager2 = (ViewPager2) v.getParent()
 			                                      .getParent()
 			                                      .getParent();
-			mListener.createUser(mSubscriptionPool.getSubscription(viewPager2.getCurrentItem()));
+			mListener.startRegistrationFlow(mSubscriptionPool.getSubscription(viewPager2.getCurrentItem()));
 		}
 	}
 	
@@ -94,7 +94,7 @@ public class SubsPagerFinalAdapter
 	}
 	
 	public interface OnFinalAdapterInteractionListener {
-		void createUser(Subscription subscription);
+		void startRegistrationFlow(Subscription subscription);
 	}
 	
 	class ViewHolder

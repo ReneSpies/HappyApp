@@ -10,8 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class OnboardingActivity
-		extends AppCompatActivity
-		implements AccountLevelFragment.OnFragmentInteractionListener {
+		extends AppCompatActivity {
 	private static final String TAG                       = "OnboardingActivity";
 	private              double doubleOnBackPressedHelper = 0;
 	
@@ -20,8 +19,6 @@ public class OnboardingActivity
 		Log.d(TAG, "onCreate:true");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_onboarding);
-		new DisplayFragment(this).displayFragment(R.id.onboarding_fragment_container,
-		                                          AccountLevelFragment.newInstance());
 	}
 	
 	@Override
