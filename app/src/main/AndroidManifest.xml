@@ -41,7 +41,7 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".EmailVerificationActivity"
+			android:name=".ConfirmEmailActivity"
 			android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />

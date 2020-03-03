@@ -9,6 +9,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:gravity="center"
+		android:id="@+id/entry_activity_loading_screen"
 		android:orientation="vertical"
 		android:visibility="gone">
 		

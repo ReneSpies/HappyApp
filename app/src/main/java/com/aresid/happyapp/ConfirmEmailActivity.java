@@ -19,22 +19,25 @@ import com.google.firebase.auth.FirebaseUser;
  * Author: René Spies
  * Copyright: © 2019 Ares ID
  */
-public class EmailVerificationActivity
+public class ConfirmEmailActivity
 		extends AppCompatActivity
 		implements View.OnClickListener {
-	private static final String TAG                = "GmailVerificationAct";
+	private static final String TAG                = "ConfirmEmailActivity";
 	private              int    mEmailErrorHelper  = 0;
 	private              int    mBackPressedHelper = 0;
 	
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate:true");
+		Log.d(TAG, "onCreate: called");
+		setTheme(R.style.Theme_HappyApp);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_email_verification);
+		setContentView(R.layout.activity_confirm_email);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			FirebaseUser user = extras.getParcelable("user");
+			FirebaseUser user =
+					extras.getParcelable(getString(R.string.firebaseUserKey));
 			if (user != null) {
+				sendEmailVerification(user);
 				checkUserStatus(user);
 			}
 		} else {
@@ -45,19 +48,19 @@ public class EmailVerificationActivity
 	}
 	
 	private void startMainActivity(FirebaseUser user) {
-		Log.d(TAG, "startMainActivity:true");
+		Log.d(TAG, "startMainActivity: called");
 		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra("user", user);
+		intent.putExtra(getString(R.string.firebaseUserKey), user);
 		startActivity(intent);
 	}
 	
 	private void checkUserStatus(FirebaseUser user) {
-		Log.d(TAG, "checkUserStatus:true");
+		Log.d(TAG, "checkUserStatus: called");
 		new Handler().postDelayed(() -> {
-			Log.d(TAG, "run:true");
+			Log.d(TAG, "run: called");
 			user.reload()
 			    .addOnSuccessListener(command -> {
-				    Log.d(TAG, "checkUserStatus: success");
+				    Log.d(TAG, "checkUserStatus: great success");
 				    if (user.isEmailVerified()) {
 					    startMainActivity(user);
 				    } else {
@@ -69,18 +72,18 @@ public class EmailVerificationActivity
 				    Log.e(TAG, "checkUserStatus: ", e);
 				    checkUserStatus(user);
 			    });
-		}, 1300);
+		}, 5000);
 	}
 	
 	private void sendEmailVerification(FirebaseUser user) {
-		Log.d(TAG, "sendEmailVerification:true");
+		Log.d(TAG, "sendEmailVerification: called");
 		Toast toast = Toast.makeText(this,
 		                             getString(R.string.errorStandardMessageTryAgain),
 		                             Toast.LENGTH_LONG);
 		if (user != null) {
 			user.sendEmailVerification()
 			    .addOnSuccessListener(command -> {
-				    Log.d(TAG, "sendEmailVerification: success");
+				    Log.d(TAG, "sendEmailVerification: great success");
 				    toast.cancel();
 				    Toast.makeText(this, getString(R.string.plainEmailSentTo,
 				                                   user.getEmail()), Toast.LENGTH_LONG)
@@ -107,7 +110,7 @@ public class EmailVerificationActivity
 	
 	@Override
 	public void onBackPressed() {
-		Log.d(TAG, "onBackPressed:true");
+		Log.d(TAG, "onBackPressed: called");
 		Toast toast = Toast.makeText(this, getString(R.string.plainPressAgainToExit),
 		                             Toast.LENGTH_SHORT);
 		if (mBackPressedHelper == 0) {
@@ -115,7 +118,7 @@ public class EmailVerificationActivity
 			toast.show();
 			mBackPressedHelper = 1;
 			new Handler().postDelayed(() -> {
-				Log.d(TAG, "run:true");
+				Log.d(TAG, "run: called");
 				mBackPressedHelper = 0;
 			}, 6130);
 		} else {
@@ -128,7 +131,7 @@ public class EmailVerificationActivity
 	}
 	
 	private void handleLogout() {
-		Log.d(TAG, "handleLogout:true");
+		Log.d(TAG, "handleLogout: called");
 		FirebaseAuth.getInstance()
 		            .signOut();
 		finish();
@@ -136,13 +139,14 @@ public class EmailVerificationActivity
 	
 	@Override
 	public void onClick(View v) {
-		Log.d(TAG, "onClick:true");
+		Log.d(TAG, "onClick: called");
 		switch (v.getId()) {
 			case R.id.buttong2:
 				Log.d(TAG, "onClick: send again button");
 				Bundle extras = getIntent().getExtras();
-				if (extras != null && extras.getParcelable("user") != null) {
-					sendEmailVerification(extras.getParcelable("user"));
+				if (extras != null &&
+				    extras.getParcelable(getString(R.string.firebaseUserKey)) != null) {
+					sendEmailVerification(extras.getParcelable(getString(R.string.firebaseUserKey)));
 				}
 				break;
 			case R.id.buttong1:

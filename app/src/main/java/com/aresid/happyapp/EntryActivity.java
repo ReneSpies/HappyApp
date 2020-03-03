@@ -36,7 +36,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -184,172 +183,6 @@ public class EntryActivity
 		super.onDestroy();
 	}
 	
-	void updateUI(FirebaseUser user) {
-		Log.d(TAG, "updateUI: called");
-		if (user != null) {
-			changeToLoadingScreen();
-			Toast toast = Toast.makeText(this,
-			                             getString(R.string.plainReloadingUserInformation), Toast.LENGTH_LONG);
-			toast.show();
-			user.reload()
-			    .addOnSuccessListener(command -> {
-				    Log.d(TAG, "updateUI: success");
-				    // cancels the toast after user has been reloaded.
-				    toast.cancel();
-				    // checks if user already has a username and date of birth set.
-				    Task<DocumentSnapshot> task = FirebaseFirestore.getInstance()
-				                                                   .collection(FirestoreNames.COLLECTION_USERS)
-				                                                   .document(user.getUid())
-				                                                   .get();
-				    task.addOnSuccessListener(document -> {
-					    Log.d(TAG, "updateUI: success");
-					    if (document.getString(FirestoreNames.COLUMN_USERNAME) != null &&
-					        document.getString(FirestoreNames.COLUMN_DATE_OF_BIRTH) !=
-					        null) {
-						    if (user.isEmailVerified()) {
-							    startMainActivity(user);
-							    // changes from loading screen after user has been
-							    // directed to the main activity.
-							    changeFromLoadingScreen();
-						    } else {
-							    startEmailVerificationActivity(user);
-							    // changes from loading screen after user has been
-							    // directed to the email verification.
-							    changeFromLoadingScreen();
-						    }
-					    } else {
-						    changeFromLoadingScreen();
-						    changeToGoogleRegistration();
-					    }
-				    })
-				        .addOnFailureListener(e -> {
-					        // if user is not found somehow.
-					        Log.d(TAG, "updateUI: failure");
-					        Log.e(TAG, "updateUI: ", e);
-				        });
-			    })
-			    .addOnFailureListener(e -> {
-				    // if user info cannot be reloaded somehow.
-				    Log.d(TAG, "updateUI: failure");
-				    Log.e(TAG, "updateUI: ", e);
-				    // TODO
-				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
-					    // if user has been deleted in the meantime.
-					    Toast.makeText(this, getString(R.string.errorUserNotFound),
-					                   Toast.LENGTH_LONG)
-					         .show();
-					    // log non-existing user out.
-					    mAuth.signOut();
-					    // change to normal screen after logout.
-					    changeFromLoadingScreen();
-				    }
-			    });
-		} else {
-			Log.d(TAG, "updateUI: user == null");
-			// no user logged in.
-			// TODO
-			changeFromLoadingScreen();
-		}
-	}
-	
-	/**
-	 * Changes to loading screen.
-	 */
-	private void changeToLoadingScreen() {
-		Log.d(TAG, "changeToLoadingScreen: called");
-//		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View
-//		.VISIBLE);
-		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.GONE);
-	}
-	
-	/**
-	 * Starts main activity.
-	 *
-	 * @param user Firebase user.
-	 */
-	void startMainActivity(FirebaseUser user) {
-		Log.d(TAG, "startMainActivity: called");
-		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra("firebase_user", user);
-		startActivity(intent);
-	}
-	
-	/**
-	 * Starts new activity to tell the user to verify his email.
-	 *
-	 * @param user Firebase user.
-	 */
-	void startEmailVerificationActivity(FirebaseUser user) {
-		Log.d(TAG, "startEmailVerificationActivity: called");
-		Intent intent = new Intent(this, EmailVerificationActivity.class);
-		intent.putExtra("firebase_user", user);
-		startActivity(intent);
-	}
-	
-	/**
-	 * Changes from loading screen back to normal.
-	 */
-	private void changeFromLoadingScreen() {
-		Log.d(TAG, "changeFromLoadingScreen: called");
-//		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View
-//		.GONE);
-		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
-	}
-	
-	/**
-	 * Moves the screen to the desired position y.
-	 *
-	 * @param y Desired position to be at. Mostly view.getTop();
-	 */
-	private void smoothScrollTo(float y) {
-		Log.d(TAG, "smoothScrollTo: called");
-		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
-		svParent.smoothScrollTo(0, (int) y);
-	}
-	
-	/**
-	 * Changes EditTexts to Google registration input since Google account do not have a
-	 * username or date of birth yet.
-	 */
-	private void changeToGoogleRegistration() {
-		Log.d(TAG, "changeToGoogleRegistration: called");
-		smoothScrollTo(findViewById(R.id.entry_activity_registration_seperator_view).getBottom());
-		findViewById(R.id.entry_activity_registration_first_name_layout).setEnabled(false);
-		findViewById(R.id.entry_activity_registration_family_name_layout).setEnabled(false);
-		findViewById(R.id.entry_activity_registration_email_layout).setEnabled(false);
-		findViewById(R.id.entry_activity_registration_password_layout).setEnabled(false);
-	}
-	
-	/**
-	 * Returns fresh new firestore instance.
-	 *
-	 * @return Fresh new firestore instance.
-	 */
-	private FirebaseFirestore getFirestoreInstance() {
-		Log.d(TAG, "getFirestoreInstance: called");
-		return FirebaseFirestore.getInstance();
-	}
-	
-	/**
-	 * Adds users subscription variant to his account info in the database.
-	 *
-	 * @param user    The corresponding user.
-	 * @param variant The variant he subscribed.
-	 */
-	private void addUsersSubscriptionVariantToFirestore(FirebaseUser user, int variant) {
-		Log.d(TAG, "addUsersSubscriptionVariantToFirestore: called");
-		FirebaseFirestore db = getFirestoreInstance();
-		db.collection(FirestoreNames.COLLECTION_USERS)
-		  .document(user.getUid())
-		  .update(FirestoreNames.COLUMN_SUBSCRIPTION_VARIANT,
-		          variant == 13 ? "gold" : "no gold")
-		  .addOnFailureListener(e -> {
-			  Log.e(TAG, "addUsersSubscriptionVariantToFirestore: ", e);
-//			  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View
-//			  .INVISIBLE);
-		  });
-	}
-	
 	/**
 	 * Now this does some fancy stuff. Checks if all the data is correct and then
 	 * proceeds to Google billing flow.
@@ -439,13 +272,13 @@ public class EntryActivity
 			if (newUserInfoIsOk(firstName, username, familyName, email, password,
 			                    dateOfBirth)) {
 				// Provided info is ok
-				disableViews(registrationDateOfBirthFieldLayout,
-				             registrationFirstNameFieldLayout,
-				             registrationFamilyNameFieldLayout,
-				             registrationUsernameFieldLayout,
-				             registrationEmailFieldLayout,
-				             registrationPasswordFieldLayout,
-				             termsAndConditionsCheckBox);
+//				disableViews(registrationDateOfBirthFieldLayout,
+//				             registrationFirstNameFieldLayout,
+//				             registrationFamilyNameFieldLayout,
+//				             registrationUsernameFieldLayout,
+//				             registrationEmailFieldLayout,
+//				             registrationPasswordFieldLayout,
+//				             termsAndConditionsCheckBox);
 				// Checks whether username is available
 				db.collection(getString(R.string.collectionUsers))
 				  .whereEqualTo(getString(R.string.columnUsername), username)
@@ -491,68 +324,13 @@ public class EntryActivity
 	private String getStringFromField(EditText field) {
 		Log.d(TAG, "getStringFromField: called");
 		if (field.getText() != null) {
+			Log.d(TAG, "getStringFromField: text = " + field.getText()
+			                                                .toString());
 			return field.getText()
 			            .toString();
 		} else {
+			Log.d(TAG, "getStringFromField: text = ");
 			return "";
-		}
-	}
-	
-	/**
-	 * This method checks if the given input is correct to create a Google user.
-	 *
-	 * @param username The username.
-	 * @param dob      The date of birth.
-	 * @return True if data is fitting.
-	 */
-	private boolean googleUserInfoIsOk(String username, String dob) {
-		Log.d(TAG, "googleUserInfoIsOk: called");
-		setLayoutErrorsNull();
-		TextInputLayout registrationDateOfBirthFieldLayout =
-				findViewById(R.id.entry_activity_registration_date_of_birth_layout);
-		TextInputLayout registrationUsernameFieldLayout =
-				findViewById(R.id.entry_activity_registration_username_layout);
-		CheckBox termsAndConditionsCheckBox =
-				findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
-		if (username.length() == 0) {
-			registrationUsernameFieldLayout.setError(getString(R.string.contractionEmptyCredentialsField));
-			smoothScrollTo(registrationUsernameFieldLayout.getTop());
-			return false;
-		} else if (username.startsWith(" ")) {
-			registrationUsernameFieldLayout.setError(getString(R.string.errorFieldCannotStartWithWhitespace, R.string.plainUsername));
-			smoothScrollTo(registrationUsernameFieldLayout.getTop());
-			return false;
-		} else if (dob.length() == 0) {
-			registrationDateOfBirthFieldLayout.setError(getString(R.string.contractionEmptyCredentialsField));
-			smoothScrollTo(registrationDateOfBirthFieldLayout.getTop());
-			return false;
-		} else if (!termsAndConditionsCheckBox.isChecked()) {
-			termsAndConditionsCheckBox.setError(getString(R.string.plainPleaseConfirm));
-			smoothScrollTo(registrationDateOfBirthFieldLayout.getBottom());
-			return false;
-		}
-		return true;
-	}
-	
-	private void launchBillingFlow(SkuDetails details) {
-		Log.d(TAG, "launchBillingFlow: called");
-		BillingFlowParams params = BillingFlowParams.newBuilder()
-		                                            .setSkuDetails(details)
-		                                            .build();
-		mBillingClient.launchBillingFlow(this, params);
-	}
-	
-	private void disableViews(@NonNull View... views) {
-		Log.d(TAG, "disableViews: called");
-		for (View view : views) {
-			view.setEnabled(false);
-		}
-	}
-	
-	private void enableViews(@NonNull View... views) {
-		Log.d(TAG, "enableViews: called");
-		for (View view : views) {
-			view.setEnabled(true);
 		}
 	}
 	
@@ -567,7 +345,8 @@ public class EntryActivity
 	 * @param dateOfBirth Users date of birth. Must be > 0.
 	 * @return True if everything is fitting.
 	 */
-	private boolean newUserInfoIsOk(String firstName, String username, String familyName, String email, String password, String dateOfBirth) {
+	private boolean newUserInfoIsOk(String firstName, String username, String familyName
+			, String email, String password, String dateOfBirth) {
 		Log.d(TAG, "newUserInfoIsOk: called");
 		setLayoutErrorsNull();
 		TextInputLayout registrationEmailFieldLayout =
@@ -642,6 +421,211 @@ public class EntryActivity
 	}
 	
 	/**
+	 * Starts email verification activity to tell the Google user to verify his email.
+	 *
+	 * @param user The corresponding user.
+	 */
+	private void startGoogleEmailVerificationActivity(FirebaseUser user) {
+		Log.d(TAG, "startGoogleEmailVerificationActivity: called");
+		Intent intent = new Intent(this, ConfirmEmailActivity.class);
+		intent.putExtra("user", user);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Changes from loading screen back to normal.
+	 */
+	private void changeFromLoadingScreen() {
+		Log.d(TAG, "changeFromLoadingScreen: called");
+//		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View
+//		.GONE);
+		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
+	}
+	
+	/**
+	 * Moves the screen to the desired position y.
+	 *
+	 * @param y Desired position to be at. Mostly view.getTop();
+	 */
+	private void smoothScrollTo(float y) {
+		Log.d(TAG, "smoothScrollTo: called");
+		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
+		svParent.smoothScrollTo(0, (int) y);
+	}
+	
+	/**
+	 * Changes EditTexts to Google registration input since Google account do not have a
+	 * username or date of birth yet.
+	 */
+	private void changeToGoogleRegistration() {
+		Log.d(TAG, "changeToGoogleRegistration: called");
+		smoothScrollTo(findViewById(R.id.entry_activity_registration_seperator_view).getBottom());
+		findViewById(R.id.entry_activity_registration_first_name_layout).setEnabled(false);
+		findViewById(R.id.entry_activity_registration_family_name_layout).setEnabled(false);
+		findViewById(R.id.entry_activity_registration_email_layout).setEnabled(false);
+		findViewById(R.id.entry_activity_registration_password_layout).setEnabled(false);
+	}
+	
+	/**
+	 * Returns fresh new firestore instance.
+	 *
+	 * @return Fresh new firestore instance.
+	 */
+	private FirebaseFirestore getFirestoreInstance() {
+		Log.d(TAG, "getFirestoreInstance: called");
+		return FirebaseFirestore.getInstance();
+	}
+	
+	/**
+	 * Adds users subscription variant to his account info in the database.
+	 *
+	 * @param user    The corresponding user.
+	 * @param variant The variant he subscribed.
+	 */
+	private void addUsersSubscriptionVariantToFirestore(FirebaseUser user, int variant) {
+		Log.d(TAG, "addUsersSubscriptionVariantToFirestore: called");
+		FirebaseFirestore db = getFirestoreInstance();
+		db.collection(FirestoreNames.COLLECTION_USERS)
+		  .document(user.getUid())
+		  .update(FirestoreNames.COLUMN_SUBSCRIPTION_VARIANT,
+		          variant == 13 ? "gold" : "no gold")
+		  .addOnFailureListener(e -> {
+			  Log.e(TAG, "addUsersSubscriptionVariantToFirestore: ", e);
+//			  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View
+//			  .INVISIBLE);
+		  });
+	}
+	
+	private void createNewUser() {
+		Log.d(TAG, "createNewUser: called");
+		// Change to loading screen
+		changeToLoadingScreen();
+		// The HashMap carrying the registration information
+		HashMap<String, String> registrationInformation = getRegistrationFieldsContent();
+		// Save the registration information in strings
+		String firstName, familyName, username, email, password, dateOfBirth;
+		firstName = registrationInformation.get(getString(R.string.firstNameKey));
+		familyName = registrationInformation.get(getString(R.string.familyNameKey));
+		username = registrationInformation.get(getString(R.string.usernameKey));
+		email = registrationInformation.get(getString(R.string.emailKey));
+		password = registrationInformation.get(getString(R.string.passwordKey));
+		dateOfBirth = registrationInformation.get(getString(R.string.dateOfBirthKey));
+		// Create user with email and password
+		mAuth.createUserWithEmailAndPassword(email, password)
+		     .addOnSuccessListener(result -> {
+			     Log.d(TAG, "createNewUser: great success");
+			     if (result.getUser() != null) {
+				     saveUserInFirestore(result.getUser(), firstName, familyName,
+				                         username, email, dateOfBirth, null);
+			     }
+		     })
+		     .addOnFailureListener(e -> {
+			     Log.d(TAG, "createNewUser: failure");
+			     Log.e(TAG, "createNewUser: ", e);
+		     });
+	}
+	
+	/**
+	 * Changes to loading screen.
+	 */
+	private void changeToLoadingScreen() {
+		Log.d(TAG, "changeToLoadingScreen: called");
+		findViewById(R.id.entry_activity_loading_screen).setVisibility(View.VISIBLE);
+		findViewById(R.id.entry_activity_scroll_view).setVisibility(View.GONE);
+	}
+	
+	/**
+	 * This method checks if the given input is correct to create a Google user.
+	 *
+	 * @param username The username.
+	 * @param dob      The date of birth.
+	 * @return True if data is fitting.
+	 */
+	private boolean googleUserInfoIsOk(String username, String dob) {
+		Log.d(TAG, "googleUserInfoIsOk: called");
+		setLayoutErrorsNull();
+		TextInputLayout registrationDateOfBirthFieldLayout =
+				findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		TextInputLayout registrationUsernameFieldLayout =
+				findViewById(R.id.entry_activity_registration_username_layout);
+		CheckBox termsAndConditionsCheckBox =
+				findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+		if (username.length() == 0) {
+			registrationUsernameFieldLayout.setError(getString(R.string.contractionEmptyCredentialsField));
+			smoothScrollTo(registrationUsernameFieldLayout.getTop());
+			return false;
+		} else if (username.startsWith(" ")) {
+			registrationUsernameFieldLayout.setError(getString(R.string.errorFieldCannotStartWithWhitespace, R.string.plainUsername));
+			smoothScrollTo(registrationUsernameFieldLayout.getTop());
+			return false;
+		} else if (dob.length() == 0) {
+			registrationDateOfBirthFieldLayout.setError(getString(R.string.contractionEmptyCredentialsField));
+			smoothScrollTo(registrationDateOfBirthFieldLayout.getTop());
+			return false;
+		} else if (!termsAndConditionsCheckBox.isChecked()) {
+			termsAndConditionsCheckBox.setError(getString(R.string.plainPleaseConfirm));
+			smoothScrollTo(registrationDateOfBirthFieldLayout.getBottom());
+			return false;
+		}
+		return true;
+	}
+	
+	private void launchBillingFlow(SkuDetails details) {
+		Log.d(TAG, "launchBillingFlow: called");
+		BillingFlowParams params = BillingFlowParams.newBuilder()
+		                                            .setSkuDetails(details)
+		                                            .build();
+		mBillingClient.launchBillingFlow(this, params);
+	}
+	
+	private void disableViews(@NonNull View... views) {
+		Log.d(TAG, "disableViews: called");
+		for (View view : views) {
+			view.setEnabled(false);
+		}
+	}
+	
+	private void enableViews(@NonNull View... views) {
+		Log.d(TAG, "enableViews: called");
+		for (View view : views) {
+			view.setEnabled(true);
+		}
+	}
+	
+	private HashMap<String, String> getRegistrationFieldsContent() {
+		Log.d(TAG, "getUserInformation: called");
+		// The HashMap the information is saved to
+		HashMap<String, String> registrationFieldsContent = new HashMap<>();
+		// Access all the fields
+		TextInputEditText firstNameField, familyNameField, usernameField, emailField,
+				passwordField, dateOfBirthField;
+		firstNameField = findViewById(R.id.entry_activity_registration_first_name_field);
+		familyNameField =
+				findViewById(R.id.entry_activity_registration_family_name_field);
+		usernameField = findViewById(R.id.entry_activity_registration_username_field);
+		emailField = findViewById(R.id.entry_activity_registration_email_field);
+		passwordField = findViewById(R.id.entry_activity_registration_password_field);
+		dateOfBirthField =
+				findViewById(R.id.entry_activity_registration_date_of_birth_field);
+		// Save all the fields content into strings
+		String firstName, familyName, username, email, password, dateOfBirth;
+		firstName = getStringFromField(firstNameField);
+		familyName = getStringFromField(familyNameField);
+		username = getStringFromField(usernameField);
+		email = getStringFromField(emailField);
+		password = getStringFromField(passwordField);
+		dateOfBirth = getStringFromField(dateOfBirthField);
+		// Save the content into HashMap
+		registrationFieldsContent.put(getString(R.string.firstNameKey), firstName);
+		registrationFieldsContent.put(getString(R.string.familyNameKey), familyName);
+		registrationFieldsContent.put(getString(R.string.usernameKey), username);
+		registrationFieldsContent.put(getString(R.string.emailKey), email);
+		registrationFieldsContent.put(getString(R.string.passwordKey), password);
+		registrationFieldsContent.put(getString(R.string.dateOfBirthKey), dateOfBirth);
+		return registrationFieldsContent;
+	}
+	
+	/**
 	 * This method resets all the layout errors in the registration form.
 	 */
 	private void setLayoutErrorsNull() {
@@ -676,21 +660,6 @@ public class EntryActivity
 		cbTermsConditionsPrivacyPolicy.setError(null);
 	}
 	
-	private FirebaseUser createUserWithEmailAndPassword(String email, String password) {
-		Log.d(TAG, "createUserWithEmailAndPassword: called");
-		final FirebaseUser[] user = {null};
-		mAuth.createUserWithEmailAndPassword(email, password)
-		     .addOnSuccessListener(result -> {
-			     Log.d(TAG, "createUserWithEmailAndPassword: great success");
-			     user[0] = result.getUser();
-		     })
-		     .addOnFailureListener(e -> {
-			     Log.d(TAG, "createUserWithEmailAndPassword: failure");
-			     Log.e(TAG, "createUserWithEmailAndPassword: ", e);
-		     });
-		return user[0];
-	}
-	
 	/**
 	 * This method saves users info in firestore upon registration.
 	 *
@@ -699,38 +668,38 @@ public class EntryActivity
 	 * @param familyName     Users family name.
 	 * @param username       Users username.
 	 * @param email          Users email.
-	 * @param dob            Users date of birth.
+	 * @param dateOfBirth    Users date of birth.
 	 * @param profilePicture Users profile picture.
 	 */
 	private void saveUserInFirestore(FirebaseUser user, String firstName,
 	                                 String familyName, String username, String email,
-	                                 String dob, String profilePicture) {
+	                                 String dateOfBirth, String profilePicture) {
 		Log.d(TAG, "saveUserInFirestore: called");
 		Log.d(TAG, "saveUserInFirestore: pic = " + profilePicture);
-		FirebaseFirestore db = FirebaseFirestore.getInstance();
+		FirebaseFirestore db = getFirestoreInstance();
 		Toast toast = Toast.makeText(this,
 		                             getString(R.string.errorStandardMessageStandBy),
 		                             Toast.LENGTH_SHORT);
 		HashMap<String, Object> userInfo = new HashMap<>();
-		userInfo.put(FirestoreNames.COLUMN_FIRST_NAME, firstName);
-		userInfo.put(FirestoreNames.COLUMN_FAMILY_NAME, familyName);
-		userInfo.put(FirestoreNames.COLUMN_USERNAME, username);
-		userInfo.put(FirestoreNames.COLUMN_EMAIL, email);
-		userInfo.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
-		userInfo.put(FirestoreNames.COLUMN_PROFILE_PICTURE, profilePicture);
-		db.collection(FirestoreNames.COLLECTION_USERS)
+		userInfo.put(getString(R.string.columnFirstName), firstName);
+		userInfo.put(getString(R.string.columnFamilyName), familyName);
+		userInfo.put(getString(R.string.columnUsername), username);
+		userInfo.put(getString(R.string.columnEmail), email);
+		userInfo.put(getString(R.string.columnDateOfBirth), dateOfBirth);
+		userInfo.put(getString(R.string.columnProfilePicture), profilePicture);
+		db.collection(getString(R.string.collectionUsers))
 		  .document(user.getUid())
 		  .set(userInfo)
 		  .addOnSuccessListener(command -> {
-			  Log.d(TAG, "saveUserInFirestore: success");
+			  Log.d(TAG, "saveUserInFirestore: great success");
 			  toast.cancel();
-			  new RetrieveInternetTime(this, user.getUid()).execute("time.google.com");
+			  new RetrieveInternetTime(this, user.getUid()).execute(getString(R.string.googleTimeServerURL));
 			  updateUI(user);
 		  })
 		  .addOnFailureListener(e -> {
 			  Log.d(TAG, "saveUserInFirestore: failure");
 			  Log.e(TAG, "saveUserInFirestore: ", e);
-			  toast.cancel();
+			  toast.show();
 		  });
 	}
 	
@@ -756,16 +725,47 @@ public class EntryActivity
 		return nameParts[nameParts.length - 1];
 	}
 	
-	/**
-	 * Starts email verification activity to tell the Google user to verify his email.
-	 *
-	 * @param user The corresponding user.
-	 */
-	private void startGoogleEmailVerificationActivity(FirebaseUser user) {
-		Log.d(TAG, "startGoogleEmailVerificationActivity: called");
-		Intent intent = new Intent(this, EmailVerificationActivity.class);
-		intent.putExtra("user", user);
-		startActivity(intent);
+	void updateUI(FirebaseUser user) {
+		Log.d(TAG, "updateUI: called");
+		if (user != null) {
+			changeToLoadingScreen();
+			Toast toast = Toast.makeText(this,
+			                             getString(R.string.plainReloadingUserInformation), Toast.LENGTH_LONG);
+			toast.show();
+			user.reload()
+			    .addOnSuccessListener(command -> {
+				    Log.d(TAG, "updateUI: great success");
+				    // cancels the toast after user has been reloaded.
+				    toast.cancel();
+				    changeFromLoadingScreen();
+				    if (user.isEmailVerified()) {
+					    startMainActivity(user);
+				    } else {
+					    startEmailVerificationActivity(user);
+				    }
+			    })
+			    .addOnFailureListener(e -> {
+				    // if user info cannot be reloaded somehow.
+				    Log.d(TAG, "updateUI: failure");
+				    Log.e(TAG, "updateUI: ", e);
+				    // TODO
+				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
+					    // if user has been deleted in the meantime.
+					    Toast.makeText(this, getString(R.string.errorUserNotFound),
+					                   Toast.LENGTH_LONG)
+					         .show();
+					    // log non-existing user out.
+					    mAuth.signOut();
+					    // change to normal screen after logout.
+					    changeFromLoadingScreen();
+				    }
+			    });
+		} else {
+			Log.d(TAG, "updateUI: user == null");
+			// no user logged in.
+			// TODO
+			changeFromLoadingScreen();
+		}
 	}
 	
 	/**
@@ -982,7 +982,6 @@ public class EntryActivity
 			for (Purchase purchase : list) {
 				Log.d(TAG,
 				      "onPurchasesUpdated: got a purchase = " + purchase.toString());
-				// TODO: Create new user
 				createNewUser();
 			}
 		} else if (result.getResponseCode() ==
@@ -993,8 +992,28 @@ public class EntryActivity
 		}
 	}
 	
-	private void createNewUser() {
-		Log.d(TAG, "createNewUser: called");
+	/**
+	 * Starts main activity.
+	 *
+	 * @param user Firebase user.
+	 */
+	void startMainActivity(FirebaseUser user) {
+		Log.d(TAG, "startMainActivity: called");
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra(getString(R.string.firebaseUserKey), user);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Starts new activity to tell the user to verify his email.
+	 *
+	 * @param user Firebase user.
+	 */
+	void startEmailVerificationActivity(FirebaseUser user) {
+		Log.d(TAG, "startEmailVerificationActivity: called");
+		Intent intent = new Intent(this, ConfirmEmailActivity.class);
+		intent.putExtra(getString(R.string.firebaseUserKey), user);
+		startActivity(intent);
 	}
 	
 	public void onLoginGoogleButtonClick(View view) {

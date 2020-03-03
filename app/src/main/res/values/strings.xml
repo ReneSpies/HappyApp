@@ -69,6 +69,7 @@
 	<string name="plainProcessingLogin">Processing login</string>
 	<string name="plainLoggingIn">Logging in</string>
 	<string name="placeholderDateOfBirthContent">%1d.%1d.%1d</string>
+	<string name="plainDateOfBirth">Date of birth</string>
 	<string name="usernameWithStar">Username*</string>
 	<string name="contractionDisplayedName">This will be your displayed name</string>
 	<string name="emailWithStar">Email*</string>
@@ -86,6 +87,21 @@
 	<string name="plainFamilyName">Family name</string>
 	<string name="plainUsername">Username</string>
 	<string name="plainPressAgainToExit">Press again to exit</string>
+	<!-- Keys -->
+	<string name="firstNameFieldKey">firstNameField</string>
+	<string name="familyNameFieldKey">familyNameField</string>
+	<string name="usernameFieldKey">usernameField</string>
+	<string name="emailFieldKey">emailField</string>
+	<string name="passwordFieldKey">passwordField</string>
+	<string name="dateOfBirthFieldKey">dateOfBirthField</string>
+	<string name="firstNameKey">firstName</string>
+	<string name="familyNameKey">familyName</string>
+	<string name="usernameKey">username</string>
+	<string name="emailKey">email</string>
+	<string name="passwordKey">password</string>
+	<string name="dateOfBirthKey">dateOfBirth</string>
+	<string name="firebaseUserKey">firebaseUser</string>
+	<!-- END -->
 	<!---->
 	<!-- Content descriptions -->
 	<string name="plainProcessingRegistration">Processing registration</string>
@@ -133,5 +149,6 @@
 	<string name="subscriptionSilver">happyapp.subscription.silver</string>
 	<string name="subscriptionGold">happyapp.subscription.gold</string>
 	<string name="subscriptionPlatinum">happyapp.subscription.platinum</string>
+	<string name="googleTimeServerURL">time.google.com</string>
 	<!--  -->
 </resources>
