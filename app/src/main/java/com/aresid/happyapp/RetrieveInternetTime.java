@@ -25,7 +25,7 @@ public class RetrieveInternetTime
 	private              String                            mUid;
 	
 	RetrieveInternetTime(AppCompatActivity context, String uid) {
-		Log.d(TAG, "RetrieveInternetTime:true");
+		Log.d(TAG, "RetrieveInternetTime: called");
 		if (context instanceof OnInternetTimeInteractionListener) {
 			mListener = (OnInternetTimeInteractionListener) context;
 		} else {
@@ -37,7 +37,7 @@ public class RetrieveInternetTime
 	
 	@Override
 	protected Date doInBackground(String... strings) {
-		Log.d(TAG, "doInBackground:true");
+		Log.d(TAG, "doInBackground: called");
 		String timeServer = strings[0];
 		try {
 			NTPUDPClient client = new NTPUDPClient();
@@ -55,7 +55,7 @@ public class RetrieveInternetTime
 	
 	@Override
 	protected void onPostExecute(Date time) {
-		Log.d(TAG, "onPostExecute:true");
+		Log.d(TAG, "onPostExecute: called");
 		mListener.addTimeToFirestoreEntry(time, mUid);
 	}
 	

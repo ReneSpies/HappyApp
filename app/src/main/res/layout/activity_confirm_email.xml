@@ -2,35 +2,81 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
                                                    android:layout_width="match_parent"
-                                                   android:layout_height="wrap_content">
+                                                   android:id="@+id/confirm_email_activity_constraint_layout"
+                                                   android:layout_height="match_parent">
 	
 	<TextView
-		android:id="@+id/yeetview"
+		android:id="@+id/confirm_email_activity_confirmation_sent_textview"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="test1234"
+		android:text="@string/emailVerificationNotice"
 		android:textAlignment="center"
 		android:textAppearance="?attr/textAppearanceHeadline5"
-		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintBottom_toTopOf="@+id/confirm_email_activity_email_textview"
 		app:layout_constraintTop_toTopOf="parent"/>
 	
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/buttong1"
-		style="@style/Widget.HappyApp.OutlinedButton"
-		android:layout_width="wrap_content"
+	<TextView
+		android:id="@+id/confirm_email_activity_email_textview"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="dieser button funktioniert nicht"
+		android:fontFamily="monospace"
+		android:text="@string/_404"
+		android:textAlignment="center"
+		android:textAppearance="?attr/textAppearanceHeadline6"
+		app:layout_constraintBottom_toTopOf="@+id/linearLayout"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/yeetview"/>
+		app:layout_constraintTop_toBottomOf="@+id/confirm_email_activity_confirmation_sent_textview"/>
 	
-	<com.google.android.material.button.MaterialButton
-		android:id="@+id/buttong2"
-		style="@style/Widget.HappyApp.ContainedButton"
+	<LinearLayout
+		android:id="@+id/linearLayout"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="der auch nicht"
+		android:orientation="vertical"
+		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/buttong1"/>
+		app:layout_constraintTop_toBottomOf="@+id/confirm_email_activity_email_textview">
+		
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/confirm_email_activity_open_email_button"
+			style="@style/Widget.HappyApp.ContainedButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:onClick="onOpenEmailButtonClick"
+			android:text="@string/open_email"/>
+		
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/buttong1"
+			style="@style/Widget.HappyApp.OutlinedButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:onClick="onResendButtonClick"
+			android:text="@string/resend"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/confirm_email_activity_email_textview"/>
+		
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/buttong2"
+			style="@style/Widget.HappyApp.OutlinedButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:onClick="onChangeAndResendButtonClick"
+			android:text="@string/change_amp_resend"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/buttong1"/>
+		
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/buttong3"
+			style="@style/Widget.HappyApp.OutlinedButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:onClick="onLogoutButtonClick"
+			android:text="@string/plainLogout"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/buttong2"/>
+	</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

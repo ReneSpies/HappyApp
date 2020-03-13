@@ -433,24 +433,41 @@ public class EntryActivity
 	}
 	
 	/**
-	 * Changes from loading screen back to normal.
-	 */
-	private void changeFromLoadingScreen() {
-		Log.d(TAG, "changeFromLoadingScreen: called");
-//		findViewById(R.id.entry_activity_logging_in_waiting_layout).setVisibility(View
-//		.GONE);
-		findViewById(R.id.entry_activity_constraint_layout).setVisibility(View.VISIBLE);
-	}
-	
-	/**
 	 * Moves the screen to the desired position y.
 	 *
 	 * @param y Desired position to be at. Mostly view.getTop();
 	 */
 	private void smoothScrollTo(float y) {
 		Log.d(TAG, "smoothScrollTo: called");
-		ScrollView svParent = findViewById(R.id.entry_activity_scroll_view);
-		svParent.smoothScrollTo(0, (int) y);
+		ScrollView scrollView = findViewById(R.id.entry_activity_scroll_view);
+		scrollView.smoothScrollTo(0, (int) y);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+	                                @Nullable Intent data) {
+		Log.d(TAG, "onActivityResult: called");
+		super.onActivityResult(requestCode, resultCode, data);
+		int loginRequestCode = getResources().getInteger(R.integer.loginRequestCode);
+		// Result returned from launching the Intent.
+		if (requestCode == loginRequestCode) {
+			changeToLoadingScreen();
+			Task<GoogleSignInAccount> task =
+					GoogleSignIn.getSignedInAccountFromIntent(data);
+			task.addOnSuccessListener(gsa -> {
+				Log.d(TAG, "onActivityResult: great success");
+				if (gsa != null) { firebaseAuthWithGoogleAccount(gsa); }
+			})
+			    .addOnFailureListener(e -> {
+				    Log.d(TAG, "onActivityResult: failure");
+				    Log.e(TAG, "onActivityResult: ", e);
+				    changeFromLoadingScreen();
+				    Toast.makeText(this,
+				                   getString(R.string.errorStandardMessageTryAgain),
+				                   Toast.LENGTH_LONG)
+				         .show();
+			    });
+		}
 	}
 	
 	/**
@@ -675,7 +692,6 @@ public class EntryActivity
 	                                 String familyName, String username, String email,
 	                                 String dateOfBirth, String profilePicture) {
 		Log.d(TAG, "saveUserInFirestore: called");
-		Log.d(TAG, "saveUserInFirestore: pic = " + profilePicture);
 		FirebaseFirestore db = getFirestoreInstance();
 		Toast toast = Toast.makeText(this,
 		                             getString(R.string.errorStandardMessageStandBy),
@@ -725,47 +741,47 @@ public class EntryActivity
 		return nameParts[nameParts.length - 1];
 	}
 	
-	void updateUI(FirebaseUser user) {
-		Log.d(TAG, "updateUI: called");
-		if (user != null) {
-			changeToLoadingScreen();
-			Toast toast = Toast.makeText(this,
-			                             getString(R.string.plainReloadingUserInformation), Toast.LENGTH_LONG);
-			toast.show();
-			user.reload()
-			    .addOnSuccessListener(command -> {
-				    Log.d(TAG, "updateUI: great success");
-				    // cancels the toast after user has been reloaded.
-				    toast.cancel();
-				    changeFromLoadingScreen();
-				    if (user.isEmailVerified()) {
-					    startMainActivity(user);
-				    } else {
-					    startEmailVerificationActivity(user);
-				    }
-			    })
-			    .addOnFailureListener(e -> {
-				    // if user info cannot be reloaded somehow.
-				    Log.d(TAG, "updateUI: failure");
-				    Log.e(TAG, "updateUI: ", e);
-				    // TODO
-				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
-					    // if user has been deleted in the meantime.
-					    Toast.makeText(this, getString(R.string.errorUserNotFound),
-					                   Toast.LENGTH_LONG)
-					         .show();
-					    // log non-existing user out.
-					    mAuth.signOut();
-					    // change to normal screen after logout.
-					    changeFromLoadingScreen();
-				    }
-			    });
-		} else {
-			Log.d(TAG, "updateUI: user == null");
-			// no user logged in.
-			// TODO
-			changeFromLoadingScreen();
-		}
+	/**
+	 * Registers a new firebase user via Google sign in.
+	 *
+	 * @param account The Google account.
+	 */
+	private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: called");
+		AuthCredential authCredential =
+				GoogleAuthProvider.getCredential(account.getIdToken(), null);
+		mAuth.signInWithCredential(authCredential)
+		     .addOnSuccessListener(command -> {
+			     Log.d(TAG, "firebaseAuthWithGoogleAccount: great success");
+			     // Login success.
+			     FirebaseUser user = command.getUser();
+			     if (command.getAdditionalUserInfo() != null && user != null) {
+				     if (command.getAdditionalUserInfo()
+				                .isNewUser()) {
+					     Log.d(TAG, "firebaseAuthWithGoogleAccount: user is new");
+					     saveUserInFirestore(user, account.getGivenName(),
+					                         account.getFamilyName(), null,
+					                         account.getEmail(), null, user.getPhotoUrl()
+					                                                                                                                    .toString());
+				     } else {
+					     updateUI(user);
+				     }
+			     } else {
+				     // Something went wrong
+				     Toast.makeText(this,
+				                    getString(R.string.errorStandardMessageTryAgain),
+				                    Toast.LENGTH_SHORT)
+				          .show();
+				     changeFromLoadingScreen();
+			     }
+		     })
+		     .addOnFailureListener(e -> {
+			     Log.e(TAG, "firebaseAuthWithGoogleAccount: ", e);
+			     Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain),
+			                    Toast.LENGTH_SHORT)
+			          .show();
+			     changeFromLoadingScreen();
+		     });
 	}
 	
 	/**
@@ -879,31 +895,13 @@ public class EntryActivity
 		     });
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-	                                @Nullable Intent data) {
-		Log.d(TAG, "onActivityResult: called");
-		super.onActivityResult(requestCode, resultCode, data);
-		int loginRequestCode = getResources().getInteger(R.integer.loginRequestCode);
-		// Result returned from launching the Intent.
-		if (requestCode == loginRequestCode) {
-			changeToLoadingScreen();
-			Task<GoogleSignInAccount> task =
-					GoogleSignIn.getSignedInAccountFromIntent(data);
-			task.addOnSuccessListener(gsa -> {
-				Log.d(TAG, "onActivityResult: success");
-				if (gsa != null) { firebaseAuthWithGoogleAccount(gsa); }
-			})
-			    .addOnFailureListener(e -> {
-				    Log.d(TAG, "onActivityResult: failure");
-				    Log.e(TAG, "onActivityResult: ", e);
-				    changeFromLoadingScreen();
-				    Toast.makeText(this,
-				                   getString(R.string.errorStandardMessageTryAgain),
-				                   Toast.LENGTH_LONG)
-				         .show();
-			    });
-		}
+	/**
+	 * Changes from loading screen back to normal.
+	 */
+	private void changeFromLoadingScreen() {
+		Log.d(TAG, "changeFromLoadingScreen: called");
+		findViewById(R.id.entry_activity_loading_screen).setVisibility(View.GONE);
+		findViewById(R.id.entry_activity_scroll_view).setVisibility(View.VISIBLE);
 	}
 	
 	/**
@@ -917,38 +915,47 @@ public class EntryActivity
 		findViewById(R.id.entry_activity_registration_password_layout).setEnabled(true);
 	}
 	
-	/**
-	 * Registers a new firebase user via Google sign in.
-	 *
-	 * @param account The Google account.
-	 */
-	private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: called");
-		AuthCredential authCredential =
-				GoogleAuthProvider.getCredential(account.getIdToken(), null);
-		mAuth.signInWithCredential(authCredential)
-		     .addOnSuccessListener(command -> {
-			     Log.d(TAG, "firebaseAuthWithGoogleAccount: success");
-			     // Login success.
-			     FirebaseUser user = command.getUser();
-			     if (command.getAdditionalUserInfo()
-			                .isNewUser()) {
-				     Log.d(TAG, "firebaseAuthWithGoogleAccount: user is new");
-				     saveUserInFirestore(user, account.getGivenName(),
-				                         account.getFamilyName(), null,
-				                         account.getEmail(), null, user.getPhotoUrl()
-				                                                                                                                    .toString());
-			     } else {
-				     updateUI(user);
-			     }
-		     })
-		     .addOnFailureListener(e -> {
-			     Log.e(TAG, "firebaseAuthWithGoogleAccount: ", e);
-			     Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain),
-			                    Toast.LENGTH_SHORT)
-			          .show();
-			     changeFromLoadingScreen();
-		     });
+	void updateUI(FirebaseUser user) {
+		Log.d(TAG, "updateUI: called");
+		if (user != null) {
+			changeToLoadingScreen();
+			Toast toast = Toast.makeText(this,
+			                             getString(R.string.plainReloadingUserInformation), Toast.LENGTH_LONG);
+			toast.show();
+			user.reload()
+			    .addOnSuccessListener(command -> {
+				    Log.d(TAG, "updateUI: great success");
+				    // cancels the toast after user has been reloaded.
+				    toast.cancel();
+				    changeFromLoadingScreen();
+				    if (user.isEmailVerified()) {
+					    startMainActivity(user);
+				    } else {
+					    startConfirmEmailActivity(user);
+				    }
+			    })
+			    .addOnFailureListener(e -> {
+				    // if user info cannot be reloaded somehow.
+				    Log.d(TAG, "updateUI: failure");
+				    Log.e(TAG, "updateUI: ", e);
+				    // TODO
+				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
+					    // if user has been deleted in the meantime.
+					    Toast.makeText(this, getString(R.string.errorUserNotFound),
+					                   Toast.LENGTH_LONG)
+					         .show();
+					    // log non-existing user out.
+					    mAuth.signOut();
+					    // change to normal screen after logout.
+					    changeFromLoadingScreen();
+				    }
+			    });
+		} else {
+			Log.d(TAG, "updateUI: user == null");
+			// no user logged in.
+			// TODO
+			changeFromLoadingScreen();
+		}
 	}
 	
 	/**
@@ -1009,8 +1016,8 @@ public class EntryActivity
 	 *
 	 * @param user Firebase user.
 	 */
-	void startEmailVerificationActivity(FirebaseUser user) {
-		Log.d(TAG, "startEmailVerificationActivity: called");
+	void startConfirmEmailActivity(FirebaseUser user) {
+		Log.d(TAG, "startConfirmEmailActivity: called");
 		Intent intent = new Intent(this, ConfirmEmailActivity.class);
 		intent.putExtra(getString(R.string.firebaseUserKey), user);
 		startActivity(intent);
@@ -1020,7 +1027,7 @@ public class EntryActivity
 		Log.d(TAG, "onLoginGoogleButtonClick: called");
 		int loginRequestCode = getResources().getInteger(R.integer.loginRequestCode);
 		GoogleSignInOptions gso =
-				new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("930375194703-ioc97apofqrtst7sf064h0tpi8qcgekv.apps.googleusercontent.com")
+				new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("930375194703-47k2c1ei15jgupng4ao2f5be1sgktqds.apps.googleusercontent.com")
 		                                                                                              .requestProfile()
 		                                                                                              .requestEmail()
 		                                                                                              .build();

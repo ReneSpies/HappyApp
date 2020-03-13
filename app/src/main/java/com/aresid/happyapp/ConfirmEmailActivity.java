@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -20,11 +24,10 @@ import com.google.firebase.auth.FirebaseUser;
  * Copyright: © 2019 Ares ID
  */
 public class ConfirmEmailActivity
-		extends AppCompatActivity
-		implements View.OnClickListener {
-	private static final String TAG                = "ConfirmEmailActivity";
-	private              int    mEmailErrorHelper  = 0;
-	private              int    mBackPressedHelper = 0;
+		extends AppCompatActivity {
+	private static final String       TAG                = "ConfirmEmailActivity";
+	private              int          mBackPressedHelper = 0;
+	private              FirebaseUser mFirebaseUser;
 	
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,17 +37,23 @@ public class ConfirmEmailActivity
 		setContentView(R.layout.activity_confirm_email);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			FirebaseUser user =
+			mFirebaseUser =
 					extras.getParcelable(getString(R.string.firebaseUserKey));
-			if (user != null) {
-				sendEmailVerification(user);
-				checkUserStatus(user);
+			if (mFirebaseUser != null) {
+				setEmailTextViewText(mFirebaseUser.getEmail());
+				sendEmailVerification(mFirebaseUser);
+				checkEmailVerificationStatus(mFirebaseUser);
 			}
 		} else {
-			Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain),
-			               Toast.LENGTH_LONG)
-			     .show();
+			showErrorSnackbar(findViewById(R.id.confirm_email_activity_constraint_layout), getString(R.string.user_should_not_be_here));
 		}
+	}
+	
+	private void setEmailTextViewText(String email) {
+		Log.d(TAG, "setEmailTextViewText: called");
+		TextView emailTextView =
+				findViewById(R.id.confirm_email_activity_email_textview);
+		emailTextView.setText(email);
 	}
 	
 	private void startMainActivity(FirebaseUser user) {
@@ -54,58 +63,43 @@ public class ConfirmEmailActivity
 		startActivity(intent);
 	}
 	
-	private void checkUserStatus(FirebaseUser user) {
-		Log.d(TAG, "checkUserStatus: called");
+	private void checkEmailVerificationStatus(FirebaseUser user) {
+		Log.d(TAG, "checkEmailVerificationStatus: called");
 		new Handler().postDelayed(() -> {
 			Log.d(TAG, "run: called");
 			user.reload()
 			    .addOnSuccessListener(command -> {
-				    Log.d(TAG, "checkUserStatus: great success");
+				    Log.d(TAG, "checkEmailVerificationStatus: great success");
 				    if (user.isEmailVerified()) {
 					    startMainActivity(user);
 				    } else {
-					    checkUserStatus(user);
+					    checkEmailVerificationStatus(user);
 				    }
 			    })
 			    .addOnFailureListener(e -> {
-				    Log.d(TAG, "checkUserStatus: failure");
-				    Log.e(TAG, "checkUserStatus: ", e);
-				    checkUserStatus(user);
+				    Log.d(TAG, "checkEmailVerificationStatus: failure");
+				    Log.e(TAG, "checkEmailVerificationStatus: ", e);
+				    checkEmailVerificationStatus(user);
 			    });
 		}, 5000);
 	}
 	
-	private void sendEmailVerification(FirebaseUser user) {
-		Log.d(TAG, "sendEmailVerification: called");
-		Toast toast = Toast.makeText(this,
-		                             getString(R.string.errorStandardMessageTryAgain),
-		                             Toast.LENGTH_LONG);
-		if (user != null) {
-			user.sendEmailVerification()
-			    .addOnSuccessListener(command -> {
-				    Log.d(TAG, "sendEmailVerification: great success");
-				    toast.cancel();
-				    Toast.makeText(this, getString(R.string.plainEmailSentTo,
-				                                   user.getEmail()), Toast.LENGTH_LONG)
-				         .show();
-			    })
-			    .addOnFailureListener(e -> {
-				    Log.d(TAG, "sendEmailVerification: failure");
-				    Log.e(TAG, "sendEmailVerification: ", e);
-				    toast.cancel();
-				    if (e instanceof com.google.firebase.FirebaseTooManyRequestsException) {
-					    Toast.makeText(this, getString(R.string.errorGettingDonuts),
-					                   Toast.LENGTH_SHORT)
-					         .show();
-					    return;
-				    }
-				    if (mEmailErrorHelper <= 3) {
-					    toast.show();
-					    sendEmailVerification(user);
-					    mEmailErrorHelper++;
-				    }
-			    });
-		}
+	private void showStandardSnackbar(View view, String message) {
+		Log.d(TAG, "showStandardSnackbar: called");
+		Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
+		        .setBackgroundTint(ContextCompat.getColor(this, R.color.white))
+		        .setTextColor(ContextCompat.getColor(this, R.color.black))
+		        .show();
+	}
+	
+	private FirebaseUser getCurrentUser() {
+		Log.d(TAG, "getCurrentUser: called");
+		return mFirebaseUser;
+	}
+	
+	public void onLogoutButtonClick(View view) {
+		Log.d(TAG, "onLogoutButtonClick: called");
+		handleLogout();
 	}
 	
 	@Override
@@ -130,6 +124,11 @@ public class ConfirmEmailActivity
 		}
 	}
 	
+	public void onChangeAndResendButtonClick(View view) {
+		Log.d(TAG, "onChangeAndResendButtonClick: called");
+		// TODO:
+	}
+	
 	private void handleLogout() {
 		Log.d(TAG, "handleLogout: called");
 		FirebaseAuth.getInstance()
@@ -137,22 +136,44 @@ public class ConfirmEmailActivity
 		finish();
 	}
 	
-	@Override
-	public void onClick(View v) {
-		Log.d(TAG, "onClick: called");
-		switch (v.getId()) {
-			case R.id.buttong2:
-				Log.d(TAG, "onClick: send again button");
-				Bundle extras = getIntent().getExtras();
-				if (extras != null &&
-				    extras.getParcelable(getString(R.string.firebaseUserKey)) != null) {
-					sendEmailVerification(extras.getParcelable(getString(R.string.firebaseUserKey)));
-				}
-				break;
-			case R.id.buttong1:
-				Log.d(TAG, "onClick: logout button");
-				handleLogout();
-				break;
+	public void onResendButtonClick(View view) {
+		Log.d(TAG, "onResendButtonClick: called");
+		sendEmailVerification(mFirebaseUser);
+	}
+	
+	private void sendEmailVerification(FirebaseUser user) {
+		Log.d(TAG, "sendEmailVerification: called");
+		ConstraintLayout snackbarView =
+				findViewById(R.id.confirm_email_activity_constraint_layout);
+		if (user != null) {
+			user.sendEmailVerification()
+			    .addOnSuccessListener(command -> {
+				    Log.d(TAG, "sendEmailVerification: great success");
+			    })
+			    .addOnFailureListener(e -> {
+				    Log.d(TAG, "sendEmailVerification: failure");
+				    Log.e(TAG, "sendEmailVerification: ", e);
+				    if (e instanceof com.google.firebase.FirebaseTooManyRequestsException) {
+					    showErrorSnackbar(snackbarView,
+					                      getString(R.string.too_many_attempts));
+					    return;
+				    }
+			    });
+		} else {
+			showErrorSnackbar(snackbarView, getString(R.string.user_should_not_be_here));
 		}
+	}
+	
+	private void showErrorSnackbar(View view, String message) {
+		Log.d(TAG, "showErrorSnackbar: called");
+		Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
+		        .setBackgroundTint(ContextCompat.getColor(this,
+		                                                  R.color.design_default_color_error))
+		        .show();
+	}
+	
+	public void onOpenEmailButtonClick(View view) {
+		Log.d(TAG, "onOpenEmailButtonClick: called");
+		// TODO:
 	}
 }

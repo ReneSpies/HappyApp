@@ -15,11 +15,13 @@
 		<com.google.android.material.button.MaterialButton
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			style="@style/Widget.HappyApp.ContainedButton"
 			android:text="@string/offer"/>
 		
 		<com.google.android.material.button.MaterialButton
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			style="@style/Widget.HappyApp.ContainedButton"
 			android:text="@string/looking"/>
 	</LinearLayout>
 </LinearLayout>

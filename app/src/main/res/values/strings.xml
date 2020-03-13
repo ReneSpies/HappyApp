@@ -150,5 +150,12 @@
 	<string name="subscriptionGold">happyapp.subscription.gold</string>
 	<string name="subscriptionPlatinum">happyapp.subscription.platinum</string>
 	<string name="googleTimeServerURL">time.google.com</string>
+	<string name="emailVerificationNotice">Please verify your email before continuing. \nVerification sent to:</string>
+	<string name="open_email">Open Email</string>
+	<string name="resend">Resend</string>
+	<string name="change_amp_resend"><![CDATA[Change & Resend]]></string>
+	<string name="user_should_not_be_here">Looks like you should not be here. Please try to restart or relog.</string>
+	<string name="_404">404</string>
+	<string name="too_many_attempts">Too many attempts. Please relax.</string>
 	<!--  -->
 </resources>
