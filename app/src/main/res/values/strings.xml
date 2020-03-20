@@ -157,5 +157,9 @@
 	<string name="user_should_not_be_here">Looks like you should not be here. Please try to restart or relog.</string>
 	<string name="_404">404</string>
 	<string name="too_many_attempts">Too many attempts. Please relax.</string>
+	<string name="chooser_title">Open Email</string>
+	<string name="no_suitable_app_found">No suitable app found</string>
+	<!-- TODO: Remove or change this placeholder text -->
+	<string name="hello_blank_fragment">Hello blank fragment</string>
 	<!--  -->
 </resources>

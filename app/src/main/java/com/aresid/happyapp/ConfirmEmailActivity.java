@@ -24,7 +24,8 @@ import com.google.firebase.auth.FirebaseUser;
  * Copyright: © 2019 Ares ID
  */
 public class ConfirmEmailActivity
-		extends AppCompatActivity {
+		extends AppCompatActivity
+		implements OnTextInputDialogInteractionListener {
 	private static final String       TAG                = "ConfirmEmailActivity";
 	private              int          mBackPressedHelper = 0;
 	private              FirebaseUser mFirebaseUser;
@@ -37,8 +38,7 @@ public class ConfirmEmailActivity
 		setContentView(R.layout.activity_confirm_email);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			mFirebaseUser =
-					extras.getParcelable(getString(R.string.firebaseUserKey));
+			mFirebaseUser = extras.getParcelable(getString(R.string.firebaseUserKey));
 			if (mFirebaseUser != null) {
 				setEmailTextViewText(mFirebaseUser.getEmail());
 				sendEmailVerification(mFirebaseUser);
@@ -126,7 +126,10 @@ public class ConfirmEmailActivity
 	
 	public void onChangeAndResendButtonClick(View view) {
 		Log.d(TAG, "onChangeAndResendButtonClick: called");
-		// TODO:
+		// TODO: Show TextInputDialog and receive data from it and then change the email
+		//  and resend the confirmation
+		TextInputDialog inputDialog = new TextInputDialog();
+		inputDialog.show(getSupportFragmentManager(), "Change email dialog");
 	}
 	
 	private void handleLogout() {
@@ -172,8 +175,68 @@ public class ConfirmEmailActivity
 		        .show();
 	}
 	
-	public void onOpenEmailButtonClick(View view) {
-		Log.d(TAG, "onOpenEmailButtonClick: called");
-		// TODO:
+	public void onOpenEmailButtonClicked(View view) {
+		Log.d(TAG, "onOpenEmailButtonClicked: called");
+		// Starts default email app on users phone or shows error message
+		Intent emailIntent = new Intent(Intent.ACTION_MAIN);
+		emailIntent.addCategory(Intent.CATEGORY_APP_EMAIL);
+		if (emailIntent.resolveActivity(getPackageManager()) != null) {
+			startActivity(emailIntent);
+		} else {
+			showErrorSnackbar(view, getString(R.string.no_suitable_app_found));
+		}
+	}
+	
+	@Override
+	public void transferTextInputText(String text) {
+		Log.d(TAG, "transferTextInputText: called");
+		changeEmail(text);
+	}
+	
+	private void changeEmail(String email) {
+		Log.d(TAG, "changeEmail: called");
+		FirebaseUser user = mFirebaseUser;
+		if (user == null) {
+			View snackbarView =
+					findViewById(R.id.confirm_email_activity_constraint_layout);
+			showErrorSnackbar(snackbarView, getString(R.string.user_should_not_be_here));
+			return;
+		}
+		changeToLoadingScreen();
+		user.updateEmail(email)
+		    .addOnSuccessListener(aVoid -> {
+			    Log.d(TAG, "changeEmail: great success");
+			    changeFromLoadingScreen();
+			    updateEmailView(user.getEmail());
+			    sendEmailVerification(user);
+		    })
+		    .addOnFailureListener(e -> {
+			    Log.d(TAG, "changeEmail: failure");
+			    Log.e(TAG, "changeEmail: ", e);
+			    changeFromLoadingScreen();
+			    // TODO: Error handling
+		    });
+	}
+	
+	private void changeToLoadingScreen() {
+		Log.d(TAG, "changeToLoadingScreen: called");
+		View loadingScreen = findViewById(R.id.loading_screen);
+		View mainView = findViewById(R.id.main_view);
+		loadingScreen.setVisibility(View.VISIBLE);
+		mainView.setVisibility(View.GONE);
+	}
+	
+	private void changeFromLoadingScreen() {
+		Log.d(TAG, "changeFromLoadingScreen: called");
+		View loadingScreen = findViewById(R.id.loading_screen);
+		View mainView = findViewById(R.id.main_view);
+		loadingScreen.setVisibility(View.GONE);
+		mainView.setVisibility(View.VISIBLE);
+	}
+	
+	private void updateEmailView(String email) {
+		Log.d(TAG, "updateEmailView: called");
+		TextView emailText = findViewById(R.id.confirm_email_activity_email_textview);
+		emailText.setText(email);
 	}
 }

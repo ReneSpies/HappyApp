@@ -1,82 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:layout_width="match_parent"
                                                    android:id="@+id/confirm_email_activity_constraint_layout"
+                                                   android:layout_width="match_parent"
                                                    android:layout_height="match_parent">
 	
-	<TextView
-		android:id="@+id/confirm_email_activity_confirmation_sent_textview"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="@string/emailVerificationNotice"
-		android:textAlignment="center"
-		android:textAppearance="?attr/textAppearanceHeadline5"
-		app:layout_constraintBottom_toTopOf="@+id/confirm_email_activity_email_textview"
-		app:layout_constraintTop_toTopOf="parent"/>
-	
-	<TextView
-		android:id="@+id/confirm_email_activity_email_textview"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:fontFamily="monospace"
-		android:text="@string/_404"
-		android:textAlignment="center"
-		android:textAppearance="?attr/textAppearanceHeadline6"
-		app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/confirm_email_activity_confirmation_sent_textview"/>
-	
-	<LinearLayout
-		android:id="@+id/linearLayout"
+	<ProgressBar
+		android:id="@+id/loading_screen"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
+		android:visibility="gone"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/confirm_email_activity_email_textview">
+		app:layout_constraintTop_toTopOf="parent"/>
+	
+	<androidx.constraintlayout.widget.ConstraintLayout
+		android:id="@+id/main_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="visible"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
 		
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/confirm_email_activity_open_email_button"
-			style="@style/Widget.HappyApp.ContainedButton"
+		<TextView
+			android:id="@+id/confirm_email_activity_confirmation_sent_textview"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:onClick="onOpenEmailButtonClick"
-			android:text="@string/open_email"/>
+			android:text="@string/emailVerificationNotice"
+			android:textAlignment="center"
+			android:textAppearance="?attr/textAppearanceHeadline5"
+			app:layout_constraintBottom_toTopOf="@+id/confirm_email_activity_email_textview"
+			app:layout_constraintTop_toTopOf="parent"/>
 		
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/buttong1"
-			style="@style/Widget.HappyApp.OutlinedButton"
+		<TextView
+			android:id="@+id/confirm_email_activity_email_textview"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:onClick="onResendButtonClick"
-			android:text="@string/resend"
+			android:fontFamily="monospace"
+			android:text="@string/_404"
+			android:textAlignment="center"
+			android:textAppearance="?attr/textAppearanceHeadline6"
+			app:layout_constraintBottom_toTopOf="@+id/linearLayout"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/confirm_email_activity_email_textview"/>
+			app:layout_constraintTop_toBottomOf="@+id/confirm_email_activity_confirmation_sent_textview"/>
 		
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/buttong2"
-			style="@style/Widget.HappyApp.OutlinedButton"
-			android:layout_width="match_parent"
+		<LinearLayout
+			android:id="@+id/linearLayout"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:onClick="onChangeAndResendButtonClick"
-			android:text="@string/change_amp_resend"
+			android:orientation="vertical"
+			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/buttong1"/>
-		
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/buttong3"
-			style="@style/Widget.HappyApp.OutlinedButton"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:onClick="onLogoutButtonClick"
-			android:text="@string/plainLogout"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/buttong2"/>
-	</LinearLayout>
+			app:layout_constraintTop_toBottomOf="@+id/confirm_email_activity_email_textview">
+			
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/open_email_button"
+				style="@style/Widget.HappyApp.ContainedButton"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:onClick="onOpenEmailButtonClicked"
+				android:text="@string/open_email"/>
+			
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/resend_button"
+				style="@style/Widget.HappyApp.OutlinedButton"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:onClick="onResendButtonClick"
+				android:text="@string/resend"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/confirm_email_activity_email_textview"/>
+			
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/change_resend_button"
+				style="@style/Widget.HappyApp.OutlinedButton"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:onClick="onChangeAndResendButtonClick"
+				android:text="@string/change_amp_resend"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/resend_button"/>
+			
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/logout_button"
+				style="@style/Widget.HappyApp.OutlinedButton"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:onClick="onLogoutButtonClick"
+				android:text="@string/plainLogout"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@id/change_resend_button"/>
+		</LinearLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

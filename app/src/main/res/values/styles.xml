@@ -42,7 +42,7 @@
 		<item name="boxCornerRadiusTopEnd">@dimen/textInputLayoutCornerRadius</item>
 	</style>
 	
-	<style name="Widget.HappyApp.ContainedButton">
+	<style name="Widget.HappyApp.ContainedButton" parent="Widget.MaterialComponents.Button">
 		<item name="cornerRadius">@dimen/buttonStandardCornerRadius</item>
 		<item name="backgroundTint">@color/colorPrimary</item>
 		<item name="rippleColor">@color/rippleColor</item>
