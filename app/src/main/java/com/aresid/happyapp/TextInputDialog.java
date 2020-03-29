@@ -48,14 +48,14 @@ public class TextInputDialog
 		View view = requireActivity().getLayoutInflater()
 		                             .inflate(R.layout.view_text_input_dialog, null);
 		builder.setView(view);
-		builder.setPositiveButton("Ok", (dialog, which) -> {
+		builder.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
 			if (mListener != null) {
 				TextInputEditText emailField = view.findViewById(R.id.email_field);
 				mListener.transferTextInputText(emailField.getText()
 				                                          .toString());
 			}
 		});
-		builder.setNegativeButton("Cancel", (dialog, which) -> {});
+		builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> {});
 		return builder.create();
 	}
 }

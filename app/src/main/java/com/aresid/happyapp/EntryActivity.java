@@ -183,6 +183,13 @@ public class EntryActivity
 		super.onDestroy();
 	}
 	
+	@Override
+	protected void onStop() {
+		Log.d(TAG, "onStop: called");
+		super.onStop();
+		changeFromLoadingScreen();
+	}
+	
 	/**
 	 * Now this does some fancy stuff. Checks if all the data is correct and then
 	 * proceeds to Google billing flow.
@@ -927,7 +934,6 @@ public class EntryActivity
 				    Log.d(TAG, "updateUI: great success");
 				    // cancels the toast after user has been reloaded.
 				    toast.cancel();
-				    changeFromLoadingScreen();
 				    if (user.isEmailVerified()) {
 					    startMainActivity(user);
 				    } else {
@@ -1026,8 +1032,7 @@ public class EntryActivity
 	public void onLoginGoogleButtonClick(View view) {
 		Log.d(TAG, "onLoginGoogleButtonClick: called");
 		int loginRequestCode = getResources().getInteger(R.integer.loginRequestCode);
-		GoogleSignInOptions gso =
-				new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken("930375194703-47k2c1ei15jgupng4ao2f5be1sgktqds.apps.googleusercontent.com")
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id))
 		                                                                                              .requestProfile()
 		                                                                                              .requestEmail()
 		                                                                                              .build();

@@ -29,6 +29,10 @@
             "package_name": "com.aresid.happyapp",
             "certificate_hash": "6b8e3068b9873f25e4959c2845270e8aad9a63f8"
           }
+        },
+        {
+          "client_id": "930375194703-47k2c1ei15jgupng4ao2f5be1sgktqds.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
