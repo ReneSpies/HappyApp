@@ -22,14 +22,14 @@ public class ButtonlessLogin
 		if (context instanceof OnButtonlessLoginInteractionListener) {
 			mListener = (OnButtonlessLoginInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement " +
-			                           "OnButtonlessInteractionListener");
+			throw new RuntimeException(
+					context.toString() + " must implement " + "OnButtonlessInteractionListener");
 		}
 	}
 	
 	@Override
 	public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-		Log.d(TAG, "beforeTextChanged:true");
+		Log.d(TAG, "beforeTextChanged: called");
 		if (start < after) {
 			new Handler().postDelayed(() -> mListener.onFinishedTyping(), 1300);
 		}
@@ -37,12 +37,12 @@ public class ButtonlessLogin
 	
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
-		Log.d(TAG, "onTextChanged:true");
+		Log.d(TAG, "onTextChanged: called");
 	}
 	
 	@Override
 	public void afterTextChanged(Editable s) {
-		Log.d(TAG, "afterTextChanged:true");
+		Log.d(TAG, "afterTextChanged: called");
 	}
 	
 	interface OnButtonlessLoginInteractionListener {

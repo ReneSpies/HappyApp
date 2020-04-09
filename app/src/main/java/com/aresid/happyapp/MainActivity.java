@@ -19,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Timer;
@@ -34,14 +35,10 @@ public class MainActivity
 		           HomeFragment.OnFragmentInteractionListener,
 		           OfferFragment.OnFragmentInteractionListener,
 		           LookFragment.OnFragmentInteractionListener {
-	private static final String              FIREBASE_USER_INTENT_KEY         =
-			"firesbase_user";
-	private static final String              GOOGLE_SIGNIN_ACCOUNT_INTENT_KEY =
-			"google_sign_in_account";
-	private static final String              USER_FIRESTORE_ID_INTENT_KEY     =
-			"user_firestore_id";
-	private static final String              TAG                              =
-			"MainActivity";
+	private static final String              FIREBASE_USER_INTENT_KEY         = "firesbase_user";
+	private static final String              GOOGLE_SIGNIN_ACCOUNT_INTENT_KEY = "google_sign_in_account";
+	private static final String              USER_FIRESTORE_ID_INTENT_KEY     = "user_firestore_id";
+	private static final String              TAG                              = "MainActivity";
 	private              FirebaseUser        mFirebaseUser;
 	private              GoogleSignInAccount mSignInAccount;
 	private              String              mUserFirestoreID;
@@ -53,8 +50,7 @@ public class MainActivity
 		Log.d(TAG, "onCreate:true");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		SharedPreferences sharedPreferences =
-				PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		//		// Check if we need to display our OnboardingFragment
 		//		if (!sharedPreferences.getBoolean(OnboardingFragment
 		//		.COMPLETED_ONBOARDING_PREF_NAME, false))
@@ -71,8 +67,7 @@ public class MainActivity
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
-		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-		                                                         R.string.navigationDrawerOpen, R.string.navigationDrawerClose);
+		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigationDrawerOpen, R.string.navigationDrawerClose);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 		displayHomeFragment();
@@ -91,8 +86,7 @@ public class MainActivity
 	//}
 	private void displayHomeFragment() {
 		Log.d(TAG, "displayHomeFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container,
-		                                          HomeFragment.newInstance());
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, HomeFragment.newInstance());
 	}
 	
 	/**
@@ -114,8 +108,7 @@ public class MainActivity
 	
 	private void displayMyAccountFragment() {
 		Log.d(TAG, "displayMyAccountFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container,
-		                                          MyAccountFragment.newInstance());
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, MyAccountFragment.newInstance());
 	}
 	
 	/**
@@ -168,15 +161,28 @@ public class MainActivity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.d(TAG, "onOptionsItemSelected:true");
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up mButton, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		// noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
-			return true;
+		switch (item.getItemId()) {
+			case R.id.action_settings:
+				break;
+			case R.id.action_contact:
+				break;
+			case R.id.action_logout:
+				onToolbarMenuLogoutClicked();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void onToolbarMenuLogoutClicked() {
+		Log.d(TAG, "onToolbarMenuLogoutClicked: called");
+		FirebaseAuth.getInstance()
+		            .signOut();
+		FirebaseAuth.getInstance()
+		            .addAuthStateListener(auth -> {
+			            if (auth.getCurrentUser() == null) {
+				            finish();
+			            }
+		            });
 	}
 	
 	@Override
@@ -207,14 +213,12 @@ public class MainActivity
 	
 	private void displaySearchFragment() {
 		Log.d(TAG, "displaySearchFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container,
-		                                          SearchFragment.newInstance());
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, SearchFragment.newInstance());
 	}
 	
 	private void displayFavoritesFragment() {
 		Log.d(TAG, "displayFavoritesFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container,
-		                                          FavoritesFragment.newInstance());
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, FavoritesFragment.newInstance());
 	}
 	
 	private void displayAdvertisementFragment() {
@@ -241,8 +245,7 @@ public class MainActivity
 	
 	private void displayLookFragment() {
 		Log.d(TAG, "displayLookFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container,
-		                                          LookFragment.newInstance());
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, LookFragment.newInstance());
 	}
 	
 	/**
@@ -257,7 +260,6 @@ public class MainActivity
 	
 	private void displayOfferFragment() {
 		Log.d(TAG, "displayOfferFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container,
-		                                          OfferFragment.newInstance());
+		new DisplayFragment(this).displayFragment(R.id.fragment_container, OfferFragment.newInstance());
 	}
 }

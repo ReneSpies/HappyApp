@@ -19,15 +19,12 @@ public class EmailVerificationFragment
 		extends Fragment
 		implements View.OnClickListener {
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String                        ARG_FIREBASE_USER    =
-			"firebaseUser";
+	private static final String                        ARG_FIREBASE_USER    = "firebaseUser";
 	private static final String                        PREFERENCES_ID       = "userID";
-	private static final String                        FIRESTORE_FIRST_NAME =
-			"firstName";
+	private static final String                        FIRESTORE_FIRST_NAME = "firstName";
 	private static final String                        FIRESTORE_SURNAME    = "surname";
 	private static final String                        FIRESTORE_EMAIL      = "email";
-	private final        String                        TAG                  =
-			getClass().getSimpleName();
+	private final        String                        TAG                  = getClass().getSimpleName();
 	private              Context                       mContext;
 	private              FirebaseUser                  mFirebaseUser;
 	private              Button                        mBackButton;
@@ -53,8 +50,8 @@ public class EmailVerificationFragment
 		if (context instanceof OnFragmentInteractionListener) {
 			mFragmentInteractionListener = (OnFragmentInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement " +
-			                           "OnFragmentInteractionListener");
+			throw new RuntimeException(
+					context.toString() + " must implement " + "OnFragmentInteractionListener");
 		}
 		this.mContext = context;
 	}
@@ -125,20 +122,18 @@ public class EmailVerificationFragment
 		user.sendEmailVerification()
 		    .addOnSuccessListener(aVoid -> {
 			    Log.d(TAG, "onSuccess:true");
-			    Toast.makeText(mContext, "Verification Email sent to " +
-			                             user.getEmail(), Toast.LENGTH_SHORT)
+			    Toast.makeText(mContext, "Verification Email sent to " + user.getEmail(), Toast.LENGTH_SHORT)
 			         .show();
 		    })
 		    .addOnFailureListener(e -> {
 			    // TODO: onFailure handling!
 			    Log.e(TAG, "onFailure:true", e);
 			    if (e instanceof com.google.firebase.FirebaseTooManyRequestsException) {
-				    Toast.makeText(mContext, "Hey Flash, not so fast. Try again in a " +
-				                             "minute.", Toast.LENGTH_SHORT)
+				    Toast.makeText(mContext,
+				                   "Hey Flash, not so fast. Try again in a " + "minute.", Toast.LENGTH_SHORT)
 				         .show();
 			    } else {
-				    Toast.makeText(getContext(),
-				                   getString(R.string.verificationEmailFail),
+				    Toast.makeText(getContext(), getString(R.string.verificationEmailFail),
 				                   Toast.LENGTH_LONG)
 				         .show();
 			    }

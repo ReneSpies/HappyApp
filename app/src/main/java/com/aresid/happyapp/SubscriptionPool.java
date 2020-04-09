@@ -27,8 +27,7 @@ class SubscriptionPool {
 	 */
 	SubscriptionPool sort() {
 		Log.d(TAG, "sort:true");
-		Collections.sort(mSubscriptions, (o1, o2) -> o1.getPriority() -
-		                                             (o2.getPriority()));
+		Collections.sort(mSubscriptions, (o1, o2) -> o1.getPriority() - (o2.getPriority()));
 		return this;
 	}
 	

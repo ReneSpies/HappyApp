@@ -51,8 +51,8 @@ public class HomeFragment
 		if (context instanceof OnFragmentInteractionListener) {
 			mListener = (OnFragmentInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement " +
-			                           "OnFragmentInteractionListener");
+			throw new RuntimeException(
+					context.toString() + " must implement " + "OnFragmentInteractionListener");
 		}
 	}
 	
@@ -66,8 +66,7 @@ public class HomeFragment
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_home, container, false);
 	}
@@ -78,8 +77,7 @@ public class HomeFragment
 		String[] names = new String[] {
 				"Sabine", "Saskia", "Caro"
 		};
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-		                                                  R.layout.item_home_list,
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.item_home_list,
 		                                                  R.id.home_name, names);
 		ListView listView = view.findViewById(R.id.home_list);
 		listView.setAdapter(adapter);

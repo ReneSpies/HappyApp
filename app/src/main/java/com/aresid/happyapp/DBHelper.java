@@ -52,24 +52,19 @@ public class DBHelper
 			db.execSQL("PRAGMA foreign_keys = ON;");
 			// Create Userdata table.
 			// This one is first because it gets referenced.
-			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_USERDATA + "(" +
-			           TABLE_USERDATA_COLUMN_NAMES[0] +
-			           " TEXT PRIMARY KEY NOT NULL UNIQUE," +
-			           TABLE_USERDATA_COLUMN_NAMES[1] + " TEXT NOT NULL," + " " +
-			           TABLE_USERDATA_COLUMN_NAMES[2] + " TEXT NOT NULL, " +
-			           TABLE_USERDATA_COLUMN_NAMES[3] + "TEXT NOT NULL, " +
-			           TABLE_USERDATA_COLUMN_NAMES[4] + " TEXT NOT NULL, " +
-			           TABLE_USERDATA_COLUMN_NAMES[5] + " TEXT NOT NULL, " +
+			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_USERDATA + "(" + TABLE_USERDATA_COLUMN_NAMES[0] +
+			           " TEXT PRIMARY KEY NOT NULL UNIQUE," + TABLE_USERDATA_COLUMN_NAMES[1] +
+			           " TEXT NOT NULL," + " " + TABLE_USERDATA_COLUMN_NAMES[2] + " TEXT NOT NULL, " +
+			           TABLE_USERDATA_COLUMN_NAMES[3] + "TEXT NOT NULL, " + TABLE_USERDATA_COLUMN_NAMES[4] +
+			           " TEXT NOT NULL, " + TABLE_USERDATA_COLUMN_NAMES[5] + " TEXT NOT NULL, " +
 			           TABLE_USERDATA_COLUMN_NAMES[6] + " REAL NOT NULL);");
 			// Create Subscriptions table.
 			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_SUBSCRIPTIONS + "(" +
 			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[0] + " BLOB NOT NULL, " +
-			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] +
-			           "TEXT PRIMARY KEY NOT NULL, " +
+			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + "TEXT PRIMARY KEY NOT NULL, " +
 			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[2] + " TEXT NOT NULL, " +
 			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[3] + " TEXT NOT NULL," +
-			           "CONSTRAINT SubscriptionFK FOREIGN KEY(" +
-			           TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + ")" +
+			           "CONSTRAINT SubscriptionFK FOREIGN KEY(" + TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + ")" +
 			           "REFERENCES Userdata(" + TABLE_USERDATA_COLUMN_NAMES[0] + ")" +
 			           "ON DELETE RESTRICT ON UPDATE CASCADE);");
 			Log.d(TAG, "onCreate: Database created in: " + db.getPath());
@@ -107,8 +102,8 @@ public class DBHelper
 		if (cursor.moveToNext()) {
 			for (int i = 0; i < cursor.getColumnCount(); i++) {
 				mapOfUserInfo.put(cursor.getColumnName(i), cursor.getString(i));
-				Log.d(TAG, "getUserdata: mapOfUserInfo updated = " +
-				           mapOfUserInfo.get(cursor.getColumnName(i)));
+				Log.d(TAG,
+				      "getUserdata: mapOfUserInfo updated = " + mapOfUserInfo.get(cursor.getColumnName(i)));
 			}
 		}
 		cursor.close();
@@ -118,9 +113,8 @@ public class DBHelper
 	/**
 	 * Insert new userdata into the database.
 	 */
-	void insertUser(String firestoreID, String firstName, String surname, String email,
-	                String password, String birthdate,
-	                String acceptedLegalitiesVersion) {
+	void insertUser(String firestoreID, String firstName, String surname, String email, String password,
+	                String birthdate, String acceptedLegalitiesVersion) {
 		Log.d(TAG, "insertUser:true");
 		Log.d(TAG, "insertUser: firestoreID = " + firestoreID);
 		Log.d(TAG, "insertUser: firstName = " + firstName);
@@ -128,8 +122,7 @@ public class DBHelper
 		Log.d(TAG, "insertUser: email = " + email);
 		Log.d(TAG, "insertUser: password = " + password);
 		Log.d(TAG, "insertUser: birthdate = " + birthdate);
-		Log.d(TAG,
-		      "insertUser: acceptedLegalitiesVersion = " + acceptedLegalitiesVersion);
+		Log.d(TAG, "insertUser: acceptedLegalitiesVersion = " + acceptedLegalitiesVersion);
 		ContentValues values = new ContentValues();
 		values.put(TABLE_USERDATA_COLUMN_NAMES[0], firestoreID);
 		values.put(TABLE_USERDATA_COLUMN_NAMES[1], firstName);
@@ -155,8 +148,7 @@ public class DBHelper
 	 * SharedPrefs to see if it has changed.
 	 * If it has changed it gets updated from there only.
 	 */
-	void insertSubscription(Bitmap icon, String title, String description,
-	                        String price) {
+	void insertSubscription(Bitmap icon, String title, String description, String price) {
 		Log.d(TAG, "insertSubscription:true");
 		Log.d(TAG, "insertSubscription: icon = " + icon);
 		Log.d(TAG, "insertSubscription: title = " + title);
@@ -189,8 +181,8 @@ public class DBHelper
 		SQLiteDatabase db = getReadableDatabase();
 		// The Cursor that holds the data I retrieve from the DB via query method.
 		Cursor cursor = db.query(TABLE_SUBSCRIPTIONS, arrayOfColumns,
-		                         TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + " = '" +
-		                         subscriptionName + "'", null, null, null, null);
+		                         TABLE_SUBSCRIPTIONS_COLUMN_NAMES[1] + " = '" + subscriptionName +
+		                         "'", null, null, null, null);
 		HashMap<String, String> mapOfSubscriptionData = new HashMap<>();
 		if (cursor.moveToNext()) {
 			for (int i = 0; i < cursor.getColumnCount(); i++) {

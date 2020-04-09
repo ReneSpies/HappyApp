@@ -33,8 +33,7 @@ public class SubsPagerInitAdapter
 	public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		Log.d(TAG, "onCreateViewHolder: called");
 		View view = LayoutInflater.from(mContext)
-		                          .inflate(R.layout.content_subspagerinitadapter, parent
-				                          , false);
+		                          .inflate(R.layout.content_subspagerinitadapter, parent, false);
 		mLoadingScreen = view.findViewById(R.id.init_adapter_loading_screen);
 		mRetryScreen = view.findViewById(R.id.init_adapter_retry_screen);
 		if (mRetryScreenIsNeeded) {

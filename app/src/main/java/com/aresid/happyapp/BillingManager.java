@@ -55,13 +55,10 @@ public class BillingManager
 			@Override
 			public void onBillingSetupFinished(BillingResult billingResult) {
 				Log.d(TAG, "onBillingSetupFinished:true");
-				if (billingResult.getResponseCode() ==
-				    BillingClient.BillingResponseCode.OK) {
-					Log.i(TAG, "onBillingSetupFinished: result = " +
-					           billingResult.getResponseCode());
+				if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+					Log.i(TAG, "onBillingSetupFinished: result = " + billingResult.getResponseCode());
 				} else {
-					Log.w(TAG, "onBillingSetupFinished: result = " +
-					           billingResult.getResponseCode());
+					Log.w(TAG, "onBillingSetupFinished: result = " + billingResult.getResponseCode());
 				}
 			}
 			
@@ -87,7 +84,8 @@ public class BillingManager
 		return SKUS.get(type);
 	}
 	
-	void querySkuDetailsAsync(@BillingClient.SkuType final String skuType, final List<String> skuList, final SkuDetailsResponseListener listener) {
+	void querySkuDetailsAsync(@BillingClient.SkuType final String skuType, final List<String> skuList,
+	                          final SkuDetailsResponseListener listener) {
 		Log.d(TAG, "querySkuDetailsAsync:true");
 		SkuDetailsParams params = SkuDetailsParams.newBuilder()
 		                                          .setSkusList(skuList)

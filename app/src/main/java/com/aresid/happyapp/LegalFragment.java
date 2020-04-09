@@ -18,8 +18,7 @@ public class LegalFragment
 		extends Fragment
 		implements Button.OnClickListener {
 	private static final String                        ARG_USER    = "firebaseUser";
-	private static final String                        ARG_ACCOUNT =
-			"googleSignInAccount";
+	private static final String                        ARG_ACCOUNT = "googleSignInAccount";
 	private static final String                        ARG_USER_ID = "userID";
 	private final        String                        TAG         = getTag();
 	private              OnFragmentInteractionListener mFragmentInteractionListener;
@@ -32,8 +31,7 @@ public class LegalFragment
 		// Required empty public constructor
 	}
 	
-	public static LegalFragment newInstance(FirebaseUser user,
-	                                        GoogleSignInAccount account, String userID) {
+	public static LegalFragment newInstance(FirebaseUser user, GoogleSignInAccount account, String userID) {
 		Log.d("static", "newInstance:true");
 		LegalFragment fragment = new LegalFragment();
 		Bundle args = new Bundle();
@@ -51,8 +49,8 @@ public class LegalFragment
 		if (context instanceof OnFragmentInteractionListener) {
 			mFragmentInteractionListener = (OnFragmentInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement " +
-			                           "OnFragmentInteractionListener");
+			throw new RuntimeException(
+					context.toString() + " must implement " + "OnFragmentInteractionListener");
 		}
 	}
 	
@@ -66,8 +64,7 @@ public class LegalFragment
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView:true");
 		// Inflate the layout for this fragment
 		View rootView = inflater.inflate(R.layout.fragment_legal, container, false);
@@ -119,8 +116,7 @@ public class LegalFragment
 	}
 	
 	public interface OnFragmentInteractionListener {
-		void startMainActivity(FirebaseUser user, GoogleSignInAccount account,
-		                       String userID);
+		void startMainActivity(FirebaseUser user, GoogleSignInAccount account, String userID);
 		void displayPrivacyPolicyDialog();
 	}
 }

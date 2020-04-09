@@ -49,8 +49,8 @@ public class MyAccountFragment
 		if (context instanceof OnFragmentInteractionListener) {
 			mListener = (OnFragmentInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement " +
-			                           "OnFragmentInteractionListener");
+			throw new RuntimeException(
+					context.toString() + " must implement " + "OnFragmentInteractionListener");
 		}
 	}
 	
@@ -60,8 +60,7 @@ public class MyAccountFragment
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	                         Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_my_account, container, false);
 	}

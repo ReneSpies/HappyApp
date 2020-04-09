@@ -34,9 +34,8 @@ public class TextInputDialog
 		if (context instanceof OnTextInputDialogInteractionListener) {
 			mListener = (OnTextInputDialogInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() +
-			                           " must implement " +
-			                           "OnTextInputDialogInteractionListener");
+			throw new RuntimeException(
+					context.toString() + " must implement " + "OnTextInputDialogInteractionListener");
 		}
 	}
 	

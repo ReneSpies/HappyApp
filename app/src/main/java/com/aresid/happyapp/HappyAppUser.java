@@ -49,9 +49,8 @@ public class HappyAppUser {
 	 * @param subscriptionVariant Users subscription variant.
 	 * @param profilePictureUrl   Users profile picture.
 	 */
-	HappyAppUser(String uid, String firstName, String familyName, String dateOfBirth,
-	             String username, Subscription subscriptionVariant,
-	             Uri profilePictureUrl) {
+	HappyAppUser(String uid, String firstName, String familyName, String dateOfBirth, String username,
+	             Subscription subscriptionVariant, Uri profilePictureUrl) {
 		Log.d(TAG, "HappyAppUser: constructor 1");
 		mUid = uid;
 		init();

@@ -29,8 +29,8 @@ public class RetrieveInternetTime
 		if (context instanceof OnInternetTimeInteractionListener) {
 			mListener = (OnInternetTimeInteractionListener) context;
 		} else {
-			throw new RuntimeException(context.toString() + " must implement " +
-			                           "OnInternetTimeInteractionListener");
+			throw new RuntimeException(
+					context.toString() + " must implement " + "OnInternetTimeInteractionListener");
 		}
 		mUid = uid;
 	}
