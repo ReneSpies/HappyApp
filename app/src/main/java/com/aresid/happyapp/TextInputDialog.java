@@ -14,7 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.textfield.TextInputEditText;
 
 interface OnTextInputDialogInteractionListener {
-	void transferTextInputText(String text);
+	void onTextInputDialogPositiveButtonClicked(String text);
 }
 
 /**
@@ -35,7 +35,7 @@ public class TextInputDialog
 			mListener = (OnTextInputDialogInteractionListener) context;
 		} else {
 			throw new RuntimeException(
-					context.toString() + " must implement " + "OnTextInputDialogInteractionListener");
+					context.toString() + " must implement OnTextInputDialogInteractionListener");
 		}
 	}
 	
@@ -50,8 +50,8 @@ public class TextInputDialog
 		builder.setPositiveButton(getString(R.string.ok), (dialog, which) -> {
 			if (mListener != null) {
 				TextInputEditText emailField = view.findViewById(R.id.email_field);
-				mListener.transferTextInputText(emailField.getText()
-				                                          .toString());
+				mListener.onTextInputDialogPositiveButtonClicked(emailField.getText()
+				                                                           .toString());
 			}
 		});
 		builder.setNegativeButton(getString(R.string.cancel), (dialog, which) -> {});

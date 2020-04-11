@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<integer name="double_back_press_time">6130</integer>
+</resources>

@@ -163,117 +163,6 @@ public class EntryActivity
 		super.onDestroy();
 	}
 	
-	void updateUI(FirebaseUser user) {
-		Log.d(TAG, "updateUI: called");
-		if (user != null) {
-			changeToLoadingScreen();
-			Toast toast = Toast.makeText(this, getString(R.string.plainReloadingUserInformation),
-			                             Toast.LENGTH_LONG);
-			toast.show();
-			user.reload()
-			    .addOnSuccessListener(command -> {
-				    Log.d(TAG, "updateUI: great success");
-				    // cancels the toast after user has been reloaded.
-				    toast.cancel();
-				    if (user.isEmailVerified()) {
-					    startMainActivity(user);
-				    } else {
-					    startConfirmEmailActivity(user);
-				    }
-			    })
-			    .addOnFailureListener(e -> {
-				    // if user info cannot be reloaded somehow.
-				    Log.d(TAG, "updateUI: failure");
-				    Log.e(TAG, "updateUI: ", e);
-				    // TODO
-				    if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
-					    // if user has been deleted in the meantime.
-					    Toast.makeText(this, getString(R.string.errorUserNotFound), Toast.LENGTH_LONG)
-					         .show();
-					    // log non-existing user out.
-					    mAuth.signOut();
-					    // change to normal screen after logout.
-					    changeFromLoadingScreen();
-				    }
-			    });
-		} else {
-			Log.d(TAG, "updateUI: user == null");
-			// no user logged in.
-			// TODO
-			changeFromLoadingScreen();
-		}
-	}
-	
-	/**
-	 * Updates Google's user account in the Firestore.
-	 *
-	 * @param user     Used to load the user.getUid() into the database.
-	 * @param username The username to load into the database.
-	 * @param dob      The Date of birth to load into the database.
-	 */
-	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
-		Log.d(TAG, "updateGoogleUser: called");
-		HashMap<String, Object> info = new HashMap<>();
-		info.put(FirestoreNames.COLUMN_USERNAME, username);
-		info.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
-		FirebaseFirestore db = getFirestoreInstance();
-		db.collection(FirestoreNames.COLLECTION_USERS)
-		  .document(user.getUid())
-		  .update(info)
-		  .addOnSuccessListener(aVoid -> {
-			  Log.d(TAG, "updateGoogleUser: success");
-			  updateUI(user);
-		  })
-		  .addOnFailureListener(e -> {
-			  Log.d(TAG, "updateGoogleUser: failure");
-			  Log.e(TAG, "updateGoogleUser: ", e);
-//			  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View
-//			  .INVISIBLE);
-		  });
-	}
-	
-	/**
-	 * Changes to loading screen.
-	 */
-	private void changeToLoadingScreen() {
-		Log.d(TAG, "changeToLoadingScreen: called");
-		findViewById(R.id.entry_activity_loading_screen).setVisibility(View.VISIBLE);
-		findViewById(R.id.entry_activity_scroll_view).setVisibility(View.GONE);
-	}
-	
-	/**
-	 * Starts main activity.
-	 *
-	 * @param user Firebase user.
-	 */
-	void startMainActivity(FirebaseUser user) {
-		Log.d(TAG, "startMainActivity: called");
-		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra(getString(R.string.firebaseUserKey), user);
-		startActivity(intent);
-	}
-	
-	/**
-	 * Starts new activity to tell the user to verify his email.
-	 *
-	 * @param user Firebase user.
-	 */
-	void startConfirmEmailActivity(FirebaseUser user) {
-		Log.d(TAG, "startConfirmEmailActivity: called");
-		Intent intent = new Intent(this, ConfirmEmailActivity.class);
-		intent.putExtra(getString(R.string.firebaseUserKey), user);
-		startActivity(intent);
-	}
-	
-	/**
-	 * Changes from loading screen back to normal.
-	 */
-	private void changeFromLoadingScreen() {
-		Log.d(TAG, "changeFromLoadingScreen: called");
-		findViewById(R.id.entry_activity_loading_screen).setVisibility(View.GONE);
-		findViewById(R.id.entry_activity_scroll_view).setVisibility(View.VISIBLE);
-	}
-	
 	/**
 	 * Now this does some fancy stuff. Checks if all the data is correct and then
 	 * proceeds to Google billing flow.
@@ -376,8 +265,23 @@ public class EntryActivity
 						  // Username is available
 						  // TODO: Subscribe and when successful, create new user and
 						  //  continue
-						  launchBillingFlow(details); /* Continue with
-						  onPurchasesUpdated() */
+						  mAuth.fetchSignInMethodsForEmail(email)
+						       .addOnSuccessListener(result -> {
+							       Log.d(TAG, "startRegistrationFlow: great success");
+							       // Result sign in methods must be null or else the email is already in use
+							       if (result.getSignInMethods()
+							                 .size() == 0) {
+								       launchBillingFlow(details); /* onPurchasesUpdated() */
+							       } else {
+								       // Email is already used
+								       smoothScrollTo(registrationUsernameFieldLayout.getBottom());
+								       registrationEmailFieldLayout.setError(getString(R.string.errorThisEmailIsAlreadyInUse));
+							       }
+						       })
+						       .addOnFailureListener(e -> {
+							       Log.d(TAG, "startRegistrationFlow: failure");
+							       Log.e(TAG, "startRegistrationFlow: ", e);
+						       });
 					  } else {
 						  // Username is already taken
 						  enableViews(registrationFirstNameFieldLayout, registrationFamilyNameFieldLayout,
@@ -400,6 +304,84 @@ public class EntryActivity
 				  });
 			}
 		}
+	}
+	
+	/**
+	 * Updates Google's user account in the Firestore.
+	 *
+	 * @param user     Used to load the user.getUid() into the database.
+	 * @param username The username to load into the database.
+	 * @param dob      The Date of birth to load into the database.
+	 */
+	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
+		Log.d(TAG, "updateGoogleUser: called");
+		HashMap<String, Object> info = new HashMap<>();
+		info.put(FirestoreNames.COLUMN_USERNAME, username);
+		info.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
+		FirebaseFirestore db = getFirestoreInstance();
+		db.collection(FirestoreNames.COLLECTION_USERS)
+		  .document(user.getUid())
+		  .update(info)
+		  .addOnSuccessListener(aVoid -> {
+			  Log.d(TAG, "updateGoogleUser: success");
+			  updateUI(user);
+		  })
+		  .addOnFailureListener(e -> {
+			  Log.d(TAG, "updateGoogleUser: failure");
+			  Log.e(TAG, "updateGoogleUser: ", e);
+//			  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View
+//			  .INVISIBLE);
+		  });
+	}
+	
+	/**
+	 * Changes to loading screen.
+	 */
+	private void changeToLoadingScreen() {
+		Log.d(TAG, "changeToLoadingScreen: called");
+		findViewById(R.id.entry_activity_loading_screen).setVisibility(View.VISIBLE);
+		findViewById(R.id.entry_activity_scroll_view).setVisibility(View.GONE);
+	}
+	
+	/**
+	 * Starts main activity.
+	 *
+	 * @param user Firebase user.
+	 */
+	void startMainActivity(FirebaseUser user) {
+		Log.d(TAG, "startMainActivity: called");
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra(getString(R.string.firebaseUserKey), user);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Starts new activity to tell the user to verify his email.
+	 *
+	 * @param user Firebase user.
+	 */
+	void startConfirmEmailActivity(FirebaseUser user) {
+		Log.d(TAG, "startConfirmEmailActivity: called");
+		Intent intent = new Intent(this, ConfirmEmailActivity.class);
+		intent.putExtra(getString(R.string.firebaseUserKey), user);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Changes from loading screen back to normal.
+	 */
+	private void changeFromLoadingScreen() {
+		Log.d(TAG, "changeFromLoadingScreen: called");
+		findViewById(R.id.entry_activity_loading_screen).setVisibility(View.GONE);
+		findViewById(R.id.entry_activity_scroll_view).setVisibility(View.VISIBLE);
+	}
+	
+	private void launchBillingFlow(SkuDetails details) {
+		Log.d(TAG, "launchBillingFlow: called");
+		BillingFlowParams params = BillingFlowParams.newBuilder()
+		                                            .setSkuDetails(details)
+		                                            .build();
+		mBillingClient.launchBillingFlow(this, params); /* onPurchasesUpdated() */
 	}
 	
 	/**
@@ -469,12 +451,41 @@ public class EntryActivity
 		}
 	}
 	
-	private void launchBillingFlow(SkuDetails details) {
-		Log.d(TAG, "launchBillingFlow: called");
-		BillingFlowParams params = BillingFlowParams.newBuilder()
-		                                            .setSkuDetails(details)
-		                                            .build();
-		mBillingClient.launchBillingFlow(this, params);
+	/**
+	 * Registers a new firebase user via Google sign in.
+	 *
+	 * @param account The Google account.
+	 */
+	private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
+		Log.d(TAG, "firebaseAuthWithGoogleAccount: called");
+		AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+		mAuth.signInWithCredential(authCredential)
+		     .addOnSuccessListener(command -> {
+			     Log.d(TAG, "firebaseAuthWithGoogleAccount: great success");
+			     // Login success.
+			     FirebaseUser user = command.getUser();
+			     if (command.getAdditionalUserInfo() != null && user != null) {
+				     if (command.getAdditionalUserInfo()
+				                .isNewUser()) {
+					     Log.d(TAG, "firebaseAuthWithGoogleAccount: user is new");
+					     saveUserInFirestore(user);
+				     } else {
+					     updateUI(user);
+				     }
+			     } else {
+				     // Something went wrong
+				     Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain),
+				                    Toast.LENGTH_SHORT)
+				          .show();
+				     changeFromLoadingScreen();
+			     }
+		     })
+		     .addOnFailureListener(e -> {
+			     Log.e(TAG, "firebaseAuthWithGoogleAccount: ", e);
+			     Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_SHORT)
+			          .show();
+			     changeFromLoadingScreen();
+		     });
 	}
 	
 	private void enableViews(@NonNull View... views) {
@@ -654,97 +665,17 @@ public class EntryActivity
 		}
 	}
 	
-	/**
-	 * Changes EditTexts to Google registration input since Google account do not have a
-	 * username or date of birth yet.
-	 */
-	private void changeToGoogleRegistration() {
-		Log.d(TAG, "changeToGoogleRegistration: called");
-		smoothScrollTo(findViewById(R.id.entry_activity_registration_seperator_view).getBottom());
-		findViewById(R.id.entry_activity_registration_first_name_layout).setEnabled(false);
-		findViewById(R.id.entry_activity_registration_family_name_layout).setEnabled(false);
-		findViewById(R.id.entry_activity_registration_email_layout).setEnabled(false);
-		findViewById(R.id.entry_activity_registration_password_layout).setEnabled(false);
-	}
-	
-	/**
-	 * Adds users subscription variant to his account info in the database.
-	 *
-	 * @param user    The corresponding user.
-	 * @param variant The variant he subscribed.
-	 */
-	private void addUsersSubscriptionVariantToFirestore(FirebaseUser user, int variant) {
-		Log.d(TAG, "addUsersSubscriptionVariantToFirestore: called");
-		FirebaseFirestore db = getFirestoreInstance();
-		db.collection(FirestoreNames.COLLECTION_USERS)
-		  .document(user.getUid())
-		  .update(FirestoreNames.COLUMN_SUBSCRIPTION_VARIANT, variant == 13 ? "gold" : "no gold")
-		  .addOnFailureListener(e -> {
-			  Log.e(TAG, "addUsersSubscriptionVariantToFirestore: ", e);
-//			  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View
-//			  .INVISIBLE);
-		  });
-	}
-	
-	private String getGoogleUserFirstName(String displayName) {
-		Log.d(TAG, "getGoogleUserFirstName: called");
-		Log.d(TAG, "getGoogleUserFirstName: display name = " + displayName);
-		if (displayName == null) {
-			return "Error 404";
-		}
-		String[] nameParts = displayName.split("\\s+");
-		Log.d(TAG, "getGoogleUserFirstName: nameParts = " + nameParts.toString());
-		return nameParts[0];
-	}
-	
-	private String getGoogleUserFamilyName(String displayName) {
-		Log.d(TAG, "getGoogleUserFamilyName: called");
-		Log.d(TAG, "getGoogleUserFamilyName: display name = " + displayName);
-		if (displayName == null) {
-			return "Error 404";
-		}
-		String[] nameParts = displayName.split("\\s+");
-		Log.d(TAG, "getGoogleUserFamilyName: nameParts = " + nameParts.toString());
-		return nameParts[nameParts.length - 1];
-	}
-	
-	/**
-	 * Registers a new firebase user via Google sign in.
-	 *
-	 * @param account The Google account.
-	 */
-	private void firebaseAuthWithGoogleAccount(GoogleSignInAccount account) {
-		Log.d(TAG, "firebaseAuthWithGoogleAccount: called");
-		AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-		mAuth.signInWithCredential(authCredential)
-		     .addOnSuccessListener(command -> {
-			     Log.d(TAG, "firebaseAuthWithGoogleAccount: great success");
-			     // Login success.
-			     FirebaseUser user = command.getUser();
-			     if (command.getAdditionalUserInfo() != null && user != null) {
-				     if (command.getAdditionalUserInfo()
-				                .isNewUser()) {
-					     Log.d(TAG, "firebaseAuthWithGoogleAccount: user is new");
-					     saveUserInFirestore(user, account.getGivenName(), account.getFamilyName(), null,
-					                         account.getEmail(), null, user.getPhotoUrl()
-					                                                                                                                    .toString());
-				     } else {
-					     updateUI(user);
-				     }
-			     } else {
-				     // Something went wrong
-				     Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain),
-				                    Toast.LENGTH_SHORT)
-				          .show();
-				     changeFromLoadingScreen();
-			     }
-		     })
-		     .addOnFailureListener(e -> {
-			     Log.e(TAG, "firebaseAuthWithGoogleAccount: ", e);
-			     Toast.makeText(this, getString(R.string.errorStandardMessageTryAgain), Toast.LENGTH_SHORT)
-			          .show();
-			     changeFromLoadingScreen();
-		     });
+	public void onLoginGoogleButtonClick(View view) {
+		Log.d(TAG, "onLoginGoogleButtonClick: called");
+		int loginRequestCode = getResources().getInteger(R.integer.loginRequestCode);
+		GoogleSignInOptions gso =
+				new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id))
+		                                                                                              .requestProfile()
+		                                                                                              .requestEmail()
+		                                                                                              .build();
+		Intent googleLoginIntent = GoogleSignIn.getClient(this, gso)
+		                                       .getSignInIntent();
+		startActivityForResult(googleLoginIntent, loginRequestCode);
 	}
 	
 	/**
@@ -918,16 +849,28 @@ public class EntryActivity
 		}
 	}
 	
-	public void onLoginGoogleButtonClick(View view) {
-		Log.d(TAG, "onLoginGoogleButtonClick: called");
-		int loginRequestCode = getResources().getInteger(R.integer.loginRequestCode);
-		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id))
-		                                                                                              .requestProfile()
-		                                                                                              .requestEmail()
-		                                                                                              .build();
-		Intent googleLoginIntent = GoogleSignIn.getClient(this, gso)
-		                                       .getSignInIntent();
-		startActivityForResult(googleLoginIntent, loginRequestCode);
+	private void createNewUser() {
+		Log.d(TAG, "createNewUser: called");
+		// Change to loading screen
+		changeToLoadingScreen();
+		// The HashMap carrying the registration information
+		HashMap<String, String> registrationInformation = getRegistrationFieldsContent();
+		String email = registrationInformation.get(getString(R.string.emailKey));
+		String password = registrationInformation.get(getString(R.string.passwordKey));
+		// Create user with email and password
+		mAuth.createUserWithEmailAndPassword(email, password)
+		     .addOnSuccessListener(result -> {
+			     Log.d(TAG, "createNewUser: great success");
+			     if (result.getUser() != null) {
+				     saveUserInFirestore(result.getUser());
+			     }
+		     })
+		     .addOnFailureListener(e -> {
+			     Log.d(TAG, "createNewUser: failure");
+			     Log.e(TAG, "createNewUser: ", e);
+			     // TODO: Error handling
+			     changeFromLoadingScreen();
+		     });
 	}
 	
 	public void onConfirmButtonClick(View view) {
@@ -993,33 +936,47 @@ public class EntryActivity
 		createNewUser();
 	}
 	
-	private void createNewUser() {
-		Log.d(TAG, "createNewUser: called");
-		// Change to loading screen
-		changeToLoadingScreen();
+	/**
+	 * This method saves users info in firestore upon registration.
+	 *
+	 * @param user The user to save the Uid.
+	 */
+	private void saveUserInFirestore(FirebaseUser user) {
+		Log.d(TAG, "saveUserInFirestore: called");
 		// The HashMap carrying the registration information
 		HashMap<String, String> registrationInformation = getRegistrationFieldsContent();
 		// Save the registration information in strings
-		String firstName, familyName, username, email, password, dateOfBirth;
-		firstName = registrationInformation.get(getString(R.string.firstNameKey));
-		familyName = registrationInformation.get(getString(R.string.familyNameKey));
-		username = registrationInformation.get(getString(R.string.usernameKey));
-		email = registrationInformation.get(getString(R.string.emailKey));
-		password = registrationInformation.get(getString(R.string.passwordKey));
-		dateOfBirth = registrationInformation.get(getString(R.string.dateOfBirthKey));
-		// Create user with email and password
-		mAuth.createUserWithEmailAndPassword(email, password)
-		     .addOnSuccessListener(result -> {
-			     Log.d(TAG, "createNewUser: great success");
-			     if (result.getUser() != null) {
-				     saveUserInFirestore(result.getUser(), firstName, familyName, username, email,
-				                         dateOfBirth, null);
-			     }
-		     })
-		     .addOnFailureListener(e -> {
-			     Log.d(TAG, "createNewUser: failure");
-			     Log.e(TAG, "createNewUser: ", e);
-		     });
+		String firstName = registrationInformation.get(getString(R.string.firstNameKey));
+		String familyName = registrationInformation.get(getString(R.string.familyNameKey));
+		String username = registrationInformation.get(getString(R.string.usernameKey));
+		String email = registrationInformation.get(getString(R.string.emailKey));
+		String dateOfBirth = registrationInformation.get(getString(R.string.dateOfBirthKey));
+		String profilePicture = user.getPhotoUrl() != null ? user.getPhotoUrl()
+		                                                         .toString() : "";
+		FirebaseFirestore db = getFirestoreInstance();
+		Toast toast = Toast.makeText(this, getString(R.string.errorStandardMessageStandBy),
+		                             Toast.LENGTH_SHORT);
+		HashMap<String, Object> userInfo = new HashMap<>();
+		userInfo.put(getString(R.string.columnFirstName), firstName);
+		userInfo.put(getString(R.string.columnFamilyName), familyName);
+		userInfo.put(getString(R.string.columnUsername), username);
+		userInfo.put(getString(R.string.columnEmail), email);
+		userInfo.put(getString(R.string.columnDateOfBirth), dateOfBirth);
+		userInfo.put(getString(R.string.columnProfilePicture), profilePicture);
+		db.collection(getString(R.string.collectionUsers))
+		  .document(user.getUid())
+		  .set(userInfo)
+		  .addOnSuccessListener(command -> {
+			  Log.d(TAG, "saveUserInFirestore: great success");
+			  toast.cancel();
+			  new RetrieveInternetTime(this, user.getUid()).execute(getString(R.string.googleTimeServerURL));
+			  updateUI(user);
+		  })
+		  .addOnFailureListener(e -> {
+			  Log.d(TAG, "saveUserInFirestore: failure");
+			  Log.e(TAG, "saveUserInFirestore: ", e);
+			  toast.show();
+		  });
 	}
 	
 	private HashMap<String, String> getRegistrationFieldsContent() {
@@ -1053,43 +1010,16 @@ public class EntryActivity
 		return registrationFieldsContent;
 	}
 	
-	/**
-	 * This method saves users info in firestore upon registration.
-	 *
-	 * @param user           The user to save the Uid.
-	 * @param firstName      Users first name.
-	 * @param familyName     Users family name.
-	 * @param username       Users username.
-	 * @param email          Users email.
-	 * @param dateOfBirth    Users date of birth.
-	 * @param profilePicture Users profile picture.
-	 */
-	private void saveUserInFirestore(FirebaseUser user, String firstName, String familyName, String username
-			, String email, String dateOfBirth, String profilePicture) {
-		Log.d(TAG, "saveUserInFirestore: called");
-		FirebaseFirestore db = getFirestoreInstance();
-		Toast toast = Toast.makeText(this, getString(R.string.errorStandardMessageStandBy),
-		                             Toast.LENGTH_SHORT);
-		HashMap<String, Object> userInfo = new HashMap<>();
-		userInfo.put(getString(R.string.columnFirstName), firstName);
-		userInfo.put(getString(R.string.columnFamilyName), familyName);
-		userInfo.put(getString(R.string.columnUsername), username);
-		userInfo.put(getString(R.string.columnEmail), email);
-		userInfo.put(getString(R.string.columnDateOfBirth), dateOfBirth);
-		userInfo.put(getString(R.string.columnProfilePicture), profilePicture);
-		db.collection(getString(R.string.collectionUsers))
-		  .document(user.getUid())
-		  .set(userInfo)
-		  .addOnSuccessListener(command -> {
-			  Log.d(TAG, "saveUserInFirestore: great success");
-			  toast.cancel();
-			  new RetrieveInternetTime(this, user.getUid()).execute(getString(R.string.googleTimeServerURL));
-			  updateUI(user);
-		  })
-		  .addOnFailureListener(e -> {
-			  Log.d(TAG, "saveUserInFirestore: failure");
-			  Log.e(TAG, "saveUserInFirestore: ", e);
-			  toast.show();
-		  });
+	void updateUI(FirebaseUser user) {
+		Log.d(TAG, "updateUI: called");
+		if (user != null) {
+			changeToLoadingScreen();
+			startMainActivity(user);
+		} else {
+			Log.d(TAG, "updateUI: user == null");
+			// no user logged in.
+			// TODO
+			changeFromLoadingScreen();
+		}
 	}
 }

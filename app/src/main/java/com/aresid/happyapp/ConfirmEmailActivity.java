@@ -84,24 +84,6 @@ public class ConfirmEmailActivity
 		}, 5000);
 	}
 	
-	private void showStandardSnackbar(View view, String message) {
-		Log.d(TAG, "showStandardSnackbar: called");
-		Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
-		        .setBackgroundTint(ContextCompat.getColor(this, R.color.white))
-		        .setTextColor(ContextCompat.getColor(this, R.color.black))
-		        .show();
-	}
-	
-	private FirebaseUser getCurrentUser() {
-		Log.d(TAG, "getCurrentUser: called");
-		return mFirebaseUser;
-	}
-	
-	public void onLogoutButtonClick(View view) {
-		Log.d(TAG, "onLogoutButtonClick: called");
-		handleLogout();
-	}
-	
 	private void sendEmailVerification(FirebaseUser user) {
 		Log.d(TAG, "sendEmailVerification: called");
 		ConstraintLayout snackbarView = findViewById(R.id.confirm_email_activity_constraint_layout);
@@ -109,18 +91,29 @@ public class ConfirmEmailActivity
 			user.sendEmailVerification()
 			    .addOnSuccessListener(command -> {
 				    Log.d(TAG, "sendEmailVerification: great success");
+				    showSnackbar(snackbarView, getString(R.string.plainEmailSentTo,
+				                                         mFirebaseUser.getEmail()));
 			    })
 			    .addOnFailureListener(e -> {
 				    Log.d(TAG, "sendEmailVerification: failure");
 				    Log.e(TAG, "sendEmailVerification: ", e);
-				    if (e instanceof com.google.firebase.FirebaseTooManyRequestsException) {
-					    showErrorSnackbar(snackbarView, getString(R.string.too_many_attempts));
-					    return;
-				    }
 			    });
 		} else {
 			showErrorSnackbar(snackbarView, getString(R.string.user_should_not_be_here));
 		}
+	}
+	
+	public void onLogoutButtonClick(View view) {
+		Log.d(TAG, "onLogoutButtonClick: called");
+		handleLogout();
+	}
+	
+	private void showSnackbar(View view, String message) {
+		Log.d(TAG, "showSnackbar: called");
+		Snackbar.make(view, message, Snackbar.LENGTH_SHORT)
+		        .setBackgroundTint(ContextCompat.getColor(this, R.color.white))
+		        .setTextColor(ContextCompat.getColor(this, R.color.black))
+		        .show();
 	}
 	
 	private void showErrorSnackbar(View view, String message) {
@@ -132,8 +125,6 @@ public class ConfirmEmailActivity
 	
 	public void onChangeAndResendButtonClick(View view) {
 		Log.d(TAG, "onChangeAndResendButtonClick: called");
-		// TODO: Show TextInputDialog and receive data from it and then change the email
-		//  and resend the confirmation
 		TextInputDialog inputDialog = new TextInputDialog();
 		inputDialog.show(getSupportFragmentManager(), "Change email dialog");
 	}
@@ -158,10 +149,11 @@ public class ConfirmEmailActivity
 			Log.d(TAG, "onBackPressed: helper == 0");
 			toast.show();
 			mBackPressedHelper = 1;
+			int time = getResources().getInteger(R.integer.double_back_press_time);
 			new Handler().postDelayed(() -> {
 				Log.d(TAG, "run: called");
 				mBackPressedHelper = 0;
-			}, 6130);
+			}, time);
 		} else {
 			if (mBackPressedHelper == 1) {
 				Log.d(TAG, "onBackPressed: helper == 1");
@@ -184,8 +176,8 @@ public class ConfirmEmailActivity
 	}
 	
 	@Override
-	public void transferTextInputText(String text) {
-		Log.d(TAG, "transferTextInputText: called");
+	public void onTextInputDialogPositiveButtonClicked(String text) {
+		Log.d(TAG, "onTextInputDialogPositiveButtonClicked: called");
 		changeEmail(text);
 	}
 	
