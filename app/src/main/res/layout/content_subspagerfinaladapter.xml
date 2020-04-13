@@ -21,13 +21,13 @@
 			android:id="@+id/view_pager_checkout_waiting_assistant"
 			android:layout_width="@dimen/waitingAssistantSmallSize"
 			android:layout_height="@dimen/waitingAssistantSmallSize"
-			android:contentDescription="@string/plainProcessingLogin"/>
+			android:contentDescription="@string/processing_login"/>
 		
 		<TextView
 			android:id="@+id/view_pager_checkout_waiting_assistant_text_view"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/plainLoggingIn"
+			android:text="@string/logging_in_ellipsis"
 			android:textAppearance="?attr/textAppearanceCaption"/>
 	</LinearLayout>
 	
@@ -74,7 +74,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:onClick="onConfirmButtonClick"
-		android:text="@string/plainCheckThisOut"
+		android:text="@string/check_this_out"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

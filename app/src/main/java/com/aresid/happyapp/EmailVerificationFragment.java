@@ -133,7 +133,7 @@ public class EmailVerificationFragment
 				                   "Hey Flash, not so fast. Try again in a " + "minute.", Toast.LENGTH_SHORT)
 				         .show();
 			    } else {
-				    Toast.makeText(getContext(), getString(R.string.verificationEmailFail),
+				    Toast.makeText(getContext(), getString(R.string.error_verification_email_send_failed),
 				                   Toast.LENGTH_LONG)
 				         .show();
 			    }

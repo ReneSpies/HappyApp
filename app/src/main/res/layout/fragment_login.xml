@@ -29,7 +29,7 @@
 		android:layout_marginTop="8dp"
 		android:layout_marginEnd="8dp"
 		android:layout_marginBottom="8dp"
-		android:text="@string/loggingIn3Dots"
+		android:text="@string/logging_in_ellipsis"
 		android:visibility="invisible"
 		app:layout_constraintBottom_toTopOf="@+id/google_linear_layout"
 		app:layout_constraintEnd_toEndOf="parent"
@@ -56,7 +56,7 @@
 				android:id="@+id/login_email_field"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="@string/promptEmail"
+				android:hint="@string/email"
 				android:inputType="textEmailAddress"
 				android:maxLines="1"
 				android:singleLine="true"/>
@@ -74,7 +74,7 @@
 				android:id="@+id/login_password_field"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="@string/promptPassword"
+				android:hint="@string/password"
 				android:imeActionId="6"
 				android:imeActionLabel="@string/common_signin_button_text"
 				android:imeOptions="actionUnspecified"
@@ -89,7 +89,7 @@
 		style="@style/Widget.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/signMeIn"
+		android:text="@string/log_in"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/login_linear_layout"/>
@@ -112,7 +112,7 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/plainOrSignInUsing"
+			android:text="@string/or_log_in_using"
 			android:textAlignment="center"/>
 		
 		<com.google.android.material.button.MaterialButton
@@ -143,7 +143,7 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/noAccount"
+			android:text="@string/question_no_account_yet"
 			android:textAlignment="center"/>
 		
 		<com.google.android.material.button.MaterialButton
@@ -153,6 +153,6 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="@dimen/buttonMarginStartEnd"
 			android:layout_marginEnd="@dimen/buttonMarginStartEnd"
-			android:text="@string/signMeUp"/>
+			android:text="@string/sign_me_up"/>
 	</LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

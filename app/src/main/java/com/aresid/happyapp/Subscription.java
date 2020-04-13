@@ -59,7 +59,7 @@ class Subscription {
 	/**
 	 * Sets the subscriptions title to the given String.
 	 *
-	 * @param title Your desired title name.
+	 * @param title Your desired title name_with_placeholder.
 	 */
 	void setTitle(String title) {
 		Log.d(TAG, "setTitle:true");

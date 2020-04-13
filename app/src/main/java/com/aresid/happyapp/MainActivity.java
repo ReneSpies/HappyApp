@@ -67,7 +67,9 @@ public class MainActivity
 		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		DrawerLayout drawer = findViewById(R.id.drawer_layout);
-		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigationDrawerOpen, R.string.navigationDrawerClose);
+		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+		                                                         R.string.open_navigation_drawer,
+		                                                         R.string.close_navigation_drawer);
 		drawer.addDrawerListener(toggle);
 		toggle.syncState();
 		displayHomeFragment();

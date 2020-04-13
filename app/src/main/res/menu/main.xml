@@ -5,17 +5,17 @@
 		<item
 			android:id="@+id/action_settings"
 			android:orderInCategory="100"
-			android:title="@string/actionSettings"
+			android:title="@string/settings"
 			app:showAsAction="never"/>
 		<item
 			android:id="@+id/action_contact"
 			android:orderInCategory="101"
-			android:title="@string/contact"
+			android:title="@string/contact_us"
 			app:showAsAction="never"/>
 		<item
 			android:id="@+id/action_logout"
 			android:orderInCategory="102"
-			android:title="@string/plainLogout"
+			android:title="@string/log_out"
 			app:showAsAction="never"/>
 	</group>
 </menu>

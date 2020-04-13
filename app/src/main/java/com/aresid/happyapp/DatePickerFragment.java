@@ -33,7 +33,7 @@ public class DatePickerFragment
 			Log.d(TAG, "onDateSet:true");
 			Log.d(TAG, "onDateSet: selected date = " + view.getDayOfMonth() + (view.getMonth() + 1) +
 			           view.getYear());
-			mEditText.setText(getResources().getString(R.string.placeholderDateOfBirthContent,
+			mEditText.setText(getResources().getString(R.string.placeholders_for_date_of_birth,
 			                                           view.getDayOfMonth(),
 			                                           view.getMonth() + 1, view.getYear()));
 		}

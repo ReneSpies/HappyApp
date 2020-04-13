@@ -29,7 +29,7 @@
 			android:id="@+id/confirm_email_activity_confirmation_sent_textview"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/emailVerificationNotice"
+			android:text="@string/email_verification_notice"
 			android:textAlignment="center"
 			android:textAppearance="?attr/textAppearanceHeadline5"
 			app:layout_constraintBottom_toTopOf="@+id/confirm_email_activity_email_textview"
@@ -94,7 +94,7 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:onClick="onLogoutButtonClick"
-				android:text="@string/plainLogout"
+				android:text="@string/log_out"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@id/change_resend_button"/>

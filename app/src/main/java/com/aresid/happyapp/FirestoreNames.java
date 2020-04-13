@@ -8,8 +8,8 @@ package com.aresid.happyapp;
  */
 class FirestoreNames {
 	// Columns
-	static final String COLUMN_FIRST_NAME           = "first name";
-	static final String COLUMN_FAMILY_NAME          = "family name";
+	static final String COLUMN_FIRST_NAME           = "first name_with_placeholder";
+	static final String COLUMN_FAMILY_NAME          = "family name_with_placeholder";
 	static final String COLUMN_USERNAME             = "username";
 	static final String COLUMN_EMAIL                = "email";
 	static final String COLUMN_DATE_OF_BIRTH        = "date of birth";

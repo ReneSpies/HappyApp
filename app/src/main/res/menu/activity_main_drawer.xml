@@ -18,12 +18,12 @@
 		<item
 			android:id="@+id/nav_place_ad"
 			android:icon="@drawable/ic_launch_black_24dp"
-			android:title="@string/submitAd"/>
+			android:title="@string/submit_an_ad"/>
 		<!--My Account wird beim klick auf Nav Header ausgelöst-->
 		<!--Escort Service hab ich zu der Suche hinzugefügt-->
 		<!--<item-->
 		<!--android:id="@+id/nav_escort_service"-->
 		<!--android:icon="@drawable/ic_person_add_black_24dp"-->
-		<!--android:title="@string/escortService" />-->
+		<!--android:title="@string/escort_service" />-->
 	</group>
 </menu>

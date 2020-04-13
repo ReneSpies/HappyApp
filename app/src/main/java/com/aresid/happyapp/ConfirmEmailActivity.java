@@ -38,7 +38,7 @@ public class ConfirmEmailActivity
 		setContentView(R.layout.activity_confirm_email);
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			mFirebaseUser = extras.getParcelable(getString(R.string.firebaseUserKey));
+			mFirebaseUser = extras.getParcelable(getString(R.string.intent_key_firebase_user));
 			if (mFirebaseUser != null) {
 				setEmailTextViewText(mFirebaseUser.getEmail());
 				sendEmailVerification(mFirebaseUser);
@@ -56,11 +56,23 @@ public class ConfirmEmailActivity
 		emailTextView.setText(email);
 	}
 	
-	private void startMainActivity(FirebaseUser user) {
-		Log.d(TAG, "startMainActivity: called");
-		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra(getString(R.string.firebaseUserKey), user);
-		startActivity(intent);
+	private void sendEmailVerification(FirebaseUser user) {
+		Log.d(TAG, "sendEmailVerification: called");
+		ConstraintLayout snackbarView = findViewById(R.id.confirm_email_activity_constraint_layout);
+		if (user != null) {
+			user.sendEmailVerification()
+			    .addOnSuccessListener(command -> {
+				    Log.d(TAG, "sendEmailVerification: great success");
+				    showSnackbar(snackbarView, getString(R.string.email_sent_to_placeholder,
+				                                         mFirebaseUser.getEmail()));
+			    })
+			    .addOnFailureListener(e -> {
+				    Log.d(TAG, "sendEmailVerification: failure");
+				    Log.e(TAG, "sendEmailVerification: ", e);
+			    });
+		} else {
+			showErrorSnackbar(snackbarView, getString(R.string.user_should_not_be_here));
+		}
 	}
 	
 	private void checkEmailVerificationStatus(FirebaseUser user) {
@@ -84,23 +96,11 @@ public class ConfirmEmailActivity
 		}, 5000);
 	}
 	
-	private void sendEmailVerification(FirebaseUser user) {
-		Log.d(TAG, "sendEmailVerification: called");
-		ConstraintLayout snackbarView = findViewById(R.id.confirm_email_activity_constraint_layout);
-		if (user != null) {
-			user.sendEmailVerification()
-			    .addOnSuccessListener(command -> {
-				    Log.d(TAG, "sendEmailVerification: great success");
-				    showSnackbar(snackbarView, getString(R.string.plainEmailSentTo,
-				                                         mFirebaseUser.getEmail()));
-			    })
-			    .addOnFailureListener(e -> {
-				    Log.d(TAG, "sendEmailVerification: failure");
-				    Log.e(TAG, "sendEmailVerification: ", e);
-			    });
-		} else {
-			showErrorSnackbar(snackbarView, getString(R.string.user_should_not_be_here));
-		}
+	private void startMainActivity(FirebaseUser user) {
+		Log.d(TAG, "startMainActivity: called");
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra(getString(R.string.intent_key_firebase_user), user);
+		startActivity(intent);
 	}
 	
 	public void onLogoutButtonClick(View view) {
@@ -144,7 +144,7 @@ public class ConfirmEmailActivity
 	@Override
 	public void onBackPressed() {
 		Log.d(TAG, "onBackPressed: called");
-		Toast toast = Toast.makeText(this, getString(R.string.plainPressAgainToExit), Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(this, getString(R.string.press_again_to_exit), Toast.LENGTH_SHORT);
 		if (mBackPressedHelper == 0) {
 			Log.d(TAG, "onBackPressed: helper == 0");
 			toast.show();

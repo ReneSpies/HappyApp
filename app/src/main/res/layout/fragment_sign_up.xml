@@ -20,7 +20,7 @@
 			android:id="@+id/sign_up_first_name_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/plainFirstName"
+			android:hint="@string/first_name"
 			android:inputType="text"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	
@@ -37,7 +37,7 @@
 			android:id="@+id/sign_up_surname_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/plainUsername"
+			android:hint="@string/username"
 			android:inputType="text"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	
@@ -54,7 +54,7 @@
 			android:id="@+id/sign_up_email_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/promptEmail"
+			android:hint="@string/email"
 			android:inputType="textEmailAddress"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	
@@ -72,7 +72,7 @@
 			android:id="@+id/sign_up_password_field"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="@string/promptPassword"
+			android:hint="@string/password"
 			android:inputType="textPassword"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	
@@ -118,5 +118,5 @@
 		style="@style/Widget.HappyApp.ContainedButton"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/signUpNow"/>
+		android:text="@string/sign_up_now"/>
 </LinearLayout>

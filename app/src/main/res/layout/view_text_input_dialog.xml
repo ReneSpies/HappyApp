@@ -19,7 +19,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:fontFamily="monospace"
-			android:hint="@string/emailWithStar"
+			android:hint="@string/email_with_star"
 			android:inputType="textEmailAddress"/>
 	</com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

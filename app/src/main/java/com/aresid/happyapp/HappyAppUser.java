@@ -42,8 +42,8 @@ public class HappyAppUser {
 	 * Constructor 1.
 	 *
 	 * @param uid                 Users unique id.
-	 * @param firstName           Users first name.
-	 * @param familyName          Users family name.
+	 * @param firstName           Users first name_with_placeholder.
+	 * @param familyName          Users family name_with_placeholder.
 	 * @param dateOfBirth         Users date of birth.
 	 * @param username            Users username.
 	 * @param subscriptionVariant Users subscription variant.
@@ -70,7 +70,7 @@ public class HappyAppUser {
 	}
 	
 	/**
-	 * Getter for users first name.
+	 * Getter for users first name_with_placeholder.
 	 *
 	 * @return Guess.
 	 */
@@ -79,7 +79,7 @@ public class HappyAppUser {
 	}
 	
 	/**
-	 * Setter for users first name.
+	 * Setter for users first name_with_placeholder.
 	 *
 	 * @param firstName Guess.
 	 */
@@ -106,7 +106,7 @@ public class HappyAppUser {
 	}
 	
 	/**
-	 * Getter for users family name.
+	 * Getter for users family name_with_placeholder.
 	 *
 	 * @return Guess.
 	 */
@@ -115,7 +115,7 @@ public class HappyAppUser {
 	}
 	
 	/**
-	 * Setter for users family name.
+	 * Setter for users family name_with_placeholder.
 	 *
 	 * @param familyName Guess.
 	 */

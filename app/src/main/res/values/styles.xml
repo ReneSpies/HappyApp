@@ -34,7 +34,7 @@
 	</style>
 	
 	<style name="Widget.HappyApp.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-		<!--<item name="android:paddingBottom">6dp</item>-->
+		<!--<item name_with_placeholder="android:paddingBottom">6dp</item>-->
 		<item name="android:layout_margin">13dp</item>
 		<item name="boxCornerRadiusBottomEnd">.13dp</item>
 		<item name="boxCornerRadiusTopStart">.13dp</item>

@@ -17,7 +17,7 @@
 			android:id="@+id/entry_activity_logging_in_waiting_assistant"
 			android:layout_width="@dimen/waitingAssistantStandardSize"
 			android:layout_height="@dimen/waitingAssistantStandardSize"
-			android:contentDescription="@string/plainProcessingLogin"
+			android:contentDescription="@string/processing_login"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
 			android:id="@+id/entry_activity_logging_in_waiting_assistant_text_view"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/plainLoggingIn"
+			android:text="@string/logging_in_ellipsis"
 			android:textAlignment="center"
 			android:textAppearance="?attr/textAppearanceCaption"
 			app:layout_constraintTop_toBottomOf="@+id/entry_activity_logging_in_waiting_assistant"/>
@@ -49,7 +49,7 @@
 				android:layout_height="@dimen/imageViewAppLogoSize"
 				android:layout_marginTop="30dp"
 				android:layout_marginBottom="50dp"
-				android:contentDescription="@string/plainHappyAppLogo"
+				android:contentDescription="@string/happy_app_logo"
 				android:src="@drawable/ic_app_logo"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_login_email_layout"
 				app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="@string/plainEmail"
+				android:hint="@string/email"
 				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_login_password_layout"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_app_logo">
@@ -81,7 +81,7 @@
 				style="@style/Widget.HappyApp.TextInputLayout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:hint="@string/plainPassword"
+				android:hint="@string/password"
 				app:errorEnabled="true"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_google_login_seperator_text_view"
 				app:layout_constraintTop_toBottomOf="@id/entry_activity_login_email_layout"
@@ -101,7 +101,7 @@
 				android:id="@+id/entry_activity_google_login_seperator_text_view"
 				style="@style/Widget.HappyApp.Seperator.TextView"
 				android:layout_marginTop="100.13dp"
-				android:text="@string/plainOrLoginUsing"
+				android:text="@string/or_log_in_using"
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_login_password_layout"
 				tools:ignore="MissingConstraints"/>
 			
@@ -127,7 +127,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="8.13dp"
 				android:layout_marginBottom="14.13dp"
-				android:text="@string/plainRegisterAnAccountForHappyApp"
+				android:text="@string/register_account_for_happyapp"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"
 				app:layout_constraintBottom_toTopOf="@id/entry_activity_registration_first_name_layout"
@@ -146,7 +146,7 @@
 					android:id="@+id/entry_activity_registration_first_name_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/firstNameWithStar"
+					android:hint="@string/first_name_with_star"
 					android:imeActionId="2"
 					android:imeOptions="actionNext"
 					android:inputType="text"/>
@@ -165,7 +165,7 @@
 					android:id="@+id/entry_activity_registration_family_name_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/familyNameWithStar"
+					android:hint="@string/family_name_with_star"
 					android:imeActionId="3"
 					android:imeOptions="actionNext"
 					android:inputType="text"/>
@@ -175,7 +175,7 @@
 				android:id="@+id/entry_activity_registration_username_info_text_view"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:text="@string/contractionDisplayedName"
+				android:text="@string/message_edit_text_your_displayed_name"
 				android:textAppearance="?attr/textAppearanceCaption"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_registration_username_layout"
 				app:layout_constraintEnd_toEndOf="@+id/entry_activity_registration_username_layout"
@@ -194,7 +194,7 @@
 					android:id="@+id/entry_activity_registration_username_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/usernameWithStar"
+					android:hint="@string/username_with_star"
 					android:imeActionId="4"
 					android:imeOptions="actionNext"
 					android:inputType="text"/>
@@ -213,7 +213,7 @@
 					android:id="@+id/entry_activity_registration_email_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/emailWithStar"
+					android:hint="@string/email_with_star"
 					android:imeActionId="5"
 					android:imeOptions="actionNext"
 					android:inputType="textEmailAddress"/>
@@ -233,7 +233,7 @@
 					android:id="@+id/entry_activity_registration_password_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/passwordWithStar"
+					android:hint="@string/password_with_star"
 					android:imeActionId="6"
 					android:imeOptions="actionNext"
 					android:inputType="textPassword"/>
@@ -252,7 +252,7 @@
 					android:id="@+id/entry_activity_registration_date_of_birth_field"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:hint="@string/dateOfBirthWithStar"
+					android:hint="@string/date_of_birth_with_star"
 					android:imeActionId="7"/>
 			</com.google.android.material.textfield.TextInputLayout>
 			
@@ -262,7 +262,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginStart="@dimen/buttonMarginAllSides"
 				android:layout_marginEnd="@dimen/buttonMarginAllSides"
-				android:text="@string/contractionConfirmTcAndPrivacyPolicy"
+				android:text="@string/confirmation_message_legalities"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_view_pager_caption"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -274,7 +274,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="8dp"
 				android:layout_marginBottom="16dp"
-				android:text="@string/plainSubscribe"
+				android:text="@string/subscribe"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"
 				app:layout_constraintBottom_toTopOf="@+id/entry_activity_subscription_view_pager"
