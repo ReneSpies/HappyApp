@@ -3,6 +3,11 @@
 	<integer name="double_back_press_time">6130</integer>
 	
 	<!-- Request Codes -->
-	<integer name="request_code_login">1</integer>
+	<integer name="request_code_google_login">1</integer>
+	<integer name="request_code_login">2</integer>
 	<!-- END Request Codes -->
+	
+	<!-- Result Codes -->
+	<integer name="result_code_logout">1</integer>
+	<!-- END Result Codes -->
 </resources>

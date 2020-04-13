@@ -1,5 +1,6 @@
 package com.aresid.happyapp;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -182,9 +183,19 @@ public class MainActivity
 		FirebaseAuth.getInstance()
 		            .addAuthStateListener(auth -> {
 			            if (auth.getCurrentUser() == null) {
-				            finish();
+				            handleFinish();
 			            }
 		            });
+	}
+	
+	private void handleFinish() {
+		Log.d(TAG, "handleFinish: called");
+		// Set a result so onActivityResult() is called in the activity from backstack
+		// If necessary, I can do stuff in onActivityResult() like resetting views
+		Intent resultIntent = new Intent();
+		int logoutResultCode = getResources().getInteger(R.integer.result_code_logout);
+		setResult(logoutResultCode, resultIntent);
+		finish();
 	}
 	
 	@Override

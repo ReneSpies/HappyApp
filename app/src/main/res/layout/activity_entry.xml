@@ -3,13 +3,14 @@
              xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
+             android:id="@+id/frame_layout"
              android:layout_height="match_parent">
 	
 	<LinearLayout
+		android:id="@+id/entry_activity_loading_screen"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:gravity="center"
-		android:id="@+id/entry_activity_loading_screen"
 		android:orientation="vertical"
 		android:visibility="gone">
 		
@@ -27,6 +28,7 @@
 			android:id="@+id/entry_activity_logging_in_waiting_assistant_text_view"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
+			android:drawableTop="@drawable/waiting_assistant_content"
 			android:text="@string/logging_in_ellipsis"
 			android:textAlignment="center"
 			android:textAppearance="?attr/textAppearanceCaption"
@@ -96,6 +98,17 @@
 					android:inputType="textPassword"
 					android:maxLines="1"/>
 			</com.google.android.material.textfield.TextInputLayout>
+			
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/login_button"
+				style="@style/Widget.HappyApp.ContainedButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:onClick="onLoginButtonClicked"
+				android:text="@string/log_in"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/entry_activity_login_password_layout"/>
 			
 			<TextView
 				android:id="@+id/entry_activity_google_login_seperator_text_view"

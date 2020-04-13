@@ -5,8 +5,7 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.apache.commons.net.ntp.NTPUDPClient;
-import org.apache.commons.net.ntp.TimeInfo;
+import org.apache.commons.net.TimeUDPClient;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -30,7 +29,7 @@ public class RetrieveInternetTime
 			mListener = (OnInternetTimeInteractionListener) context;
 		} else {
 			throw new RuntimeException(
-					context.toString() + " must implement " + "OnInternetTimeInteractionListener");
+					context.toString() + " must implement OnInternetTimeInteractionListener");
 		}
 		mUid = uid;
 	}
@@ -40,16 +39,13 @@ public class RetrieveInternetTime
 		Log.d(TAG, "doInBackground: called");
 		String timeServer = strings[0];
 		try {
-			NTPUDPClient client = new NTPUDPClient();
+			TimeUDPClient client = new TimeUDPClient();
+			client.open();
 			InetAddress address = InetAddress.getByName(timeServer);
-			TimeInfo info = client.getTime(address);
-			long returnTime = info.getMessage()
-			                      .getTransmitTimeStamp()
-			                      .getTime();
-			return new Date(returnTime);
+			return client.getDate(address);
 		} catch (IOException e) {
 			Log.e(TAG, "doInBackground: ", e);
-			return null;
+			return new Date();
 		}
 	}
 	
