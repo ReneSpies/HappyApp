@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.android.billingclient.api.AcknowledgePurchaseParams;
@@ -33,8 +35,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -170,7 +174,6 @@ public class EntryActivity
 	 */
 	public void startRegistrationFlow(Subscription subscription) {
 		Log.d(TAG, "startRegistrationFlow: called");
-		Log.d(TAG, "startRegistrationFlow: subscription = " + subscription.getTitle());
 		// All these views are needed for the process
 		TextInputEditText registrationEmailField =
 				findViewById(R.id.entry_activity_registration_email_field);
@@ -259,14 +262,14 @@ public class EntryActivity
 				  .whereEqualTo(getString(R.string.firestore_key_column_username), username)
 				  .get()
 				  .addOnSuccessListener(command -> {
-					  Log.d(TAG, "startRegistrationFlow: great success");
+					  Log.d(TAG, "startRegistrationFlow: great success querying username");
 					  if (command.isEmpty()) {
 						  // Username is available
 						  // TODO: Subscribe and when successful, create new user and
 						  //  continue
 						  mAuth.fetchSignInMethodsForEmail(email)
 						       .addOnSuccessListener(result -> {
-							       Log.d(TAG, "startRegistrationFlow: great success");
+							       Log.d(TAG, "startRegistrationFlow:  great success querying email");
 							       // Result sign in methods must be null or else the email is already in use
 							       if (result.getSignInMethods()
 							                 .size() == 0) {
@@ -278,8 +281,14 @@ public class EntryActivity
 							       }
 						       })
 						       .addOnFailureListener(e -> {
-							       Log.d(TAG, "startRegistrationFlow: failure");
+							       Log.d(TAG, "startRegistrationFlow: failure querying email");
 							       Log.e(TAG, "startRegistrationFlow: ", e);
+							       if (e instanceof FirebaseNetworkException) {
+								       // Timeout
+								       String connectionFailed =
+										       getString(R.string.error_network_connection_failed);
+								       showErrorSnackbar(connectionFailed);
+							       }
 						       });
 					  } else {
 						  // Username is already taken
@@ -292,7 +301,7 @@ public class EntryActivity
 					  }
 				  })
 				  .addOnFailureListener(e -> {
-					  Log.d(TAG, "startRegistrationFlow: failure");
+					  Log.d(TAG, "startRegistrationFlow: failure querying username");
 					  Log.e(TAG, "startRegistrationFlow: ", e);
 					  enableViews(registrationFirstNameFieldLayout, registrationFamilyNameFieldLayout,
 					              registrationUsernameFieldLayout, registrationEmailFieldLayout,
@@ -303,6 +312,87 @@ public class EntryActivity
 				  });
 			}
 		}
+	}
+	
+	/**
+	 * This method checks if the given input is correct to create a new user.
+	 *
+	 * @param firstName   Users first name_with_placeholder. Must be > 0 and cannot start with space.
+	 * @param username    Users username. Must be > 0 and cannot start with space.
+	 * @param familyName  Users family name_with_placeholder. Must be > 0 and cannot start with space.
+	 * @param email       Users email. Must be > 0 and cannot start with space.
+	 * @param password    Users password. Must be > 6 and cannot start with space.
+	 * @param dateOfBirth Users date of birth. Must be > 0.
+	 * @return True if everything is fitting.
+	 */
+	private boolean newUserInfoIsOk(String firstName, String username, String familyName, String email,
+	                                String password, String dateOfBirth) {
+		Log.d(TAG, "newUserInfoIsOk: called");
+		setLayoutErrorsNull();
+		TextInputLayout registrationEmailFieldLayout =
+				findViewById(R.id.entry_activity_registration_email_layout);
+		TextInputLayout registrationPasswordFieldLayout =
+				findViewById(R.id.entry_activity_registration_password_layout);
+		TextInputLayout registrationFirstNameFieldLayout =
+				findViewById(R.id.entry_activity_registration_first_name_layout);
+		TextInputLayout registrationFamilyNameFieldLayout =
+				findViewById(R.id.entry_activity_registration_family_name_layout);
+		TextInputLayout registrationDateOfBirthFieldLayout =
+				findViewById(R.id.entry_activity_registration_date_of_birth_layout);
+		TextInputLayout registrationUsernameFieldLayout =
+				findViewById(R.id.entry_activity_registration_username_layout);
+		CheckBox termsAndConditionsCheckBox =
+				findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
+		String youForgotMe = getString(R.string.error_you_forgot_me);
+		if (firstName.length() == 0) {
+			setFieldLayoutErrorAndScroll(registrationFirstNameFieldLayout,
+			                             getString(R.string.error_you_forgot_me));
+			return false;
+		} else if (firstName.startsWith(" ")) {
+			setFieldLayoutErrorAndScroll(registrationFirstNameFieldLayout,
+			                             getString(R.string.error_field_starts_with_whitespace,
+			                                       R.string.first_name));
+			return false;
+		} else if (familyName.length() == 0) {
+			setFieldLayoutErrorAndScroll(registrationFamilyNameFieldLayout, youForgotMe);
+			return false;
+		} else if (familyName.startsWith(" ")) {
+			setFieldLayoutErrorAndScroll(registrationFamilyNameFieldLayout,
+			                             getString(R.string.error_field_starts_with_whitespace,
+			                                       R.string.family_name));
+			return false;
+		} else if (username.length() == 0) {
+			setFieldLayoutErrorAndScroll(registrationUsernameFieldLayout, youForgotMe);
+			return false;
+		} else if (username.startsWith(" ")) {
+			setFieldLayoutErrorAndScroll(registrationUsernameFieldLayout,
+			                             getString(R.string.error_field_starts_with_whitespace,
+			                                       R.string.username));
+			return false;
+		} else if (email.length() == 0) {
+			setFieldLayoutErrorAndScroll(registrationEmailFieldLayout, youForgotMe);
+			return false;
+		} else if (email.startsWith(" ")) {
+			setFieldLayoutErrorAndScroll(registrationEmailFieldLayout, getString(R.string.error_field_starts_with_whitespace, R.string.email));
+			return false;
+		} else if (password.length() == 0) {
+			setFieldLayoutErrorAndScroll(registrationPasswordFieldLayout, youForgotMe);
+			return false;
+		} else if (password.startsWith(" ")) {
+			setFieldLayoutErrorAndScroll(registrationPasswordFieldLayout, getString(R.string.error_field_starts_with_whitespace, R.string.password));
+			return false;
+		} else if (password.length() < 6) {
+			setFieldLayoutErrorAndScroll(registrationPasswordFieldLayout, getString(R.string.error_password_must_be_6_long));
+			return false;
+		} else if (dateOfBirth.length() == 0) {
+			setFieldLayoutErrorAndScroll(registrationDateOfBirthFieldLayout, youForgotMe);
+			return false;
+		} else if (!termsAndConditionsCheckBox.isChecked()) {
+			termsAndConditionsCheckBox.setError(getString(R.string.please_confirm));
+			smoothScrollTo(registrationDateOfBirthFieldLayout.getBottom());
+			return false;
+		}
+		return true;
 	}
 	
 	/**
@@ -379,85 +469,12 @@ public class EntryActivity
 		return true;
 	}
 	
-	/**
-	 * This method checks if the given input is correct to create a new user.
-	 *
-	 * @param firstName   Users first name_with_placeholder. Must be > 0 and cannot start with space.
-	 * @param username    Users username. Must be > 0 and cannot start with space.
-	 * @param familyName  Users family name_with_placeholder. Must be > 0 and cannot start with space.
-	 * @param email       Users email. Must be > 0 and cannot start with space.
-	 * @param password    Users password. Must be > 6 and cannot start with space.
-	 * @param dateOfBirth Users date of birth. Must be > 0.
-	 * @return True if everything is fitting.
-	 */
-	private boolean newUserInfoIsOk(String firstName, String username, String familyName, String email,
-	                                String password, String dateOfBirth) {
-		Log.d(TAG, "newUserInfoIsOk: called");
-		setLayoutErrorsNull();
-		TextInputLayout registrationEmailFieldLayout =
-				findViewById(R.id.entry_activity_registration_email_layout);
-		TextInputLayout registrationPasswordFieldLayout =
-				findViewById(R.id.entry_activity_registration_password_layout);
-		TextInputLayout registrationFirstNameFieldLayout =
-				findViewById(R.id.entry_activity_registration_first_name_layout);
-		TextInputLayout registrationFamilyNameFieldLayout =
-				findViewById(R.id.entry_activity_registration_family_name_layout);
-		TextInputLayout registrationDateOfBirthFieldLayout =
-				findViewById(R.id.entry_activity_registration_date_of_birth_layout);
-		TextInputLayout registrationUsernameFieldLayout =
-				findViewById(R.id.entry_activity_registration_username_layout);
-		CheckBox termsAndConditionsCheckBox =
-				findViewById(R.id.entry_activity_registration_confirm_tc_privacy_policy_checkbox);
-		String youForgotMe = getString(R.string.error_you_forgot_me);
-		if (firstName.length() == 0) {
-			setFieldLayoutErrorAndScroll(registrationFirstNameFieldLayout,
-			                             getString(R.string.error_you_forgot_me));
-			return false;
-		} else if (firstName.startsWith(" ")) {
-			setFieldLayoutErrorAndScroll(registrationFirstNameFieldLayout,
-			                             getString(R.string.error_field_starts_with_whitespace,
-			                                       R.string.first_name));
-			return false;
-		} else if (familyName.length() == 0) {
-			setFieldLayoutErrorAndScroll(registrationFamilyNameFieldLayout, youForgotMe);
-			return false;
-		} else if (familyName.startsWith(" ")) {
-			setFieldLayoutErrorAndScroll(registrationFamilyNameFieldLayout,
-			                             getString(R.string.error_field_starts_with_whitespace,
-			                                       R.string.family_name));
-			return false;
-		} else if (username.length() == 0) {
-			setFieldLayoutErrorAndScroll(registrationUsernameFieldLayout, youForgotMe);
-			return false;
-		} else if (username.startsWith(" ")) {
-			setFieldLayoutErrorAndScroll(registrationUsernameFieldLayout, getString(R.string.error_field_starts_with_whitespace, R.string.username));
-			return false;
-		} else if (email.length() == 0) {
-			setFieldLayoutErrorAndScroll(registrationEmailFieldLayout, youForgotMe);
-			return false;
-		} else if (email.startsWith(" ")) {
-			setFieldLayoutErrorAndScroll(registrationEmailFieldLayout,
-			                             getString(R.string.error_field_starts_with_whitespace, R.string.email));
-			return false;
-		} else if (password.length() == 0) {
-			setFieldLayoutErrorAndScroll(registrationPasswordFieldLayout, youForgotMe);
-			return false;
-		} else if (password.startsWith(" ")) {
-			setFieldLayoutErrorAndScroll(registrationPasswordFieldLayout,
-			                             getString(R.string.error_field_starts_with_whitespace, R.string.password));
-			return false;
-		} else if (password.length() < 6) {
-			setFieldLayoutErrorAndScroll(registrationPasswordFieldLayout, getString(R.string.error_password_must_be_6_long));
-			return false;
-		} else if (dateOfBirth.length() == 0) {
-			setFieldLayoutErrorAndScroll(registrationDateOfBirthFieldLayout, youForgotMe);
-			return false;
-		} else if (!termsAndConditionsCheckBox.isChecked()) {
-			termsAndConditionsCheckBox.setError(getString(R.string.please_confirm));
-			smoothScrollTo(registrationDateOfBirthFieldLayout.getBottom());
-			return false;
-		}
-		return true;
+	private void showErrorSnackbar(String message) {
+		Log.d(TAG, "showErrorSnackbar: called");
+		CoordinatorLayout snackbarView = findViewById(R.id.coordinator_layout);
+		Snackbar.make(snackbarView, message, Snackbar.LENGTH_LONG)
+		        .setBackgroundTint(ContextCompat.getColor(this, R.color.design_default_color_error))
+		        .show();
 	}
 	
 	/**
@@ -571,6 +588,7 @@ public class EntryActivity
 		// Result code when user logs out of main activity
 		int logoutResultCode = getResources().getInteger(R.integer.result_code_logout);
 		if (requestCode == googleLoginRequestCode) {
+			// TODO: 15/04/2020 onActivityResult: subscribe
 			// Result received from Google login activity
 			changeToLoadingScreen();
 			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -639,14 +657,15 @@ public class EntryActivity
 		AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
 		mAuth.signInWithCredential(authCredential)
 		     .addOnSuccessListener(command -> {
-			     Log.d(TAG, "firebaseAuthWithGoogleAccount: great success");
+			     Log.d(TAG, "firebaseAuthWithGoogleAccount: great success signing in");
 			     // Login success.
 			     FirebaseUser user = command.getUser();
 			     if (command.getAdditionalUserInfo() != null && user != null) {
 				     if (command.getAdditionalUserInfo()
 				                .isNewUser()) {
 					     Log.d(TAG, "firebaseAuthWithGoogleAccount: user is new");
-					     saveUserInFirestore(user);
+					     // TODO:
+					     saveUserInFirestore(user, null);
 				     } else {
 					     updateUI(user);
 				     }
@@ -693,29 +712,57 @@ public class EntryActivity
 		finishAffinity();
 	}
 	
-	@Override
-	public void onSkuDetailsResponse(BillingResult result, List<SkuDetails> list) {
-		Log.d(TAG, "onSkuDetailsResponse: called");
-		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-			// Define a new SubscriptionPool
-			SubscriptionPool pool = new SubscriptionPool();
-			// Iterate through the SkuDetails list
-			for (SkuDetails details : list) {
-				// Define a new Subscription based on the SkuDetails
-				Subscription sub = new Subscription(this, details);
-				// Add the new Subscription to the pool
-				pool.addSubscription(sub);
-			}
-			ViewPager2 viewPager2 = findViewById(R.id.entry_activity_subscription_view_pager);
-			// Set the new Adapter to the ViewPager2 as we have the Skus from the server
-			viewPager2.setAdapter(new SubsPagerFinalAdapter(this, pool.sort()));
-		} else {
-			Log.d(TAG, "onSkuDetailsResponse: " + result.getDebugMessage());
-			Log.d(TAG, "onSkuDetailsResponse: " + result.getResponseCode());
-			if (result.getResponseCode() == BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE) {
-				new SubsPagerInitAdapter(this).retry();
-			}
-		}
+	/**
+	 * This method saves users info in firestore upon registration.
+	 *
+	 * @param user     The user to save the Uid.
+	 * @param purchase
+	 */
+	private void saveUserInFirestore(FirebaseUser user, Purchase purchase) {
+		Log.d(TAG, "saveUserInFirestore: called");
+		// Define the HashMap carrying the registration information
+		HashMap<String, String> registrationInformation = getRegistrationFieldsContent();
+		// Save the registration information in strings
+		String firstName = registrationInformation.get(getString(R.string.hashmap_key_first_name));
+		String familyName = registrationInformation.get(getString(R.string.hashmap_key_family_name));
+		String username = registrationInformation.get(getString(R.string.hashmap_key_username));
+		String email = registrationInformation.get(getString(R.string.hashmap_key_email));
+		String dateOfBirth = registrationInformation.get(getString(R.string.hashmap_key_date_of_birth));
+		String profilePicture = user.getPhotoUrl() != null ? user.getPhotoUrl()
+		                                                         .toString() : "";
+		FirebaseFirestore db = getFirestoreInstance();
+		Toast toast = Toast.makeText(this, getString(R.string.error_stand_by), Toast.LENGTH_SHORT);
+		// Define the HashMap carrying the user information from the fields
+		HashMap<String, Object> userInfo = new HashMap<>();
+		userInfo.put(getString(R.string.firestore_key_column_first_name), firstName);
+		userInfo.put(getString(R.string.firestore_key_column_family_name), familyName);
+		userInfo.put(getString(R.string.firestore_key_column_username), username);
+		userInfo.put(getString(R.string.firestore_key_column_email), email);
+		userInfo.put(getString(R.string.firestore_key_column_date_of_birth), dateOfBirth);
+		userInfo.put(getString(R.string.firestore_key_column_profile_picture), profilePicture);
+		// Store the user information in the firestore
+		db.collection(getString(R.string.firestore_key_collection_users))
+		  .document(user.getUid())
+		  .set(userInfo)
+		  .addOnSuccessListener(command -> {
+			  Log.d(TAG, "saveUserInFirestore: great success");
+			  toast.cancel();
+			  // Retrieve the creation date from the internet
+			  // It calls the callback addTimeToFirestoreEntry
+			  new RetrieveInternetTime(this, user.getUid()).execute(getString(R.string.google_time_server_url));
+			  // Acknowledge the purchase if it hasn't already been acknowledged
+			  if (!purchase.isAcknowledged()) {
+				  AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder()
+				                                                              .setPurchaseToken(purchase.getPurchaseToken())
+				                                                              .build();
+				  mBillingClient.acknowledgePurchase(params, this /* onAcknowledgePurchaseResponse */);
+			  }
+		  })
+		  .addOnFailureListener(e -> {
+			  Log.d(TAG, "saveUserInFirestore: failure");
+			  Log.e(TAG, "saveUserInFirestore: ", e);
+			  toast.show();
+		  });
 	}
 	
 	/**
@@ -764,28 +811,30 @@ public class EntryActivity
 		  });
 	}
 	
-	private void createNewUser() {
-		Log.d(TAG, "createNewUser: called");
-		// Change to loading screen
-		changeToLoadingScreen();
-		// Define the HashMap carrying the registration information
-		HashMap<String, String> registrationInformation = getRegistrationFieldsContent();
-		String email = registrationInformation.get(getString(R.string.hashmap_key_email));
-		String password = registrationInformation.get(getString(R.string.hashmap_key_password));
-		// Create user with email and password
-		mAuth.createUserWithEmailAndPassword(email, password)
-		     .addOnSuccessListener(result -> {
-			     Log.d(TAG, "createNewUser: great success");
-			     if (result.getUser() != null) {
-				     saveUserInFirestore(result.getUser());
-			     }
-		     })
-		     .addOnFailureListener(e -> {
-			     Log.d(TAG, "createNewUser: failure");
-			     Log.e(TAG, "createNewUser: ", e);
-			     // TODO: Error handling
-			     changeFromLoadingScreen();
-		     });
+	@Override
+	public void onSkuDetailsResponse(BillingResult result, List<SkuDetails> list) {
+		Log.d(TAG, "onSkuDetailsResponse: called");
+		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+			// Define a new SubscriptionPool
+			SubscriptionPool pool = new SubscriptionPool();
+			// Iterate through the SkuDetails list
+			for (SkuDetails details : list) {
+				// Define a new Subscription based on the SkuDetails
+				Subscription sub = new Subscription(this, details);
+				// Add the new Subscription to the pool
+				pool.addSubscription(sub);
+			}
+			ViewPager2 viewPager2 = findViewById(R.id.entry_activity_subscription_view_pager);
+			// Set the new Adapter to the ViewPager2 as we have the Skus from the server
+			viewPager2.setAdapter(new SubsPagerFinalAdapter(this, pool.sort()));
+		} else {
+			Log.d(TAG, "onSkuDetailsResponse: " + result.getDebugMessage());
+			Log.d(TAG, "onSkuDetailsResponse: " + result.getResponseCode());
+			if (result.getResponseCode() == (BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE |
+			                                 BillingClient.BillingResponseCode.ERROR)) {
+				new SubsPagerInitAdapter(this).retry();
+			}
+		}
 	}
 	
 	@Override
@@ -807,13 +856,7 @@ public class EntryActivity
 		Log.d(TAG, "handlePurchase: called");
 		if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
 			// Grant entitlement to user
-			// Acknowledge the purchase if it hasn't already been acknowledged
-			if (!purchase.isAcknowledged()) {
-				AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder()
-				                                                            .setPurchaseToken(purchase.getPurchaseToken())
-				                                                            .build();
-				mBillingClient.acknowledgePurchase(params, this /* onAcknowledgePurchaseResponse */);
-			}
+			createNewUser(purchase);
 		} else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
 			// Here you can confirm to the user that they've started the pending
 			// purchase, and to complete it, they should follow instructions that
@@ -858,50 +901,32 @@ public class EntryActivity
 		Log.d(TAG, "onConfirmButtonClick: called");
 	}
 	
-	/**
-	 * This method saves users info in firestore upon registration.
-	 *
-	 * @param user The user to save the Uid.
-	 */
-	private void saveUserInFirestore(FirebaseUser user) {
-		Log.d(TAG, "saveUserInFirestore: called");
+	private void createNewUser(Purchase purchase) {
+		Log.d(TAG, "createNewUser: called");
+		// Change to loading screen
+		changeToLoadingScreen();
 		// Define the HashMap carrying the registration information
 		HashMap<String, String> registrationInformation = getRegistrationFieldsContent();
-		// Save the registration information in strings
-		String firstName = registrationInformation.get(getString(R.string.hashmap_key_first_name));
-		String familyName = registrationInformation.get(getString(R.string.hashmap_key_family_name));
-		String username = registrationInformation.get(getString(R.string.hashmap_key_username));
 		String email = registrationInformation.get(getString(R.string.hashmap_key_email));
-		String dateOfBirth = registrationInformation.get(getString(R.string.hashmap_key_date_of_birth));
-		String profilePicture = user.getPhotoUrl() != null ? user.getPhotoUrl()
-		                                                         .toString() : "";
-		FirebaseFirestore db = getFirestoreInstance();
-		Toast toast = Toast.makeText(this, getString(R.string.error_stand_by), Toast.LENGTH_SHORT);
-		// Define the HashMap carrying the user information from the fields
-		HashMap<String, Object> userInfo = new HashMap<>();
-		userInfo.put(getString(R.string.firestore_key_column_first_name), firstName);
-		userInfo.put(getString(R.string.firestore_key_column_family_name), familyName);
-		userInfo.put(getString(R.string.firestore_key_column_username), username);
-		userInfo.put(getString(R.string.firestore_key_column_email), email);
-		userInfo.put(getString(R.string.firestore_key_column_date_of_birth), dateOfBirth);
-		userInfo.put(getString(R.string.firestore_key_column_profile_picture), profilePicture);
-		// Store the user information in the firestore
-		db.collection(getString(R.string.firestore_key_collection_users))
-		  .document(user.getUid())
-		  .set(userInfo)
-		  .addOnSuccessListener(command -> {
-			  Log.d(TAG, "saveUserInFirestore: great success");
-			  toast.cancel();
-			  // Retrieve the creation time from the internet
-			  // It calls the callback addTimeToFirestoreEntry
-			  new RetrieveInternetTime(this, user.getUid()).execute(getString(R.string.google_time_server_url));
-			  updateUI(user);
-		  })
-		  .addOnFailureListener(e -> {
-			  Log.d(TAG, "saveUserInFirestore: failure");
-			  Log.e(TAG, "saveUserInFirestore: ", e);
-			  toast.show();
-		  });
+		String password = registrationInformation.get(getString(R.string.hashmap_key_password));
+		// Create user with email and password
+		mAuth.createUserWithEmailAndPassword(email, password)
+		     .addOnSuccessListener(result -> {
+			     Log.d(TAG, "createNewUser: great success creating user");
+			     if (result.getUser() != null) {
+				     saveUserInFirestore(result.getUser(), purchase);
+			     }
+		     })
+		     .addOnFailureListener(e -> {
+			     Log.d(TAG, "createNewUser: failure creating user");
+			     Log.e(TAG, "createNewUser: ", e);
+			     changeFromLoadingScreen();
+			     // TODO: 15/04/2020 createNewUser: error handling
+			     if (e instanceof com.google.firebase.FirebaseNetworkException) {
+				     String connectionFail = getString(R.string.error_network_connection_failed);
+				     showErrorSnackbar(connectionFail);
+			     }
+		     });
 	}
 	
 	void updateUI(FirebaseUser user) {
@@ -940,7 +965,8 @@ public class EntryActivity
 	@Override
 	public void onAcknowledgePurchaseResponse(BillingResult result) {
 		Log.d(TAG, "onAcknowledgePurchaseResponse: called");
-		createNewUser();
+		// TODO: Verify on backend server
+		updateUI(mAuth.getCurrentUser());
 	}
 	
 	@Override
@@ -948,22 +974,26 @@ public class EntryActivity
 		Log.d(TAG, "onBillingSetupFinished: called");
 		// The billing client is ready. Query SKUs here.
 		if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-			// Define the list carrying the subscription IDs
-			List<String> skus = new ArrayList<>();
-			skus.add(getString(R.string.subscription_bronze));
-			skus.add(getString(R.string.subscription_silver));
-			skus.add(getString(R.string.subscription_gold));
-			skus.add(getString(R.string.subscription_platinum));
 			// Queries the server and calls back
 			mBillingClient.querySkuDetailsAsync(SkuDetailsParams.newBuilder()
-			                                                    .setSkusList(skus)
+			                                                    .setSkusList(getSkuList())
 			                                                    .setType(BillingClient.SkuType.SUBS)
-			                                                    .build(), this
-					/* onSkuDetailsResponse */);
+			                                                    .build(), this /* onSkuDetailsResponse */);
 		} else {
 			Log.w(TAG, "onBillingSetupFinished: result = " + result.getDebugMessage());
 			Log.d(TAG, "onBillingSetupFinished: result code = " + result.getResponseCode());
 		}
+	}
+	
+	private List<String> getSkuList() {
+		Log.d(TAG, "getSkuList: called");
+		// Define the list carrying the subscription IDs
+		List<String> skuList = new ArrayList<>();
+		skuList.add(getString(R.string.subscription_bronze));
+		skuList.add(getString(R.string.subscription_silver));
+		skuList.add(getString(R.string.subscription_gold));
+		skuList.add(getString(R.string.subscription_platinum));
+		return skuList;
 	}
 	
 	@Override

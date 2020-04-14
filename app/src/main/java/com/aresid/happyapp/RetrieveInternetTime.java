@@ -5,9 +5,9 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.apache.commons.net.TimeUDPClient;
+import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Date;
 
@@ -39,12 +39,21 @@ public class RetrieveInternetTime
 		Log.d(TAG, "doInBackground: called");
 		String timeServer = strings[0];
 		try {
-			TimeUDPClient client = new TimeUDPClient();
-			client.open();
+			// Define NTPUDPClient
+			NTPUDPClient client = new NTPUDPClient();
+			// Define InetAddress Object from time server name received in the parameters
 			InetAddress address = InetAddress.getByName(timeServer);
-			return client.getDate(address);
-		} catch (IOException e) {
+			// Define TimeInfo Object from clients time
+			TimeInfo timeInfo = client.getTime(address);
+			// Get the time from the clients time info
+			long returnTime = timeInfo.getMessage()
+			                          .getOriginateTimeStamp()
+			                          .getTime();
+			// Translate the return time long into a Date Object and return it
+			return new Date(returnTime);
+		} catch (Exception e) {
 			Log.e(TAG, "doInBackground: ", e);
+			// If an error occurs, just return the devices local time
 			return new Date();
 		}
 	}

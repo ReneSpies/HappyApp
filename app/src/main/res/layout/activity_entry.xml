@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:id="@+id/frame_layout"
-             android:layout_height="match_parent">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:id="@+id/coordinator_layout"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent">
 	
 	<LinearLayout
 		android:id="@+id/entry_activity_loading_screen"
@@ -28,7 +28,6 @@
 			android:id="@+id/entry_activity_logging_in_waiting_assistant_text_view"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:drawableTop="@drawable/waiting_assistant_content"
 			android:text="@string/logging_in_ellipsis"
 			android:textAlignment="center"
 			android:textAppearance="?attr/textAppearanceCaption"
@@ -301,4 +300,4 @@
 				app:layout_constraintTop_toBottomOf="@+id/entry_activity_subscription_view_pager_caption"/>
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</ScrollView>
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

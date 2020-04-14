@@ -23,6 +23,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -35,7 +36,8 @@ public class MainActivity
 		           AdvertisementFragment.OnFragmentInteractionListener,
 		           HomeFragment.OnFragmentInteractionListener,
 		           OfferFragment.OnFragmentInteractionListener,
-		           LookFragment.OnFragmentInteractionListener {
+		           LookFragment.OnFragmentInteractionListener,
+		           RetrieveInternetTime.OnInternetTimeInteractionListener {
 	private static final String              FIREBASE_USER_INTENT_KEY         = "firesbase_user";
 	private static final String              GOOGLE_SIGNIN_ACCOUNT_INTENT_KEY = "google_sign_in_account";
 	private static final String              USER_FIRESTORE_ID_INTENT_KEY     = "user_firestore_id";
@@ -274,5 +276,10 @@ public class MainActivity
 	private void displayOfferFragment() {
 		Log.d(TAG, "displayOfferFragment:true");
 		new DisplayFragment(this).displayFragment(R.id.fragment_container, OfferFragment.newInstance());
+	}
+	
+	@Override
+	public void addTimeToFirestoreEntry(Date time, String uid) {
+		Log.d(TAG, "addTimeToFirestoreEntry: called");
 	}
 }
