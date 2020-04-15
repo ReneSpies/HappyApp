@@ -8,8 +8,6 @@
 		<item name="rippleColor">@color/rippleColor</item>
 	</style>
 	
-	<style name="Theme.HappyApp.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar"/>
-	
 	<style name="Theme.HappyApp.Launcher">
 		<item name="android:windowBackground">@drawable/launch_screen</item>
 	</style>
