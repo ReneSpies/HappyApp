@@ -30,6 +30,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.aresid.happyapp.activity.MainActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -102,8 +103,7 @@ public class EntryActivity
 	private void loadGifInto(ImageView... gifHolders) {
 		Log.d(TAG, "loadGifInto: called");
 		for (ImageView holder : gifHolders) {
-			Glide.with(this)
-			     .load(getResources().getDrawable(R.drawable.waiting_assistant_content))
+			Glide.with(this).load(getResources().getDrawable(R.drawable.loading_animation))
 			     .into(holder);
 		}
 	}

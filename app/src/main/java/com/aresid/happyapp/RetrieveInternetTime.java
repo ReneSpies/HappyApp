@@ -64,7 +64,7 @@ public class RetrieveInternetTime
 		mListener.addTimeToFirestoreEntry(time, mUid);
 	}
 	
-	interface OnInternetTimeInteractionListener {
+	public interface OnInternetTimeInteractionListener {
 		void addTimeToFirestoreEntry(Date time, String uid);
 	}
 }

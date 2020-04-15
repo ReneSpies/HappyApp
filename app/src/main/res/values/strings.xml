@@ -91,6 +91,10 @@
 	<string name="firestore_key_column_subscription_variant">subscription variant</string>
 	<string name="firestore_key_column_username">username</string>
 	<!-- END Firestore Field Keys -->
+	
+	<!-- Arguments Keys -->
+	<!-- The company name is not yet set so it's happyapp.happyapp -->
+	<string name="arguments_key_email">happyapp.happyapp.arguments.keys.email</string>
 	<!-- END Keys -->
 	
 	<string name="log_out">Log out</string>
@@ -130,4 +134,6 @@
 	<string name="no_suitable_app_found">No suitable app found</string>
 	<string name="ok">OK</string>
 	<string name="cancel">Cancel</string>
+	<string name="register">Register</string>
+	<string name="error_account_disabled_or_deleted">Corresponding account has been disabled or deleted</string>
 </resources>

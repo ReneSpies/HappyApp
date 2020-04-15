@@ -1,4 +1,4 @@
-package com.aresid.happyapp;
+package com.aresid.happyapp.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +18,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.aresid.happyapp.AdvertisementFragment;
+import com.aresid.happyapp.DisplayFragment;
+import com.aresid.happyapp.FavoritesFragment;
+import com.aresid.happyapp.HomeFragment;
+import com.aresid.happyapp.LookFragment;
+import com.aresid.happyapp.MyAccountFragment;
+import com.aresid.happyapp.OfferFragment;
+import com.aresid.happyapp.R;
+import com.aresid.happyapp.RetrieveInternetTime;
+import com.aresid.happyapp.SearchFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;

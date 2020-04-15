@@ -3,156 +3,114 @@
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
-                                                   android:layout_height="wrap_content"
-                                                   android:gravity="center_horizontal"
+                                                   android:layout_height="match_parent"
                                                    android:padding="@dimen/fragmentPaddingMedium"
-                                                   tools:context="com.aresid.happyapp.android.aresid.happyapp.EntryActivity">
+                                                   tools:context=".activity.MainActivity2">
 	
 	<ImageView
-		android:id="@+id/progress_bar"
-		android:layout_width="@dimen/waitingAssistantStandardSize"
-		android:layout_height="@dimen/waitingAssistantStandardSize"
-		android:layout_marginTop="8dp"
-		android:layout_marginBottom="8dp"
-		android:contentDescription="Happy App logo"
-		android:visibility="invisible"
-		app:layout_constraintBottom_toTopOf="@+id/google_linear_layout"
+		android:id="@+id/app_logo"
+		android:layout_width="@dimen/imageViewAppLogoSize"
+		android:layout_height="@dimen/imageViewAppLogoSize"
+		android:contentDescription="@string/happy_app_logo"
+		android:src="@drawable/ic_app_logo"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="@+id/login_linear_layout"/>
+		app:layout_constraintTop_toTopOf="parent"/>
 	
-	<TextView
-		android:id="@+id/login_text_view"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="8dp"
-		android:layout_marginTop="8dp"
-		android:layout_marginEnd="8dp"
-		android:layout_marginBottom="8dp"
-		android:text="@string/logging_in_ellipsis"
-		android:visibility="invisible"
-		app:layout_constraintBottom_toTopOf="@+id/google_linear_layout"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/progress_bar"/>
-	
-	<LinearLayout
-		android:id="@+id/login_linear_layout"
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/email_field_layout"
+		style="@style/Widget.HappyApp.TextInputLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
+		app:errorEnabled="true"
+		app:layout_constraintTop_toBottomOf="@+id/app_logo">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/email_field"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/email"
+			android:inputType="textEmailAddress"
+			android:maxLines="1"
+			android:singleLine="true"/>
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/password_field_layout"
+		style="@style/Widget.HappyApp.TextInputLayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:errorEnabled="true"
+		app:layout_constraintTop_toBottomOf="@+id/email_field_layout"
+		app:passwordToggleEnabled="true">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/password_field"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/password"
+			android:imeActionId="6"
+			android:imeActionLabel="@string/common_signin_button_text"
+			android:imeOptions="actionUnspecified"
+			android:inputType="textPassword"
+			android:maxLines="1"
+			android:singleLine="true"/>
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<LinearLayout
+		android:id="@+id/loading_view_layout"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:paddingHorizontal="@dimen/fragmentPaddingSmall"
+		android:visibility="invisible"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
+		app:layout_constraintTop_toBottomOf="@+id/password_field_layout">
 		
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/login_email_field_layout"
-			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			app:errorEnabled="true">
-			
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/login_email_field"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:hint="@string/email"
-				android:inputType="textEmailAddress"
-				android:maxLines="1"
-				android:singleLine="true"/>
-		</com.google.android.material.textfield.TextInputLayout>
+		<ImageView
+			android:id="@+id/loading_view_container"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:contentDescription="@string/processing_login"
+			android:src="@drawable/loading_animation"/>
 		
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/login_password_field_layout"
-			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
+		<TextView
+			android:id="@+id/loading_view_text"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			app:errorEnabled="true"
-			app:passwordToggleEnabled="true">
-			
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/login_password_field"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:hint="@string/password"
-				android:imeActionId="6"
-				android:imeActionLabel="@string/common_signin_button_text"
-				android:imeOptions="actionUnspecified"
-				android:inputType="textPassword"
-				android:maxLines="1"
-				android:singleLine="true"/>
-		</com.google.android.material.textfield.TextInputLayout>
+			android:layout_gravity="center"
+			android:text="@string/logging_in_ellipsis"/>
 	</LinearLayout>
 	
 	<com.google.android.material.button.MaterialButton
-		android:id="@+id/login_login_button"
+		android:id="@+id/login_button"
 		style="@style/Widget.HappyApp.ContainedButton"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/log_in"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/login_linear_layout"/>
+		app:layout_constraintTop_toBottomOf="@+id/loading_view_layout"/>
 	
-	<LinearLayout
-		android:id="@+id/google_linear_layout"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_marginTop="100dp"
-		android:orientation="vertical"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/login_login_button">
-		
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="0.8dp"
-			android:background="#808080"/>
-		
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/or_log_in_using"
-			android:textAlignment="center"/>
-		
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/login_google_button"
-			style="@style/Widget.HappyApp.ContainedButton"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/buttonMarginStartEnd"
-			android:layout_marginEnd="@dimen/buttonMarginStartEnd"
-			android:text="@string/google"/>
-	</LinearLayout>
-	
-	<LinearLayout
-		android:id="@+id/sign_up_linear_layout"
+	<TextView
+		android:id="@+id/register_text_view"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="10dp"
-		android:orientation="vertical"
+		android:text="@string/question_no_account_yet"
+		android:textAlignment="center"
+		app:layout_constraintBottom_toTopOf="@+id/register_button"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/google_linear_layout">
-		
-		<View
-			android:layout_width="match_parent"
-			android:layout_height="0.8dp"
-			android:background="#808080"/>
-		
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/question_no_account_yet"
-			android:textAlignment="center"/>
-		
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/login_sign_up_button"
-			style="@style/Widget.HappyApp.ContainedButton"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginStart="@dimen/buttonMarginStartEnd"
-			android:layout_marginEnd="@dimen/buttonMarginStartEnd"
-			android:text="@string/sign_me_up"/>
-	</LinearLayout>
+		app:layout_constraintStart_toStartOf="parent"/>
+	
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/register_button"
+		style="@style/Widget.HappyApp.OutlinedButton"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/register"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

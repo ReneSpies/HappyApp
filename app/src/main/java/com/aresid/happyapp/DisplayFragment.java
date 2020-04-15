@@ -15,7 +15,7 @@ public class DisplayFragment {
 	private static final String           TAG = "DisplayFragment";
 	private              FragmentActivity mFragmentActivity;
 	
-	DisplayFragment(FragmentActivity fragmentActivity) {
+	public DisplayFragment(FragmentActivity fragmentActivity) {
 		Log.d(TAG, "DisplayFragment:true");
 		mFragmentActivity = fragmentActivity;
 	}
@@ -29,7 +29,7 @@ public class DisplayFragment {
 		                 .commit();
 	}
 	
-	void displayFragment(int containerResource, Fragment fragment) {
+	public void displayFragment(int containerResource, Fragment fragment) {
 		Log.d(TAG, "displayFragment:true");
 		mFragmentActivity.getSupportFragmentManager()
 		                 .beginTransaction()
