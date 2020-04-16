@@ -5,13 +5,23 @@
                                                    android:layout_height="match_parent">
 	
 	<TextView
-		android:id="@+id/text_view"
+		android:id="@+id/view_pager_title"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="registration layout"
+		android:text="@string/choose_subscription"
+		android:textAppearance="?attr/textAppearanceHeadline5"
+		app:layout_constraintStart_toStartOf="parent"
 		android:textAlignment="center"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintTop_toTopOf="parent"/>
+	
+	<androidx.viewpager2.widget.ViewPager2
+		android:id="@+id/view_pager"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"/>
+		app:layout_constraintTop_toBottomOf="@+id/view_pager_title"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
