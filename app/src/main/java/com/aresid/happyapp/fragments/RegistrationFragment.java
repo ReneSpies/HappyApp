@@ -62,12 +62,14 @@ public class RegistrationFragment
 		
 		Log.d(TAG, "onViewCreated: called");
 		super.onViewCreated(view, savedInstanceState);
+		
 		// Use this class to reference the views
 		// Define NavController
 		mNavController = Navigation.findNavController(view);
+		
 		// Define the views
-		TextView textView = view.findViewById(R.id.text_view);
-		textView.setText(mEmailText);
+		TextView emailField = view.findViewById(R.id.email_field);
+		emailField.setText(mEmailText);
 	}
 	
 }

@@ -34,6 +34,7 @@ android {
 
 dependencies {
     def navigation_version = '2.3.0-alpha04'
+    def commons_net_version = '3.6'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.billingclient:billing:2.2.0'
     implementation 'androidx.leanback:leanback:1.0.0'
@@ -42,8 +43,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.navigation:navigation-fragment:$navigation_version"
     implementation "androidx.navigation:navigation-ui:$navigation_version"
-    //noinspection GradleDependency
-    implementation 'commons-net:commons-net:3.6'
+    implementation "commons-net:commons-net:$commons_net_version"
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
