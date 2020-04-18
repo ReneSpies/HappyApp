@@ -22,7 +22,9 @@ import com.aresid.happyapp.RegistrationChecker;
  * Copyright: © 2020 ARES ID
  */
 public class RegistrationFragment
-		extends Fragment {
+		extends Fragment
+		implements RegistrationChecker.RegistrationCheckerListener,
+		           View.OnClickListener {
 	
 	private static final String              TAG = "RegistrationFragment";
 	private              NavController       mNavController;
@@ -78,10 +80,56 @@ public class RegistrationFragment
 		mNavController = Navigation.findNavController(view);
 		
 		// Define the RegistrationChecker
-		mRegistrationChecker = new RegistrationChecker(view);
+		mRegistrationChecker = new RegistrationChecker(this, view);
 		
 		// Send the email text to the registration checker which sets it to the field
 		mRegistrationChecker.setEmailText(mEmailText);
+		
+		// Set the OnClickListener for the subscribe button
+		view.findViewById(R.id.subscribe_button).setOnClickListener(this);
+		
+	}
+	
+	/**
+	 * Is called when everything is ok with the registration forms input.
+	 */
+	@Override
+	public void inputIsOk() {
+		
+		Log.d(TAG, "inputIsOk: called");
+		
+		// Get registration forms input as bundle and pass it to the subscribe fragment
+		
+		// Define the Bundle
+		Bundle arguments = mRegistrationChecker.getInputBundle();
+		
+		// Navigate to the subscription fragment and pass the bundle
+		mNavController.navigate(R.id.action_registrationFragment_to_subscriptionFragment, arguments);
+		
+	}
+	
+	@Override
+	public void onClick(View v) {
+		
+		Log.d(TAG, "onClick: called");
+		
+		if (v.getId() == R.id.subscribe_button) {
+			
+			onSubscribeButtonClicked();
+			
+		}
+		
+	}
+	
+	/**
+	 * Checks registration form input and continues with inputIsOk callback if appropriate.
+	 */
+	private void onSubscribeButtonClicked() {
+		
+		Log.d(TAG, "onSubscribeButtonClicked: called");
+		
+		// Check registration form input
+		mRegistrationChecker.checkInput(); // Calls inputIsOk()
 		
 	}
 	

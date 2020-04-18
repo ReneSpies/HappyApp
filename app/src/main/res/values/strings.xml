@@ -107,7 +107,7 @@
 	<string name="error_try_again">Oops. Something went wrong. Please try again</string>
 	<string name="error_stand_by">Oops. Something went wrong. Please stand by</string>
 	<string name="error_field_starts_with_whitespace">%1d cannot start with whitespace</string>
-	<string name="please_confirm">Please confirm</string>
+	<string name="error_please_confirm">Please confirm</string>
 	<string name="error_password_must_be_6_long">I need to be longer than 6 characters of your choice</string>
 	<string name="error_email_or_password_incorrect">Email or password incorrect</string>
 	<string name="error_no_user_found">There is no user record corresponding to this identifier. The user may have been deleted</string>

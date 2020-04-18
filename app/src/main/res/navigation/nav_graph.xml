@@ -38,12 +38,16 @@
 		android:label="RegistrationFragment"
 		tools:layout="@layout/fragment_registration">
 		<action
-			android:id="@+id/action_registrationFragment_to_loadingFragment"
-			app:destination="@id/loadingFragment"/>
+			android:id="@+id/action_registrationFragment_to_subscriptionFragment"
+			app:destination="@id/subscriptionFragment"/>
 	</fragment>
 	<fragment
 		android:id="@+id/loadingFragment"
 		android:name="com.aresid.happyapp.fragments.LoadingFragment"
 		android:label="LoadingFragment"
 		tools:layout="@layout/fragment_loading"/>
+	<fragment
+		android:id="@+id/subscriptionFragment"
+		android:name="com.aresid.happyapp.fragments.SubscriptionFragment"
+		android:label="SubscriptionFragment"/>
 </navigation>

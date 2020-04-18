@@ -388,7 +388,7 @@ public class EntryActivity
 			setFieldLayoutErrorAndScroll(registrationDateOfBirthFieldLayout, youForgotMe);
 			return false;
 		} else if (!termsAndConditionsCheckBox.isChecked()) {
-			termsAndConditionsCheckBox.setError(getString(R.string.please_confirm));
+			termsAndConditionsCheckBox.setError(getString(R.string.error_please_confirm));
 			smoothScrollTo(registrationDateOfBirthFieldLayout.getBottom());
 			return false;
 		}
@@ -462,7 +462,7 @@ public class EntryActivity
 			smoothScrollTo(registrationDateOfBirthFieldLayout.getTop());
 			return false;
 		} else if (!termsAndConditionsCheckBox.isChecked()) {
-			termsAndConditionsCheckBox.setError(getString(R.string.please_confirm));
+			termsAndConditionsCheckBox.setError(getString(R.string.error_please_confirm));
 			smoothScrollTo(registrationDateOfBirthFieldLayout.getBottom());
 			return false;
 		}
