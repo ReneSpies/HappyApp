@@ -11,14 +11,13 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.aresid.happyapp.R;
+import com.aresid.happyapp.utils.Utils;
 import com.bumptech.glide.Glide;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -70,8 +69,7 @@ public class LoginFragment
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		Log.d(TAG, "onCreateView: called");
 		
@@ -112,10 +110,130 @@ public class LoginFragment
 		Glide.with(view).load(getResources().getDrawable(R.drawable.loading_animation)).into((ImageView) view.findViewById(R.id.loading_view_container));
 	}
 	
+	@Override
+	public void onClick(View v) {
+		
+		Log.d(TAG, "onClick: called");
+		switch (v.getId()) {
+			case R.id.login_button:
+				onLoginButtonClicked((Button) v);
+				break;
+			case R.id.register_button:
+				onRegisterButtonClicked();
+				break;
+		}
+	}
+	
+	private void onLoginButtonClicked(Button view) {
+		
+		Log.d(TAG, "onLoginButtonClicked: called");
+		
+		// Define Strings carrying the fields text
+		String email = Utils.getString(mEmailField.getText());
+		String password = Utils.getString(mPasswordField.getText());
+		
+		// Reset old layout errors
+		resetLoginLayoutErrors();
+		
+		// Define error string
+		String youForgotMeError = getString(R.string.error_you_forgot_me);
+		
+		// If email length is 0, set appropriate error
+		if (email.length() == 0) {
+			
+			mEmailFieldLayout.setError(youForgotMeError);
+			
+			return;
+			
+		}
+		
+		// If password length is 0, set appropriate error
+		if (password.length() == 0) {
+			
+			mPasswordFieldLayout.setError(youForgotMeError);
+			
+			return;
+			
+		}
+		
+		// Set loading view layout visible to show loading animation
+		mLoadingViewLayout.setVisibility(View.VISIBLE);
+		
+		// Disable login button
+		view.setEnabled(false);
+		
+		// Sign in with email and password
+		mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(result -> {
+			
+			Log.d(TAG, "onLoginButtonClicked: great success logging user in");
+			
+			// Send the user to MainFragment if exist
+			updateUI(result.getUser());
+			
+		}).addOnFailureListener(e -> {
+			
+			Log.d(TAG, "onLoginButtonClicked: failure logging user in");
+			Log.e(TAG, "onLoginButtonClicked: ", e);
+			
+			// Set layout errors null so no multiple errors are shown
+			resetLoginLayoutErrors();
+			
+			// Suppress the loading view
+			mLoadingViewLayout.setVisibility(View.INVISIBLE);
+			
+			// Enable login button again
+			view.setEnabled(true);
+			
+			if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
+				
+				// Wrong credentials
+				mEmailFieldLayout.setError(getString(R.string.error_email_or_password_incorrect));
+				
+			}
+			
+			// Account for email exists but has been deleted or disabled
+			else if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
+				
+				// Set appropriate error
+				mEmailFieldLayout.setError(getString(R.string.error_account_disabled_or_deleted));
+				
+			}
+			
+			// Network connection failed
+			else if (e instanceof com.google.firebase.FirebaseNetworkException) {
+				
+				// Show appropriate error Snackbar
+				Utils.showErrorSnackbar(mEmailFieldLayout, getString(R.string.error_network_connection_failed), requireContext());
+				
+			}
+		});
+	}
+	
+	private void onRegisterButtonClicked() {
+		
+		Log.d(TAG, "onRegisterButtonClicked: called");
+		
+		// Define a new Bundle
+		Bundle bundle = new Bundle();
+		
+		// Access the email field and save its text into a new String
+		String email = Utils.getString(mEmailField.getText());
+		
+		// Define String from getString() method
+		String emailKey = getString(R.string.arguments_key_email);
+		
+		// Put the email into the bundle using the key
+		bundle.putString(emailKey, email);
+		
+		// Finally navigate to the new fragment and pass the bundle
+		mNavController.navigate(R.id.action_loginFragment_to_registrationFragment, bundle);
+		
+	}
+	
 	/**
-	 * Sends user to the MainFragment if exists
+	 * Sends user to the MainFragment if exists.
 	 *
-	 * @param user FirebaseUser
+	 * @param user FirebaseUser.
 	 */
 	private void updateUI(FirebaseUser user) {
 		
@@ -130,113 +248,6 @@ public class LoginFragment
 		
 	}
 	
-	@Override
-	public void onClick(View v) {
-		
-		Log.d(TAG, "onClick: called");
-		switch (v.getId()) {
-			case R.id.login_button:
-				onLoginButtonClicked((Button) v);
-				break;
-			case R.id.register_button:
-				onRegisterButtonClicked(v);
-				break;
-		}
-	}
-	
-	private void onLoginButtonClicked(Button view) {
-		
-		Log.d(TAG, "onLoginButtonClicked: called");
-		
-		// Define Strings carrying the fields text
-		String email = mEmailField.getText().toString();
-		String password = mPasswordField.getText().toString();
-		
-		resetLoginLayoutErrors();
-		
-		// Define error string
-		String youForgotMeError = getString(R.string.error_you_forgot_me);
-		
-		if (email.length() == 0) {
-			
-			mEmailFieldLayout.setError(youForgotMeError);
-			
-			return;
-		}
-		if (password.length() == 0) {
-			
-			mPasswordFieldLayout.setError(youForgotMeError);
-			
-			return;
-		}
-		
-		// Set loading view layout visible to show loading animation
-		mLoadingViewLayout.setVisibility(View.VISIBLE);
-		
-		// Disable login button
-		view.setEnabled(false);
-		
-		// Sign in with email and password
-		mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(result -> {
-			
-			Log.d(TAG, "onLoginButtonClicked: great success logging user in");
-			
-			updateUI(result.getUser());
-			
-		}).addOnFailureListener(e -> {
-			
-			Log.d(TAG, "onLoginButtonClicked: failure logging user in");
-			Log.e(TAG, "onLoginButtonClicked: ", e);
-			
-			// Set layout errors null so no multiple errors are shown
-			resetLoginLayoutErrors();
-			
-			mLoadingViewLayout.setVisibility(View.INVISIBLE);
-			
-			// Enable login button again
-			view.setEnabled(true);
-			
-			if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
-				
-				// Wrong credentials
-				mEmailFieldLayout.setError(getString(R.string.error_email_or_password_incorrect));
-				
-			} else if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidUserException) {
-				
-				// Account for email exists but has been deleted or disabled
-				mEmailFieldLayout.setError(getString(R.string.error_account_disabled_or_deleted));
-				
-			} else if (e instanceof com.google.firebase.FirebaseNetworkException) {
-				
-				// Network connection failed
-				showErrorSnackbar(mEmailFieldLayout,
-						getString(R.string.error_network_connection_failed));
-				
-			}
-		});
-	}
-	
-	private void onRegisterButtonClicked(View view) {
-		
-		Log.d(TAG, "onRegisterButtonClicked: called");
-		
-		// Define a new Bundle
-		Bundle bundle = new Bundle();
-		
-		// Access the email field and save its text into a new String
-		String email = mEmailField.getText().toString();
-		
-		// Define String from getString() method
-		String emailKey = getString(R.string.arguments_key_email);
-		
-		// Put the email into the bundle using the key
-		bundle.putString(emailKey, email);
-		
-		// Finally navigate to the new fragment and pass the bundle
-		mNavController.navigate(R.id.action_loginFragment_to_registrationFragment, bundle);
-		
-	}
-	
 	/**
 	 * Sets the email and password field layouts error null
 	 */
@@ -247,13 +258,6 @@ public class LoginFragment
 		// Set layout error null
 		mEmailFieldLayout.setError(null);
 		mPasswordFieldLayout.setError(null);
-		
-	}
-	
-	private void showErrorSnackbar(View snackbarView, String message) {
-		
-		Log.d(TAG, "showErrorSnackbar: called");
-		Snackbar.make(snackbarView, message, Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.design_default_color_error)).show();
 		
 	}
 	
