@@ -72,6 +72,10 @@
 		<item name="android:textColor">?attr/colorOnSurface</item>
 	</style>
 	
+	<style name="Widget.HappyApp.RoundImageButton" parent="Widget.AppCompat.ImageButton">
+		<item name="background">@drawable/round_button_background</item>
+	</style>
+	
 	<style name="Theme.HappyApp.Fragment">
 		<item name="background">@color/fragmentBackgroundColor</item>
 		<item name="elevation">4dp</item>

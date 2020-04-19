@@ -95,7 +95,8 @@ public class LoginFragment
 		
 		// Set onClickListeners
 		view.findViewById(R.id.login_button).setOnClickListener(this);
-		view.findViewById(R.id.register_button).setOnClickListener(this);
+		view.findViewById(R.id.email_signup_button).setOnClickListener(this);
+		view.findViewById(R.id.google_signup_button).setOnClickListener(this);
 		
 		// Define fields and layouts for login flow
 		mEmailFieldLayout = view.findViewById(R.id.email_field_layout);
@@ -118,8 +119,10 @@ public class LoginFragment
 			case R.id.login_button:
 				onLoginButtonClicked((Button) v);
 				break;
-			case R.id.register_button:
-				onRegisterButtonClicked();
+			case R.id.email_signup_button:
+				onEmailSignupButtonClicked();
+				break;
+			case R.id.google_signup_button:
 				break;
 		}
 	}
@@ -209,9 +212,9 @@ public class LoginFragment
 		});
 	}
 	
-	private void onRegisterButtonClicked() {
+	private void onEmailSignupButtonClicked() {
 		
-		Log.d(TAG, "onRegisterButtonClicked: called");
+		Log.d(TAG, "onEmailSignupButtonClicked: called");
 		
 		// Define a new Bundle
 		Bundle bundle = new Bundle();

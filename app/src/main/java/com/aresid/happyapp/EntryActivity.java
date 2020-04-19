@@ -712,57 +712,31 @@ public class EntryActivity
 		finishAffinity();
 	}
 	
-	/**
-	 * This method saves users info in firestore upon registration.
-	 *
-	 * @param user     The user to save the Uid.
-	 * @param purchase
-	 */
-	private void saveUserInFirestore(FirebaseUser user, Purchase purchase) {
-		Log.d(TAG, "saveUserInFirestore: called");
-		// Define the HashMap carrying the registration information
+	private void createNewUser(Purchase purchase) {
+		
+		Log.d(TAG, "createNewUser: called");
+		// Change to loading screen
+		changeToLoadingScreen();
+		// Define the HashMap carrying the signup information
 		HashMap<String, String> registrationInformation = getRegistrationFieldsContent();
-		// Save the registration information in strings
-		String firstName = registrationInformation.get(getString(R.string.hashmap_key_first_name));
-		String familyName = registrationInformation.get(getString(R.string.hashmap_key_family_name));
-		String username = registrationInformation.get(getString(R.string.hashmap_key_username));
 		String email = registrationInformation.get(getString(R.string.hashmap_key_email));
-		String dateOfBirth = registrationInformation.get(getString(R.string.hashmap_key_date_of_birth));
-		String profilePicture = user.getPhotoUrl() != null ? user.getPhotoUrl()
-		                                                         .toString() : "";
-		FirebaseFirestore db = getFirestoreInstance();
-		Toast toast = Toast.makeText(this, getString(R.string.error_stand_by), Toast.LENGTH_SHORT);
-		// Define the HashMap carrying the user information from the fields
-		HashMap<String, Object> userInfo = new HashMap<>();
-		userInfo.put(getString(R.string.firestore_key_column_first_name), firstName);
-		userInfo.put(getString(R.string.firestore_key_column_family_name), familyName);
-		userInfo.put(getString(R.string.firestore_key_column_username), username);
-		userInfo.put(getString(R.string.firestore_key_column_email), email);
-		userInfo.put(getString(R.string.firestore_key_column_date_of_birth), dateOfBirth);
-		userInfo.put(getString(R.string.firestore_key_column_profile_picture), profilePicture);
-		// Store the user information in the firestore
-		db.collection(getString(R.string.firestore_key_collection_users))
-		  .document(user.getUid())
-		  .set(userInfo)
-		  .addOnSuccessListener(command -> {
-			  Log.d(TAG, "saveUserInFirestore: great success");
-			  toast.cancel();
-			  // Retrieve the creation date from the internet
-			  // It calls the callback addTimeToFirestoreEntry
-			  new RetrieveInternetTime(this, user.getUid()).execute(getString(R.string.google_time_server_url));
-			  // Acknowledge the purchase if it hasn't already been acknowledged
-			  if (!purchase.isAcknowledged()) {
-				  AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder()
-				                                                              .setPurchaseToken(purchase.getPurchaseToken())
-				                                                              .build();
-				  mBillingClient.acknowledgePurchase(params, this /* onAcknowledgePurchaseResponse */);
-			  }
-		  })
-		  .addOnFailureListener(e -> {
-			  Log.d(TAG, "saveUserInFirestore: failure");
-			  Log.e(TAG, "saveUserInFirestore: ", e);
-			  toast.show();
-		  });
+		String password = registrationInformation.get(getString(R.string.hashmap_key_password));
+		// Create user with email and password
+		mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(result -> {
+			Log.d(TAG, "createNewUser: great success creating user");
+			if (result.getUser() != null) {
+				saveUserInFirestore(result.getUser(), purchase);
+			}
+		}).addOnFailureListener(e -> {
+			Log.d(TAG, "createNewUser: failure creating user");
+			Log.e(TAG, "createNewUser: ", e);
+			changeFromLoadingScreen();
+			// TODO: 15/04/2020 createNewUser: error handling
+			if (e instanceof com.google.firebase.FirebaseNetworkException) {
+				String connectionFail = getString(R.string.error_network_connection_failed);
+				showErrorSnackbar(connectionFail);
+			}
+		});
 	}
 	
 	/**
@@ -901,32 +875,51 @@ public class EntryActivity
 		Log.d(TAG, "onConfirmButtonClick: called");
 	}
 	
-	private void createNewUser(Purchase purchase) {
-		Log.d(TAG, "createNewUser: called");
-		// Change to loading screen
-		changeToLoadingScreen();
-		// Define the HashMap carrying the registration information
+	/**
+	 * This method saves users info in firestore upon signup.
+	 *
+	 * @param user     The user to save the Uid.
+	 * @param purchase
+	 */
+	private void saveUserInFirestore(FirebaseUser user, Purchase purchase) {
+		
+		Log.d(TAG, "saveUserInFirestore: called");
+		// Define the HashMap carrying the signup information
 		HashMap<String, String> registrationInformation = getRegistrationFieldsContent();
+		// Save the signup information in strings
+		String firstName = registrationInformation.get(getString(R.string.hashmap_key_first_name));
+		String familyName = registrationInformation.get(getString(R.string.hashmap_key_family_name));
+		String username = registrationInformation.get(getString(R.string.hashmap_key_username));
 		String email = registrationInformation.get(getString(R.string.hashmap_key_email));
-		String password = registrationInformation.get(getString(R.string.hashmap_key_password));
-		// Create user with email and password
-		mAuth.createUserWithEmailAndPassword(email, password)
-		     .addOnSuccessListener(result -> {
-			     Log.d(TAG, "createNewUser: great success creating user");
-			     if (result.getUser() != null) {
-				     saveUserInFirestore(result.getUser(), purchase);
-			     }
-		     })
-		     .addOnFailureListener(e -> {
-			     Log.d(TAG, "createNewUser: failure creating user");
-			     Log.e(TAG, "createNewUser: ", e);
-			     changeFromLoadingScreen();
-			     // TODO: 15/04/2020 createNewUser: error handling
-			     if (e instanceof com.google.firebase.FirebaseNetworkException) {
-				     String connectionFail = getString(R.string.error_network_connection_failed);
-				     showErrorSnackbar(connectionFail);
-			     }
-		     });
+		String dateOfBirth = registrationInformation.get(getString(R.string.hashmap_key_date_of_birth));
+		String profilePicture = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : "";
+		FirebaseFirestore db = getFirestoreInstance();
+		Toast toast = Toast.makeText(this, getString(R.string.error_stand_by), Toast.LENGTH_SHORT);
+		// Define the HashMap carrying the user information from the fields
+		HashMap<String, Object> userInfo = new HashMap<>();
+		userInfo.put(getString(R.string.firestore_key_column_first_name), firstName);
+		userInfo.put(getString(R.string.firestore_key_column_family_name), familyName);
+		userInfo.put(getString(R.string.firestore_key_column_username), username);
+		userInfo.put(getString(R.string.firestore_key_column_email), email);
+		userInfo.put(getString(R.string.firestore_key_column_date_of_birth), dateOfBirth);
+		userInfo.put(getString(R.string.firestore_key_column_profile_picture), profilePicture);
+		// Store the user information in the firestore
+		db.collection(getString(R.string.firestore_key_collection_users)).document(user.getUid()).set(userInfo).addOnSuccessListener(command -> {
+			Log.d(TAG, "saveUserInFirestore: great success");
+			toast.cancel();
+			// Retrieve the creation date from the internet
+			// It calls the callback addTimeToFirestoreEntry
+			new RetrieveInternetTime(this, user.getUid()).execute(getString(R.string.google_time_server_url));
+			// Acknowledge the purchase if it hasn't already been acknowledged
+			if (!purchase.isAcknowledged()) {
+				AcknowledgePurchaseParams params = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
+				mBillingClient.acknowledgePurchase(params, this /* onAcknowledgePurchaseResponse */);
+			}
+		}).addOnFailureListener(e -> {
+			Log.d(TAG, "saveUserInFirestore: failure");
+			Log.e(TAG, "saveUserInFirestore: ", e);
+			toast.show();
+		  });
 	}
 	
 	void updateUI(FirebaseUser user) {

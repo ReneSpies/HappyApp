@@ -34,7 +34,7 @@
 		tools:layout="@layout/fragment_main"/>
 	<fragment
 		android:id="@+id/registrationFragment"
-		android:name="com.aresid.happyapp.fragments.RegistrationFragment"
+		android:name="com.aresid.happyapp.signup.EmailSignupFragment"
 		android:label="RegistrationFragment"
 		tools:layout="@layout/fragment_registration">
 		<action

@@ -1,4 +1,4 @@
-package com.aresid.happyapp.fragments;
+package com.aresid.happyapp.signup;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +13,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.aresid.happyapp.R;
-import com.aresid.happyapp.RegistrationChecker;
 
 /**
  * Created on: 15/04/2020
@@ -21,19 +20,19 @@ import com.aresid.happyapp.RegistrationChecker;
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
-public class RegistrationFragment
+public class EmailSignupFragment
 		extends Fragment
-		implements RegistrationChecker.RegistrationCheckerListener,
+		implements EmailSignupChecker.SignupCheckerListener,
 		           View.OnClickListener {
 	
-	private static final String              TAG = "RegistrationFragment";
-	private              NavController       mNavController;
-	private              String              mEmailText;
-	private              RegistrationChecker mRegistrationChecker;
+	private static final String             TAG = "EmailSignupFragment";
+	private              NavController      mNavController;
+	private              String             mEmailText;
+	private              EmailSignupChecker mRegistrationChecker;
 	
-	public RegistrationFragment() {
+	public EmailSignupFragment() {
 		
-		Log.d(TAG, "RegistrationFragment: called");
+		Log.d(TAG, "EmailSignupFragment: called");
 		// Required public empty constructor
 		
 	}
@@ -79,10 +78,10 @@ public class RegistrationFragment
 		// Define NavController
 		mNavController = Navigation.findNavController(view);
 		
-		// Define the RegistrationChecker
-		mRegistrationChecker = new RegistrationChecker(this, view);
+		// Define the EmailSignupChecker
+		mRegistrationChecker = new EmailSignupChecker(this, view);
 		
-		// Send the email text to the registration checker which sets it to the field
+		// Send the email text to the signup checker which sets it to the field
 		mRegistrationChecker.setEmailText(mEmailText);
 		
 		// Set the OnClickListener for the subscribe button
@@ -91,14 +90,14 @@ public class RegistrationFragment
 	}
 	
 	/**
-	 * Is called when everything is ok with the registration forms input.
+	 * Is called when everything is ok with the signup forms input.
 	 */
 	@Override
 	public void inputIsOk() {
 		
 		Log.d(TAG, "inputIsOk: called");
 		
-		// Get registration forms input as bundle and pass it to the subscribe fragment
+		// Get signup forms input as bundle and pass it to the subscribe fragment
 		
 		// Define the Bundle
 		Bundle arguments = mRegistrationChecker.getInputBundle();
@@ -122,13 +121,13 @@ public class RegistrationFragment
 	}
 	
 	/**
-	 * Checks registration form input and continues with inputIsOk callback if appropriate.
+	 * Checks signup form input and continues with inputIsOk callback if appropriate.
 	 */
 	private void onSubscribeButtonClicked() {
 		
 		Log.d(TAG, "onSubscribeButtonClicked: called");
 		
-		// Check registration form input
+		// Check signup form input
 		mRegistrationChecker.checkInput(); // Calls inputIsOk()
 		
 	}

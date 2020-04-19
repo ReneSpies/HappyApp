@@ -1,4 +1,4 @@
-package com.aresid.happyapp;
+package com.aresid.happyapp.signup;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +9,7 @@ import android.widget.ScrollView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.aresid.happyapp.R;
 import com.aresid.happyapp.keys.Keys;
 import com.aresid.happyapp.utils.Utils;
 import com.google.android.material.textfield.TextInputEditText;
@@ -23,52 +24,52 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * Copyright: © 2020 ARES ID
  */
 
-public class RegistrationChecker {
+public class EmailSignupChecker {
 	
-	private static final String                      TAG = "RegistrationChecker";
-	private final        FirebaseAuth                mAuth;
-	private final        Fragment                    mContext;
-	private final        RegistrationCheckerListener mListener;
-	private              View                        mParentView;
+	private static final String                TAG = "EmailSignupChecker";
+	private final        FirebaseAuth          mAuth;
+	private final        Fragment              mContext;
+	private final        SignupCheckerListener mListener;
+	private              View                  mParentView;
 	// Fields layouts
-	private              TextInputLayout             mFirstNameFieldLayout;
-	private              TextInputLayout             mFamilyNameFieldLayout;
-	private              TextInputLayout             mUsernameFieldLayout;
-	private              TextInputLayout             mEmailFieldLayout;
-	private              TextInputLayout             mPasswordFieldLayout;
-	private              TextInputLayout             mDateOfBirthFieldLayout;
+	private              TextInputLayout       mFirstNameFieldLayout;
+	private              TextInputLayout       mFamilyNameFieldLayout;
+	private              TextInputLayout       mUsernameFieldLayout;
+	private              TextInputLayout       mEmailFieldLayout;
+	private              TextInputLayout       mPasswordFieldLayout;
+	private              TextInputLayout       mDateOfBirthFieldLayout;
 	// Fields
-	private              TextInputEditText           mFirstNameField;
-	private              TextInputEditText           mFamilyNameField;
-	private              TextInputEditText           mUsernameField;
-	private              TextInputEditText           mEmailField;
-	private              TextInputEditText           mPasswordField;
-	private              TextInputEditText           mDateOfBirthField;
+	private              TextInputEditText     mFirstNameField;
+	private              TextInputEditText     mFamilyNameField;
+	private              TextInputEditText     mUsernameField;
+	private              TextInputEditText     mEmailField;
+	private              TextInputEditText     mPasswordField;
+	private              TextInputEditText     mDateOfBirthField;
 	// Checkbox
-	private              CheckBox                    mLegalitiesCheckbox;
+	private              CheckBox              mLegalitiesCheckbox;
 	// Field text Strings
-	private              String                      mFirstName;
-	private              String                      mFamilyName;
-	private              String                      mUsername;
-	private              String                      mEmail;
-	private              String                      mPassword;
-	private              String                      mDateOfBirth;
+	private              String                mFirstName;
+	private              String                mFamilyName;
+	private              String                mUsername;
+	private              String                mEmail;
+	private              String                mPassword;
+	private              String                mDateOfBirth;
 	
-	public RegistrationChecker(Fragment context, View parent) {
+	public EmailSignupChecker(Fragment context, View parent) {
 		
-		Log.d(TAG, "RegistrationChecker: called");
+		Log.d(TAG, "EmailSignupChecker: called");
 		
-		// Check if associated context implements the RegistrationCheckerListener interface
-		if (context instanceof RegistrationChecker.RegistrationCheckerListener) {
+		// Check if associated context implements the SignupCheckerListener interface
+		if (context instanceof SignupCheckerListener) {
 			
-			mListener = (RegistrationCheckerListener) context;
+			mListener = (SignupCheckerListener) context;
 			
 		}
 		
 		// Else throw RuntimeException
 		else {
 			
-			throw new RuntimeException(context.toString() + " must implement RegistrationCheckerListener");
+			throw new RuntimeException(context.toString() + " must implement SignupCheckerListener");
 			
 		}
 		
@@ -171,7 +172,7 @@ public class RegistrationChecker {
 	}
 	
 	/**
-	 * Checks if the registration forms input is ok and calls RegistrationCheckerListener#inputIsOk() if so.
+	 * Checks if the signup forms input is ok and calls SignupCheckerListener#inputIsOk() if so.
 	 * Shows appropriate error messages otherwise.
 	 */
 	public void checkInput() {
@@ -253,7 +254,7 @@ public class RegistrationChecker {
 		/*
 		Query FirebaseAuth if email is already in use.
 		If not, query FirebaseFirestore if username is already taken.
-		If not, call RegistrationCheckerListener#inputIsOk() callback.
+		If not, call SignupCheckerListener#inputIsOk() callback.
 		 */
 		mAuth.fetchSignInMethodsForEmail(mEmail).addOnSuccessListener(result -> {
 			
@@ -342,7 +343,7 @@ public class RegistrationChecker {
 		
 		Log.d(TAG, "resetLayoutErrors: called");
 		
-		// mParentView is the first view in the RegistrationFragment's layout
+		// mParentView is the first view in the EmailSignupFragment's layout
 		// Define a ViewGroup object from the first child of mParentView which is the ConstraintLayout
 		ConstraintLayout viewGroup = (ConstraintLayout) ((ScrollView) mParentView).getChildAt(0);
 		
@@ -386,7 +387,7 @@ public class RegistrationChecker {
 		
 	}
 	
-	public interface RegistrationCheckerListener {
+	public interface SignupCheckerListener {
 		
 		void inputIsOk();
 		
