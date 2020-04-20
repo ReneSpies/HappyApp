@@ -38,6 +38,7 @@
 	<string name="check_email">Check Email</string>
 	<string name="error_verification_email_send_failed">Sending Verification Email failed</string>
 	<string name="question_no_account_yet">No account yet?</string>
+	<string name="sign_up_using_these_colon">Sign up using these:</string>
 	<string name="first_name">First Name</string>
 	<string name="sign_up_now">Sign up now</string>
 	<string name="google">Google</string>

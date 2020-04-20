@@ -90,14 +90,15 @@
 		android:layout_height="wrap_content"
 		android:text="@string/log_in"
 		app:layout_constraintEnd_toEndOf="parent"
+		android:drawablePadding="13dp"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toBottomOf="@+id/loading_view_layout"/>
-	
+
 	<TextView
 		android:id="@+id/signup_text_view"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/question_no_account_yet"
+		android:text="@string/sign_up_using_these_colon"
 		android:textAlignment="center"
 		android:layout_marginBottom="13dp"
 		app:layout_constraintBottom_toTopOf="@+id/signup_button_container"
@@ -129,7 +130,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginStart="6.5dp"
 			android:background="@drawable/round_button_background"
-			android:src="@drawable/ic_google_favicon_logo_24dp"/>
+			android:src="@drawable/ic_google_favicon_24dp"/>
 	</LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
