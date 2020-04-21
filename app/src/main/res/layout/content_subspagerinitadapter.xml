@@ -31,8 +31,7 @@
 			android:id="@+id/subspagerinitadapter_no_connection_image_view"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:contentDescription="@string/no_internet_connection"
-			android:src="@drawable/ic_signal_wifi_off_36dp"/>
+			android:contentDescription="@string/no_internet_connection"/>
 		
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/subspagerinitadapter_retry_button"

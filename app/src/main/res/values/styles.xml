@@ -6,7 +6,7 @@
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
 		<item name="rippleColor">@color/rippleColor</item>
-		<item name="fontFamily">@font/didactgothic_regular</item>
+		<item name="android:fontFamily">@font/lato_regular</item>
 	</style>
 	
 	<style name="Theme.HappyApp.Launcher">
@@ -16,12 +16,6 @@
 	<style name="Widget.HappyApp.Spinner" parent="Widget.AppCompat.Spinner">
 		<item name="elevation">13dp</item>
 		<item name="background">@drawable/main_fragment_shape</item>
-	</style>
-	
-	<style name="Widget.HappyApp.Seperator.View">
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">1.13dp</item>
-		<item name="background">@color/black</item>
 	</style>
 	
 	<style name="Widget.HappyApp.Seperator.TextView" parent="Widget.AppCompat.TextView">

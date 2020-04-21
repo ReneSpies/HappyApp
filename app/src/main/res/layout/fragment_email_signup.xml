@@ -124,9 +124,9 @@
 				android:id="@+id/date_of_birth_field"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
+				android:imeActionId="7"
 				android:imeOptions="actionDone"
-				android:inputType="date"
-				android:imeActionId="7"/>
+				android:inputType="date"/>
 		</com.google.android.material.textfield.TextInputLayout>
 		
 		<CheckBox
@@ -144,7 +144,6 @@
 			style="@style/Widget.HappyApp.ContainedButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="13dp"
 			android:text="@string/subscribe"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"

@@ -148,16 +148,16 @@ class Subscription {
 	 */
 	void setId(String id) {
 		if ((id.contains("bronze"))) {
-			setIcon(mContext.getDrawable(R.drawable.bronze_icon));
+			setIcon(mContext.getDrawable(R.drawable.bronze_logo));
 			setPriority(PRIORITY_BRONZE);
 		} else if ((id.contains("silver"))) {
-			setIcon(mContext.getDrawable(R.drawable.silver_icon));
+			setIcon(mContext.getDrawable(R.drawable.silver_logo));
 			setPriority(PRIORITY_SILVER);
 		} else if ((id.contains("gold"))) {
-			setIcon(mContext.getDrawable(R.drawable.gold_icon));
+			setIcon(mContext.getDrawable(R.drawable.gold_logo));
 			setPriority(PRIORITY_GOLD);
 		} else if ((id.contains("platinum"))) {
-			setIcon(mContext.getDrawable(R.drawable.platinum_icon));
+			setIcon(mContext.getDrawable(R.drawable.platinum_logo));
 			setPriority(PRIORITY_PLATINUM);
 		} else {
 			setPriority(PRIORITY_DEFAULT);
