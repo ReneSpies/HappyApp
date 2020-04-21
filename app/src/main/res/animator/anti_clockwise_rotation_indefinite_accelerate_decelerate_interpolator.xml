@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
-                android:duration="613"
-                android:interpolator="@android:anim/linear_interpolator"
+                android:duration="513"
+                android:interpolator="@android:anim/accelerate_decelerate_interpolator"
                 android:propertyName="rotation"
                 android:repeatCount="infinite"
-                android:valueFrom="0"
-                android:valueTo="360"/>
+                android:valueFrom="680"
+                android:valueTo="320"/>

@@ -76,11 +76,27 @@ public class Utils {
 		
 		Log.d(TAG, "setAndStartLoadingButtonAnimationWithDisable: called");
 		
+		Log.d(TAG, "setAndStartLoadingButtonAnimationWithDisable: elevation = " + button.getElevation());
+		
+		AnimatedVectorDrawable animatedVectorDrawable;
+		
+		if (button.getElevation() > 0) {
+			
+			// Define an AnimatedVectorDrawable object from the drawable file
+			animatedVectorDrawable = (AnimatedVectorDrawable) button.getContext().getResources().getDrawable(R.drawable.animated_loading_circle_white_black, null);
+			
+		}
+		
+		else {
+			
+			// Define an AnimatedVectorDrawable object from the drawable file
+			animatedVectorDrawable = (AnimatedVectorDrawable) button.getContext().getResources().getDrawable(R.drawable.animated_loading_circle_red_black, null);
+			
+		}
+		
 		// Disable the button or not
 		button.setEnabled(!disable);
 		
-		// Define an AnimatedVectorDrawable object from the drawable file
-		AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) button.getContext().getResources().getDrawable(R.drawable.animated_loading_circle, null);
 		
 		// Sets the button drawable to its end
 		button.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, animatedVectorDrawable, null);
