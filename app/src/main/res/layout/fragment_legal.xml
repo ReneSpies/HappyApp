@@ -25,12 +25,12 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 			
-			<TableRow android:backgroundTint="@color/colorPrimary">
+			<TableRow android:backgroundTint="@color/color_primary">
 				
 				<TextView android:text="AGB"/>
 			</TableRow>
 			
-			<TableRow android:backgroundTint="@color/colorPrimary">
+			<TableRow android:backgroundTint="@color/color_primary">
 				
 				<TextView android:text="Datenschutzhinweise"/>
 			</TableRow>

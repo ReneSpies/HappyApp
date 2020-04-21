@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="colorPrimary">#DB2323</color>
+	<color name="color_primary">#DB2323</color>
 	<color name="colorPrimaryDark">#991818</color>
 	<color name="colorAccent">#FF6666</color>
-	<color name="hintTextColor">@color/colorPrimary</color>
+	<color name="hintTextColor">@color/color_primary</color>
 	<color name="black">#000</color>
 	<color name="white">#fff</color>
 	<color name="fragmentBackgroundColor">#fff</color>

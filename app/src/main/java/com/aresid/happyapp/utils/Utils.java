@@ -1,8 +1,10 @@
 package com.aresid.happyapp.utils;
 
 import android.content.Context;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 
@@ -62,6 +64,41 @@ public class Utils {
 		Log.d(TAG, "showSnackbar: called");
 		
 		Snackbar.make(snackbarView, message, Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(context, R.color.colorAccent)).show();
+		
+	}
+	
+	/**
+	 * Sets a animated vector drawable to the buttons end and then starts its rotation animation.
+	 *
+	 * @param button The button to set the drawable on.
+	 */
+	public static void setAndStartLoadingButtonAnimationWithDisable(Button button, boolean disable) {
+		
+		Log.d(TAG, "setAndStartLoadingButtonAnimationWithDisable: called");
+		
+		// Disable the button or not
+		button.setEnabled(!disable);
+		
+		// Define an AnimatedVectorDrawable object from the drawable file
+		AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) button.getContext().getResources().getDrawable(R.drawable.animated_circle, null);
+		
+		// Sets the button drawable to its end
+		button.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, animatedVectorDrawable, null);
+		
+		// Start the animation
+		animatedVectorDrawable.start();
+		
+	}
+	
+	public static void removeLoadingButtonAnimationWithEnable(Button button, boolean enable) {
+		
+		Log.d(TAG, "removeLoadingButtonAnimationWithEnable: called");
+		
+		// Enable the button or not
+		button.setEnabled(enable);
+		
+		// Set all button drawables to null
+		button.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
 		
 	}
 	

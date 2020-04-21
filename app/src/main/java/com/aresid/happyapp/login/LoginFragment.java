@@ -1,4 +1,4 @@
-package com.aresid.happyapp.fragments;
+package com.aresid.happyapp.login;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +15,6 @@ import androidx.navigation.Navigation;
 
 import com.aresid.happyapp.R;
 import com.aresid.happyapp.utils.Utils;
-import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +39,6 @@ public class LoginFragment
 	private              TextInputLayout   mPasswordFieldLayout;
 	private              TextInputEditText mPasswordField;
 	private              FirebaseAuth      mAuth;
-	private              LinearLayout      mLoadingViewLayout;
 	
 	/**
 	 * Required public empty constructor
@@ -104,30 +100,38 @@ public class LoginFragment
 		mPasswordFieldLayout = view.findViewById(R.id.password_field_layout);
 		mPasswordField = view.findViewById(R.id.password_field);
 		
-		// Define the loading view layout
-		mLoadingViewLayout = view.findViewById(R.id.loading_view_layout);
-		
-		// Load gif into loading view container
-		Glide.with(view).load(getResources().getDrawable(R.drawable.loading_animation)).into((ImageView) view.findViewById(R.id.loading_view_container));
 	}
 	
 	@Override
 	public void onClick(View v) {
 		
 		Log.d(TAG, "onClick: called");
+		
 		switch (v.getId()) {
+			
 			case R.id.login_button:
+				
 				onLoginButtonClicked((Button) v);
+				
 				break;
+			
 			case R.id.email_signup_button:
+				
 				onEmailSignupButtonClicked();
+				
 				break;
+			
 			case R.id.google_signup_button:
+				
+				onGoogleSignupButtonClicked();
+				
 				break;
+			
 		}
+		
 	}
 	
-	private void onLoginButtonClicked(Button view) {
+	private void onLoginButtonClicked(Button button) {
 		
 		Log.d(TAG, "onLoginButtonClicked: called");
 		
@@ -159,11 +163,8 @@ public class LoginFragment
 			
 		}
 		
-		// Set loading view layout visible to show loading animation
-		mLoadingViewLayout.setVisibility(View.VISIBLE);
-		
-		// Disable login button
-		view.setEnabled(false);
+		// Start loading animation on the button and disable it
+		Utils.setAndStartLoadingButtonAnimationWithDisable(button, true);
 		
 		// Sign in with email and password
 		mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(result -> {
@@ -173,6 +174,9 @@ public class LoginFragment
 			// Send the user to MainFragment if exist
 			updateUI(result.getUser());
 			
+			// Remove loading animation and enable button again
+			Utils.removeLoadingButtonAnimationWithEnable(button, true);
+			
 		}).addOnFailureListener(e -> {
 			
 			Log.d(TAG, "onLoginButtonClicked: failure logging user in");
@@ -181,11 +185,8 @@ public class LoginFragment
 			// Set layout errors null so no multiple errors are shown
 			resetLoginLayoutErrors();
 			
-			// Suppress the loading view
-			mLoadingViewLayout.setVisibility(View.INVISIBLE);
-			
-			// Enable login button again
-			view.setEnabled(true);
+			// Remove loading animation and enable button again
+			Utils.removeLoadingButtonAnimationWithEnable(button, true);
 			
 			if (e instanceof com.google.firebase.auth.FirebaseAuthInvalidCredentialsException) {
 				
@@ -216,20 +217,29 @@ public class LoginFragment
 		
 		Log.d(TAG, "onEmailSignupButtonClicked: called");
 		
-		// Define a new Bundle
+		// Define a new Bundle to pass the email
 		Bundle bundle = new Bundle();
 		
 		// Access the email field and save its text into a new String
 		String email = Utils.getString(mEmailField.getText());
 		
-		// Define String from getString() method
+		// Define String from Context#getString() method
 		String emailKey = getString(R.string.arguments_key_email);
 		
 		// Put the email into the bundle using the key
 		bundle.putString(emailKey, email);
 		
 		// Finally navigate to the new fragment and pass the bundle
-		mNavController.navigate(R.id.action_loginFragment_to_registrationFragment, bundle);
+		mNavController.navigate(R.id.action_loginFragment_to_emailSignupFragment, bundle);
+		
+	}
+	
+	private void onGoogleSignupButtonClicked() {
+		
+		Log.d(TAG, "onGoogleSignupButtonClicked: called");
+		
+		// Directly send through to SubscribeFragment
+		mNavController.navigate(R.id.action_loginFragment_to_subscribeFragment);
 		
 	}
 	

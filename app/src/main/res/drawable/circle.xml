@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
         android:width="20dp"
         android:height="20dp"
@@ -6,11 +7,9 @@
 	<group
 		android:name="rotationGroup"
 		android:pivotX="60"
-		android:pivotY="60"
-		android:rotation="45">
+		android:pivotY="60">
 		<path
-			android:name="v"
-			android:fillColor="#fff"
+			android:fillColor="@android:color/white"
 			android:pathData="M60,120A60,60 0,1 1,60 0v6a54,54 0,1 0,54 54h6a59.95,59.95 0,0 1,-60 60Z"/>
 	</group>
 </vector>

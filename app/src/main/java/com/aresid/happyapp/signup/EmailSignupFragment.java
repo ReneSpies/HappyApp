@@ -63,7 +63,7 @@ public class EmailSignupFragment
 		Log.d(TAG, "onCreateView: called");
 		
 		// Inflate the layout
-		return inflater.inflate(R.layout.fragment_registration, container, false);
+		return inflater.inflate(R.layout.fragment_email_signup, container, false);
 		
 	}
 	
@@ -103,7 +103,7 @@ public class EmailSignupFragment
 		Bundle arguments = mRegistrationChecker.getInputBundle();
 		
 		// Navigate to the subscription fragment and pass the bundle
-		mNavController.navigate(R.id.action_registrationFragment_to_subscriptionFragment, arguments);
+		mNavController.navigate(R.id.action_emailSignupFragment_to_subscribeFragment, arguments);
 		
 	}
 	

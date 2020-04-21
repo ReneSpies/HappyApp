@@ -124,6 +124,8 @@
 				android:id="@+id/date_of_birth_field"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
+				android:imeOptions="actionDone"
+				android:inputType="date"
 				android:imeActionId="7"/>
 		</com.google.android.material.textfield.TextInputLayout>
 		

@@ -57,32 +57,6 @@
 			android:singleLine="true"/>
 	</com.google.android.material.textfield.TextInputLayout>
 	
-	<LinearLayout
-		android:id="@+id/loading_view_layout"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:paddingHorizontal="@dimen/fragmentPaddingSmall"
-		android:visibility="invisible"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/password_field_layout">
-		
-		<ImageView
-			android:id="@+id/loading_view_container"
-			android:layout_width="48dp"
-			android:layout_height="48dp"
-			android:contentDescription="@string/processing_login"
-			android:src="@drawable/loading_animation"/>
-		
-		<TextView
-			android:id="@+id/loading_view_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:text="@string/logging_in_ellipsis"/>
-	</LinearLayout>
-	
 	<com.google.android.material.button.MaterialButton
 		android:id="@+id/login_button"
 		style="@style/Widget.HappyApp.ContainedButton"
@@ -90,9 +64,8 @@
 		android:layout_height="wrap_content"
 		android:text="@string/log_in"
 		app:layout_constraintEnd_toEndOf="parent"
-		android:drawablePadding="13dp"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/loading_view_layout"/>
+		app:layout_constraintTop_toBottomOf="@+id/password_field_layout"/>
 
 	<TextView
 		android:id="@+id/signup_text_view"

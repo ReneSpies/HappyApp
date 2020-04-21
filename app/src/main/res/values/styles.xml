@@ -2,7 +2,7 @@
 	<!-- Base application theme. -->
 	<style name="Theme.HappyApp" parent="Theme.MaterialComponents.Light.NoActionBar">
 		<!-- Customize your theme here. -->
-		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimary">@color/color_primary</item>
 		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
 		<item name="colorAccent">@color/colorAccent</item>
 		<item name="rippleColor">@color/rippleColor</item>
@@ -41,14 +41,15 @@
 	</style>
 	
 	<style name="Widget.HappyApp.ContainedButton" parent="Widget.MaterialComponents.Button">
-		<item name="cornerRadius">@dimen/buttonStandardCornerRadius</item>
-		<item name="backgroundTint">@color/colorPrimary</item>
-		<item name="rippleColor">@color/rippleColor</item>
-		<item name="android:layout_margin">@dimen/buttonMarginAllSides</item>
-		<item name="android:textSize">@dimen/buttonTextSize</item>
+		<item name="cornerRadius">@dimen/contained_button_corner_radius</item>
+		<item name="backgroundTint">@color/color_primary</item>
+		<item name="rippleColor">@android:color/white</item>
+		<item name="drawableTint">@android:color/white</item>
+		<item name="android:layout_margin">@dimen/contained_button_margin</item>
+		<item name="android:textSize">@dimen/contained_button_text_size</item>
 		<item name="android:stateListAnimator">@null</item>
-		<item name="android:elevation">@dimen/buttonStandardElevation</item>
-		<item name="android:textColor">@color/white</item>
+		<item name="android:elevation">@dimen/contained_button_elevation</item>
+		<item name="android:textColor">@android:color/white</item>
 		<item name="textAllCaps">false</item>
 	</style>
 	
@@ -56,7 +57,7 @@
 		<item name="cornerRadius">25.13dp</item>
 		<item name="rippleColor">@color/rippleColorAccent</item>
 		<item name="android:layout_margin">13dp</item>
-		<item name="android:textSize">@dimen/buttonTextSize</item>
+		<item name="android:textSize">@dimen/contained_button_text_size</item>
 		<item name="android:textColor">?attr/colorOnSurface</item>
 		<item name="textAllCaps">false</item>
 	</style>
@@ -64,11 +65,12 @@
 	<style name="Widget.HappyApp.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
 		<item name="cornerRadius">25.13dp</item>
 		<item name="rippleColor">@color/rippleColorAccent</item>
-		<item name="android:textSize">@dimen/buttonTextSize</item>
+		<item name="android:textSize">@dimen/contained_button_text_size</item>
 		<item name="android:layout_margin">13dp</item>
+		<item name="drawableTint">@android:color/black</item>
 		<item name="textAllCaps">false</item>
 		<item name="strokeWidth">1.13dp</item>
-		<item name="strokeColor">@color/colorPrimary</item>
+		<item name="strokeColor">@color/color_primary</item>
 		<item name="android:textColor">?attr/colorOnSurface</item>
 	</style>
 	

@@ -6,12 +6,12 @@
             app:startDestination="@id/loginFragment">
 	<fragment
 		android:id="@+id/loginFragment"
-		android:name="com.aresid.happyapp.fragments.LoginFragment"
+		android:name="com.aresid.happyapp.login.LoginFragment"
 		android:label="LoginFragment"
 		tools:layout="@layout/fragment_login">
 		<action
-			android:id="@+id/action_loginFragment_to_registrationFragment"
-			app:destination="@id/registrationFragment"
+			android:id="@+id/action_loginFragment_to_emailSignupFragment"
+			app:destination="@id/emailSignupFragment"
 			app:enterAnim="@anim/slide_in_from_right"
 			app:exitAnim="@anim/slide_out_to_left"
 			app:popEnterAnim="@anim/slide_in_from_left"
@@ -26,6 +26,13 @@
 			app:exitAnim="@anim/slide_out_to_left"
 			app:popEnterAnim="@anim/slide_in_from_left"
 			app:popExitAnim="@anim/slide_out_to_right"/>
+		<action
+			android:id="@+id/action_loginFragment_to_subscribeFragment"
+			app:destination="@id/subscribeFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"/>
 	</fragment>
 	<fragment
 		android:id="@+id/mainFragment"
@@ -33,13 +40,17 @@
 		android:label="MainFragment"
 		tools:layout="@layout/fragment_main"/>
 	<fragment
-		android:id="@+id/registrationFragment"
+		android:id="@+id/emailSignupFragment"
 		android:name="com.aresid.happyapp.signup.EmailSignupFragment"
-		android:label="RegistrationFragment"
-		tools:layout="@layout/fragment_registration">
+		android:label="EmailSignupFragment"
+		tools:layout="@layout/fragment_email_signup">
 		<action
-			android:id="@+id/action_registrationFragment_to_subscriptionFragment"
-			app:destination="@id/subscriptionFragment"/>
+			android:id="@+id/action_emailSignupFragment_to_subscribeFragment"
+			app:destination="@id/subscribeFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"/>
 	</fragment>
 	<fragment
 		android:id="@+id/loadingFragment"
@@ -47,7 +58,8 @@
 		android:label="LoadingFragment"
 		tools:layout="@layout/fragment_loading"/>
 	<fragment
-		android:id="@+id/subscriptionFragment"
-		android:name="com.aresid.happyapp.fragments.SubscriptionFragment"
-		android:label="SubscriptionFragment"/>
+		android:id="@+id/subscribeFragment"
+		android:name="com.aresid.happyapp.signup.SubscribeFragment"
+		android:label="SubscribeFragment"
+		tools:layout="@layout/fragment_subscribe"/>
 </navigation>

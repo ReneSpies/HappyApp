@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +13,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.aresid.happyapp.R;
-import com.bumptech.glide.Glide;
 
 /**
  * Created on: 15/04/2020
@@ -40,8 +38,10 @@ public class LoadingFragment
 			@Nullable Bundle savedInstanceState) {
 		
 		Log.d(TAG, "onCreateView: called");
+		
 		// Inflate the layout
 		return inflater.inflate(R.layout.fragment_loading, container, false);
+		
 	}
 	
 	@Override
@@ -53,8 +53,6 @@ public class LoadingFragment
 		// Define NavController
 		mNavController = Navigation.findNavController(view);
 		
-		// Load gif into loading animation
-		Glide.with(view).load(getResources().getDrawable(R.drawable.loading_animation)).into((ImageView) view.findViewById(R.id.loading_view_container));
 	}
 	
 }

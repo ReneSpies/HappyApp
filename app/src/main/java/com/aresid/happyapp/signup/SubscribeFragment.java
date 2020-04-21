@@ -1,4 +1,4 @@
-package com.aresid.happyapp.fragments;
+package com.aresid.happyapp.signup;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,21 +10,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.aresid.happyapp.R;
+
 /**
  * Created on: 15/04/2020
  * For Project: HappyApp
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
-public class SubscriptionFragment
+public class SubscribeFragment
 		extends Fragment {
 	
-	private static final String TAG = "SubscriptionFragment";
+	private static final String TAG = "SubscribeFragment";
 	
-	public SubscriptionFragment() {
+	public SubscribeFragment() {
 		
-		Log.d(TAG, "SubscriptionFragment: called");
+		Log.d(TAG, "SubscribeFragment: called");
 		// Required public empty constructor
+		
 	}
 	
 	@Nullable
@@ -33,7 +36,10 @@ public class SubscriptionFragment
 			@Nullable Bundle savedInstanceState) {
 		
 		Log.d(TAG, "onCreateView: called");
-		return super.onCreateView(inflater, container, savedInstanceState);
+		
+		// Inflate layout
+		return inflater.inflate(R.layout.fragment_subscribe, container, false);
+		
 	}
 	
 }
