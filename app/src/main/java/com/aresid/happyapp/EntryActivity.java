@@ -2,7 +2,6 @@ package com.aresid.happyapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -30,12 +29,8 @@ import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import com.aresid.happyapp.activity.MainActivity;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -55,7 +50,6 @@ public class EntryActivity
 		extends AppCompatActivity
 		implements View.OnClickListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener,
-		           ButtonlessLogin.OnButtonlessLoginInteractionListener,
 		           PurchasesUpdatedListener,
 		           SkuDetailsResponseListener,
 		           BillingClientStateListener,
@@ -402,26 +396,26 @@ public class EntryActivity
 	 * @param username The username to load into the database.
 	 * @param dob      The Date of birth to load into the database.
 	 */
-	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
-		Log.d(TAG, "updateGoogleUser: called");
-		HashMap<String, Object> info = new HashMap<>();
-		info.put(FirestoreNames.COLUMN_USERNAME, username);
-		info.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
-		FirebaseFirestore db = getFirestoreInstance();
-		db.collection(FirestoreNames.COLLECTION_USERS)
-		  .document(user.getUid())
-		  .update(info)
-		  .addOnSuccessListener(aVoid -> {
-			  Log.d(TAG, "updateGoogleUser: success");
-			  updateUI(user);
-		  })
-		  .addOnFailureListener(e -> {
-			  Log.d(TAG, "updateGoogleUser: failure");
-			  Log.e(TAG, "updateGoogleUser: ", e);
-//			  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View
-//			  .INVISIBLE);
-		  });
-	}
+	//	private void updateGoogleUser(FirebaseUser user, String username, String dob) {
+	//		Log.d(TAG, "updateGoogleUser: called");
+	//		HashMap<String, Object> info = new HashMap<>();
+	//		info.put(FirestoreNames.COLUMN_USERNAME, username);
+	//		info.put(FirestoreNames.COLUMN_DATE_OF_BIRTH, dob);
+	//		FirebaseFirestore db = getFirestoreInstance();
+	//		db.collection(FirestoreNames.COLLECTION_USERS)
+	//		  .document(user.getUid())
+	//		  .update(info)
+	//		  .addOnSuccessListener(aVoid -> {
+	//			  Log.d(TAG, "updateGoogleUser: success");
+	//			  updateUI(user);
+	//		  })
+	//		  .addOnFailureListener(e -> {
+	//			  Log.d(TAG, "updateGoogleUser: failure");
+	//			  Log.e(TAG, "updateGoogleUser: ", e);
+	////			  SubsPagerFinalAdapter.setCheckoutProcessingLayoutVisibility(View
+	////			  .INVISIBLE);
+	//		  });
+	//	}
 	
 	/**
 	 * Changes to loading screen.
@@ -547,12 +541,12 @@ public class EntryActivity
 	 *
 	 * @param user Firebase user.
 	 */
-	void startConfirmEmailActivity(FirebaseUser user) {
-		Log.d(TAG, "startConfirmEmailActivity: called");
-		Intent intent = new Intent(this, ConfirmEmailActivity.class);
-		intent.putExtra(getString(R.string.intent_key_firebase_user), user);
-		startActivity(intent);
-	}
+	//	void startConfirmEmailActivity(FirebaseUser user) {
+	//		Log.d(TAG, "startConfirmEmailActivity: called");
+	//		Intent intent = new Intent(this, ConfirmEmailActivity.class);
+	//		intent.putExtra(getString(R.string.intent_key_firebase_user), user);
+	//		startActivity(intent);
+	//	}
 	
 	private void enableViews(@NonNull View... views) {
 		Log.d(TAG, "enableViews: called");
@@ -582,33 +576,33 @@ public class EntryActivity
 	protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		Log.d(TAG, "onActivityResult: called");
 		super.onActivityResult(requestCode, resultCode, data);
-		int googleLoginRequestCode = getResources().getInteger(R.integer.request_code_google_login);
-		// Normal login request code when user is guided from entry activity to main activity
-		int loginRequestCode = getResources().getInteger(R.integer.request_code_login);
-		// Result code when user logs out of main activity
-		int logoutResultCode = getResources().getInteger(R.integer.result_code_logout);
-		if (requestCode == googleLoginRequestCode) {
-			// TODO: 15/04/2020 onActivityResult: subscribe
-			// Result received from Google login activity
-			changeToLoadingScreen();
-			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-			task.addOnSuccessListener(gsa -> {
-				Log.d(TAG, "onActivityResult: great success");
-				if (gsa != null) { firebaseAuthWithGoogleAccount(gsa); }
-			})
-			    .addOnFailureListener(e -> {
-				    Log.d(TAG, "onActivityResult: failure");
-				    Log.e(TAG, "onActivityResult: ", e);
-				    changeFromLoadingScreen();
-				    Toast.makeText(this, getString(R.string.error_try_again), Toast.LENGTH_LONG)
-				         .show();
-			    });
-		}
-		if (requestCode == loginRequestCode && resultCode == logoutResultCode) {
-			// Logout from another Activity
-			// Reset all views here
-			resetAllViews();
-		}
+		//		int googleLoginRequestCode = getResources().getInteger(R.integer.request_code_google_login);
+		//		// Normal login request code when user is guided from entry activity to main activity
+		//		int loginRequestCode = getResources().getInteger(R.integer.request_code_login);
+		//		// Result code when user logs out of main activity
+		//		int logoutResultCode = getResources().getInteger(R.integer.result_code_logout);
+		//		if (requestCode == googleLoginRequestCode) {
+		//			// TODO: 15/04/2020 onActivityResult: subscribe
+		//			// Result received from Google login activity
+		//			changeToLoadingScreen();
+		//			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+		//			task.addOnSuccessListener(gsa -> {
+		//				Log.d(TAG, "onActivityResult: great success");
+		//				if (gsa != null) { firebaseAuthWithGoogleAccount(gsa); }
+		//			})
+		//			    .addOnFailureListener(e -> {
+		//				    Log.d(TAG, "onActivityResult: failure");
+		//				    Log.e(TAG, "onActivityResult: ", e);
+		//				    changeFromLoadingScreen();
+		//				    Toast.makeText(this, getString(R.string.error_try_again), Toast.LENGTH_LONG)
+		//				         .show();
+		//			    });
+		//		}
+		//		if (requestCode == loginRequestCode && resultCode == logoutResultCode) {
+		//			// Logout from another Activity
+		//			// Reset all views here
+		//			resetAllViews();
+		////		}
 	}
 	
 	private void resetAllViews() {
@@ -636,15 +630,15 @@ public class EntryActivity
 	
 	public void onLoginGoogleButtonClick(View view) {
 		Log.d(TAG, "onLoginGoogleButtonClick: called");
-		int googleLoginRequestCode = getResources().getInteger(R.integer.request_code_google_login);
-		GoogleSignInOptions gso =
-				new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id))
-		                                                                                              .requestProfile()
-		                                                                                              .requestEmail()
-		                                                                                              .build();
-		Intent googleLoginIntent = GoogleSignIn.getClient(this, gso)
-		                                       .getSignInIntent();
-		startActivityForResult(googleLoginIntent, googleLoginRequestCode);
+		//		int googleLoginRequestCode = getResources().getInteger(R.integer.request_code_google_login);
+		//		GoogleSignInOptions gso =
+		//				new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.default_web_client_id))
+		//		                                                                                              .requestProfile()
+		//		                                                                                              .requestEmail()
+		//		                                                                                              .build();
+		//		Intent googleLoginIntent = GoogleSignIn.getClient(this, gso)
+		//		                                       .getSignInIntent();
+		//		startActivityForResult(googleLoginIntent, googleLoginRequestCode);
 	}
 	
 	/**
@@ -687,30 +681,30 @@ public class EntryActivity
 	/**
 	 * This method handles what happens on back pressed.
 	 */
-	@Override
-	public void onBackPressed() {
-		// I want to have the user click 2 times back when he wants to leave the app.
-		Log.d(TAG, "onBackPressed: called");
-		int time = getResources().getInteger(R.integer.double_back_press_time);
-		Toast toast = Toast.makeText(this, getString(R.string.press_again_to_exit), Toast.LENGTH_LONG);
-		if (mBackPressCounter == 0) {
-			Log.d(TAG, "onBackPressed: counter == 0");
-			toast.show();
-			mBackPressCounter = 1;
-			new Handler().postDelayed(() -> {
-				Log.d(TAG, "run:true");
-				mBackPressCounter = 0;
-			}, time);
-			return;
-		} else {
-			if (mBackPressCounter == 1) {
-				Log.d(TAG, "onBackPressed: counter == 1");
-				toast.cancel();
-				finishAffinity();
-			}
-		}
-		finishAffinity();
-	}
+	//	@Override
+	//	public void onBackPressed() {
+	//		// I want to have the user click 2 times back when he wants to leave the app.
+	//		Log.d(TAG, "onBackPressed: called");
+	//		int time = getResources().getInteger(R.integer.double_back_press_time);
+	//		Toast toast = Toast.makeText(this, getString(R.string.press_again_to_exit), Toast.LENGTH_LONG);
+	//		if (mBackPressCounter == 0) {
+	//			Log.d(TAG, "onBackPressed: counter == 0");
+	//			toast.show();
+	//			mBackPressCounter = 1;
+	//			new Handler().postDelayed(() -> {
+	//				Log.d(TAG, "run:true");
+	//				mBackPressCounter = 0;
+	//			}, time);
+	//			return;
+	//		} else {
+	//			if (mBackPressCounter == 1) {
+	//				Log.d(TAG, "onBackPressed: counter == 1");
+	//				toast.cancel();
+	//				finishAffinity();
+	//			}
+	//		}
+	//		finishAffinity();
+	//	}
 	
 	private void createNewUser(Purchase purchase) {
 		
@@ -753,11 +747,11 @@ public class EntryActivity
 		}
 	}
 	
-	@Override
-	public void onFinishedTyping() {
-		Log.d(TAG, "onFinishedTyping: called");
-		loginUser();
-	}
+	//	@Override
+	//	public void onFinishedTyping() {
+	//		Log.d(TAG, "onFinishedTyping: called");
+	//		loginUser();
+	//	}
 	
 	/**
 	 * This method evaluates an online time and saves it to the users account in the
@@ -928,7 +922,7 @@ public class EntryActivity
 			changeToLoadingScreen();
 			// Starts the MainActivity an passes the FirebaseUser through
 			// It starts for result which is called when the user logs out in MainActivity
-			startMainActivity(user);
+			//			startMainActivity(user);
 		} else {
 			Log.d(TAG, "updateUI: user == null");
 			// no user logged in.
@@ -942,13 +936,13 @@ public class EntryActivity
 	 *
 	 * @param user Firebase user.
 	 */
-	void startMainActivity(FirebaseUser user) {
-		Log.d(TAG, "startMainActivity: called");
-		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra(getString(R.string.intent_key_firebase_user), user);
-		int requestCode = getResources().getInteger(R.integer.request_code_login);
-		startActivityForResult(intent, requestCode);
-	}
+	//	void startMainActivity(FirebaseUser user) {
+	//		Log.d(TAG, "startMainActivity: called");
+	//		Intent intent = new Intent(this, MainActivity.class);
+	//		intent.putExtra(getString(R.string.intent_key_firebase_user), user);
+	//		int requestCode = getResources().getInteger(R.integer.request_code_login);
+	//		startActivityForResult(intent, requestCode);
+	//	}
 	
 	public void onRetryClick(View view) {
 		Log.d(TAG, "onRetryClick: called");

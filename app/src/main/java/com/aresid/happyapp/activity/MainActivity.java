@@ -2,7 +2,6 @@ package com.aresid.happyapp.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -18,16 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.aresid.happyapp.AdvertisementFragment;
-import com.aresid.happyapp.DisplayFragment;
-import com.aresid.happyapp.FavoritesFragment;
-import com.aresid.happyapp.HomeFragment;
-import com.aresid.happyapp.LookFragment;
-import com.aresid.happyapp.MyAccountFragment;
-import com.aresid.happyapp.OfferFragment;
 import com.aresid.happyapp.R;
 import com.aresid.happyapp.RetrieveInternetTime;
-import com.aresid.happyapp.SearchFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,13 +31,6 @@ import java.util.TimerTask;
 public class MainActivity
 		extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener,
-		           SearchFragment.OnFragmentInteractionListener,
-		           FavoritesFragment.OnFragmentInteractionListener,
-		           MyAccountFragment.OnFragmentInteractionListener,
-		           AdvertisementFragment.OnFragmentInteractionListener,
-		           HomeFragment.OnFragmentInteractionListener,
-		           OfferFragment.OnFragmentInteractionListener,
-		           LookFragment.OnFragmentInteractionListener,
 		           RetrieveInternetTime.OnInternetTimeInteractionListener {
 	private static final String              FIREBASE_USER_INTENT_KEY         = "firesbase_user";
 	private static final String              GOOGLE_SIGNIN_ACCOUNT_INTENT_KEY = "google_sign_in_account";
@@ -101,7 +85,6 @@ public class MainActivity
 	//}
 	private void displayHomeFragment() {
 		Log.d(TAG, "displayHomeFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container, HomeFragment.newInstance());
 	}
 	
 	/**
@@ -123,7 +106,6 @@ public class MainActivity
 	
 	private void displayMyAccountFragment() {
 		Log.d(TAG, "displayMyAccountFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container, MyAccountFragment.newInstance());
 	}
 	
 	/**
@@ -205,8 +187,8 @@ public class MainActivity
 		// Set a result so onActivityResult() is called in the activity from backstack
 		// If necessary, I can do stuff in onActivityResult() like resetting views
 		Intent resultIntent = new Intent();
-		int logoutResultCode = getResources().getInteger(R.integer.result_code_logout);
-		setResult(logoutResultCode, resultIntent);
+		//		int logoutResultCode = getResources().getInteger(R.integer.result_code_logout);
+		//		setResult(logoutResultCode, resultIntent);
 		finish();
 	}
 	
@@ -238,24 +220,17 @@ public class MainActivity
 	
 	private void displaySearchFragment() {
 		Log.d(TAG, "displaySearchFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container, SearchFragment.newInstance());
 	}
 	
 	private void displayFavoritesFragment() {
 		Log.d(TAG, "displayFavoritesFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container, FavoritesFragment.newInstance());
 	}
 	
 	private void displayAdvertisementFragment() {
 		Log.d(TAG, "displayAdvertisementFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container,
-		                                          AdvertisementFragment.newInstance());
+		
 	}
 	
-	// TODO: Delete method in all fragment interfaces.
-	@Override
-	public void onFragmentInteraction(Uri uri) {
-	}
 	
 	/**
 	 * Method is called when the appropriate item in the NavigationDrawer was clicked.
@@ -270,7 +245,6 @@ public class MainActivity
 	
 	private void displayLookFragment() {
 		Log.d(TAG, "displayLookFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container, LookFragment.newInstance());
 	}
 	
 	/**
@@ -285,7 +259,6 @@ public class MainActivity
 	
 	private void displayOfferFragment() {
 		Log.d(TAG, "displayOfferFragment:true");
-		new DisplayFragment(this).displayFragment(R.id.fragment_container, OfferFragment.newInstance());
 	}
 	
 	@Override

@@ -80,7 +80,7 @@ public class Utils {
 		button.setEnabled(!disable);
 		
 		// Define an AnimatedVectorDrawable object from the drawable file
-		AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) button.getContext().getResources().getDrawable(R.drawable.animated_circle, null);
+		AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) button.getContext().getResources().getDrawable(R.drawable.animated_loading_circle, null);
 		
 		// Sets the button drawable to its end
 		button.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, animatedVectorDrawable, null);

@@ -6,7 +6,7 @@
 	<color name="hintTextColor">@color/color_primary</color>
 	<color name="black">#000</color>
 	<color name="white">#fff</color>
-	<color name="fragmentBackgroundColor">#fff</color>
+	<color name="main_fragment_background_color">@android:color/white</color>
 	<color name="silver">#C0C0C0</color>
 	<color name="gold">#FFD700</color>
 	<color name="platinum">#e5e4e2</color>
