@@ -5,7 +5,7 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    android:padding="@dimen/fragmentPaddingMedium"
-                                                   tools:context=".activity.MainActivity2">
+                                                   tools:context=".login.LoginFragment">
 	
 	<ImageView
 		android:id="@+id/app_logo"
@@ -68,7 +68,6 @@
 		app:layout_constraintTop_toBottomOf="@+id/password_field_layout"/>
 
 	<TextView
-		android:id="@+id/signup_text_view"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:text="@string/sign_up_using_these_colon"

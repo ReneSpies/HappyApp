@@ -25,7 +25,6 @@
 			app:layout_constraintTop_toTopOf="parent"/>
 		
 		<TextView
-			android:id="@+id/entry_activity_logging_in_waiting_assistant_text_view"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/logging_in_ellipsis"
@@ -118,7 +117,6 @@
 				tools:ignore="MissingConstraints"/>
 			
 			<com.google.android.material.button.MaterialButton
-				android:id="@+id/entry_activity_login_google_button"
 				style="@style/Widget.HappyApp.ContainedButton"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -177,7 +175,6 @@
 			</com.google.android.material.textfield.TextInputLayout>
 			
 			<TextView
-				android:id="@+id/entry_activity_registration_username_info_text_view"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:text="@string/message_edit_text_your_displayed_name"

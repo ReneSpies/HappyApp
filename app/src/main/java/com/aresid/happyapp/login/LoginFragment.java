@@ -14,6 +14,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.aresid.happyapp.R;
+import com.aresid.happyapp.keys.Keys;
 import com.aresid.happyapp.utils.Utils;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -39,6 +40,8 @@ public class LoginFragment
 	private              TextInputLayout   mPasswordFieldLayout;
 	private              TextInputEditText mPasswordField;
 	private              FirebaseAuth      mAuth;
+	
+	// TODO: 23/04/2020: Implement reset password policy.
 	
 	/**
 	 * Required public empty constructor
@@ -71,6 +74,7 @@ public class LoginFragment
 		
 		// Inflate the layout
 		return inflater.inflate(R.layout.fragment_login, container, false);
+		
 	}
 	
 	/**
@@ -117,7 +121,7 @@ public class LoginFragment
 			
 			case R.id.email_signup_button:
 				
-				onEmailSignupButtonClicked();
+				showEmailSignupFragment();
 				
 				break;
 			
@@ -213,38 +217,38 @@ public class LoginFragment
 		});
 	}
 	
-	private void onEmailSignupButtonClicked() {
+	/**
+	 * Navigates to the EmailSignupFragment.
+	 */
+	private void showEmailSignupFragment() {
 		
-		Log.d(TAG, "onEmailSignupButtonClicked: called");
+		Log.d(TAG, "showEmailSignupFragment: called");
 		
-		// Define a new Bundle to pass the email
-		Bundle bundle = new Bundle();
-		
-		// Access the email field and save its text into a new String
-		String email = Utils.getString(mEmailField.getText());
-		
-		// Define String from Context#getString() method
-		String emailKey = getString(R.string.arguments_key_email);
-		
-		// Put the email into the bundle using the key
-		bundle.putString(emailKey, email);
-		
-		// Finally navigate to the new fragment and pass the bundle
-		mNavController.navigate(R.id.action_loginFragment_to_emailSignupFragment, bundle);
-		
-	}
-	
-	private void onGoogleSignupButtonClicked() {
-		
-		Log.d(TAG, "onGoogleSignupButtonClicked: called");
-		
-		// Directly send through to SubscribeFragment
-		mNavController.navigate(R.id.action_loginFragment_to_subscribeFragment);
+		// Navigate to the EmailSignupFragment
+		mNavController.navigate(R.id.action_loginFragment_to_emailSignupFragment);
 		
 	}
 	
 	/**
-	 * Sends user to the MainFragment if exists.
+	 * Navigates to the SubscribeFragment and puts an ID in a Bundle to identify that the user want Google signup.
+	 */
+	private void onGoogleSignupButtonClicked() {
+		
+		Log.d(TAG, "onGoogleSignupButtonClicked: called");
+		
+		// Define a new Bundle object
+		Bundle arguments = new Bundle();
+		
+		// Put a String into the Bundle to identify that the user wants a Google signup
+		arguments.putString(Keys.BundleKeys.KEY_GOOGLE_SIGNUP_ID, Keys.BundleKeys.GOOGLE_SIGNUP_ID);
+		
+		// Navigate to the SubscribeFragment and pass the bundle
+		mNavController.navigate(R.id.action_loginFragment_to_subscribeFragment, arguments);
+		
+	}
+	
+	/**
+	 * Sends user to the MainFragment if user exists.
 	 *
 	 * @param user FirebaseUser.
 	 */

@@ -4,25 +4,14 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent">
 	
-	<LinearLayout
-		android:id="@+id/loading_view_layout"
+	<TextView
+		android:id="@+id/loading_text_view"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:orientation="vertical"
+		android:drawableTop="@drawable/animated_loading_circle_red_black"
+		android:text="@string/logging_in_ellipsis"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent">
-		
-		<ImageView
-			android:layout_width="96dp"
-			android:layout_height="96dp"
-			android:contentDescription="@string/processing_login"/>
-		
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/logging_in_ellipsis"/>
-	</LinearLayout>
+		app:layout_constraintTop_toTopOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

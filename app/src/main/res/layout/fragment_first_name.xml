@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".signup.FirstNameFragment">
+	
+	<com.google.android.material.textfield.TextInputLayout
+		android:id="@+id/first_name_field_layout"
+		style="@style/Widget.HappyApp.TextInputLayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:errorEnabled="true"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
+		
+		<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/first_name_field"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:hint="@string/first_name_with_star"
+			android:imeActionId="1"
+			android:imeOptions="actionNext"
+			android:inputType="textCapSentences|textAutoCorrect"/>
+	</com.google.android.material.textfield.TextInputLayout>
+	
+	<com.google.android.material.button.MaterialButton
+		android:id="@+id/next_button"
+		style="@style/Widget.HappyApp.TextButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/next"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/first_name_field_layout"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

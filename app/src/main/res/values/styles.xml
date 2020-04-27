@@ -13,11 +13,6 @@
 		<item name="android:windowBackground">@drawable/launch_screen</item>
 	</style>
 	
-	<style name="Widget.HappyApp.Spinner" parent="Widget.AppCompat.Spinner">
-		<item name="elevation">13dp</item>
-		<item name="background">@drawable/main_fragment_shape</item>
-	</style>
-	
 	<style name="Widget.HappyApp.Seperator.TextView" parent="Widget.AppCompat.TextView">
 		<item name="android:textAlignment">center</item>
 		<item name="android:layout_marginTop">.13dp</item>
@@ -68,10 +63,6 @@
 		<item name="android:textColor">?attr/colorOnSurface</item>
 	</style>
 	
-	<style name="Widget.HappyApp.RoundImageButton" parent="Widget.AppCompat.ImageButton">
-		<item name="background">@drawable/round_button_background</item>
-	</style>
-	
 	<style name="Theme.HappyApp.Fragment">
 		<item name="background">@color/main_fragment_background_color</item>
 		<item name="elevation">4dp</item>
@@ -81,21 +72,9 @@
 	
 	<style name="Theme.HappyApp.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light"/>
 	
-	<style name="Theme.HappyApp.LinearLayoutBox">
-		<item name="android:padding">0dp</item>
-		<item name="background">@drawable/main_fragment_shape</item>
-		<item name="android:orientation">vertical</item>
-		<item name="android:layout_marginTop">4dp</item>
-		<item name="android:layout_marginBottom">4dp</item>
-	</style>
-	
 	<style name="Widget.HappyApp.ProgressBar" parent="Widget.AppCompat.ProgressBar">
 		<item name="android:indeterminateTint">@color/colorAccent</item>
 	</style>
-	
-	<style name="Widget.HappyApp.Seperator"/>
-	
-	<style name="Widget.HappyApp"/>
 	
 	<style name="Widget"/>
 </resources>

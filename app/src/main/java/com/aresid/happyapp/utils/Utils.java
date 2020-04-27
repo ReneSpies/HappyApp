@@ -4,12 +4,14 @@ import android.content.Context;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.core.content.ContextCompat;
 
 import com.aresid.happyapp.R;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Created on: 18/04/2020
@@ -17,7 +19,6 @@ import com.google.android.material.snackbar.Snackbar;
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
-
 public class Utils {
 	
 	private static final String TAG = "Utils";
@@ -63,40 +64,25 @@ public class Utils {
 		
 		Log.d(TAG, "showSnackbar: called");
 		
-		Snackbar.make(snackbarView, message, Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(context, R.color.colorAccent)).show();
+		Snackbar.make(snackbarView, message, Snackbar.LENGTH_LONG).setBackgroundTint(ContextCompat.getColor(context, R.color.black)).show();
 		
 	}
 	
 	/**
-	 * Sets a animated vector drawable to the buttons end and then starts its rotation animation.
+	 * Sets an animated vector drawable to the buttons end and then starts its rotation animation.
 	 *
-	 * @param button The button to set the drawable on.
+	 * @param button  The button to set the animation on.
+	 * @param disable Disable the button?
 	 */
 	public static void setAndStartLoadingButtonAnimationWithDisable(Button button, boolean disable) {
 		
 		Log.d(TAG, "setAndStartLoadingButtonAnimationWithDisable: called");
 		
-		Log.d(TAG, "setAndStartLoadingButtonAnimationWithDisable: elevation = " + button.getElevation());
-		
-		AnimatedVectorDrawable animatedVectorDrawable;
-		
-		if (button.getElevation() > 0) {
-			
-			// Define an AnimatedVectorDrawable object from the drawable file
-			animatedVectorDrawable = (AnimatedVectorDrawable) button.getContext().getResources().getDrawable(R.drawable.animated_loading_circle_white_black, null);
-			
-		}
-		
-		else {
-			
-			// Define an AnimatedVectorDrawable object from the drawable file
-			animatedVectorDrawable = (AnimatedVectorDrawable) button.getContext().getResources().getDrawable(R.drawable.animated_loading_circle_red_black, null);
-			
-		}
+		// Define a new AnimatedVectorDrawable object from the drawable file
+		AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) button.getContext().getResources().getDrawable(R.drawable.animated_loading_circle_red_black, null);
 		
 		// Disable the button or not
 		button.setEnabled(!disable);
-		
 		
 		// Sets the button drawable to its end
 		button.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, animatedVectorDrawable, null);
@@ -106,6 +92,12 @@ public class Utils {
 		
 	}
 	
+	/**
+	 * Removes the loading animation from the button and enables it if wished.
+	 *
+	 * @param button The button to remove the animation from.
+	 * @param enable Enable the button?
+	 */
 	public static void removeLoadingButtonAnimationWithEnable(Button button, boolean enable) {
 		
 		Log.d(TAG, "removeLoadingButtonAnimationWithEnable: called");
@@ -115,6 +107,36 @@ public class Utils {
 		
 		// Set all button drawables to null
 		button.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+		
+	}
+	
+	/**
+	 * Takes all TextInputLayouts available in parentView and set its errors to null.
+	 *
+	 * @param parentView The View containing the TextInputLayouts
+	 */
+	public static void resetLayoutErrors(ViewGroup parentView) {
+		
+		Log.d(TAG, "resetLayoutErrors: called");
+		
+		// Abstract the parentViews child count to an int
+		int childCount = parentView.getChildCount();
+		
+		// Iterate through all members of parentView and set every TextInputLayout error to null
+		for (int i = 0; i <= childCount; i++) {
+			
+			// Define a View object from the parentViews child at index
+			View child = parentView.getChildAt(i);
+			
+			// If child is a TextInputLayout, set its error to null
+			if (child instanceof TextInputLayout) {
+				
+				// Set error to null
+				((TextInputLayout) child).setError(null);
+				
+			}
+			
+		}
 		
 	}
 	

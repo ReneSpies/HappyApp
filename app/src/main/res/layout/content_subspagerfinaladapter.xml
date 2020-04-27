@@ -2,12 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
                                                    xmlns:tools="http://schemas.android.com/tools"
-                                                   android:id="@+id/view_pager_main_view"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent">
 	
 	<LinearLayout
-		android:id="@+id/view_pager_checkout_waiting_assistant_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center"
@@ -18,13 +16,11 @@
 		tools:ignore="UseCompoundDrawables">
 		
 		<ImageView
-			android:id="@+id/view_pager_checkout_waiting_assistant"
 			android:layout_width="@dimen/waitingAssistantSmallSize"
 			android:layout_height="@dimen/waitingAssistantSmallSize"
 			android:contentDescription="@string/processing_login"/>
 		
 		<TextView
-			android:id="@+id/view_pager_checkout_waiting_assistant_text_view"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/logging_in_ellipsis"

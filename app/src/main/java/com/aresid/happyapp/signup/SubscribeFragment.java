@@ -30,6 +30,15 @@ public class SubscribeFragment
 		
 	}
 	
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		
+		Log.d(TAG, "onCreate: called");
+		
+		super.onCreate(savedInstanceState);
+		
+	}
+	
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

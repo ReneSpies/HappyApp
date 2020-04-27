@@ -14,11 +14,21 @@ public class Keys {
 	 */
 	public static class BundleKeys {
 		
-		public static final String KEY_FIRST_NAME    = "happyapp.happyapp.bundle.keys.first_name";
-		public static final String KEY_FAMILY_NAME   = "happyapp.happyapp.bundle.keys.family_name";
-		public static final String KEY_USERNAME      = "happyapp.happyapp.bundle.keys.username";
-		public static final String KEY_EMAIL         = "happyapp.happyapp.bundle.keys.email";
-		public static final String KEY_DATE_OF_BIRTH = "happyapp.happyapp.bundle.keys.date_of_birth";
+		// No key. This is the default value
+		public static final String DEFAULT_VALUE = "404";
+		
+		// Keys
+		public static final String KEY_FIRST_NAME       = "happyapp.happyapp.bundle.keys.first_name";
+		public static final String KEY_FAMILY_NAME      = "happyapp.happyapp.bundle.keys.family_name";
+		public static final String KEY_USERNAME         = "happyapp.happyapp.bundle.keys.username";
+		public static final String KEY_EMAIL            = "happyapp.happyapp.bundle.keys.email";
+		public static final String KEY_DATE_OF_BIRTH    = "happyapp.happyapp.bundle.keys.date_of_birth";
+		public static final String KEY_GOOGLE_SIGNUP_ID = "happyapp.happyapp.bundle.keys.google_signup";
+		public static final String KEY_EMAIL_SIGNUP_ID  = "happyapp.happyapp.bundle.keys.email_signup";
+		
+		// IDs
+		public static final String GOOGLE_SIGNUP_ID = "happyapp.happyapp.bundle.ids.google_signup";
+		public static final String EMAIL_SIGNUP_ID  = "happyapp.happyapp.bundle.ids.email_signup";
 		
 	}
 	
@@ -27,6 +37,7 @@ public class Keys {
 	 */
 	public static class HashmapKeys {
 		
+		// Keys
 		public static final String KEY_FIRST_NAME    = "happyapp.happyapp.hashmap.keys.first_name";
 		public static final String KEY_FAMILY_NAME   = "happyapp.happyapp.hashmap.keys.family_name";
 		public static final String KEY_USERNAME      = "happyapp.happyapp.hashmap.keys.username";
@@ -41,6 +52,7 @@ public class Keys {
 	 */
 	public static class FirestoreFieldKeys {
 		
+		// Keys
 		// Collections
 		public static final String KEY_COLLECTION_SUBSCRIPTION = "subscription";
 		public static final String KEY_COLLECTION_USERS        = "users";

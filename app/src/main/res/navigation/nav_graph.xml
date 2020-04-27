@@ -15,10 +15,12 @@
 			app:enterAnim="@anim/slide_in_from_right"
 			app:exitAnim="@anim/slide_out_to_left"
 			app:popEnterAnim="@anim/slide_in_from_left"
-			app:popExitAnim="@anim/slide_out_to_right"/>
-		<argument
-			android:name="email"
-			android:defaultValue="None"/>
+			app:popExitAnim="@anim/slide_out_to_right">
+			<argument
+				android:name="happyapp.happyapp.safeargs.ids.email_signup"
+				app:nullable="false"/>
+		</action>
+		
 		<action
 			android:id="@+id/action_loginFragment_to_mainFragment"
 			app:destination="@id/mainFragment"
@@ -32,7 +34,11 @@
 			app:enterAnim="@anim/slide_in_from_right"
 			app:exitAnim="@anim/slide_out_to_left"
 			app:popEnterAnim="@anim/slide_in_from_left"
-			app:popExitAnim="@anim/slide_out_to_right"/>
+			app:popExitAnim="@anim/slide_out_to_right">
+			<argument
+				android:name="happyapp.happyapp.safeargs.ids.google_signup"
+				app:nullable="false"/>
+		</action>
 	</fragment>
 	<fragment
 		android:id="@+id/mainFragment"

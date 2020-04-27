@@ -28,13 +28,11 @@
 		app:layout_constraintTop_toTopOf="parent">
 		
 		<ImageView
-			android:id="@+id/subspagerinitadapter_no_connection_image_view"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:contentDescription="@string/no_internet_connection"/>
 		
 		<com.google.android.material.button.MaterialButton
-			android:id="@+id/subspagerinitadapter_retry_button"
 			style="@style/Widget.HappyApp.OutlinedButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

@@ -1,10 +1,12 @@
 package com.aresid.happyapp.fragments;
 
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,8 +36,7 @@ public class LoadingFragment
 	
 	@Nullable
 	@Override
-	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-			@Nullable Bundle savedInstanceState) {
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		
 		Log.d(TAG, "onCreateView: called");
 		
@@ -50,8 +51,31 @@ public class LoadingFragment
 		Log.d(TAG, "onViewCreated: called");
 		super.onViewCreated(view, savedInstanceState);
 		
+		// Define a TextView from the layout
+		TextView loadingTextView = view.findViewById(R.id.loading_text_view);
+		
+		// Start the loading animation on the TextViews compound drawable
+		startLoadingAnimation(loadingTextView);
+		
 		// Define NavController
 		mNavController = Navigation.findNavController(view);
+		
+	}
+	
+	/**
+	 * Takes the TextViews compound drawable top and starts its loading animation.
+	 *
+	 * @param textView The TextView to take the compound drawable top from.
+	 */
+	private void startLoadingAnimation(TextView textView) {
+		
+		Log.d(TAG, "startLoadingAnimation: called");
+		
+		// Define a AnimatedVectorDrawable object from the TextViews compound drawable top
+		AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) textView.getCompoundDrawablesRelative()[1];
+		
+		// Start the loading animation
+		animatedVectorDrawable.start();
 		
 	}
 	

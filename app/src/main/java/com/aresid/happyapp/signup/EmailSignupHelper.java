@@ -24,9 +24,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * Copyright: © 2020 ARES ID
  */
 
-public class EmailSignupChecker {
+public class EmailSignupHelper {
 	
-	private static final String                TAG = "EmailSignupChecker";
+	private static final String                TAG = "EmailSignupHelper";
 	private final        FirebaseAuth          mAuth;
 	private final        Fragment              mContext;
 	private final        SignupCheckerListener mListener;
@@ -55,9 +55,9 @@ public class EmailSignupChecker {
 	private              String                mPassword;
 	private              String                mDateOfBirth;
 	
-	public EmailSignupChecker(Fragment context, View parent) {
+	public EmailSignupHelper(Fragment context, View parent) {
 		
-		Log.d(TAG, "EmailSignupChecker: called");
+		Log.d(TAG, "EmailSignupHelper: called");
 		
 		// Check if associated context implements the SignupCheckerListener interface
 		if (context instanceof SignupCheckerListener) {
@@ -86,7 +86,7 @@ public class EmailSignupChecker {
 		defineFieldLayouts(parent);
 		
 		// Define the checkbox
-		mLegalitiesCheckbox = parent.findViewById(R.id.legalities_check_box);
+		//		mLegalitiesCheckbox = parent.findViewById(R.id.legalities_check_box);
 		
 		// Define FirebaseAuth instance
 		mAuth = FirebaseAuth.getInstance();

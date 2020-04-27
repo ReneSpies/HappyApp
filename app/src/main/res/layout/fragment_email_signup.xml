@@ -1,154 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".signup.EmailSignupFragment">
 	
-	<androidx.constraintlayout.widget.ConstraintLayout
+	<TextView
+		android:id="@+id/title"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
-		
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/first_name_field_layout"
-			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/first_name_with_star"
-			app:errorEnabled="true"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent">
-			
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/first_name_field"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:imeActionId="2"
-				android:imeOptions="actionNext"
-				android:inputType="textCapSentences|textAutoCorrect"/>
-		</com.google.android.material.textfield.TextInputLayout>
-		
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/family_name_field_layout"
-			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/family_name_with_star"
-			app:errorEnabled="true"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/first_name_field_layout">
-			
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/family_name_field"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:imeActionId="3"
-				android:imeOptions="actionNext"
-				android:inputType="textCapSentences|textAutoCorrect"/>
-		</com.google.android.material.textfield.TextInputLayout>
-		
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/username_field_layout"
-			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/username_with_star"
-			app:errorEnabled="true"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/family_name_field_layout">
-			
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/username_field"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:imeActionId="4"
-				android:imeOptions="actionNext"
-				android:inputType="text"/>
-		</com.google.android.material.textfield.TextInputLayout>
-		
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/email_field_layout"
-			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/email_with_star"
-			app:errorEnabled="true"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/username_field_layout">
-			
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/email_field"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:imeActionId="5"
-				android:imeOptions="actionNext"
-				android:inputType="textEmailAddress"/>
-		</com.google.android.material.textfield.TextInputLayout>
-		
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/password_field_layout"
-			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/password_with_star"
-			app:errorEnabled="true"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/email_field_layout"
-			app:passwordToggleEnabled="true">
-			
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/password_field"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:imeActionId="6"
-				android:imeOptions="actionNext"
-				android:inputType="textPassword"/>
-		</com.google.android.material.textfield.TextInputLayout>
-		
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/date_of_birth_field_layout"
-			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:hint="@string/date_of_birth_with_star"
-			app:errorEnabled="true"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/password_field_layout">
-			
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/date_of_birth_field"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:imeActionId="7"
-				android:imeOptions="actionDone"
-				android:inputType="date"/>
-		</com.google.android.material.textfield.TextInputLayout>
-		
-		<CheckBox
-			android:id="@+id/legalities_check_box"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginHorizontal="13dp"
-			android:text="@string/confirmation_message_legalities"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/date_of_birth_field_layout"/>
-		
-		<com.google.android.material.button.MaterialButton
-			android:id="@+id/subscribe_button"
-			style="@style/Widget.HappyApp.ContainedButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/subscribe"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/legalities_check_box"/>
+		android:layout_height="wrap_content"
+		android:padding="13dp"
+		android:text="@string/sign_up_and_subscribe_for_happyapp"
+		android:textAlignment="center"
+		android:textAppearance="?attr/textAppearanceHeadline5"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"/>
 	
-	</androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+	<androidx.fragment.app.FragmentContainerView
+		android:id="@+id/signup_nav_host_fragment"
+		android:name="androidx.navigation.fragment.NavHostFragment"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginHorizontal="13dp"
+		android:background="@drawable/main_fragment_shape"
+		android:elevation="8dp"
+		app:defaultNavHost="true"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:navGraph="@navigation/signup_nav_graph"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
