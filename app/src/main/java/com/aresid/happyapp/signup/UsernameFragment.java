@@ -42,9 +42,6 @@ public class UsernameFragment
 		
 		super.onViewCreated(view, savedInstanceState);
 		
-		String firstName = UsernameFragmentArgs.fromBundle(getArguments()).getFirstName();
-		Log.d(TAG, "onViewCreated: first name = " + firstName);
-		
 	}
 	
 }

@@ -12,7 +12,10 @@
 		android:layout_width="@dimen/imageViewAppLogoSize"
 		android:layout_height="@dimen/imageViewAppLogoSize"
 		android:contentDescription="@string/happy_app_logo"
-		android:src="@drawable/ic_app_logo"
+		android:layout_marginTop="4dp"
+		android:background="@drawable/main_fragment_shape"
+		android:elevation="8dp"
+		android:src="@drawable/ic_happyapp_logo"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"/>
