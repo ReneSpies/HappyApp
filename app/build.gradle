@@ -1,11 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\renej\\Documents\\Keystore\\happyapp_keystore.jks')
+            storeFile file('/home/rene/Documents/Keystores/HappyApp/happyapp_keystore.jks')
             storePassword 'q<1ZS$i0.Lk4-Qf9rN6:8,Pc'
             keyAlias = 'happyapp_release_key'
             keyPassword 'q<1ZS$i0.Lk4-Qf9rN6:8,Pc'
@@ -67,4 +69,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-beta01'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
