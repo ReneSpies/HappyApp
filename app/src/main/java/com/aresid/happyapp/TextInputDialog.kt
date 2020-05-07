@@ -19,6 +19,7 @@ internal interface OnTextInputDialogInteractionListener {
  * Author: René Spies
  * Copyright: © 2020 Ares ID
  */
+
 class TextInputDialog: DialogFragment() {
 	
 	private var mListener: OnTextInputDialogInteractionListener? = null
