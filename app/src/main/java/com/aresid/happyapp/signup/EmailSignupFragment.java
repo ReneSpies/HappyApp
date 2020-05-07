@@ -1,7 +1,6 @@
 package com.aresid.happyapp.signup;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,8 @@ import androidx.navigation.Navigation;
 
 import com.aresid.happyapp.R;
 
+import timber.log.Timber;
+
 /**
  * Created on: 15/04/2020
  * For Project: HappyApp
@@ -25,13 +26,12 @@ public class EmailSignupFragment
 		extends Fragment
 		implements EmailSignupHelper.SignupCheckerListener {
 	
-	private static final String            TAG = "EmailSignupFragment";
 	private              NavController     mNavController;
 	private              EmailSignupHelper mEmailSignupHelper;
 	
 	public EmailSignupFragment() {
 		
-		Log.d(TAG, "EmailSignupFragment: called");
+		Timber.d("EmailSignupFragment: called");
 		// Required public empty constructor
 		
 	}
@@ -41,7 +41,7 @@ public class EmailSignupFragment
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
 			@Nullable Bundle savedInstanceState) {
 		
-		Log.d(TAG, "onCreateView: called");
+		Timber.d("onCreateView: called");
 		
 		// Inflate the layout
 		return inflater.inflate(R.layout.fragment_email_signup, container, false);
@@ -51,7 +51,7 @@ public class EmailSignupFragment
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		
-		Log.d(TAG, "onViewCreated: called");
+		Timber.d("onViewCreated: called");
 		super.onViewCreated(view, savedInstanceState);
 		
 		/* Use this class to reference the views */
@@ -70,7 +70,7 @@ public class EmailSignupFragment
 	@Override
 	public void inputIsOk() {
 		
-		Log.d(TAG, "inputIsOk: called");
+		Timber.d("inputIsOk: called");
 		
 		// Get signup forms input as bundle and pass it to the subscribe fragment
 		

@@ -1,7 +1,6 @@
 package com.aresid.happyapp.login;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +20,19 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import timber.log.Timber;
+
 /**
  * Created on: 15/04/2020
  * For Project: HappyApp
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
+
 public class LoginFragment
 		extends Fragment
 		implements View.OnClickListener {
 	
-	private static final String            TAG = "LoginFragment";
 	// Declare NavController
 	private              NavController     mNavController;
 	// Declare fields and layouts for login flow
@@ -48,14 +49,14 @@ public class LoginFragment
 	 */
 	public LoginFragment() {
 		
-		Log.d(TAG, "LoginFragment: called");
+		Timber.d("LoginFragment: called");
 		
 	}
 	
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		
-		Log.d(TAG, "onCreate: called");
+		Timber.d("onCreate: called");
 		
 		super.onCreate(savedInstanceState);
 		
@@ -70,7 +71,7 @@ public class LoginFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		Log.d(TAG, "onCreateView: called");
+		Timber.d("onCreateView: called");
 		
 		// Inflate the layout
 		return inflater.inflate(R.layout.fragment_login, container, false);
@@ -86,7 +87,7 @@ public class LoginFragment
 	@Override
 	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 		
-		Log.d(TAG, "onViewCreated: called");
+		Timber.d("onViewCreated: called");
 		
 		super.onViewCreated(view, savedInstanceState);
 		
@@ -106,10 +107,28 @@ public class LoginFragment
 		
 	}
 	
+	/**
+	 * Sends user to the MainFragment if user exists.
+	 *
+	 * @param user FirebaseUser.
+	 */
+	private void updateUI(FirebaseUser user) {
+		
+		Timber.d("updateUI: called");
+		
+		if (user != null) {
+			
+			// Navigate to MainFragment
+			mNavController.navigate(R.id.action_loginFragment_to_mainFragment);
+			
+		}
+		
+	}
+	
 	@Override
 	public void onClick(View v) {
 		
-		Log.d(TAG, "onClick: called");
+		Timber.d("onClick: called");
 		
 		switch (v.getId()) {
 			
@@ -137,7 +156,7 @@ public class LoginFragment
 	
 	private void onLoginButtonClicked(Button button) {
 		
-		Log.d(TAG, "onLoginButtonClicked: called");
+		Timber.d("onLoginButtonClicked: called");
 		
 		// Define Strings carrying the fields text
 		String email = Utils.getString(mEmailField.getText());
@@ -173,7 +192,7 @@ public class LoginFragment
 		// Sign in with email and password
 		mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(result -> {
 			
-			Log.d(TAG, "onLoginButtonClicked: great success logging user in");
+			Timber.d("onLoginButtonClicked: great success logging user in");
 			
 			// Send the user to MainFragment if exist
 			updateUI(result.getUser());
@@ -183,8 +202,8 @@ public class LoginFragment
 			
 		}).addOnFailureListener(e -> {
 			
-			Log.d(TAG, "onLoginButtonClicked: failure logging user in");
-			Log.e(TAG, "onLoginButtonClicked: ", e);
+			Timber.d("onLoginButtonClicked: failure logging user in");
+			Timber.e(e, "onLoginButtonClicked: ");
 			
 			// Set layout errors null so no multiple errors are shown
 			resetLoginLayoutErrors();
@@ -222,7 +241,7 @@ public class LoginFragment
 	 */
 	private void showEmailSignupFragment() {
 		
-		Log.d(TAG, "showEmailSignupFragment: called");
+		Timber.d("showEmailSignupFragment: called");
 		
 		// Navigate to the EmailSignupFragment
 		mNavController.navigate(R.id.action_loginFragment_to_emailSignupFragment);
@@ -234,7 +253,7 @@ public class LoginFragment
 	 */
 	private void onGoogleSignupButtonClicked() {
 		
-		Log.d(TAG, "onGoogleSignupButtonClicked: called");
+		Timber.d("onGoogleSignupButtonClicked: called");
 		
 		// Define a new Bundle object
 		Bundle arguments = new Bundle();
@@ -248,29 +267,11 @@ public class LoginFragment
 	}
 	
 	/**
-	 * Sends user to the MainFragment if user exists.
-	 *
-	 * @param user FirebaseUser.
-	 */
-	private void updateUI(FirebaseUser user) {
-		
-		Log.d(TAG, "updateUI: called");
-		
-		if (user != null) {
-			
-			// Navigate to MainFragment
-			mNavController.navigate(R.id.action_loginFragment_to_mainFragment);
-			
-		}
-		
-	}
-	
-	/**
 	 * Sets the email and password field layouts error null
 	 */
 	private void resetLoginLayoutErrors() {
 		
-		Log.d(TAG, "resetLayoutErrors: called");
+		Timber.d("resetLayoutErrors: called");
 		
 		// Set layout error null
 		mEmailFieldLayout.setError(null);

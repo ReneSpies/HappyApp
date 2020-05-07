@@ -1,7 +1,6 @@
 package com.aresid.happyapp.signup;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ScrollView;
@@ -17,6 +16,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import timber.log.Timber;
+
 /**
  * Created on: 18/04/2020
  * For Project: HappyApp
@@ -26,38 +27,36 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EmailSignupHelper {
 	
-	private static final String                TAG = "EmailSignupHelper";
-	private final        FirebaseAuth          mAuth;
-	private final        Fragment              mContext;
-	private final        SignupCheckerListener mListener;
-	private              View                  mParentView;
+	private final FirebaseAuth          mAuth;
+	private final Fragment              mContext;
+	private final SignupCheckerListener mListener;
+	private       View                  mParentView;
 	// Fields layouts
-	private              TextInputLayout       mFirstNameFieldLayout;
-	private              TextInputLayout       mFamilyNameFieldLayout;
-	private              TextInputLayout       mUsernameFieldLayout;
-	private              TextInputLayout       mEmailFieldLayout;
-	private              TextInputLayout       mPasswordFieldLayout;
-	private              TextInputLayout       mDateOfBirthFieldLayout;
+	private       TextInputLayout       mFirstNameFieldLayout;
+	private       TextInputLayout       mFamilyNameFieldLayout;
+	private       TextInputLayout       mUsernameFieldLayout;
+	private       TextInputLayout       mEmailFieldLayout;
+	private       TextInputLayout       mPasswordFieldLayout;
+	private       TextInputLayout       mDateOfBirthFieldLayout;
 	// Fields
-	private              TextInputEditText     mFirstNameField;
-	private              TextInputEditText     mFamilyNameField;
-	private              TextInputEditText     mUsernameField;
-	private              TextInputEditText     mEmailField;
-	private              TextInputEditText     mPasswordField;
-	private              TextInputEditText     mDateOfBirthField;
-	// Checkbox
-	private              CheckBox              mLegalitiesCheckbox;
+	private       TextInputEditText     mFirstNameField;
+	private       TextInputEditText     mFamilyNameField;
+	private       TextInputEditText     mUsernameField;
+	private       TextInputEditText     mEmailField;
+	private       TextInputEditText     mPasswordField;
+	private       TextInputEditText     mDateOfBirthField;
 	// Field text Strings
-	private              String                mFirstName;
-	private              String                mFamilyName;
-	private              String                mUsername;
-	private              String                mEmail;
-	private              String                mPassword;
-	private              String                mDateOfBirth;
+	private       String                mFirstName;
+	private       String                mFamilyName;
+	private       String                mUsername;
+	private       String                mEmail;
+	private       String                mPassword;
+	private       String                mDateOfBirth;
+	private       CheckBox              mLegalitiesCheckbox;
 	
-	public EmailSignupHelper(Fragment context, View parent) {
+	EmailSignupHelper(Fragment context, View parent) {
 		
-		Log.d(TAG, "EmailSignupHelper: called");
+		Timber.d("EmailSignupHelper: called");
 		
 		// Check if associated context implements the SignupCheckerListener interface
 		if (context instanceof SignupCheckerListener) {
@@ -86,10 +85,47 @@ public class EmailSignupHelper {
 		defineFieldLayouts(parent);
 		
 		// Define the checkbox
-		//		mLegalitiesCheckbox = parent.findViewById(R.id.legalities_check_box);
+		// Check box not in the view hierarchy anymore
+		//				mLegalitiesCheckbox = parent.findViewById(R.id.legalities_check_box);
 		
 		// Define FirebaseAuth instance
 		mAuth = FirebaseAuth.getInstance();
+		
+	}
+	
+	/**
+	 * Defines the fields from given parent.
+	 *
+	 * @param parent Parent carrying the fields.
+	 */
+	private void defineFields(View parent) {
+		
+		Timber.d("defineFields: called");
+		
+		mFirstNameField = parent.findViewById(R.id.first_name_field);
+		mFamilyNameField = parent.findViewById(R.id.family_name_field);
+		mUsernameField = parent.findViewById(R.id.username_field);
+		mEmailField = parent.findViewById(R.id.email_field);
+		mPasswordField = parent.findViewById(R.id.password_field);
+		mDateOfBirthField = parent.findViewById(R.id.date_of_birth_field);
+		
+	}
+	
+	/**
+	 * Defines the field layouts from given parent.
+	 *
+	 * @param parent Parent carrying the field layouts.
+	 */
+	private void defineFieldLayouts(View parent) {
+		
+		Timber.d("defineFieldLayouts: called");
+		
+		mFirstNameFieldLayout = parent.findViewById(R.id.first_name_field_layout);
+		mFamilyNameFieldLayout = parent.findViewById(R.id.family_name_field_layout);
+		mUsernameFieldLayout = parent.findViewById(R.id.username_field_layout);
+		mEmailFieldLayout = parent.findViewById(R.id.email_field_layout);
+		mPasswordFieldLayout = parent.findViewById(R.id.password_field_layout);
+		mDateOfBirthFieldLayout = parent.findViewById(R.id.date_of_birth_field_layout);
 		
 	}
 	
@@ -98,9 +134,9 @@ public class EmailSignupHelper {
 	 *
 	 * @return The bundled field texts.
 	 */
-	public Bundle getInputBundle() {
+	Bundle getInputBundle() {
 		
-		Log.d(TAG, "getInputBundle: called");
+		Timber.d("getInputBundle: called");
 		
 		// Define the field text strings
 		defineFieldStrings();
@@ -120,47 +156,11 @@ public class EmailSignupHelper {
 	}
 	
 	/**
-	 * Defines the fields from given parent.
-	 *
-	 * @param parent Parent carrying the fields.
-	 */
-	private void defineFields(View parent) {
-		
-		Log.d(TAG, "defineFields: called");
-		
-		mFirstNameField = parent.findViewById(R.id.first_name_field);
-		mFamilyNameField = parent.findViewById(R.id.family_name_field);
-		mUsernameField = parent.findViewById(R.id.username_field);
-		mEmailField = parent.findViewById(R.id.email_field);
-		mPasswordField = parent.findViewById(R.id.password_field);
-		mDateOfBirthField = parent.findViewById(R.id.date_of_birth_field);
-		
-	}
-	
-	/**
-	 * Defines the field layouts from given parent.
-	 *
-	 * @param parent Parent carrying the field layouts.
-	 */
-	private void defineFieldLayouts(View parent) {
-		
-		Log.d(TAG, "defineFieldLayouts: called");
-		
-		mFirstNameFieldLayout = parent.findViewById(R.id.first_name_field_layout);
-		mFamilyNameFieldLayout = parent.findViewById(R.id.family_name_field_layout);
-		mUsernameFieldLayout = parent.findViewById(R.id.username_field_layout);
-		mEmailFieldLayout = parent.findViewById(R.id.email_field_layout);
-		mPasswordFieldLayout = parent.findViewById(R.id.password_field_layout);
-		mDateOfBirthFieldLayout = parent.findViewById(R.id.date_of_birth_field_layout);
-		
-	}
-	
-	/**
 	 * Defines the Strings carrying the fields texts.
 	 */
 	private void defineFieldStrings() {
 		
-		Log.d(TAG, "defineFieldStrings: called");
+		Timber.d("defineFieldStrings: called");
 		
 		mFirstName = Utils.getString(mFirstNameField.getText());
 		mFamilyName = Utils.getString(mFamilyNameField.getText());
@@ -177,7 +177,7 @@ public class EmailSignupHelper {
 	 */
 	public void checkInput() {
 		
-		Log.d(TAG, "checkInput: called");
+		Timber.d("checkInput: called");
 		
 		// Reset layout errors
 		resetLayoutErrors();
@@ -258,7 +258,7 @@ public class EmailSignupHelper {
 		 */
 		mAuth.fetchSignInMethodsForEmail(mEmail).addOnSuccessListener(result -> {
 			
-			Log.d(TAG, "checkInput: great success checking email availability");
+			Timber.d("checkInput: great success checking email availability");
 			
 			// If signInMethods() size == 0, the email is available
 			if (result.getSignInMethods() != null && result.getSignInMethods().size() == 0) {
@@ -274,7 +274,7 @@ public class EmailSignupHelper {
 				 */
 				firestore.collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).whereEqualTo(Keys.FirestoreFieldKeys.KEY_COLUMN_USERNAME, mUsername).get().addOnSuccessListener(snapshots -> {
 					
-					Log.d(TAG, "checkInput: great success comparing usernames");
+					Timber.d("checkInput: great success comparing usernames");
 					
 					// If username is available, call callback
 					if (snapshots.isEmpty()) {
@@ -298,8 +298,8 @@ public class EmailSignupHelper {
 					
 				}).addOnFailureListener(e -> {
 					
-					Log.d(TAG, "checkInput: failure comparing usernames");
-					Log.e(TAG, "checkInput: ", e);
+					Timber.d("checkInput: failure comparing usernames");
+					Timber.e(e, "checkInput: ");
 					
 					// TODO: 18/04/2020 checkInput: test exceptions. Docs do not tell which exceptions can be thrown
 					
@@ -316,8 +316,8 @@ public class EmailSignupHelper {
 			
 		}).addOnFailureListener(e -> {
 			
-			Log.d(TAG, "checkInput: failure checking email availability");
-			Log.e(TAG, "checkInput: ", e);
+			Timber.d("checkInput: failure checking email availability");
+			Timber.e(e, "checkInput: ");
 			
 			// TODO: 18/04/2020 checkInput: test exceptions
 			
@@ -341,7 +341,7 @@ public class EmailSignupHelper {
 	 */
 	private void resetLayoutErrors() {
 		
-		Log.d(TAG, "resetLayoutErrors: called");
+		Timber.d("resetLayoutErrors: called");
 		
 		// mParentView is the first view in the EmailSignupFragment's layout
 		// Define a ViewGroup object from the first child of mParentView which is the ConstraintLayout
@@ -381,7 +381,7 @@ public class EmailSignupHelper {
 	 */
 	public void setEmailText(String emailText) {
 		
-		Log.d(TAG, "setEmailText: called");
+		Timber.d("setEmailText: called");
 		
 		mEmailField.setText(emailText);
 		
