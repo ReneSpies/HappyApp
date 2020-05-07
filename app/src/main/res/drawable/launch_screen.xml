@@ -4,6 +4,6 @@
 	<item android:drawable="@android:color/white"/>
 	<!-- My product entry_activity_app_logo -->
 	<item
-		android:drawable="@drawable/ic_app_logo"
+		android:drawable = "@drawable/happyapp_logo_144"
 		android:gravity="center"/>
 </layer-list>

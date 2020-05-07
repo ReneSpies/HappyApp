@@ -14,7 +14,7 @@
 		android:contentDescription="@string/happy_app_logo"
 		android:layout_marginTop="4dp"
 		android:elevation="8dp"
-		android:src="@drawable/ic_happyapp_logo"
+		android:src = "@drawable/happyapp_logo_144"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent"/>
