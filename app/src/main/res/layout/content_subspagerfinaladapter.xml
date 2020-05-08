@@ -1,78 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:app = "http://schemas.android.com/apk/res-auto"
+	xmlns:tools = "http://schemas.android.com/tools"
+	android:layout_width = "match_parent"
+	android:layout_height = "match_parent"
+	>
 	
 	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:orientation="horizontal"
-		android:visibility="invisible"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toBottomOf="@id/view_pager_tv_price"
-		tools:ignore="UseCompoundDrawables">
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:gravity = "center"
+		android:orientation = "horizontal"
+		android:visibility = "invisible"
+		app:layout_constraintBottom_toBottomOf = "parent"
+		app:layout_constraintTop_toBottomOf = "@id/view_pager_tv_price"
+		tools:ignore = "UseCompoundDrawables"
+		>
 		
 		<ImageView
-			android:layout_width="@dimen/waitingAssistantSmallSize"
-			android:layout_height="@dimen/waitingAssistantSmallSize"
-			android:contentDescription="@string/processing_login"/>
+			android:layout_width = "@dimen/waitingAssistantSmallSize"
+			android:layout_height = "@dimen/waitingAssistantSmallSize"
+			android:contentDescription = "@string/processing_login"
+			/>
 		
 		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/logging_in_ellipsis"
-			android:textAppearance="?attr/textAppearanceCaption"/>
+			android:layout_width = "wrap_content"
+			android:layout_height = "wrap_content"
+			android:text = "@string/logging_in_ellipsis"
+			android:textAppearance = "?attr/textAppearanceCaption"
+			/>
 	</LinearLayout>
 	
 	<androidx.appcompat.widget.AppCompatImageView
-		android:id="@+id/view_pager_subscription_icon"
-		android:layout_width="@dimen/imageViewAppLogoSize"
-		android:layout_height="@dimen/imageViewAppLogoSize"
-		android:antialias="true"
-		app:layout_constraintBottom_toTopOf="@id/view_pager_tv_title"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent"/>
+		android:id = "@+id/view_pager_subscription_icon"
+		android:layout_width = "@dimen/imageViewAppLogoSize"
+		android:layout_height = "@dimen/imageViewAppLogoSize"
+		android:antialias = "true"
+		app:layout_constraintBottom_toTopOf = "@id/view_pager_tv_title"
+		app:layout_constraintEnd_toEndOf = "parent"
+		app:layout_constraintStart_toStartOf = "parent"
+		app:layout_constraintTop_toTopOf = "parent"
+		/>
 	
 	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/view_pager_tv_description"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:textAppearance="?attr/textAppearanceSubtitle2"
-		app:layout_constraintBottom_toBottomOf="@+id/view_pager_tv_price"
-		app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_title"/>
+		android:id = "@+id/view_pager_tv_description"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:gravity = "center"
+		android:textAppearance = "?attr/textAppearanceSubtitle2"
+		app:layout_constraintBottom_toBottomOf = "@+id/view_pager_tv_price"
+		app:layout_constraintTop_toBottomOf = "@+id/view_pager_tv_title"
+		/>
 	
 	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/view_pager_tv_price"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:textAppearance="?attr/textAppearanceSubtitle1"
-		app:layout_constraintBottom_toTopOf="@+id/view_pager_bt_confirm"
-		app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_description"/>
+		android:id = "@+id/view_pager_tv_price"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:gravity = "center"
+		android:textAppearance = "?attr/textAppearanceSubtitle1"
+		app:layout_constraintBottom_toTopOf = "@+id/view_pager_bt_confirm"
+		app:layout_constraintTop_toBottomOf = "@+id/view_pager_tv_description"
+		/>
 	
 	<androidx.appcompat.widget.AppCompatTextView
-		android:id="@+id/view_pager_tv_title"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:textAppearance="?attr/textAppearanceHeadline5"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toTopOf="parent"/>
+		android:id = "@+id/view_pager_tv_title"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:gravity = "center"
+		android:textAppearance = "?attr/textAppearanceHeadline5"
+		app:layout_constraintBottom_toBottomOf = "parent"
+		app:layout_constraintTop_toTopOf = "parent"
+		/>
 	
 	<com.google.android.material.button.MaterialButton
-		android:id="@+id/view_pager_bt_confirm"
-		style="@style/Widget.HappyApp.ContainedButton"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:onClick="onConfirmButtonClick"
-		android:text="@string/check_this_out"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toBottomOf="@+id/view_pager_tv_price"/>
+		android:id = "@+id/view_pager_bt_confirm"
+		style = "@style/Widget.HappyApp.ContainedButton"
+		android:layout_width = "match_parent"
+		android:layout_height = "wrap_content"
+		android:onClick = "onConfirmButtonClick"
+		android:text = "@string/check_this_out"
+		app:layout_constraintBottom_toBottomOf = "parent"
+		app:layout_constraintEnd_toEndOf = "parent"
+		app:layout_constraintStart_toStartOf = "parent"
+		app:layout_constraintTop_toBottomOf = "@+id/view_pager_tv_price"
+		/>
 </androidx.constraintlayout.widget.ConstraintLayout>

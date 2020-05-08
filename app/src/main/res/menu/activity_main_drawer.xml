@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:showIn="navigation_view">
-	<group android:checkableBehavior="single">
+<menu
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	xmlns:tools = "http://schemas.android.com/tools"
+	tools:showIn = "navigation_view"
+	>
+	<group android:checkableBehavior = "single">
 		<item
-			android:id="@+id/nav_home"
-			android:icon="@drawable/ic_home_black_24dp"
-			android:title="@string/home"/>
+			android:id = "@+id/nav_home"
+			android:icon = "@drawable/ic_home_black_24dp"
+			android:title = "@string/home"
+			/>
 		<item
-			android:id="@+id/nav_search"
-			android:icon="@drawable/ic_search_black_24dp"
-			android:title="@string/search"/>
+			android:id = "@+id/nav_search"
+			android:icon = "@drawable/ic_search_black_24dp"
+			android:title = "@string/search"
+			/>
 		<item
-			android:id="@+id/nav_favorites"
-			android:icon="@drawable/ic_star_black_24dp"
-			android:title="@string/favorites"/>
+			android:id = "@+id/nav_favorites"
+			android:icon = "@drawable/ic_star_black_24dp"
+			android:title = "@string/favorites"
+			/>
 		<item
-			android:id="@+id/nav_place_ad"
-			android:icon="@drawable/ic_launch_black_24dp"
-			android:title="@string/submit_an_ad"/>
+			android:id = "@+id/nav_place_ad"
+			android:icon = "@drawable/ic_launch_black_24dp"
+			android:title = "@string/submit_an_ad"
+			/>
 		<!--My Account wird beim klick auf Nav Header ausgelöst-->
 		<!--Escort Service hab ich zu der Suche hinzugefügt-->
 		<!--<item-->

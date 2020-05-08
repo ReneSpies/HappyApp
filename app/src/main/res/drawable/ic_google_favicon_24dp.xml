@@ -1,18 +1,24 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="24dp"
-        android:height="24dp"
-        android:viewportWidth="24"
-        android:viewportHeight="24">
+<vector
+	xmlns:android = "http://schemas.android.com/apk/res/android"
+	android:width = "24dp"
+	android:height = "24dp"
+	android:viewportWidth = "24"
+	android:viewportHeight = "24"
+	>
 	<path
-		android:fillColor="#E73B31"
-		android:pathData="M16.686,6.349L20.032,3.083Q15.485,-0.941 9.283,0.287Q3.932,1.575 1.289,6.564L5.366,9.89Q6.78,5.899 10.678,4.981Q13.82,4.241 16.686,6.349Z"/>
+		android:fillColor = "#E73B31"
+		android:pathData = "M16.686,6.349L20.032,3.083Q15.485,-0.941 9.283,0.287Q3.932,1.575 1.289,6.564L5.366,9.89Q6.78,5.899 10.678,4.981Q13.82,4.241 16.686,6.349Z"
+		/>
 	<path
-		android:fillColor="#F9B317"
-		android:pathData="M5.366,9.89Q5.052,11.01 5.071,12.063Q5.09,13.115 5.42,14.236L1.235,17.348Q0.052,14.846 0.001,11.983Q-0.044,9.425 1.289,6.564L5.366,9.89Z"/>
+		android:fillColor = "#F9B317"
+		android:pathData = "M5.366,9.89Q5.052,11.01 5.071,12.063Q5.09,13.115 5.42,14.236L1.235,17.348Q0.052,14.846 0.001,11.983Q-0.044,9.425 1.289,6.564L5.366,9.89Z"
+		/>
 	<path
-		android:fillColor="#2A9E4B"
-		android:pathData="M5.42,14.236Q7.276,18.925 12.153,19.172Q13.862,19.258 16.23,18.126Q18.7,20.049 19.924,21.002C18.821,21.931 14.204,25.713 7.378,23.088Q3.332,21.382 1.235,17.348L5.42,14.236Z"/>
+		android:fillColor = "#2A9E4B"
+		android:pathData = "M5.42,14.236Q7.276,18.925 12.153,19.172Q13.862,19.258 16.23,18.126Q18.7,20.049 19.924,21.002C18.821,21.931 14.204,25.713 7.378,23.088Q3.332,21.382 1.235,17.348L5.42,14.236Z"
+		/>
 	<path
-		android:fillColor="#4A72B7"
-		android:pathData="M16.23,18.126L19.924,21.002Q22.695,18.434 23.393,15.309Q23.979,12.679 23.446,9.783L12.18,9.783L12.18,14.424L18.771,14.424Q18.449,15.683 18.001,16.415Q17.401,17.395 16.23,18.126Z"/>
+		android:fillColor = "#4A72B7"
+		android:pathData = "M16.23,18.126L19.924,21.002Q22.695,18.434 23.393,15.309Q23.979,12.679 23.446,9.783L12.18,9.783L12.18,14.424L18.771,14.424Q18.449,15.683 18.001,16.415Q17.401,17.395 16.23,18.126Z"
+		/>
 </vector>

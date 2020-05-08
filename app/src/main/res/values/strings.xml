@@ -1,51 +1,51 @@
 <resources>
-	<string name="app_name">HappyApp</string>
+	<string name = "app_name">HappyApp</string>
 	<!-- Strings related to login -->
-	<string name="email">Email</string>
-	<string name="password">Password</string>
-	<string name="open_navigation_drawer">Open navigation drawer</string>
-	<string name="close_navigation_drawer">Close navigation drawer</string>
-	<string name="settings">Settings</string>
-	<string name="android_studio">Android Studio</string>
-	<string name="android_studio_email">android.studio@android.com</string>
-	<string name="navigation_header">Navigation header</string>
-	<string name="contact_us">Contact us</string>
-	<string name="search">Search</string>
-	<string name="favorites">Favorites</string>
-	<string name="submit_an_ad">Submit an Ad</string>
-	<string name="home">Home</string>
-	<string name="log_in">Log in</string>
-	<string name="sign_up_using_these_colon">Sign up using these:</string>
-	<string name="first_name">First Name</string>
-	<string name="or_log_in_using">or log in using</string>
-	<string name="logging_in_ellipsis">Logging in&#8230;</string>
-	<string name="plainGoogle">Google</string>
-	<string name="happy_app_logo">Happy App Logo</string>
-	<string name="register_account_for_happyapp">Register an account for HappyApp</string>
-	<string name="first_name_with_star">First Name*</string>
-	<string name="family_name_with_star">Family Name*</string>
-	<string name="date_of_birth_with_star">Date of birth*</string>
-	<string name="confirmation_message_legalities">I confirm that I\'ve read and accepted the Terms and Conditions and Privacy Policy</string>
-	<string name="processing_login">Processing login</string>
-	<string name="placeholders_for_date_of_birth">%1d.%1d.%1d</string>
-	<string name="username_with_star">Username*</string>
-	<string name="message_edit_text_your_displayed_name">This will be your displayed name</string>
-	<string name="email_with_star">Email*</string>
-	<string name="password_with_star">Password*</string>
-	<string name="check_this_out">Check this out</string>
-	<string name="subscribe">Subscribe</string>
-	<string name="family_name">Family name</string>
-	<string name="username">Username</string>
+	<string name = "email">Email</string>
+	<string name = "password">Password</string>
+	<string name = "open_navigation_drawer">Open navigation drawer</string>
+	<string name = "close_navigation_drawer">Close navigation drawer</string>
+	<string name = "settings">Settings</string>
+	<string name = "android_studio">Android Studio</string>
+	<string name = "android_studio_email">android.studio@android.com</string>
+	<string name = "navigation_header">Navigation header</string>
+	<string name = "contact_us">Contact us</string>
+	<string name = "search">Search</string>
+	<string name = "favorites">Favorites</string>
+	<string name = "submit_an_ad">Submit an Ad</string>
+	<string name = "home">Home</string>
+	<string name = "log_in">Log in</string>
+	<string name = "sign_up_using_these_colon">Sign up using these:</string>
+	<string name = "first_name">First Name</string>
+	<string name = "or_log_in_using">or log in using</string>
+	<string name = "logging_in_ellipsis">Logging in&#8230;</string>
+	<string name = "plainGoogle">Google</string>
+	<string name = "happy_app_logo">Happy App Logo</string>
+	<string name = "register_account_for_happyapp">Register an account for HappyApp</string>
+	<string name = "first_name_with_star">First Name*</string>
+	<string name = "family_name_with_star">Family Name*</string>
+	<string name = "date_of_birth_with_star">Date of birth*</string>
+	<string name = "confirmation_message_legalities">I confirm that I\'ve read and accepted the Terms and Conditions and Privacy Policy</string>
+	<string name = "processing_login">Processing login</string>
+	<string name = "placeholders_for_date_of_birth">%1d.%1d.%1d</string>
+	<string name = "username_with_star">Username*</string>
+	<string name = "message_edit_text_your_displayed_name">This will be your displayed name</string>
+	<string name = "email_with_star">Email*</string>
+	<string name = "password_with_star">Password*</string>
+	<string name = "check_this_out">Check this out</string>
+	<string name = "subscribe">Subscribe</string>
+	<string name = "family_name">Family name</string>
+	<string name = "username">Username</string>
 	
 	<!-- Keys -->
 	<!-- Hashmap Keys -->
 	<!-- The company name is not yet set so it's happyapp.happyapp -->
-	<string name="hashmap_key_first_name">happyapp.happyapp.hashmap.keys.first_name</string>
-	<string name="hashmap_key_family_name">happyapp.happyapp.hashmap.keys.family_name</string>
-	<string name="hashmap_key_username">happyapp.happyapp.hashmap.keys.username</string>
-	<string name="hashmap_key_email">happyapp.happyapp.hashmap.keys.email</string>
-	<string name="hashmap_key_password">happyapp.happyapp.hashmap.keys.password</string>
-	<string name="hashmap_key_date_of_birth">happyapp.happyapp.hashmap.keys.date_of_birth</string>
+	<string name = "hashmap_key_first_name">happyapp.happyapp.hashmap.keys.first_name</string>
+	<string name = "hashmap_key_family_name">happyapp.happyapp.hashmap.keys.family_name</string>
+	<string name = "hashmap_key_username">happyapp.happyapp.hashmap.keys.username</string>
+	<string name = "hashmap_key_email">happyapp.happyapp.hashmap.keys.email</string>
+	<string name = "hashmap_key_password">happyapp.happyapp.hashmap.keys.password</string>
+	<string name = "hashmap_key_date_of_birth">happyapp.happyapp.hashmap.keys.date_of_birth</string>
 	<!-- END Hashmap Keys -->
 	
 	<!-- Intent Keys -->
@@ -53,52 +53,52 @@
 	<!-- END Intent Keys -->
 	
 	<!-- Firestore Field Keys -->
-	<string name="firestore_key_collection_users">users</string>
-	<string name="firestore_key_column_date_of_birth">date of birth</string>
-	<string name="firestore_key_column_date_of_creation">date of creation</string>
-	<string name="firestore_key_column_family_name">family name</string>
-	<string name="firestore_key_column_first_name">first name</string>
-	<string name="firestore_key_column_email">email</string>
-	<string name="firestore_key_column_profile_picture">profile picture</string>
-	<string name="firestore_key_column_username">username</string>
+	<string name = "firestore_key_collection_users">users</string>
+	<string name = "firestore_key_column_date_of_birth">date of birth</string>
+	<string name = "firestore_key_column_date_of_creation">date of creation</string>
+	<string name = "firestore_key_column_family_name">family name</string>
+	<string name = "firestore_key_column_first_name">first name</string>
+	<string name = "firestore_key_column_email">email</string>
+	<string name = "firestore_key_column_profile_picture">profile picture</string>
+	<string name = "firestore_key_column_username">username</string>
 	<!-- END Firestore Field Keys -->
 	
 	<!-- Arguments Keys -->
 	<!-- The company name is not yet set so it's happyapp.happyapp -->
-	<string name="arguments_key_email">happyapp.happyapp.arguments.keys.email</string>
+	<string name = "arguments_key_email">happyapp.happyapp.arguments.keys.email</string>
 	<!-- END Keys -->
 	
-	<string name="log_out">Log out</string>
+	<string name = "log_out">Log out</string>
 	<!-- Error messages / HappyAppUser feedback -->
-	<string name="error_network_connection_failed">Network connection failed. Please try again</string>
-	<string name="error_you_forgot_me">You forgot me</string>
-	<string name="error_username_already_is_taken">Username is already taken</string>
-	<string name="error_email_is_already_in_use">This email is already in use</string>
-	<string name="error_email_is_badly_formatted">This email is badly formatted</string>
-	<string name="error_try_again">Oops. Something went wrong. Please try again</string>
-	<string name="error_stand_by">Oops. Something went wrong. Please stand by</string>
-	<string name="error_field_starts_with_whitespace">%1d cannot start with whitespace</string>
-	<string name="error_please_confirm">Please confirm</string>
-	<string name="error_password_must_be_6_long">I need to be longer than 6 characters of your choice</string>
-	<string name="error_email_or_password_incorrect">Email or password incorrect</string>
-	<string name="no_internet_connection">No internet connection</string>
-	<string name="retry">Retry</string>
+	<string name = "error_network_connection_failed">Network connection failed. Please try again</string>
+	<string name = "error_you_forgot_me">You forgot me</string>
+	<string name = "error_username_already_is_taken">Username is already taken</string>
+	<string name = "error_email_is_already_in_use">This email is already in use</string>
+	<string name = "error_email_is_badly_formatted">This email is badly formatted</string>
+	<string name = "error_try_again">Oops. Something went wrong. Please try again</string>
+	<string name = "error_stand_by">Oops. Something went wrong. Please stand by</string>
+	<string name = "error_field_starts_with_whitespace">%1d cannot start with whitespace</string>
+	<string name = "error_please_confirm">Please confirm</string>
+	<string name = "error_password_must_be_6_long">I need to be longer than 6 characters of your choice</string>
+	<string name = "error_email_or_password_incorrect">Email or password incorrect</string>
+	<string name = "no_internet_connection">No internet connection</string>
+	<string name = "retry">Retry</string>
 	
 	<!-- Subscription IDs -->
-	<string name="subscription_bronze">happyapp.subscription.bronze</string>
-	<string name="subscription_silver">happyapp.subscription.silver</string>
-	<string name="subscription_gold">happyapp.subscription.gold</string>
-	<string name="subscription_platinum">happyapp.subscription.platinum</string>
+	<string name = "subscription_bronze">happyapp.subscription.bronze</string>
+	<string name = "subscription_silver">happyapp.subscription.silver</string>
+	<string name = "subscription_gold">happyapp.subscription.gold</string>
+	<string name = "subscription_platinum">happyapp.subscription.platinum</string>
 	<!-- END Subscription IDs -->
-	<string name="google_time_server_url">time.google.com</string>
-	<string name="ok">OK</string>
-	<string name="cancel">Cancel</string>
-	<string name="error_account_disabled_or_deleted">Corresponding account has been disabled or deleted</string>
-	<string name="sign_up_and_subscribe_for_happyapp">Sign up and subscribe for HappyApp</string>
+	<string name = "google_time_server_url">time.google.com</string>
+	<string name = "ok">OK</string>
+	<string name = "cancel">Cancel</string>
+	<string name = "error_account_disabled_or_deleted">Corresponding account has been disabled or deleted</string>
+	<string name = "sign_up_and_subscribe_for_happyapp">Sign up and subscribe for HappyApp</string>
 	
 	<!-- TODO: Remove or change this placeholder text -->
-	<string name="next">Next</string>
+	<string name = "next">Next</string>
 	
 	<!-- TODO: Remove or change this placeholder text -->
-	<string name="hello_blank_fragment">Hello blank fragment</string>
+	<string name = "hello_blank_fragment">Hello blank fragment</string>
 </resources>
