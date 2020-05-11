@@ -71,8 +71,7 @@ class EmailSignupFragment: Fragment(), SignupCheckerListener {
 		
 		// Navigate to the subscription fragment and pass the bundle
 		mNavController!!.navigate(
-			R.id.action_emailSignupFragment_to_subscribeFragment,
-			arguments
+			EmailSignupFragmentDirections.toSubscribeFragment()
 		)
 	}
 	

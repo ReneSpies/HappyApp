@@ -1,4 +1,4 @@
-package com.aresid.happyapp.signup
+package com.aresid.happyapp.signup.form
 
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +14,7 @@ import com.aresid.happyapp.R
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
-class UsernameFragment: Fragment() {
+class PasswordFragment: Fragment() {
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -28,27 +28,13 @@ class UsernameFragment: Fragment() {
 		
 		// Inflate the layout
 		return inflater.inflate(
-			R.layout.fragment_username,
+			R.layout.fragment_password,
 			container,
 			false
 		)
 	}
 	
-	override fun onViewCreated(
-		view: View,
-		savedInstanceState: Bundle?
-	) {
-		Log.d(
-			TAG,
-			"onViewCreated: called"
-		)
-		super.onViewCreated(
-			view,
-			savedInstanceState
-		)
-	}
-	
 	companion object {
-		private const val TAG = "UsernameFragment"
+		private const val TAG = "PasswordFragment"
 	}
 }

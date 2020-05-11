@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-	xmlns:android = "http://schemas.android.com/apk/res/android"
-	xmlns:app = "http://schemas.android.com/apk/res-auto"
-	xmlns:tools = "http://schemas.android.com/tools"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	>
 	
 	<data>
@@ -10,42 +10,42 @@
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
-		android:layout_width = "match_parent"
-		android:layout_height = "match_parent"
-		tools:context = ".signup.UsernameFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context=".signup.form.UsernameFragment"
 		>
 		
 		<com.google.android.material.textfield.TextInputLayout
-			android:id = "@+id/username_field_layout"
-			style = "@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width = "match_parent"
-			android:layout_height = "wrap_content"
-			app:errorEnabled = "true"
-			app:layout_constraintEnd_toEndOf = "parent"
-			app:layout_constraintStart_toStartOf = "parent"
-			app:layout_constraintTop_toTopOf = "parent"
+			android:id="@+id/username_field_layout"
+			style="@style/Widget.HappyApp.TextInputLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:errorEnabled="true"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
 			>
 			
 			<com.google.android.material.textfield.TextInputEditText
-				android:id = "@+id/username_field"
-				android:layout_width = "match_parent"
-				android:layout_height = "match_parent"
-				android:hint = "@string/username_with_star"
-				android:imeActionId = "3"
-				android:imeOptions = "actionNext"
-				android:inputType = "text"
+				android:id="@+id/username_field"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:hint="@string/username_with_star"
+				android:imeActionId="3"
+				android:imeOptions="actionNext"
+				android:inputType="text"
 				/>
 		</com.google.android.material.textfield.TextInputLayout>
 		
 		<com.google.android.material.button.MaterialButton
-			android:id = "@+id/next_button"
-			style = "@style/Widget.HappyApp.TextButton"
-			android:layout_width = "wrap_content"
-			android:layout_height = "wrap_content"
-			android:text = "@string/next"
-			app:layout_constraintEnd_toEndOf = "parent"
-			app:layout_constraintStart_toStartOf = "parent"
-			app:layout_constraintTop_toBottomOf = "@id/username_field_layout"
+			android:id="@+id/next_button"
+			style="@style/Widget.HappyApp.TextButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/next"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@id/username_field_layout"
 			/>
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>

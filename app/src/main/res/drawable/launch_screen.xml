@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list
-	xmlns:android = "http://schemas.android.com/apk/res/android">
+	xmlns:android="http://schemas.android.com/apk/res/android">
 	<!-- The Background color. Usually the same as your main theme. -->
-	<item android:drawable = "@android:color/white"/>
+	<item android:drawable="@android:color/white"/>
 	<!-- My product entry_activity_app_logo -->
 	<item
-		android:drawable = "@drawable/happyapp_logo_144"
-		android:gravity = "center"
+		android:drawable="@drawable/happyapp_logo_144"
+		android:gravity="center"
 		/>
 </layer-list>

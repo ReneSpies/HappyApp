@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputLayout
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
-object Utils {
+object Util {
 	
 	private const val TAG = "Utils"
 	

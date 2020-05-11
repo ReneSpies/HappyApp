@@ -1,128 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-	xmlns:android = "http://schemas.android.com/apk/res/android"
-	xmlns:app = "http://schemas.android.com/apk/res-auto"
-	xmlns:tools = "http://schemas.android.com/tools"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	>
 	
 	<data>
-	
+		
+		<variable
+			name="loginViewModel"
+			type="com.aresid.happyapp.login.LoginViewModel"
+			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
-		android:layout_width = "match_parent"
-		android:layout_height = "match_parent"
-		android:padding = "@dimen/fragmentPaddingMedium"
-		tools:context = ".login.LoginFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:padding="@dimen/padding_medium"
+		tools:context=".login.LoginFragment"
 		>
 		
 		<ImageView
-			android:id = "@+id/app_logo"
-			android:layout_width = "@dimen/imageViewAppLogoSize"
-			android:layout_height = "@dimen/imageViewAppLogoSize"
-			android:layout_marginTop = "4dp"
-			android:contentDescription = "@string/happy_app_logo"
-			android:elevation = "8dp"
-			android:src = "@drawable/happyapp_logo_144"
-			app:layout_constraintEnd_toEndOf = "parent"
-			app:layout_constraintStart_toStartOf = "parent"
-			app:layout_constraintTop_toTopOf = "parent"
+			android:id="@+id/app_logo"
+			android:layout_width="200dp"
+			android:layout_height="200dp"
+			android:layout_marginTop="4dp"
+			android:contentDescription="@string/happy_app_logo"
+			android:src="@drawable/happyapp_logo_144"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
 			/>
 		
 		<com.google.android.material.textfield.TextInputLayout
-			android:id = "@+id/email_field_layout"
-			style = "@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width = "match_parent"
-			android:layout_height = "wrap_content"
-			app:errorEnabled = "true"
-			app:layout_constraintTop_toBottomOf = "@+id/app_logo"
+			android:id="@+id/email_field_layout"
+			style="@style/Widget.HappyApp.TextInputLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:errorEnabled="true"
+			app:layout_constraintTop_toBottomOf="@+id/app_logo"
 			>
 			
 			<com.google.android.material.textfield.TextInputEditText
-				android:id = "@+id/email_field"
-				android:layout_width = "match_parent"
-				android:layout_height = "wrap_content"
-				android:hint = "@string/email"
-				android:inputType = "textEmailAddress"
-				android:maxLines = "1"
-				android:singleLine = "true"
+				android:id="@+id/email_field"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/email"
+				android:inputType="textEmailAddress"
+				android:maxLines="1"
+				android:singleLine="true"
+				android:text="@={loginViewModel.email}"
 				/>
 		</com.google.android.material.textfield.TextInputLayout>
 		
 		<com.google.android.material.textfield.TextInputLayout
-			android:id = "@+id/password_field_layout"
-			style = "@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width = "match_parent"
-			android:layout_height = "wrap_content"
-			app:errorEnabled = "true"
-			app:layout_constraintTop_toBottomOf = "@+id/email_field_layout"
-			app:passwordToggleEnabled = "true"
+			android:id="@+id/password_field_layout"
+			style="@style/Widget.HappyApp.TextInputLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:errorEnabled="true"
+			app:layout_constraintTop_toBottomOf="@+id/email_field_layout"
+			app:passwordToggleEnabled="true"
 			>
 			
 			<com.google.android.material.textfield.TextInputEditText
-				android:id = "@+id/password_field"
-				android:layout_width = "match_parent"
-				android:layout_height = "wrap_content"
-				android:hint = "@string/password"
-				android:imeActionId = "6"
-				android:imeActionLabel = "@string/common_signin_button_text"
-				android:imeOptions = "actionUnspecified"
-				android:inputType = "textPassword"
-				android:maxLines = "1"
-				android:singleLine = "true"
+				android:id="@+id/password_field"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/password"
+				android:imeActionId="6"
+				android:imeActionLabel="@string/common_signin_button_text"
+				android:imeOptions="actionUnspecified"
+				android:inputType="textPassword"
+				android:maxLines="1"
+				android:singleLine="true"
+				android:text="@={loginViewModel.password}"
 				/>
 		</com.google.android.material.textfield.TextInputLayout>
 		
 		<com.google.android.material.button.MaterialButton
-			android:id = "@+id/login_button"
-			style = "@style/Widget.HappyApp.ContainedButton"
-			android:layout_width = "wrap_content"
-			android:layout_height = "wrap_content"
-			android:text = "@string/log_in"
-			app:layout_constraintEnd_toEndOf = "parent"
-			app:layout_constraintStart_toStartOf = "parent"
-			app:layout_constraintTop_toBottomOf = "@+id/password_field_layout"
+			android:id="@+id/login_button"
+			style="@style/Widget.HappyApp.ContainedButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:onClick="@{(view) -> loginViewModel.onLoginButtonClicked(view)}"
+			android:text="@string/log_in"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/password_field_layout"
+			/>
+		
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/forgot_login_button"
+			style="@style/Widget.HappyApp.OutlinedButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="13.13dp"
+			android:onClick="@{(view) -> loginViewModel.onForgotLoginButtonClicked(view)}"
+			android:text="@string/forgot_my_login"
+			android:visibility="gone"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/login_button"
 			/>
 		
 		<TextView
-			android:layout_width = "match_parent"
-			android:layout_height = "wrap_content"
-			android:layout_marginBottom = "13dp"
-			android:text = "@string/sign_up_using_these_colon"
-			android:textAlignment = "center"
-			app:layout_constraintBottom_toTopOf = "@+id/signup_button_container"
-			app:layout_constraintEnd_toEndOf = "parent"
-			app:layout_constraintStart_toStartOf = "parent"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="13dp"
+			android:text="@string/sign_up_using_these_colon"
+			android:textAlignment="center"
+			app:layout_constraintBottom_toTopOf="@+id/signup_button_container"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
 			/>
 		
 		<LinearLayout
-			android:id = "@+id/signup_button_container"
-			android:layout_width = "wrap_content"
-			android:layout_height = "wrap_content"
-			android:layout_margin = "13dp"
-			android:gravity = "center"
-			android:orientation = "horizontal"
-			app:layout_constraintBottom_toBottomOf = "parent"
-			app:layout_constraintEnd_toEndOf = "parent"
-			app:layout_constraintStart_toStartOf = "parent"
+			android:id="@+id/signup_button_container"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_margin="13dp"
+			android:gravity="center"
+			android:orientation="horizontal"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
 			>
 			
 			<androidx.appcompat.widget.AppCompatImageButton
-				android:id = "@+id/email_signup_button"
-				android:layout_width = "wrap_content"
-				android:layout_height = "wrap_content"
-				android:layout_marginEnd = "6.5dp"
-				android:background = "@drawable/round_button_background"
-				android:src = "@drawable/ic_email_24dp"
+				android:id="@+id/email_signup_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="6.5dp"
+				android:background="@drawable/round_button_background"
+				android:src="@drawable/ic_email_24dp"
 				/>
 			
 			<androidx.appcompat.widget.AppCompatImageButton
-				android:id = "@+id/google_signup_button"
-				android:layout_width = "wrap_content"
-				android:layout_height = "wrap_content"
-				android:layout_marginStart = "6.5dp"
-				android:background = "@drawable/round_button_background"
-				android:src = "@drawable/ic_google_favicon_24dp"
+				android:id="@+id/google_signup_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="6.5dp"
+				android:background="@drawable/round_button_background"
+				android:src="@drawable/ic_google_favicon_24dp"
 				/>
 		</LinearLayout>
 	

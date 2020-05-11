@@ -1,4 +1,4 @@
-package com.aresid.happyapp.signup
+package com.aresid.happyapp.signup.form
 
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.aresid.happyapp.R
 import com.aresid.happyapp.keys.Keys
-import com.aresid.happyapp.utils.Utils
+import com.aresid.happyapp.utils.Util
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -107,7 +107,7 @@ class FirstNameFragment: Fragment(), View.OnClickListener {
 		// Put the first name into the bundle
 		arguments.putString(
 			Keys.BundleKeys.KEY_FIRST_NAME,
-			Utils.getString(mFirstNameField!!.text)
+			Util.getString(mFirstNameField!!.text)
 		)
 		
 		// Navigate to the FamilyNameFragment and pass the bundle

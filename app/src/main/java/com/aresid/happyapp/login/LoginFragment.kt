@@ -6,11 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
+import com.aresid.happyapp.databinding.FragmentLoginBinding
 import com.aresid.happyapp.keys.Keys
-import com.aresid.happyapp.utils.Utils
+import com.aresid.happyapp.utils.Util
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.FirebaseNetworkException
@@ -23,7 +27,14 @@ import timber.log.Timber
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
+
 class LoginFragment: Fragment(), View.OnClickListener {
+	
+	// Declare LoginViewModel
+	private lateinit var loginViewModel: LoginViewModel
+	
+	// Declare FragmentLoginBinding
+	private lateinit var binding: FragmentLoginBinding
 	
 	// Declare NavController
 	private var mNavController: NavController? = null
@@ -34,15 +45,20 @@ class LoginFragment: Fragment(), View.OnClickListener {
 	private var mPasswordFieldLayout: TextInputLayout? = null
 	private var mPasswordField: TextInputEditText? = null
 	private var mAuth: FirebaseAuth? = null
+	
 	override fun onCreate(savedInstanceState: Bundle?) {
+		
 		Timber.d("onCreate: called")
+		
 		super.onCreate(savedInstanceState)
 		
+		// TODO:  onCreate: move the firebase auth to the ViewModel
 		// Define FirebaseAuth object
 		mAuth = FirebaseAuth.getInstance()
 		
 		// UpdateUI to send user through if exists
 		updateUI(mAuth!!.currentUser)
+		
 	}
 	
 	override fun onCreateView(
@@ -50,14 +66,110 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
+		
 		Timber.d("onCreateView: called")
 		
-		// Inflate the layout
-		return inflater.inflate(
-			R.layout.fragment_login,
+		// Define LoginViewModel
+		loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+		
+		// Define FragmentLoginBinding and inflate the layout
+		binding = FragmentLoginBinding.inflate(
+			inflater,
 			container,
 			false
 		)
+		
+		// TODO:  onCreateView: code goes here
+		
+		// Observe the LiveData of emailOrPasswordIsEmpty and show an error to the user
+		loginViewModel.emailOrPasswordIsEmpty.observe(
+			viewLifecycleOwner,
+			Observer { isEmpty ->
+				
+				// If the LiveData is true, show an error to the user
+				if (isEmpty) {
+					
+					binding.emailFieldLayout.error = getString(R.string.error_email_or_password_empty)
+					
+				}
+				
+				// Else, reset the error
+				else {
+					
+					binding.emailFieldLayout.error = null
+					
+				}
+				
+			})
+		
+		// Observe the LiveData of the firebaseUser and if the user is not null, navigate to the MainFragment
+		loginViewModel.firebaseUser.observe(
+			viewLifecycleOwner,
+			Observer { firebaseUser ->
+				
+				// Check if the User is not null and log the user in
+				firebaseUser ?: navigateToMainFragment()
+				
+			})
+		
+		// Observe the LiveData for the FirebaseAuthInvalidUserException and show the appropriate error
+		loginViewModel.firebaseAuthInvalidUserException.observe(
+			viewLifecycleOwner,
+			Observer { isError ->
+				
+				// If the error is thrown, show the appropriate error message
+				if (isError) {
+					
+					binding.emailFieldLayout.error = getString(R.string.error_account_disabled_or_deleted)
+					
+				}
+				
+				// Else, reset the error
+				else {
+					
+					binding.emailFieldLayout.error = null
+					
+				}
+				
+			})
+		
+		// Observe the LiveData for the FirebaseAuthInvalidCredentialException and show the appropriate error
+		loginViewModel.firebaseAuthInvalidCredentialsException.observe(
+			viewLifecycleOwner,
+			Observer { isError ->
+				
+				// If the error is thrown, show the appropriate error message
+				if (isError) {
+					
+					binding.emailFieldLayout.error = getString(R.string.error_email_or_password_incorrect)
+					
+				}
+				
+				// Else, reset the error
+				else {
+					
+					binding.emailFieldLayout.error = null
+					
+				}
+				
+			})
+		
+		// Let the data binder know about the LoginViewModel
+		binding.loginViewModel = loginViewModel
+		
+		// Return the inflated layout
+		return binding.root
+		
+	}
+	
+	/**
+	 * Finds the NavController and navigates to the MainFragment using LoginFragmentDirections.
+	 */
+	private fun navigateToMainFragment() {
+		
+		// Find the NavController and navigate to the MainFragment using LoginFragmentDirections
+		findNavController(this).navigate(LoginFragmentDirections.toMainFragment())
+		
 	}
 	
 	/**
@@ -80,7 +192,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		mNavController = Navigation.findNavController(view)
 		
 		// Set onClickListeners
-		view.findViewById<View>(R.id.login_button).setOnClickListener(this)
+		//		view.findViewById<View>(R.id.login_button).setOnClickListener(this)
 		view.findViewById<View>(R.id.email_signup_button).setOnClickListener(this)
 		view.findViewById<View>(R.id.google_signup_button).setOnClickListener(this)
 		
@@ -101,14 +213,14 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		if (user != null) {
 			
 			// Navigate to MainFragment
-			mNavController!!.navigate(R.id.action_loginFragment_to_mainFragment)
+			mNavController!!.navigate(LoginFragmentDirections.toMainFragment())
 		}
 	}
 	
 	override fun onClick(v: View) {
 		Timber.d("onClick: called")
 		when (v.id) {
-			R.id.login_button -> onLoginButtonClicked(v as Button)
+			//			R.id.login_button -> onLoginButtonClicked(v as Button)
 			R.id.email_signup_button -> showEmailSignupFragment()
 			R.id.google_signup_button -> onGoogleSignupButtonClicked()
 		}
@@ -118,8 +230,8 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		Timber.d("onLoginButtonClicked: called")
 		
 		// Define Strings carrying the fields text
-		val email = Utils.getString(mEmailField!!.text)
-		val password = Utils.getString(mPasswordField!!.text)
+		val email = Util.getString(mEmailField!!.text)
+		val password = Util.getString(mPasswordField!!.text)
 		
 		// Reset old layout errors
 		resetLoginLayoutErrors()
@@ -140,7 +252,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		}
 		
 		// Start loading animation on the button and disable it
-		Utils.setAndStartLoadingButtonAnimationWithDisable(
+		Util.setAndStartLoadingButtonAnimationWithDisable(
 			button,
 			true
 		)
@@ -156,7 +268,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			updateUI(result.user)
 			
 			// Remove loading animation and enable button again
-			Utils.removeLoadingButtonAnimationWithEnable(
+			Util.removeLoadingButtonAnimationWithEnable(
 				button,
 				true
 			)
@@ -171,7 +283,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			resetLoginLayoutErrors()
 			
 			// Remove loading animation and enable button again
-			Utils.removeLoadingButtonAnimationWithEnable(
+			Util.removeLoadingButtonAnimationWithEnable(
 				button,
 				true
 			)
@@ -191,7 +303,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 				is FirebaseNetworkException -> {
 					
 					// Show appropriate error Snackbar
-					Utils.showErrorSnackbar(
+					Util.showErrorSnackbar(
 						mEmailFieldLayout,
 						getString(R.string.error_network_connection_failed),
 						requireContext()
@@ -208,7 +320,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		Timber.d("showEmailSignupFragment: called")
 		
 		// Navigate to the EmailSignupFragment
-		mNavController!!.navigate(R.id.action_loginFragment_to_emailSignupFragment)
+		mNavController!!.navigate(LoginFragmentDirections.toEmailSignupFragment())
 	}
 	
 	/**
@@ -228,8 +340,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		
 		// Navigate to the SubscribeFragment and pass the bundle
 		mNavController!!.navigate(
-			R.id.action_loginFragment_to_subscribeFragment,
-			arguments
+			LoginFragmentDirections.toSubscribeFragment()
 		)
 	}
 	

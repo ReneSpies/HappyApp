@@ -1,76 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation
-	xmlns:android = "http://schemas.android.com/apk/res/android"
-	xmlns:app = "http://schemas.android.com/apk/res-auto"
-	xmlns:tools = "http://schemas.android.com/tools"
-	android:id = "@+id/nav_graph"
-	app:startDestination = "@id/loginFragment"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/nav_graph"
+	app:startDestination="@id/loginFragment"
 	>
 	<fragment
-		android:id = "@+id/loginFragment"
-		android:name = "com.aresid.happyapp.login.LoginFragment"
-		android:label = "LoginFragment"
-		tools:layout = "@layout/fragment_login"
+		android:id="@+id/loginFragment"
+		android:name="com.aresid.happyapp.login.LoginFragment"
+		android:label="LoginFragment"
+		tools:layout="@layout/fragment_login"
 		>
 		<action
-			android:id = "@+id/to_emailSignupFragment"
-			app:destination = "@id/emailSignupFragment"
-			app:enterAnim = "@anim/slide_in_from_right"
-			app:exitAnim = "@anim/slide_out_to_left"
-			app:popEnterAnim = "@anim/slide_in_from_left"
-			app:popExitAnim = "@anim/slide_out_to_right"
+			android:id="@+id/to_emailSignupFragment"
+			app:destination="@id/emailSignupFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"
 			>
 		</action>
 		
 		<action
-			android:id = "@+id/to_mainFragment"
-			app:destination = "@id/mainFragment"
-			app:enterAnim = "@anim/slide_in_from_right"
-			app:exitAnim = "@anim/slide_out_to_left"
-			app:popEnterAnim = "@anim/slide_in_from_left"
-			app:popExitAnim = "@anim/slide_out_to_right"
+			android:id="@+id/to_mainFragment"
+			app:destination="@id/mainFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"
 			/>
 		<action
-			android:id = "@+id/to_subscribeFragment"
-			app:destination = "@id/subscribeFragment"
-			app:enterAnim = "@anim/slide_in_from_right"
-			app:exitAnim = "@anim/slide_out_to_left"
-			app:popEnterAnim = "@anim/slide_in_from_left"
-			app:popExitAnim = "@anim/slide_out_to_right"
+			android:id="@+id/to_subscribeFragment"
+			app:destination="@id/subscribeFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"
 			>
 		</action>
 	</fragment>
 	<fragment
-		android:id = "@+id/mainFragment"
-		android:name = "com.aresid.happyapp.fragments.MainFragment"
-		android:label = "MainFragment"
-		tools:layout = "@layout/fragment_main"
+		android:id="@+id/mainFragment"
+		android:name="com.aresid.happyapp.fragments.MainFragment"
+		android:label="MainFragment"
+		tools:layout="@layout/fragment_main"
 		/>
 	<fragment
-		android:id = "@+id/emailSignupFragment"
-		android:name = "com.aresid.happyapp.signup.EmailSignupFragment"
-		android:label = "EmailSignupFragment"
-		tools:layout = "@layout/fragment_email_signup"
+		android:id="@+id/emailSignupFragment"
+		android:name="com.aresid.happyapp.signup.EmailSignupFragment"
+		android:label="EmailSignupFragment"
+		tools:layout="@layout/fragment_email_signup"
 		>
 		<action
-			android:id = "@+id/to_subscribeFragment"
-			app:destination = "@id/subscribeFragment"
-			app:enterAnim = "@anim/slide_in_from_right"
-			app:exitAnim = "@anim/slide_out_to_left"
-			app:popEnterAnim = "@anim/slide_in_from_left"
-			app:popExitAnim = "@anim/slide_out_to_right"
+			android:id="@+id/to_subscribeFragment"
+			app:destination="@id/subscribeFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"
 			/>
 	</fragment>
 	<fragment
-		android:id = "@+id/loadingFragment"
-		android:name = "com.aresid.happyapp.fragments.LoadingFragment"
-		android:label = "LoadingFragment"
-		tools:layout = "@layout/fragment_loading"
+		android:id="@+id/loadingFragment"
+		android:name="com.aresid.happyapp.fragments.LoadingFragment"
+		android:label="LoadingFragment"
+		tools:layout="@layout/fragment_loading"
 		/>
 	<fragment
-		android:id = "@+id/subscribeFragment"
-		android:name = "com.aresid.happyapp.signup.SubscribeFragment"
-		android:label = "SubscribeFragment"
-		tools:layout = "@layout/fragment_subscribe"
+		android:id="@+id/subscribeFragment"
+		android:name="com.aresid.happyapp.signup.form.SubscribeFragment"
+		android:label="SubscribeFragment"
+		tools:layout="@layout/fragment_subscribe"
 		/>
 </navigation>

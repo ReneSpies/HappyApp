@@ -8,7 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.aresid.happyapp.R
 import com.aresid.happyapp.keys.Keys
-import com.aresid.happyapp.utils.Utils
+import com.aresid.happyapp.utils.Util
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -137,12 +137,12 @@ class EmailSignupHelper internal constructor(
 	 */
 	private fun defineFieldStrings() {
 		Timber.d("defineFieldStrings: called")
-		mFirstName = Utils.getString(mFirstNameField!!.text)
-		mFamilyName = Utils.getString(mFamilyNameField!!.text)
-		mUsername = Utils.getString(mUsernameField!!.text)
-		mEmail = Utils.getString(mEmailField!!.text)
-		mPassword = Utils.getString(mPasswordField!!.text)
-		mDateOfBirth = Utils.getString(mDateOfBirthField!!.text)
+		mFirstName = Util.getString(mFirstNameField!!.text)
+		mFamilyName = Util.getString(mFamilyNameField!!.text)
+		mUsername = Util.getString(mUsernameField!!.text)
+		mEmail = Util.getString(mEmailField!!.text)
+		mPassword = Util.getString(mPasswordField!!.text)
+		mDateOfBirth = Util.getString(mDateOfBirthField!!.text)
 	}
 	
 	/**
