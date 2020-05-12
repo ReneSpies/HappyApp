@@ -5,7 +5,8 @@ import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aresid.happyapp.utils.Util
+import com.aresid.happyapp.utils.ButtonUtil
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
@@ -48,7 +49,12 @@ class LoginViewModel: ViewModel() {
 	// LiveData for the FirebaseAuthInvalidCredentialException, meaning the password or email is wrong
 	private val _firebaseAuthInvalidCredentialException = MutableLiveData<Boolean>()
 	val firebaseAuthInvalidCredentialsException: LiveData<Boolean>
-		get() = _firebaseAuthInvalidUserException
+		get() = _firebaseAuthInvalidCredentialException
+	
+	// LiveData for the FirebaseNetworkException, meaning the user is not connected to the internet
+	private val _firebaseNetworkException = MutableLiveData<Boolean>()
+	val firebaseNetworkException: LiveData<Boolean>
+		get() = _firebaseNetworkException
 	
 	// FirebaseAuth object initiated in init
 	private var mFirebaseAuth: FirebaseAuth
@@ -78,7 +84,23 @@ class LoginViewModel: ViewModel() {
 		// Init the FirebaseAuthInvalidCredentialException LiveData
 		_firebaseAuthInvalidCredentialException.value = false
 		
-		// TODO:  init: LiveData for the forgot login button visibility
+		// Init the FirebaseNetworkException LiveData
+		_firebaseNetworkException.value = false
+		
+	}
+	
+	private fun resetAllFirebaseExceptions() {
+		
+		Timber.d("resetAllFirebaseExceptions: called")
+		
+		// Reset FirebaseInvalidUserException
+		_firebaseAuthInvalidUserException.value = false
+		
+		// Reset FirebaseInvalidCredentialsException
+		_firebaseAuthInvalidCredentialException.value = false
+		
+		// Reset the FirebaseNetworkException
+		_firebaseNetworkException.value = false
 		
 	}
 	
@@ -88,6 +110,9 @@ class LoginViewModel: ViewModel() {
 		
 		// Cast View to Button. XML expression do not allow a cast to Button in XML, so I do it here
 		val button = view as Button
+		
+		// Reset all FirebaseExceptions
+		resetAllFirebaseExceptions()
 		
 		// Check if input is empty and show an error, else reset the error
 		if (email.value!!.isEmpty() || password.value!!.isEmpty()) {
@@ -114,7 +139,7 @@ class LoginViewModel: ViewModel() {
 		Timber.d("loginUser: called")
 		
 		// Set and start the loading animation on the button and disable it
-		Util.setAndStartLoadingButtonAnimationWithDisable(
+		ButtonUtil.setAndStartLoadingButtonAnimationWithDisable(
 			button,
 			true
 		)
@@ -122,28 +147,35 @@ class LoginViewModel: ViewModel() {
 		mFirebaseAuth.signInWithEmailAndPassword(
 			email.value!!,
 			password.value!!
-		).addOnSuccessListener {
+		).addOnSuccessListener { authResult ->
 			
 			Timber.d("great success authenticating user with email and password")
 			
 			// Set the new FirebaseUser. If the
-			_firebaseUser.value = it.user
+			_firebaseUser.value = authResult.user
 			
 		}.addOnFailureListener { e ->
 			
 			Timber.e(e)
 			
+			// Reset the buttons loading animation and enable it again
+			ButtonUtil.removeLoadingButtonAnimationWithEnable(
+				button,
+				true
+			)
+			
 			// Check which error e is and do appropriate things
 			when (e) {
-				
+
 				// The users account has been disabled or deleted
 				is FirebaseAuthInvalidUserException -> _firebaseAuthInvalidUserException.value = true
 				
 				// The password is wrong
 				is FirebaseAuthInvalidCredentialsException -> _firebaseAuthInvalidCredentialException.value = true
 				
-				// TODO:  loginUserWithEmailAndPassword: add the missing network error
-				
+				// No or bad internet
+				is FirebaseNetworkException -> _firebaseNetworkException.value = true
+
 			}
 			
 		}

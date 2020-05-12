@@ -92,13 +92,13 @@
 		
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/forgot_login_button"
-			style="@style/Widget.HappyApp.OutlinedButton"
+			style="@style/Widget.HappyApp.TextButton"
+			android:textSize="@dimen/button_text_size_small"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="13.13dp"
 			android:onClick="@{(view) -> loginViewModel.onForgotLoginButtonClicked(view)}"
 			android:text="@string/forgot_my_login"
-			android:visibility="gone"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/login_button"
