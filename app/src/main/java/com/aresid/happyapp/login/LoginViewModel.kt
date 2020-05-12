@@ -182,15 +182,4 @@ class LoginViewModel: ViewModel() {
 		
 	}
 	
-	fun onForgotLoginButtonClicked(view: View) {
-		
-		Timber.d("onForgotLoginButtonClicked: called")
-		
-		// Cast View to Button. XML expression do not allow a cast to Button in XML, so I do it here
-		val button = view as Button
-		
-		// TODO:  onForgotLoginButtonClicked: implement logic
-		
-	}
-	
 }

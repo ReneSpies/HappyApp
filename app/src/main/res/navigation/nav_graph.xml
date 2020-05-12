@@ -39,6 +39,14 @@
 			app:popExitAnim="@anim/slide_out_to_right"
 			>
 		</action>
+		<action
+			android:id="@+id/to_forgotLoginFragment"
+			app:destination="@id/forgotLoginFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"
+			/>
 	</fragment>
 	<fragment
 		android:id="@+id/mainFragment"
@@ -72,5 +80,11 @@
 		android:name="com.aresid.happyapp.signup.form.SubscribeFragment"
 		android:label="SubscribeFragment"
 		tools:layout="@layout/fragment_subscribe"
+		/>
+	<fragment
+		android:id="@+id/forgotLoginFragment"
+		android:name="com.aresid.happyapp.login.ForgotLoginFragment"
+		android:label="ForgotLoginFragment"
+		tools:layout="@layout/fragment_forgot_login"
 		/>
 </navigation>

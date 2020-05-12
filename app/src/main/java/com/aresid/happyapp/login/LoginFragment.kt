@@ -15,7 +15,6 @@ import com.aresid.happyapp.databinding.FragmentLoginBinding
 import com.aresid.happyapp.keys.Keys
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.firebase.auth.FirebaseAuth
 import timber.log.Timber
 
 /**
@@ -41,15 +40,6 @@ class LoginFragment: Fragment(), View.OnClickListener {
 	private var mEmailField: TextInputEditText? = null
 	private var mPasswordFieldLayout: TextInputLayout? = null
 	private var mPasswordField: TextInputEditText? = null
-	private var mAuth: FirebaseAuth? = null
-	
-	override fun onCreate(savedInstanceState: Bundle?) {
-		
-		Timber.d("onCreate: called")
-		
-		super.onCreate(savedInstanceState)
-		
-	}
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -176,6 +166,15 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		
 	}
 	
+	private fun navigateToForgotLoginFragment() {
+		
+		Timber.d("navigateToForgotLoginFragment: called")
+		
+		// Navigate to the ForgotLoginFragment
+		findNavController(this).navigate(LoginFragmentDirections.toForgotLoginFragment())
+		
+	}
+	
 	/**
 	 * Finds the NavController and navigates to the MainFragment using LoginFragmentDirections.
 	 */
@@ -208,9 +207,9 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		mNavController = Navigation.findNavController(view)
 		
 		// Set onClickListeners
-		//		view.findViewById<View>(R.id.login_button).setOnClickListener(this)
-		view.findViewById<View>(R.id.email_signup_button).setOnClickListener(this)
-		view.findViewById<View>(R.id.google_signup_button).setOnClickListener(this)
+		binding.emailSignupButton.setOnClickListener(this)
+		binding.googleSignupButton.setOnClickListener(this)
+		binding.forgotLoginButton.setOnClickListener(this)
 		
 		// Define fields and layouts for login flow
 		mEmailFieldLayout = view.findViewById(R.id.email_field_layout)
@@ -222,9 +221,9 @@ class LoginFragment: Fragment(), View.OnClickListener {
 	override fun onClick(v: View) {
 		Timber.d("onClick: called")
 		when (v.id) {
-			//			R.id.login_button -> onLoginButtonClicked(v as Button)
 			R.id.email_signup_button -> showEmailSignupFragment()
 			R.id.google_signup_button -> onGoogleSignupButtonClicked()
+			R.id.forgot_login_button -> navigateToForgotLoginFragment()
 		}
 	}
 	
@@ -232,10 +231,12 @@ class LoginFragment: Fragment(), View.OnClickListener {
 	 * Navigates to the EmailSignupFragment.
 	 */
 	private fun showEmailSignupFragment() {
+		
 		Timber.d("showEmailSignupFragment: called")
 		
 		// Navigate to the EmailSignupFragment
 		mNavController!!.navigate(LoginFragmentDirections.toEmailSignupFragment())
+		
 	}
 	
 	/**
