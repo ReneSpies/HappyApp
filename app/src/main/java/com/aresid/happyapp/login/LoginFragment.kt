@@ -8,13 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentLoginBinding
-import com.aresid.happyapp.keys.Keys
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import timber.log.Timber
 
 /**
@@ -33,13 +29,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 	private lateinit var binding: FragmentLoginBinding
 	
 	// Declare NavController
-	private var mNavController: NavController? = null
-	
-	// Declare fields and layouts for login flow
-	private var mEmailFieldLayout: TextInputLayout? = null
-	private var mEmailField: TextInputEditText? = null
-	private var mPasswordFieldLayout: TextInputLayout? = null
-	private var mPasswordField: TextInputEditText? = null
+	private lateinit var mNavController: NavController
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -59,7 +49,8 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			false
 		)
 		
-		// TODO:  onCreateView: code goes here
+		// Define the NavController object
+		mNavController = findNavController(this)
 		
 		// Observe the LiveData of emailOrPasswordIsEmpty and show an error to the user
 		loginViewModel.emailOrPasswordIsEmpty.observe(viewLifecycleOwner,
@@ -103,7 +94,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			                                                        // If the error is thrown, show the appropriate error message
 			                                                        if (isError) {
 				
-				                                                        binding.emailFieldLayout.error = getString(R.string.error_account_disabled_or_deleted)
+				                                                        binding.emailFieldLayout.error = getString(R.string.error_email_not_recognized)
 				
 			                                                        }
 			
@@ -166,33 +157,30 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		
 	}
 	
+	/**
+	 * Uses the NavController object to navigate to the ForgotLoginFragment using LoginFragmentDirections.
+	 */
 	private fun navigateToForgotLoginFragment() {
 		
 		Timber.d("navigateToForgotLoginFragment: called")
 		
 		// Navigate to the ForgotLoginFragment
-		findNavController(this).navigate(LoginFragmentDirections.toForgotLoginFragment())
+		mNavController.navigate(LoginFragmentDirections.toForgotLoginFragment())
 		
 	}
 	
 	/**
-	 * Finds the NavController and navigates to the MainFragment using LoginFragmentDirections.
+	 * Uses the NavController object to navigate to the MainFragment using LoginFragmentDirections.
 	 */
 	private fun navigateToMainFragment() {
 		
 		Timber.d("navigateToMainFragment: called")
 		
 		// Find the NavController and navigate to the MainFragment using LoginFragmentDirections
-		findNavController(this).navigate(LoginFragmentDirections.toMainFragment())
+		mNavController.navigate(LoginFragmentDirections.toMainFragment())
 		
 	}
 	
-	/**
-	 * Use this method to reference views
-	 *
-	 * @param view               Parent
-	 * @param savedInstanceState savedInstanceState
-	 */
 	override fun onViewCreated(
 		view: View,
 		savedInstanceState: Bundle?
@@ -203,78 +191,49 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			savedInstanceState
 		)
 		
-		// Define the NavController
-		mNavController = Navigation.findNavController(view)
-		
 		// Set onClickListeners
 		binding.emailSignupButton.setOnClickListener(this)
 		binding.googleSignupButton.setOnClickListener(this)
 		binding.forgotLoginButton.setOnClickListener(this)
 		
-		// Define fields and layouts for login flow
-		mEmailFieldLayout = view.findViewById(R.id.email_field_layout)
-		mEmailField = view.findViewById(R.id.email_field)
-		mPasswordFieldLayout = view.findViewById(R.id.password_field_layout)
-		mPasswordField = view.findViewById(R.id.password_field)
 	}
 	
 	override fun onClick(v: View) {
+		
 		Timber.d("onClick: called")
+		
 		when (v.id) {
+			
 			R.id.email_signup_button -> showEmailSignupFragment()
 			R.id.google_signup_button -> onGoogleSignupButtonClicked()
 			R.id.forgot_login_button -> navigateToForgotLoginFragment()
+			
 		}
+		
 	}
 	
 	/**
-	 * Navigates to the EmailSignupFragment.
+	 * Uses the NavController object to navigate to the EmailSignupFragment using LoginFragmentDirections.
 	 */
 	private fun showEmailSignupFragment() {
 		
 		Timber.d("showEmailSignupFragment: called")
 		
 		// Navigate to the EmailSignupFragment
-		mNavController!!.navigate(LoginFragmentDirections.toEmailSignupFragment())
+		mNavController.navigate(LoginFragmentDirections.toEmailSignupFragment())
 		
 	}
 	
 	/**
-	 * Navigates to the SubscribeFragment and puts an ID in a Bundle to identify that the user want Google signup.
+	 * Uses the NavController object to navigate to the SubscribeFragment using LoginFragmentDirections.
 	 */
 	private fun onGoogleSignupButtonClicked() {
+		
 		Timber.d("onGoogleSignupButtonClicked: called")
 		
-		// Define a new Bundle object
-		val arguments = Bundle()
+		// Navigate to the SubscribeFragment
+		mNavController.navigate(LoginFragmentDirections.toSubscribeFragment())
 		
-		// Put a String into the Bundle to identify that the user wants a Google signup
-		arguments.putString(
-			Keys.BundleKeys.KEY_GOOGLE_SIGNUP_ID,
-			Keys.BundleKeys.GOOGLE_SIGNUP_ID
-		)
-		
-		// Navigate to the SubscribeFragment and pass the bundle
-		mNavController!!.navigate(
-			LoginFragmentDirections.toSubscribeFragment()
-		)
 	}
 	
-	/**
-	 * Sets the email and password field layouts error null
-	 */
-	private fun resetLoginLayoutErrors() {
-		Timber.d("resetLayoutErrors: called")
-		
-		// Set layout error null
-		mEmailFieldLayout!!.error = null
-		mPasswordFieldLayout!!.error = null
-	}
-	// TODO: 23/04/2020: Implement reset password policy.
-	/**
-	 * Required public empty constructor
-	 */
-	init {
-		Timber.d("LoginFragment: called")
-	}
 }

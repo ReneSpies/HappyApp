@@ -158,7 +158,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 			TAG,
 			"onDestroy: called"
 		)
-		// TODO
 		super.onDestroy()
 	}
 	
@@ -218,8 +217,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 					)
 					if (command.isEmpty) {
 						// Username is available
-						// TODO: Subscribe and when successful, create new user and
-						//  continue
 						launchBillingFlow(details) /* Continue with
 						  onPurchasesUpdated() */
 					}
@@ -282,8 +279,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 					)
 					if (command.isEmpty) {
 						// Username is available
-						// TODO: Subscribe and when successful, create new user and
-						//  continue
 						mAuth!!.fetchSignInMethodsForEmail(email).addOnSuccessListener { result: SignInMethodQueryResult ->
 							Log.d(
 								TAG,
@@ -753,7 +748,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 		//		// Result code when user logs out of main activity
 		//		int logoutResultCode = getResources().getInteger(R.integer.result_code_logout);
 		//		if (requestCode == googleLoginRequestCode) {
-		//			// TODO: 15/04/2020 onActivityResult: subscribe
 		//			// Result received from Google login activity
 		//			changeToLoadingScreen();
 		//			Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -843,7 +837,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 						TAG,
 						"firebaseAuthWithGoogleAccount: user is new"
 					)
-					// TODO:
 					saveUserInFirestore(
 						user,
 						null
@@ -941,7 +934,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 				e
 			)
 			changeFromLoadingScreen()
-			// TODO: 15/04/2020 createNewUser: error handling
 			if (e is FirebaseNetworkException) {
 				val connectionFail = getString(R.string.error_network_connection_failed)
 				showErrorSnackbar(connectionFail)
@@ -1248,7 +1240,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 				"updateUI: user == null"
 			)
 			// no user logged in.
-			// TODO
 			changeFromLoadingScreen()
 		}
 	}
@@ -1270,7 +1261,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 			TAG,
 			"onRetryClick: called"
 		)
-		// TODO: subscription view pager retry policy
 	}
 	
 	override fun onAcknowledgePurchaseResponse(result: BillingResult) {
@@ -1278,7 +1268,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 			TAG,
 			"onAcknowledgePurchaseResponse: called"
 		)
-		// TODO: Verify on backend server
 		updateUI(mAuth!!.currentUser)
 	}
 	
@@ -1328,7 +1317,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 			TAG,
 			"onBillingServiceDisconnected: called"
 		)
-		// TODO: Implement own connection failed policy
 	}
 	
 	fun onLoginButtonClicked(view: View?) {
@@ -1413,7 +1401,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 			// Enable the views again
 			findViewById<View>(R.id.entry_activity_login_email_layout).isEnabled = true
 			findViewById<View>(R.id.entry_activity_login_password_layout).isEnabled = true
-			// TODO: More error handling
 			if (e is FirebaseAuthInvalidCredentialsException) {
 				smoothScrollTo(loginEmailFieldLayout.top.toFloat())
 				loginEmailFieldLayout.error = getString(R.string.error_email_or_password_incorrect)

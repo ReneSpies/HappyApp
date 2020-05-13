@@ -260,8 +260,6 @@ class EmailSignupHelper internal constructor(
 				"checkInput: "
 			)
 			
-			// TODO: 18/04/2020 checkInput: test exceptions
-			
 			// The email is malformed, show error on mEmailFieldLayout
 			if (e is FirebaseAuthInvalidCredentialsException) {
 				

@@ -6,7 +6,11 @@
 	>
 	
 	<data>
-	
+		
+		<variable
+			name="viewModel"
+			type="com.aresid.happyapp.login.ForgotLoginViewModel"
+			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -16,14 +20,87 @@
 		>
 		
 		<TextView
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="hello i forgot my login credentials"
+			android:text="@string/please_provide_your_email_address_below"
 			android:textAlignment="center"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
+			android:textAppearance="?attr/textAppearanceHeadline5"
+			app:layout_constraintBottom_toTopOf="@+id/email_field_layout"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toTopOf="parent"
 			/>
+		
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/email_field_layout"
+			style="@style/Widget.HappyApp.TextInputLayout"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			app:errorEnabled="true"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toTopOf="parent"
+			>
+			
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/email_field"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:hint="@string/email"
+				android:inputType="textEmailAddress"
+				android:maxLines="1"
+				android:singleLine="true"
+				android:text="@={viewModel.email}"
+				/>
+		</com.google.android.material.textfield.TextInputLayout>
+		
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/send_button"
+			style="@style/Widget.HappyApp.ContainedButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_small"
+			android:onClick="@{(view) -> viewModel.onSendButtonClicked(view)}"
+			android:text="@string/send"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toBottomOf="@+id/email_field_layout"
+			/>
+		
+		<TextView
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="@string/note_forgot_email_not_implemented"
+			android:textAlignment="center"
+			app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_end"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_end="@dimen/margin_medium"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_start"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_begin="@dimen/margin_medium"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_bottom"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_end="@dimen/margin_small"
+			/>
+	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

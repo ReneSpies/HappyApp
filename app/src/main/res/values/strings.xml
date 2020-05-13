@@ -95,12 +95,13 @@
 	<string name="cancel">Cancel</string>
 	<string name="error_account_disabled_or_deleted">Corresponding account has been disabled or deleted</string>
 	<string name="sign_up_and_subscribe_for_happyapp">Sign up and subscribe for HappyApp</string>
-	
-	<!-- TODO: Remove or change this placeholder text -->
 	<string name="next">Next</string>
-	
-	<!-- TODO: Remove or change this placeholder text -->
-	<string name="hello_blank_fragment">Hello blank fragment</string>
 	<string name="forgot_my_login">Forgot my login</string>
 	<string name="error_email_or_password_empty">Email or password empty</string>
+	<string name="please_provide_your_email_address_below">Please provide your email address below</string>
+	<string name="send">Send</string>
+	<!-- This is the note in the ForgotLoginFragment -->
+	<string name="note_forgot_email_not_implemented">Note: For the case that you forgot your email or have no access to it any longer, we ask you to contact our support team to further help you. The feature to reset your login credentials without access to your email has not yet been implemented, as we are working on it. Thank you very much for your patience.</string>
+	<string name="email_sent">Email sent</string>
+	<string name="error_email_not_recognized">This email is not recognized by our systems</string>
 </resources>

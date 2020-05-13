@@ -272,7 +272,6 @@ class MainActivity: AppCompatActivity(), NavigationView.OnNavigationItemSelected
 			TAG,
 			"onLookingClick:true"
 		)
-		// TODO: Delete this.
 		displayLookFragment()
 	}
 	

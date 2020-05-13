@@ -41,15 +41,15 @@ class LoginViewModel: ViewModel() {
 	val firebaseUser: LiveData<FirebaseUser>
 		get() = _firebaseUser
 	
-	// LiveData for the FirebaseAuthInvalidUserException, meaning the users account has been disabled or deleted
+	// LiveData for the FirebaseAuthInvalidUserException, meaning the is not recognized
 	private val _firebaseAuthInvalidUserException = MutableLiveData<Boolean>()
 	val firebaseAuthInvalidUserException: LiveData<Boolean>
 		get() = _firebaseAuthInvalidUserException
 	
 	// LiveData for the FirebaseAuthInvalidCredentialException, meaning the password or email is wrong
-	private val _firebaseAuthInvalidCredentialException = MutableLiveData<Boolean>()
+	private val _firebaseAuthInvalidCredentialsException = MutableLiveData<Boolean>()
 	val firebaseAuthInvalidCredentialsException: LiveData<Boolean>
-		get() = _firebaseAuthInvalidCredentialException
+		get() = _firebaseAuthInvalidCredentialsException
 	
 	// LiveData for the FirebaseNetworkException, meaning the user is not connected to the internet
 	private val _firebaseNetworkException = MutableLiveData<Boolean>()
@@ -82,7 +82,7 @@ class LoginViewModel: ViewModel() {
 		_firebaseAuthInvalidUserException.value = false
 		
 		// Init the FirebaseAuthInvalidCredentialException LiveData
-		_firebaseAuthInvalidCredentialException.value = false
+		_firebaseAuthInvalidCredentialsException.value = false
 		
 		// Init the FirebaseNetworkException LiveData
 		_firebaseNetworkException.value = false
@@ -97,7 +97,7 @@ class LoginViewModel: ViewModel() {
 		_firebaseAuthInvalidUserException.value = false
 		
 		// Reset FirebaseInvalidCredentialsException
-		_firebaseAuthInvalidCredentialException.value = false
+		_firebaseAuthInvalidCredentialsException.value = false
 		
 		// Reset the FirebaseNetworkException
 		_firebaseNetworkException.value = false
@@ -115,7 +115,7 @@ class LoginViewModel: ViewModel() {
 		resetAllFirebaseExceptions()
 		
 		// Check if input is empty and show an error, else reset the error
-		if (email.value!!.isEmpty() || password.value!!.isEmpty()) {
+		if (email.value.isNullOrBlank() || password.value.isNullOrBlank()) {
 			
 			// Set the LiveData to show an error in the fragment class
 			_emailOrPasswordIsEmpty.value = true
@@ -151,8 +151,14 @@ class LoginViewModel: ViewModel() {
 			
 			Timber.d("great success authenticating user with email and password")
 			
-			// Set the new FirebaseUser. If the
+			// Set the new FirebaseUser
 			_firebaseUser.value = authResult.user
+			
+			// Reset the buttons loading animation and enable it again
+			ButtonUtil.removeLoadingButtonAnimationWithEnable(
+				button,
+				true
+			)
 			
 		}.addOnFailureListener { e ->
 			
@@ -171,7 +177,7 @@ class LoginViewModel: ViewModel() {
 				is FirebaseAuthInvalidUserException -> _firebaseAuthInvalidUserException.value = true
 				
 				// The password is wrong
-				is FirebaseAuthInvalidCredentialsException -> _firebaseAuthInvalidCredentialException.value = true
+				is FirebaseAuthInvalidCredentialsException -> _firebaseAuthInvalidCredentialsException.value = true
 				
 				// No or bad internet
 				is FirebaseNetworkException -> _firebaseNetworkException.value = true
