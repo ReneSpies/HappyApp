@@ -16,7 +16,6 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:padding="@dimen/padding_medium"
 		tools:context=".login.LoginFragment"
 		>
 		
@@ -27,17 +26,19 @@
 			android:layout_marginTop="4dp"
 			android:contentDescription="@string/happy_app_logo"
 			android:src="@drawable/happyapp_logo_144"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toTopOf="@id/guideline_top"
 			/>
 		
 		<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/email_field_layout"
 			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			app:errorEnabled="true"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toBottomOf="@+id/app_logo"
 			>
 			
@@ -56,9 +57,11 @@
 		<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/password_field_layout"
 			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			app:errorEnabled="true"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toBottomOf="@+id/email_field_layout"
 			app:passwordToggleEnabled="true"
 			>
@@ -85,45 +88,44 @@
 			android:layout_height="wrap_content"
 			android:onClick="@{(view) -> loginViewModel.onLoginButtonClicked(view)}"
 			android:text="@string/log_in"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toBottomOf="@+id/password_field_layout"
 			/>
 		
 		<com.google.android.material.button.MaterialButton
 			android:id="@+id/forgot_login_button"
 			style="@style/Widget.HappyApp.TextButton"
-			android:textSize="@dimen/button_text_size_small"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="13.13dp"
 			android:text="@string/forgot_my_login"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
+			android:textSize="@dimen/button_text_size_small"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toBottomOf="@+id/login_button"
 			/>
 		
 		<TextView
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="13dp"
 			android:text="@string/sign_up_using_these_colon"
 			android:textAlignment="center"
 			app:layout_constraintBottom_toTopOf="@+id/signup_button_container"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			/>
 		
 		<LinearLayout
 			android:id="@+id/signup_button_container"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_margin="13dp"
 			android:gravity="center"
 			android:orientation="horizontal"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			>
 			
 			<androidx.appcompat.widget.AppCompatImageButton
@@ -144,6 +146,38 @@
 				android:src="@drawable/ic_google_favicon_24dp"
 				/>
 		</LinearLayout>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_top"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_begin="@dimen/margin_small"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_end"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_end="@dimen/margin_medium"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_bottom"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_end="@dimen/margin_small"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_start"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_begin="@dimen/margin_medium"
+			/>
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
