@@ -17,31 +17,61 @@
 		
 		<TextView
 			android:id="@+id/title"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:padding="13dp"
 			android:text="@string/sign_up_and_subscribe_for_happyapp"
 			android:textAlignment="center"
 			android:textAppearance="?attr/textAppearanceHeadline5"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toTopOf="@id/guideline_top"
 			/>
 		
 		<androidx.fragment.app.FragmentContainerView
 			android:id="@+id/signup_nav_host_fragment"
 			android:name="androidx.navigation.fragment.NavHostFragment"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:layout_marginHorizontal="13dp"
 			android:background="@drawable/main_fragment_shape"
 			android:elevation="8dp"
 			app:defaultNavHost="true"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toTopOf="@id/guideline_top"
 			app:navGraph="@navigation/signup_nav_graph"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_top"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_begin="@dimen/margin_small"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_end"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_end="@dimen/margin_medium"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_bottom"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_end="@dimen/margin_small"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_start"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_begin="@dimen/margin_medium"
 			/>
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>

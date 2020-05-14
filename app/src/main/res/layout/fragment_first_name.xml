@@ -6,6 +6,11 @@
 	>
 	
 	<data>
+		
+		<variable
+			name="viewModel"
+			type="com.aresid.happyapp.signup.form.FirstNameViewModel"
+			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -17,12 +22,12 @@
 		<com.google.android.material.textfield.TextInputLayout
 			android:id="@+id/first_name_field_layout"
 			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			app:errorEnabled="true"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toTopOf="@id/guideline_top"
 			>
 			
 			<com.google.android.material.textfield.TextInputEditText
@@ -32,6 +37,7 @@
 				android:hint="@string/first_name_with_star"
 				android:imeActionId="1"
 				android:imeOptions="actionNext"
+				android:text="@={viewModel.firstName}"
 				android:inputType="textCapSentences|textAutoCorrect"
 				/>
 		</com.google.android.material.textfield.TextInputLayout>
@@ -42,9 +48,42 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/next"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
+			android:onClick="@{() -> viewModel.onNextButtonClicked()}"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toBottomOf="@id/first_name_field_layout"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_top"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_begin="@dimen/margin_small"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_end"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_end="@dimen/margin_medium"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_bottom"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_end="@dimen/margin_small"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_start"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_begin="@dimen/margin_medium"
 			/>
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>

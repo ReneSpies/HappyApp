@@ -1,18 +1,17 @@
 package com.aresid.happyapp.signup.form
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
-import com.aresid.happyapp.keys.Keys
-import com.aresid.happyapp.utils.Util
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import com.aresid.happyapp.databinding.FragmentFirstNameBinding
+import com.aresid.happyapp.signup.EmailSignupViewModel
+import timber.log.Timber
 
 /**
  * Created on: 23/04/2020
@@ -20,113 +19,94 @@ import com.google.android.material.textfield.TextInputLayout
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
-class FirstNameFragment: Fragment(), View.OnClickListener {
+class FirstNameFragment: Fragment() {
 	
-	private var mNavController: NavController? = null
-	private var mFirstNameField: TextInputEditText? = null
-	private var mFirstNameFieldLayout: TextInputLayout? = null
+	// Binding for the layout
+	private lateinit var binding: FragmentFirstNameBinding
+	
+	// Corresponding ViewModel
+	private lateinit var firstNameViewModel: FirstNameViewModel
+	
+	// EmailSignupViewModel needed to pass the firstName
+	private lateinit var emailSignupViewModel: EmailSignupViewModel
+	
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		Log.d(
-			TAG,
-			"onCreateView: called"
-		)
 		
-		// Inflate the layout
-		return inflater.inflate(
-			R.layout.fragment_first_name,
+		Timber.d("onCreateView: called")
+		
+		// Define the binding
+		binding = FragmentFirstNameBinding.inflate(
+			inflater,
 			container,
 			false
 		)
-	}
-	
-	override fun onViewCreated(
-		view: View,
-		savedInstanceState: Bundle?
-	) {
-		Log.d(
-			TAG,
-			"onViewCreated: called"
-		)
-		super.onViewCreated(
-			view,
-			savedInstanceState
-		)
 		
-		// Define the NavController object
-		mNavController = Navigation.findNavController(view)
+		// Define the ViewModel
+		firstNameViewModel = ViewModelProvider(this).get(FirstNameViewModel::class.java)
 		
-		// Set onClickListener
-		view.findViewById<View>(R.id.next_button).setOnClickListener(this)
+		// Tell the binding about the ViewModel
+		binding.viewModel = firstNameViewModel
 		
-		// Define first name field TextInputEditText from layout
-		mFirstNameField = view.findViewById(R.id.first_name_field)
+		// Observe the firstNameEmpty LiveData and show feedback if true
+		firstNameViewModel.firstNameEmpty.observe(viewLifecycleOwner,
+		                                          Observer { isError ->
+			
+			                                          // If isError, show feedback to the user
+			                                          if (isError) {
+				
+				                                          // Show an error message on the firstNameFieldLayout
+				                                          binding.firstNameFieldLayout.error = getString(R.string.error_you_forgot_me)
+				
+			                                          }
+			
+			                                          // Else, reset the error
+			                                          else {
+				
+				                                          binding.firstNameFieldLayout.error = null
+				
+			                                          }
+			
+		                                          })
 		
-		// Define first name field layout TextInputLayout from layout
-		mFirstNameFieldLayout = view.findViewById(R.id.first_name_field_layout)
-	}
-	
-	override fun onClick(v: View) {
-		Log.d(
-			TAG,
-			"onClick: called"
-		)
-		if (v.id == R.id.next_button) {
-			showFamilyNameFragment()
-		}
+		// Observe the firstNameOk LiveData, notify the emailSignupViewModel about the firstName and navigate to the FamilyNameFragment
+		firstNameViewModel.firstNameOk.observe(viewLifecycleOwner,
+		                                       Observer { isOk ->
+			
+			                                       // If isOk, notify and navigate
+			                                       if (isOk) {
+				
+				                                       // Put the firstName into the SignupFormData singleton object
+				                                       SignupFormData.getInstance().firstName = firstNameViewModel.firstName.value!!
+				
+				                                       // Navigate to the FamilyNameFragment
+				                                       navigateToFamilyNameFragment()
+				
+				                                       // Reset the firstNameOk LiveData
+				                                       firstNameViewModel.navigatedAndNotified()
+				
+			                                       }
+			
+		                                       })
+		
+		// Return the inflated layout
+		return binding.root
+		
 	}
 	
 	/**
-	 * Bundles the first name and navigates to the FamilyNameFragment passing the Bundle.
+	 * Navigates to the FamilyNameFragment using the NavController.
 	 */
-	private fun showFamilyNameFragment() {
-		Log.d(
-			TAG,
-			"showFamilyNameFragment: called"
-		)
+	private fun navigateToFamilyNameFragment() {
 		
-		// Show error if no first name has been typed in
-		if (mFirstNameField!!.length() == 0) {
-			
-			// No first name detected
-			
-			// Show error
-			mFirstNameFieldLayout!!.error = getString(R.string.error_you_forgot_me)
-			return
-		}
+		Timber.d("navigateToFamilyNameFragment: called")
 		
-		// Set the first name fields layout error to null proactively
-		mFirstNameFieldLayout!!.error = null
+		// Navigate to the FamilyNameFragment
+		findNavController(this).navigate(FirstNameFragmentDirections.toFamilyNameFragment())
 		
-		// Define a new Bundle object
-		val arguments = Bundle()
-		
-		// Put the first name into the bundle
-		arguments.putString(
-			Keys.BundleKeys.KEY_FIRST_NAME,
-			Util.getString(mFirstNameField!!.text)
-		)
-		
-		// Navigate to the FamilyNameFragment and pass the bundle
-		mNavController!!.navigate(
-			R.id.to_familyNameFragment,
-			arguments
-		)
 	}
 	
-	companion object {
-		private const val TAG = "FirstNameFragment"
-	}
-	
-	init {
-		Log.d(
-			TAG,
-			"FirstNameFragment: called"
-		)
-		
-		// Required empty constructor
-	}
 }
