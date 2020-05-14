@@ -1,13 +1,14 @@
 package com.aresid.happyapp.utils
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import com.aresid.happyapp.R
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputLayout
+import timber.log.Timber
 
 /**
  * Created on: 18/04/2020
@@ -47,10 +48,8 @@ object Util {
 		errorMessage: String?,
 		context: Context?
 	) {
-		Log.d(
-			TAG,
-			"showErrorSnackbar: called"
-		)
+		Timber.d("showErrorSnackbar: called")
+		
 		Snackbar.make(
 			snackbarView!!,
 			errorMessage!!,
@@ -75,10 +74,8 @@ object Util {
 		message: String?,
 		context: Context?
 	) {
-		Log.d(
-			TAG,
-			"showSnackbar: called"
-		)
+		Timber.d("showSnackbar: called")
+		
 		Snackbar.make(
 			snackbarView!!,
 			message!!,
@@ -91,34 +88,25 @@ object Util {
 		).show()
 	}
 	
-	
-	
 	/**
-	 * Takes all TextInputLayouts available in parentView and set its errors to null.
-	 *
-	 * @param parentView The View containing the TextInputLayouts
+	 * Uses the InputMethodManager to hide the soft keyboard.
 	 */
-	fun resetLayoutErrors(parentView: ViewGroup) {
-		Log.d(
-			TAG,
-			"resetLayoutErrors: called"
+	fun hideKeyboard(
+		context: Context,
+		view: View
+	) {
+		
+		Timber.d("hideKeyboard: called")
+		
+		// Define an InputMethodManager object from the context
+		val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+		
+		// Hide the soft keyboard using InputMethodManager
+		inputMethodManager.hideSoftInputFromWindow(
+			view.windowToken,
+			0
 		)
 		
-		// Abstract the parentViews child count to an int
-		val childCount = parentView.childCount
-		
-		// Iterate through all members of parentView and set every TextInputLayout error to null
-		for (i in 0 .. childCount) {
-			
-			// Define a View object from the parentViews child at index
-			val child = parentView.getChildAt(i)
-			
-			// If child is a TextInputLayout, set its error to null
-			if (child is TextInputLayout) {
-				
-				// Set error to null
-				child.error = null
-			}
-		}
 	}
+	
 }

@@ -89,6 +89,9 @@ class LoginViewModel: ViewModel() {
 		
 	}
 	
+	/**
+	 * Resets all Firebase exception LiveData used to give feedback to the user.
+	 */
 	private fun resetAllFirebaseExceptions() {
 		
 		Timber.d("resetAllFirebaseExceptions: called")
@@ -104,6 +107,11 @@ class LoginViewModel: ViewModel() {
 		
 	}
 	
+	/**
+	 * Resets all exceptions.
+	 * Checks if the emailField and passwordField are neither null nor blank.
+	 * Calls loginUserWithEmailAndPassword if everything fits.
+	 */
 	fun onLoginButtonClicked(view: View) {
 		
 		Timber.d("onLoginButtonClicked: called")
@@ -130,10 +138,16 @@ class LoginViewModel: ViewModel() {
 			
 		}
 		
+		// Login user with email and password
 		loginUserWithEmailAndPassword(button)
 		
 	}
 	
+	/**
+	 * Uses the mFirebaseAuth object to log the user in with email and password.
+	 * Sets and resets a loading animation on the button.
+	 * And sets the firebaseUser LiveData.
+	 */
 	private fun loginUserWithEmailAndPassword(button: Button) {
 		
 		Timber.d("loginUser: called")
@@ -172,7 +186,7 @@ class LoginViewModel: ViewModel() {
 			
 			// Check which error e is and do appropriate things
 			when (e) {
-
+				
 				// The users account has been disabled or deleted
 				is FirebaseAuthInvalidUserException -> _firebaseAuthInvalidUserException.value = true
 				
@@ -181,7 +195,7 @@ class LoginViewModel: ViewModel() {
 				
 				// No or bad internet
 				is FirebaseNetworkException -> _firebaseNetworkException.value = true
-
+				
 			}
 			
 		}

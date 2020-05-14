@@ -78,6 +78,11 @@ class ForgotLoginViewModel: ViewModel() {
 		
 	}
 	
+	/**
+	 * Resets all exceptions.
+	 * Checks if the emailField is neither null nor blank.
+	 * Calls sendPasswordResetEmail function.
+	 */
 	fun onSendButtonClicked(view: View) {
 		
 		Timber.d("onSendButtonClicked: called")
@@ -102,6 +107,9 @@ class ForgotLoginViewModel: ViewModel() {
 		
 	}
 	
+	/**
+	 * Resets all Firebase exceptions used to give feedback to the user.
+	 */
 	private fun resetAllExceptions() {
 		
 		Timber.d("resetAllExceptions: called")
@@ -120,6 +128,12 @@ class ForgotLoginViewModel: ViewModel() {
 		
 	}
 	
+	/**
+	 * Starts and resets a loading animation on the button and disables it.
+	 * Sends a password reset email using the mFirebaseAuth object.
+	 * Sets the passwordResetEmailSent LiveData if successful.
+	 * Sets the Firebase exception LiveData to give feedback to the user.
+	 */
 	private fun sendPasswordResetEmail(button: Button) {
 		
 		Timber.d("sendPasswordResetEmail: called")
@@ -171,6 +185,9 @@ class ForgotLoginViewModel: ViewModel() {
 		
 	}
 	
+	/**
+	 * Resets the passwordResetEmailSent LiveData.
+	 */
 	fun showedSuccessSnackbar() {
 		
 		Timber.d("showedSuccessSnackbar: called")

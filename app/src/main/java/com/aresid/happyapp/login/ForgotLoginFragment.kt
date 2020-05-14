@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentForgotLoginBinding
+import com.aresid.happyapp.utils.Util
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 
@@ -51,9 +52,19 @@ class ForgotLoginFragment: Fragment() {
 			                                                    // If email has been sent, show success Snackbar
 			                                                    if (isSent) {
 				
+				                                                    // Hide the soft keyboard
+				                                                    Util.hideKeyboard(
+					                                                    requireContext(),
+					                                                    binding.sendButton
+				                                                    )
+				                                                    
 				                                                    // Show the success Snackbar
-				                                                    showPasswordResetEmailSentSuccessSnackbar()
-				
+				                                                    Util.showSnackbar(
+					                                                    binding.emailField,
+					                                                    getString(R.string.email_sent),
+					                                                    requireContext()
+				                                                    )
+				                                                    
 				                                                    // Reset the passwordResetEmailSent LiveData
 				                                                    forgotLoginViewModel.showedSuccessSnackbar()
 				

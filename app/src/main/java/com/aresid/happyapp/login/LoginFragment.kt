@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentLoginBinding
+import com.aresid.happyapp.utils.Util
 import timber.log.Timber
 
 /**
@@ -81,6 +82,13 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			                                    // Check if the User is not null and log the user in
 			                                    if (firebaseUser != null) {
 				
+				                                    // Hide the soft keyboard
+				                                    Util.hideKeyboard(
+					                                    requireContext(),
+					                                    binding.loginButton
+				                                    )
+				
+				                                    // Navigate to MainFragment
 				                                    navigateToMainFragment()
 				
 			                                    }
