@@ -77,7 +77,7 @@
 		/>
 	<fragment
 		android:id="@+id/subscribeFragment"
-		android:name="com.aresid.happyapp.signup.form.SubscribeFragment"
+		android:name="com.aresid.happyapp.signup.SubscribeFragment"
 		android:label="SubscribeFragment"
 		tools:layout="@layout/fragment_subscribe"
 		/>

@@ -6,13 +6,17 @@
 	>
 	
 	<data>
-	
+		
+		<variable
+			name="viewModel"
+			type="com.aresid.happyapp.signup.form.username.UsernameViewModel"
+			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:context=".signup.form.UsernameFragment"
+		tools:context=".signup.form.username.UsernameFragment"
 		>
 		
 		<com.google.android.material.textfield.TextInputLayout
@@ -34,6 +38,7 @@
 				android:imeActionId="3"
 				android:imeOptions="actionNext"
 				android:inputType="text"
+				android:text="@={viewModel.username}"
 				/>
 		</com.google.android.material.textfield.TextInputLayout>
 		
@@ -42,6 +47,7 @@
 			style="@style/Widget.HappyApp.TextButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:onClick="@{() -> viewModel.onNextButtonClicked()}"
 			android:text="@string/next"
 			app:layout_constraintEnd_toEndOf="@id/guideline_end"
 			app:layout_constraintStart_toStartOf="@id/guideline_start"

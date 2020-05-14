@@ -1,4 +1,4 @@
-package com.aresid.happyapp.signup.form
+package com.aresid.happyapp.signup.form.email
 
 import android.os.Bundle
 import android.util.Log
@@ -9,20 +9,12 @@ import androidx.fragment.app.Fragment
 import com.aresid.happyapp.R
 
 /**
- * Created on: 15/04/2020
+ * Created on: 23/04/2020
  * For Project: HappyApp
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
-class SubscribeFragment: Fragment() {
-	
-	override fun onCreate(savedInstanceState: Bundle?) {
-		Log.d(
-			TAG,
-			"onCreate: called"
-		)
-		super.onCreate(savedInstanceState)
-	}
+class EmailFragment: Fragment() {
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -34,23 +26,15 @@ class SubscribeFragment: Fragment() {
 			"onCreateView: called"
 		)
 		
-		// Inflate layout
+		// Inflate the layout
 		return inflater.inflate(
-			R.layout.fragment_subscribe,
+			R.layout.fragment_email,
 			container,
 			false
 		)
 	}
 	
 	companion object {
-		private const val TAG = "SubscribeFragment"
-	}
-	
-	init {
-		Log.d(
-			TAG,
-			"SubscribeFragment: called"
-		)
-		// Required public empty constructor
+		private const val TAG = "EmailFragment"
 	}
 }

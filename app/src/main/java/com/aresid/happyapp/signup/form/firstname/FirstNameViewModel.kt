@@ -1,4 +1,4 @@
-package com.aresid.happyapp.signup.form
+package com.aresid.happyapp.signup.form.firstname
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -73,7 +73,7 @@ class FirstNameViewModel: ViewModel() {
 	 */
 	fun navigatedAndNotified() {
 		
-		Timber.d("navigated: called")
+		Timber.d("navigatedAndNotified: called")
 		
 		// Reset the firstNameOk LiveData
 		_firstNameOk.value = false

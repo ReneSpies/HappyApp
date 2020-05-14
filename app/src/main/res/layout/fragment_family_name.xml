@@ -9,14 +9,14 @@
 		
 		<variable
 			name="viewModel"
-			type="com.aresid.happyapp.signup.form.FamilyNameViewModel"
+			type="com.aresid.happyapp.signup.form.familyname.FamilyNameViewModel"
 			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:context=".signup.form.FamilyNameFragment"
+		tools:context=".signup.form.familyname.FamilyNameFragment"
 		>
 		
 		<com.google.android.material.textfield.TextInputLayout

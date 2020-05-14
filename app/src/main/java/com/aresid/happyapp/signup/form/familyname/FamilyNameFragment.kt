@@ -1,4 +1,4 @@
-package com.aresid.happyapp.signup.form
+package com.aresid.happyapp.signup.form.familyname
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentFamilyNameBinding
+import com.aresid.happyapp.signup.form.SignupFormData
 import timber.log.Timber
 
 /**

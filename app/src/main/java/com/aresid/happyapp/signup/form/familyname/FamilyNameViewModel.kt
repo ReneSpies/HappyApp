@@ -1,4 +1,4 @@
-package com.aresid.happyapp.signup.form
+package com.aresid.happyapp.signup.form.familyname
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -73,7 +73,7 @@ class FamilyNameViewModel: ViewModel() {
 	 */
 	fun navigatedAndNotified() {
 		
-		Timber.d("navigated: called")
+		Timber.d("navigatedAndNotified: called")
 		
 		// Reset the familyNameOk LiveData
 		_familyNameOk.value = false

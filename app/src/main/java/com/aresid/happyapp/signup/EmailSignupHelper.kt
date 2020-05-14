@@ -240,7 +240,7 @@ class EmailSignupHelper internal constructor(
 						// Username is unavailable
 						
 						// Show username is already taken error
-						mUsernameFieldLayout!!.error = mContext.getString(R.string.error_username_already_is_taken)
+						mUsernameFieldLayout!!.error = mContext.getString(R.string.error_username_is_already_taken)
 					}
 				}.addOnFailureListener { e: Exception? ->
 					Timber.d("checkInput: failure comparing usernames")

@@ -72,7 +72,7 @@
 	<!-- Error messages / HappyAppUser feedback -->
 	<string name="error_network_connection_failed">Network connection failed. Please try again</string>
 	<string name="error_you_forgot_me">You forgot me</string>
-	<string name="error_username_already_is_taken">Username is already taken</string>
+	<string name="error_username_is_already_taken">Username is already taken</string>
 	<string name="error_email_is_already_in_use">This email is already in use</string>
 	<string name="error_email_is_badly_formatted">This email is badly formatted</string>
 	<string name="error_try_again">Oops. Something went wrong. Please try again</string>

@@ -9,7 +9,7 @@
 	
 	<fragment
 		android:id="@+id/firstNameFragment"
-		android:name="com.aresid.happyapp.signup.form.FirstNameFragment"
+		android:name="com.aresid.happyapp.signup.form.firstname.FirstNameFragment"
 		android:label="fragment_first_name"
 		tools:layout="@layout/fragment_first_name"
 		>
@@ -24,7 +24,7 @@
 	</fragment>
 	<fragment
 		android:id="@+id/familyNameFragment"
-		android:name="com.aresid.happyapp.signup.form.FamilyNameFragment"
+		android:name="com.aresid.happyapp.signup.form.familyname.FamilyNameFragment"
 		android:label="fragment_family_name"
 		tools:layout="@layout/fragment_family_name"
 		>
@@ -39,7 +39,7 @@
 	</fragment>
 	<fragment
 		android:id="@+id/usernameFragment"
-		android:name="com.aresid.happyapp.signup.form.UsernameFragment"
+		android:name="com.aresid.happyapp.signup.form.username.UsernameFragment"
 		android:label="fragment_username"
 		tools:layout="@layout/fragment_username"
 		>
@@ -54,7 +54,7 @@
 	</fragment>
 	<fragment
 		android:id="@+id/emailFragment"
-		android:name="com.aresid.happyapp.signup.form.EmailFragment"
+		android:name="com.aresid.happyapp.signup.form.email.EmailFragment"
 		android:label="fragment_email"
 		tools:layout="@layout/fragment_email"
 		>
@@ -69,7 +69,7 @@
 	</fragment>
 	<fragment
 		android:id="@+id/passwordFragment"
-		android:name="com.aresid.happyapp.signup.form.PasswordFragment"
+		android:name="com.aresid.happyapp.signup.form.password.PasswordFragment"
 		android:label="fragment_password"
 		tools:layout="@layout/fragment_password"
 		>
@@ -84,7 +84,7 @@
 	</fragment>
 	<fragment
 		android:id="@+id/dateOfBirthFragment"
-		android:name="com.aresid.happyapp.signup.form.DateOfBirthFragment"
+		android:name="com.aresid.happyapp.signup.form.dateofbirth.DateOfBirthFragment"
 		android:label="fragment_date_of_birth"
 		tools:layout="@layout/fragment_date_of_birth"
 		/>

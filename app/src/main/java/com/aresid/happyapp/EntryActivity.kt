@@ -227,7 +227,7 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 							registrationDateOfBirthFieldLayout,
 							termsAndConditionsCheckBox
 						)
-						registrationUsernameFieldLayout.error = getString(R.string.error_username_already_is_taken)
+						registrationUsernameFieldLayout.error = getString(R.string.error_username_is_already_taken)
 						smoothScrollTo(registrationFamilyNameFieldLayout.bottom.toFloat())
 					}
 				}.addOnFailureListener { e: Exception? ->
@@ -245,7 +245,7 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 						registrationDateOfBirthFieldLayout,
 						termsAndConditionsCheckBox
 					)
-					registrationUsernameFieldLayout.error = getString(R.string.error_username_already_is_taken)
+					registrationUsernameFieldLayout.error = getString(R.string.error_username_is_already_taken)
 					smoothScrollTo(registrationFamilyNameFieldLayout.bottom.toFloat())
 				}
 			}
@@ -322,7 +322,7 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 							termsAndConditionsCheckBox
 						)
 						smoothScrollTo(registrationFamilyNameFieldLayout.bottom.toFloat())
-						registrationUsernameFieldLayout.error = getString(R.string.error_username_already_is_taken)
+						registrationUsernameFieldLayout.error = getString(R.string.error_username_is_already_taken)
 					}
 				}.addOnFailureListener { e: Exception? ->
 					Log.d(
@@ -344,7 +344,7 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 						termsAndConditionsCheckBox
 					)
 					smoothScrollTo(registrationFamilyNameFieldLayout.bottom.toFloat())
-					registrationUsernameFieldLayout.error = getString(R.string.error_username_already_is_taken)
+					registrationUsernameFieldLayout.error = getString(R.string.error_username_is_already_taken)
 				}
 			}
 		}

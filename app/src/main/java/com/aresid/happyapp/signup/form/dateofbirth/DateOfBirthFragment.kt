@@ -1,4 +1,4 @@
-package com.aresid.happyapp.signup.form
+package com.aresid.happyapp.signup.form.dateofbirth
 
 import android.os.Bundle
 import android.util.Log
