@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentFirstNameBinding
-import com.aresid.happyapp.signup.EmailSignupViewModel
 import timber.log.Timber
 
 /**
@@ -27,9 +26,6 @@ class FirstNameFragment: Fragment() {
 	// Corresponding ViewModel
 	private lateinit var firstNameViewModel: FirstNameViewModel
 	
-	// EmailSignupViewModel needed to pass the firstName
-	private lateinit var emailSignupViewModel: EmailSignupViewModel
-	
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
@@ -38,7 +34,7 @@ class FirstNameFragment: Fragment() {
 		
 		Timber.d("onCreateView: called")
 		
-		// Define the binding
+		// Define the binding and inflate the layout
 		binding = FragmentFirstNameBinding.inflate(
 			inflater,
 			container,
@@ -72,7 +68,7 @@ class FirstNameFragment: Fragment() {
 			
 		                                          })
 		
-		// Observe the firstNameOk LiveData, notify the emailSignupViewModel about the firstName and navigate to the FamilyNameFragment
+		// Observe the firstNameOk LiveData, notify the SignupFormData singleton about the firstName and navigate to the FamilyNameFragment
 		firstNameViewModel.firstNameOk.observe(viewLifecycleOwner,
 		                                       Observer { isOk ->
 			

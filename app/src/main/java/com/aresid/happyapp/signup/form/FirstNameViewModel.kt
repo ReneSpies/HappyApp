@@ -42,6 +42,10 @@ class FirstNameViewModel: ViewModel() {
 		
 	}
 	
+	/**
+	 * Checks if the firstName is empty and sets the firstNameEmpty LiveData if true.
+	 * If false, sets the firstNameOk LiveData.
+	 */
 	fun onNextButtonClicked() {
 		
 		Timber.d("onNextButtonClicked: called")
@@ -49,7 +53,7 @@ class FirstNameViewModel: ViewModel() {
 		// Reset all exceptions
 		resetAllExceptions()
 		
-		// Check if the firstName is neither blank nor null and set the firstNameEmpty LiveData to show feedback to the user
+		// Check if the firstName is either blank or null and set the firstNameEmpty LiveData to show feedback to the user
 		if (firstName.value.isNullOrBlank()) {
 			
 			// Set the firstNameEmpty LiveData
@@ -64,6 +68,9 @@ class FirstNameViewModel: ViewModel() {
 		
 	}
 	
+	/**
+	 * Resets the firstNameOk LiveData.
+	 */
 	fun navigatedAndNotified() {
 		
 		Timber.d("navigated: called")
@@ -73,6 +80,9 @@ class FirstNameViewModel: ViewModel() {
 		
 	}
 	
+	/**
+	 * Resets all Exception LiveData.
+	 */
 	private fun resetAllExceptions() {
 		
 		Timber.d("resetAllExceptions: called")
