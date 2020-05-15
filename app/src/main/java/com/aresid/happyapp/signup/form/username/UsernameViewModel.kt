@@ -35,6 +35,9 @@ class UsernameViewModel: ViewModel() {
 	val usernameTaken: LiveData<Boolean>
 		get() = _usernameTaken
 	
+	private val firestore: FirebaseFirestore
+		get() = FirebaseFirestore.getInstance()
+	
 	init {
 		
 		Timber.d("init: called")
@@ -50,17 +53,6 @@ class UsernameViewModel: ViewModel() {
 		
 		// usernameTaken LiveData
 		_usernameTaken.value = false
-		
-	}
-	
-	/**
-	 * Gets the Firestore instance.
-	 */
-	private fun getFirestore(): FirebaseFirestore {
-		
-		Timber.d("getFirestore: called")
-		
-		return FirebaseFirestore.getInstance()
 		
 	}
 	
@@ -96,7 +88,7 @@ class UsernameViewModel: ViewModel() {
 		Timber.d("checkIfUsernameIsTaken: called")
 		
 		// Check if the username is already registered in the Firestore
-		getFirestore().collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).whereEqualTo(
+		firestore.collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).whereEqualTo(
 			Keys.FirestoreFieldKeys.KEY_COLUMN_USERNAME,
 			username.value
 		).get().addOnSuccessListener { snapshot: QuerySnapshot ->
