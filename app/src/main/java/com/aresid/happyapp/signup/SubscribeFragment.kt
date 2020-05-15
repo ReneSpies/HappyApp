@@ -1,12 +1,13 @@
 package com.aresid.happyapp.signup
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.aresid.happyapp.R
+import androidx.lifecycle.ViewModelProvider
+import com.aresid.happyapp.databinding.FragmentSubscribeBinding
+import timber.log.Timber
 
 /**
  * Created on: 15/04/2020
@@ -16,41 +17,33 @@ import com.aresid.happyapp.R
  */
 class SubscribeFragment: Fragment() {
 	
-	override fun onCreate(savedInstanceState: Bundle?) {
-		Log.d(
-			TAG,
-			"onCreate: called"
-		)
-		super.onCreate(savedInstanceState)
-	}
+	// Binding for the layout
+	private lateinit var binding: FragmentSubscribeBinding
+	
+	// ViewModel
+	private lateinit var subscribeFragmentViewModel: SubscribeViewModel
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
-		Log.d(
-			TAG,
-			"onCreateView: called"
-		)
 		
-		// Inflate layout
-		return inflater.inflate(
-			R.layout.fragment_subscribe,
+		Timber.d("onCreateView: called")
+		
+		// Define the binding
+		binding = FragmentSubscribeBinding.inflate(
+			inflater,
 			container,
 			false
 		)
+		
+		// Define the ViewModel
+		subscribeFragmentViewModel = ViewModelProvider(this).get(SubscribeViewModel::class.java)
+		
+		// Return the inflated layout
+		return binding.root
+		
 	}
 	
-	companion object {
-		private const val TAG = "SubscribeFragment"
-	}
-	
-	init {
-		Log.d(
-			TAG,
-			"SubscribeFragment: called"
-		)
-		// Required public empty constructor
-	}
 }
