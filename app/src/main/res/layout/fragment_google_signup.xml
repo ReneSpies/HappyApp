@@ -2,24 +2,25 @@
 <layout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	>
 	
 	<data>
-	
+		
+		<variable
+			name="viewModel"
+			type="com.aresid.happyapp.signup.GoogleSignupViewModel"
+			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:context=".signup.EmailSignupFragment"
 		>
 		
 		<TextView
-			android:id="@+id/title"
 			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:text="@string/sign_up_and_subscribe_to_happyapp"
+			android:text="@string/sign_up_with_google_and_subscribe_to_happyapp"
 			android:textAlignment="center"
 			android:textAppearance="?attr/textAppearanceHeadline5"
 			app:layout_constraintEnd_toEndOf="@id/guideline_end"
@@ -27,19 +28,16 @@
 			app:layout_constraintTop_toTopOf="@id/guideline_top"
 			/>
 		
-		<androidx.fragment.app.FragmentContainerView
-			android:id="@+id/signup_nav_host_fragment"
-			android:name="androidx.navigation.fragment.NavHostFragment"
-			android:layout_width="0dp"
+		<androidx.appcompat.widget.AppCompatImageButton
+			android:id="@+id/google_signup_button"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:background="@drawable/main_fragment_shape"
-			android:elevation="8dp"
-			app:defaultNavHost="true"
+			android:background="@drawable/round_button_background"
+			android:src="@drawable/ic_google_favicon_24dp"
 			app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
 			app:layout_constraintEnd_toEndOf="@id/guideline_end"
 			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toTopOf="@id/guideline_top"
-			app:navGraph="@navigation/signup_nav_graph"
 			/>
 		
 		<androidx.constraintlayout.widget.Guideline

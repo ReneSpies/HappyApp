@@ -64,4 +64,15 @@ class Keys {
 		const val KEY_COLUMN_SUBSCRIPTION_VARIANT = "subscription variant"
 		const val KEY_COLUMN_USERNAME = "username"
 	}
+	
+	/**
+	 * Carries the RequestCodes.
+	 * RequestCode creation policy is only odd numbers!
+	 */
+	object RequestCodes {
+		
+		const val REQUEST_CODE_GOOGLE_SIGN_IN = 1
+		
+	}
+	
 }

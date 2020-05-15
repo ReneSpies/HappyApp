@@ -31,17 +31,16 @@
 			app:popExitAnim="@anim/slide_out_to_right"
 			/>
 		<action
-			android:id="@+id/to_subscribeFragment"
-			app:destination="@id/subscribeFragment"
+			android:id="@+id/to_forgotLoginFragment"
+			app:destination="@id/forgotLoginFragment"
 			app:enterAnim="@anim/slide_in_from_right"
 			app:exitAnim="@anim/slide_out_to_left"
 			app:popEnterAnim="@anim/slide_in_from_left"
 			app:popExitAnim="@anim/slide_out_to_right"
-			>
-		</action>
+			/>
 		<action
-			android:id="@+id/to_forgotLoginFragment"
-			app:destination="@id/forgotLoginFragment"
+			android:id="@+id/to_googleSignupFragment"
+			app:destination="@id/googleSignupFragment"
 			app:enterAnim="@anim/slide_in_from_right"
 			app:exitAnim="@anim/slide_out_to_left"
 			app:popEnterAnim="@anim/slide_in_from_left"
@@ -86,5 +85,11 @@
 		android:name="com.aresid.happyapp.login.ForgotLoginFragment"
 		android:label="ForgotLoginFragment"
 		tools:layout="@layout/fragment_forgot_login"
+		/>
+	<fragment
+		android:id="@+id/googleSignupFragment"
+		android:name="com.aresid.happyapp.signup.GoogleSignupFragment"
+		android:label="GoogleSignupFragment"
+		tools:layout="@layout/fragment_google_signup"
 		/>
 </navigation>

@@ -240,7 +240,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		Timber.d("onGoogleSignupButtonClicked: called")
 		
 		// Navigate to the SubscribeFragment
-		mNavController.navigate(LoginFragmentDirections.toSubscribeFragment())
+		mNavController.navigate(LoginFragmentDirections.toGoogleSignupFragment())
 		
 	}
 	
