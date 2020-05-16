@@ -1,4 +1,4 @@
-package com.aresid.happyapp.signup
+package com.aresid.happyapp.subscribe
 
 import androidx.lifecycle.ViewModel
 import timber.log.Timber

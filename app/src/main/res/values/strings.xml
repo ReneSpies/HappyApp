@@ -105,4 +105,9 @@
 	<string name="email_sent">Email sent</string>
 	<string name="error_email_not_recognized">This email is not recognized by our systems</string>
 	<string name="sign_up_with_google_and_subscribe_to_happyapp">Sign up with Google and subscribe to HappyApp</string>
+	<string name="loading">Loading</string>
+	<string name="silver">Silver</string>
+	<string name="platinum">Platinum</string>
+	<string name="gold">Gold</string>
+	<string name="bronze">Bronze</string>
 </resources>

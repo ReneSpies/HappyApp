@@ -12,49 +12,27 @@
 	<androidx.constraintlayout.widget.ConstraintLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:context=".signup.SubscribeFragment"
+		tools:context=".subscribe.SubscribeFragment"
 		>
 		
-		<TextView
-			android:layout_width="wrap_content"
+		<com.google.android.material.tabs.TabLayout
+			android:id="@+id/tab_layout"
 			android:layout_height="wrap_content"
-			android:text="subscribe fragment"
-			app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-			app:layout_constraintEnd_toEndOf="@id/guideline_end"
-			app:layout_constraintStart_toStartOf="@id/guideline_start"
-			app:layout_constraintTop_toTopOf="@id/guideline_top"
+			android:layout_width="0dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:tabMode="auto"
 			/>
 		
-		<androidx.constraintlayout.widget.Guideline
-			android:id="@+id/guideline_top"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			app:layout_constraintGuide_begin="@dimen/margin_small"
-			/>
-		
-		<androidx.constraintlayout.widget.Guideline
-			android:id="@+id/guideline_end"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			app:layout_constraintGuide_end="@dimen/margin_medium"
-			/>
-		
-		<androidx.constraintlayout.widget.Guideline
-			android:id="@+id/guideline_bottom"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			app:layout_constraintGuide_end="@dimen/margin_small"
-			/>
-		
-		<androidx.constraintlayout.widget.Guideline
-			android:id="@+id/guideline_start"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			app:layout_constraintGuide_begin="@dimen/margin_medium"
+		<androidx.viewpager2.widget.ViewPager2
+			android:id="@+id/view_pager_2"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			app:layout_constraintBottom_toTopOf="@id/tab_layout"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
 			/>
 	
 	</androidx.constraintlayout.widget.ConstraintLayout>

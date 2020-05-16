@@ -46,6 +46,14 @@
 			app:popEnterAnim="@anim/slide_in_from_left"
 			app:popExitAnim="@anim/slide_out_to_right"
 			/>
+		<action
+			android:id="@+id/to_subscribeFragment"
+			app:destination="@id/subscribeFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"
+			/>
 	</fragment>
 	<fragment
 		android:id="@+id/mainFragment"
@@ -70,13 +78,13 @@
 	</fragment>
 	<fragment
 		android:id="@+id/loadingFragment"
-		android:name="com.aresid.happyapp.fragments.LoadingFragment"
+		android:name="com.aresid.happyapp.utils.LoadingFragment"
 		android:label="LoadingFragment"
 		tools:layout="@layout/fragment_loading"
 		/>
 	<fragment
 		android:id="@+id/subscribeFragment"
-		android:name="com.aresid.happyapp.signup.SubscribeFragment"
+		android:name="com.aresid.happyapp.subscribe.SubscribeFragment"
 		android:label="SubscribeFragment"
 		tools:layout="@layout/fragment_subscribe"
 		/>

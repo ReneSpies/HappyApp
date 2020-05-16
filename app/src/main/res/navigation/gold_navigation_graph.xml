@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/gold_navigation_graph"
+	app:startDestination="@id/loadingFragment"
+	>
+	
+	<fragment
+		android:id="@+id/loadingFragment"
+		android:name="com.aresid.happyapp.utils.LoadingFragment"
+		android:label="LoadingFragment"
+		tools:layout="@layout/fragment_loading"
+		>
+		<action
+			android:id="@+id/to_errorFragment"
+			app:destination="@id/errorFragment"
+			app:enterAnim="@anim/zoom_in"
+			app:exitAnim="@anim/fade_out"
+			app:popEnterAnim="@anim/zoom_in"
+			app:popExitAnim="@anim/fade_out"
+			/>
+		<action
+			android:id="@+id/to_goldFragment"
+			app:destination="@id/goldFragment"
+			app:enterAnim="@anim/zoom_in"
+			app:exitAnim="@anim/fade_out"
+			app:popEnterAnim="@anim/zoom_in"
+			app:popExitAnim="@anim/fade_out"
+			/>
+	</fragment>
+	<fragment
+		android:id="@+id/errorFragment"
+		android:name="com.aresid.happyapp.utils.errorfragment.ErrorFragment"
+		android:label="ErrorFragment"
+		tools:layout="@layout/fragment_error"
+		/>
+	<fragment
+		android:id="@+id/goldFragment"
+		android:name="com.aresid.happyapp.subscribe.gold.GoldFragment"
+		android:label="GoldFragment"
+		tools:layout="@layout/fragment_gold"
+		/>
+</navigation>

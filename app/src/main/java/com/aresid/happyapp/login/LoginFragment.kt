@@ -204,6 +204,9 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		binding.googleSignupButton.setOnClickListener(this)
 		binding.forgotLoginButton.setOnClickListener(this)
 		
+		// Subscribe Button click listener. temporarily
+		binding.subscribeButton.setOnClickListener(this)
+		
 	}
 	
 	override fun onClick(v: View) {
@@ -212,18 +215,27 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		
 		when (v.id) {
 			
-			R.id.email_signup_button -> showEmailSignupFragment()
+			R.id.email_signup_button -> navigateToEmailSignupFragment()
 			R.id.google_signup_button -> onGoogleSignupButtonClicked()
 			R.id.forgot_login_button -> navigateToForgotLoginFragment()
+			R.id.subscribe_button -> navigateToSubscribeFragment()
 			
 		}
+		
+	}
+	
+	private fun navigateToSubscribeFragment() {
+		
+		Timber.d("navigateToSubscribeFragment: called")
+		
+		mNavController.navigate(LoginFragmentDirections.toSubscribeFragment())
 		
 	}
 	
 	/**
 	 * Uses the NavController object to navigate to the EmailSignupFragment using LoginFragmentDirections.
 	 */
-	private fun showEmailSignupFragment() {
+	private fun navigateToEmailSignupFragment() {
 		
 		Timber.d("showEmailSignupFragment: called")
 		

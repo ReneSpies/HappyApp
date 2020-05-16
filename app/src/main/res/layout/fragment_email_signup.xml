@@ -39,7 +39,7 @@
 			app:layout_constraintEnd_toEndOf="@id/guideline_end"
 			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toTopOf="@id/guideline_top"
-			app:navGraph="@navigation/signup_nav_graph"
+			app:navGraph="@navigation/signup_navigation_graph"
 			/>
 		
 		<androidx.constraintlayout.widget.Guideline
