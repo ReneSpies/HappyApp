@@ -75,4 +75,31 @@ class Keys {
 		
 	}
 	
+	/**
+	 * Carries the IDs of the SKUs from the Google Play Console.
+	 */
+	object HappyAppSkus {
+		
+		// Bronze subscription
+		const val BRONZE_SUBSCRIPTION = "happyapp.subscription.bronze"
+		
+		// Silver subscription
+		const val SILVER_SUBSCRIPTION = "happyapp.subscription.silver"
+		
+		// Gold subscription
+		const val GOLD_SUBSCRIPTION = "happyapp.subscription.gold"
+		
+		// Platinum subscription
+		const val PLATINUM_SUBSCRIPTION = "happyapp.subscription.platinum"
+		
+		// All SKU IDs as a list
+		val SUBSCRIPTION_SKUS = listOf(
+			BRONZE_SUBSCRIPTION,
+			SILVER_SUBSCRIPTION,
+			GOLD_SUBSCRIPTION,
+			PLATINUM_SUBSCRIPTION
+		)
+		
+	}
+	
 }

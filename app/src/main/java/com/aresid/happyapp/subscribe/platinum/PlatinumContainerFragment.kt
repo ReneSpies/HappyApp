@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.aresid.happyapp.databinding.FragmentPlatinumContainerBinding
 import timber.log.Timber
 
@@ -20,6 +21,9 @@ class PlatinumContainerFragment: Fragment() {
 	// Binding for the layout
 	private lateinit var binding: FragmentPlatinumContainerBinding
 	
+	// Corresponding ViewModel
+	private lateinit var platinumContainerViewModel: PlatinumContainerViewModel
+	
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
@@ -34,6 +38,9 @@ class PlatinumContainerFragment: Fragment() {
 			container,
 			false
 		)
+		
+		// Define the ViewModel
+		platinumContainerViewModel = ViewModelProvider(this).get(PlatinumContainerViewModel::class.java)
 		
 		// Return the inflated layout
 		return binding.root
