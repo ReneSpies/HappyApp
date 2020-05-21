@@ -1,5 +1,6 @@
 package com.aresid.happyapp.subscribe.bronze
 
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,12 @@ class BronzeFragment: Fragment() {
 		// Define the ViewModel
 		bronzeViewModel = ViewModelProvider(this).get(BronzeViewModel::class.java)
 		
+		// Tell the binding about the ViewModel
+		binding.viewModel = bronzeViewModel
+		
+		// Tell the binding about the Activity
+		binding.activity = requireActivity()
+		
 		// Observe the subscriptionSkuDetailsListLiveData
 		bronzeViewModel.subscriptionSkuDetailsListLiveData.observe(
 			viewLifecycleOwner,
@@ -64,6 +71,55 @@ class BronzeFragment: Fragment() {
 		
 		// Return the inflated layout
 		return binding.root
+		
+	}
+	
+	override fun onResume() {
+		
+		Timber.d("onResume: called")
+		
+		super.onResume()
+		
+		// If the loadingSpinner is visible, start the loading animation again
+		if (binding.loadingSpinner.visibility == View.VISIBLE) {
+			
+			// Start loading animation again
+			startLoadingAnimation()
+			
+		}
+		
+	}
+	
+	override fun onStop() {
+		
+		Timber.d("onStop: called")
+		
+		super.onStop()
+		
+		// Stop the loading animation
+		stopLoadingAnimation()
+		
+	}
+	
+	/**
+	 * Starts the loading animation on the ImageView's drawable.
+	 */
+	private fun startLoadingAnimation() {
+		
+		Timber.d("startLoadingAnimation: called")
+		
+		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).start()
+		
+	}
+	
+	/**
+	 * Stops the loading animation on the ImageView's drawable.
+	 */
+	private fun stopLoadingAnimation() {
+		
+		Timber.d("stopLoadingAnimation: called")
+		
+		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).stop()
 		
 	}
 	
@@ -90,18 +146,15 @@ class BronzeFragment: Fragment() {
 	
 	/**
 	 * Enables the bronzeContent visibility and
-	 * disables the loadingFragment and errorFragment
+	 * disables the loadingSpinner and errorFragment
 	 * visibility.
 	 */
 	private fun showBronzeContent() {
 		
 		Timber.d("showBronzeContent: called")
 		
-		// Disable the loadingFragment visibility
-		binding.loadingFragment.visibility = View.GONE
-		
-		// Disable the errorFragment visibility
-		binding.errorFragment.visibility = View.GONE
+		// Disable the loadingSpinner visibility
+		binding.loadingSpinner.visibility = View.GONE
 		
 		// Enable the bronzeContent visibility
 		binding.bronzeContent.visibility = View.VISIBLE
@@ -109,42 +162,36 @@ class BronzeFragment: Fragment() {
 	}
 	
 	/**
-	 * Enables the loadingFragment visibility and
+	 * Enables the loadingSpinner visibility and
 	 * disables the errorFragment and bronzeContent
 	 * visibility.
 	 */
-	private fun showLoadingFragment() {
+	private fun showLoadingSpinner() {
 		
-		Timber.d("showLoadingFragment: called")
-		
-		// Disable the errorFragment visibility
-		binding.errorFragment.visibility = View.GONE
+		Timber.d("showLoadingSpinner: called")
 		
 		// Disable the bronzeContent visibility
 		binding.bronzeContent.visibility = View.GONE
 		
-		// Enable the loadingFragment visibility
-		binding.loadingFragment.visibility = View.VISIBLE
+		// Enable the loadingSpinner visibility
+		binding.loadingSpinner.visibility = View.VISIBLE
 		
 	}
 	
 	/**
 	 * Enables the errorFragment visibility and
-	 * disables the loadingFragment and bronzeContent
+	 * disables the loadingSpinner and bronzeContent
 	 * visibility.
 	 */
 	private fun showErrorFragment() {
 		
 		Timber.d("showErrorFragment: called")
 		
-		// Disable the loadingFragment visibility
-		binding.loadingFragment.visibility = View.GONE
+		// Disable the loadingSpinner visibility
+		binding.loadingSpinner.visibility = View.GONE
 		
 		// Disable the bronzeContent visibility
 		binding.bronzeContent.visibility = View.GONE
-		
-		// Enable the errorFragment visibility
-		binding.errorFragment.visibility = View.VISIBLE
 		
 	}
 	

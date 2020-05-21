@@ -6,6 +6,16 @@
 	>
 	
 	<data>
+		
+		<variable
+			name="viewModel"
+			type="com.aresid.happyapp.subscribe.gold.GoldViewModel"
+			/>
+		
+		<variable
+			name="activity"
+			type="android.app.Activity"
+			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -25,20 +35,14 @@
 			app:layout_constraintTop_toTopOf="parent"
 			>
 			
-			<androidx.fragment.app.FragmentContainerView
-				android:id="@+id/loading_fragment"
-				android:name="com.aresid.happyapp.utils.LoadingFragment"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				/>
-			
-			<androidx.fragment.app.FragmentContainerView
-				android:id="@+id/error_fragment"
-				android:name="com.aresid.happyapp.utils.errorfragment.ErrorFragment"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:visibility="gone"
-				tools:layout="@layout/fragment_error"
+			<ImageView
+				android:id="@+id/loading_spinner"
+				android:layout_width="96dp"
+				android:layout_height="96dp"
+				android:layout_gravity="center"
+				android:contentDescription="@string/loading"
+				android:src="@drawable/animated_loading_circle_red_black"
+				android:visibility="visible"
 				/>
 			
 			<androidx.constraintlayout.widget.ConstraintLayout
@@ -93,7 +97,7 @@
 					android:layout_marginTop="@dimen/margin_large"
 					android:textAlignment="center"
 					android:textAppearance="?attr/textAppearanceHeadline5"
-					android:textColor="@color/platinum"
+					android:textColor="@color/gold"
 					android:textStyle="bold"
 					app:layout_constraintEnd_toEndOf="@id/guideline_end"
 					app:layout_constraintStart_toStartOf="@id/guideline_start"
@@ -108,6 +112,7 @@
 					android:layout_height="wrap_content"
 					android:layout_marginTop="@dimen/margin_medium"
 					android:text="@string/check_this_out"
+					android:onClick="@{() -> viewModel.onCheckoutButtonClicked(activity)}"
 					app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
 					app:layout_constraintEnd_toEndOf="@id/guideline_end"
 					app:layout_constraintStart_toStartOf="@id/guideline_start"

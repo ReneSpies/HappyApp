@@ -1,5 +1,6 @@
 package com.aresid.happyapp.subscribe.bronze
 
+import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -23,9 +24,15 @@ class BronzeViewModel(application: Application): AndroidViewModel(application) {
 	// BillingRepository
 	private val billingRepository: BillingRepository
 	
+	// Application
+	private val mApplication: Application
+	
 	init {
 		
 		Timber.d("init: called")
+		
+		// Define the application
+		mApplication = application
 		
 		// Define the BillingRepository
 		billingRepository = BillingRepository.getInstance(application)
@@ -70,6 +77,18 @@ class BronzeViewModel(application: Application): AndroidViewModel(application) {
 		}
 		
 		return null
+		
+	}
+	
+	fun onCheckoutButtonClicked(activity: Activity) {
+		
+		Timber.d("onCheckoutButtonClicked: called")
+		
+		// Launch the billing flow
+		billingRepository.launchBillingFlow(
+			activity,
+			getSubscriptionSkuDetails()!!
+		)
 		
 	}
 	

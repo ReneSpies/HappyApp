@@ -88,8 +88,17 @@ interface EntitlementsDao {
 		
 		entitlements.forEach { entitlement ->
 			
-			// Insert the Entitlement into the corresponding table
-			insert(entitlement)
+			when (entitlement) {
+				
+				is BronzeSubscription -> insert(entitlement)
+				
+				is SilverSubscription -> insert(entitlement)
+				
+				is GoldSubscription -> insert(entitlement)
+				
+				is PlatinumSubscription -> insert(entitlement)
+				
+			}
 			
 		}
 		
@@ -103,8 +112,17 @@ interface EntitlementsDao {
 		// Iterates through all elements of entitlements and updates the corresponding tables
 		entitlements.forEach { entitlement ->
 			
-			// Updated the corresponding tables with the Entitlement
-			update(entitlement)
+			when (entitlement) {
+				
+				is BronzeSubscription -> update(entitlement)
+				
+				is SilverSubscription -> update(entitlement)
+				
+				is GoldSubscription -> update(entitlement)
+				
+				is PlatinumSubscription -> update(entitlement)
+				
+			}
 			
 		}
 		

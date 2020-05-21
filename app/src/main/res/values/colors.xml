@@ -9,5 +9,6 @@
 	<color name="rippleColorAccent">@color/colorAccent</color>
 	<color name="bronze">#b35c0f</color>
 	<color name="silver">#b5b5b5</color>
+	<color name="gold">#b3840f</color>
 	<color name="platinum">#a3a5b0</color>
 </resources>

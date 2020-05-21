@@ -116,7 +116,7 @@ object Security {
 			
 			signatureAlgorithm.initVerify(publicKey)
 			
-			signatureAlgorithm.update(signature.toByteArray())
+			signatureAlgorithm.update(signedData.toByteArray())
 			
 			if (!signatureAlgorithm.verify(signatureBytes)) {
 				

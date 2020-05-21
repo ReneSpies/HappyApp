@@ -1,5 +1,6 @@
 package com.aresid.happyapp.subscribe.platinum
 
+import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -63,6 +64,17 @@ class PlatinumViewModel(application: Application): AndroidViewModel(application)
 		}
 		
 		return null
+		
+	}
+	
+	fun onCheckoutButtonClicked(activity: Activity) {
+		
+		Timber.d("onCheckoutButtonClicked: called")
+		
+		billingRepository.launchBillingFlow(
+			activity,
+			getSubscriptionSkuDetails()!!
+		)
 		
 	}
 	

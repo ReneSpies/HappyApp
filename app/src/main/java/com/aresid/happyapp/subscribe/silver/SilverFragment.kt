@@ -1,5 +1,6 @@
 package com.aresid.happyapp.subscribe.silver
 
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,12 @@ class SilverFragment: Fragment() {
 		// Define the ViewModel
 		silverViewModel = ViewModelProvider(this).get(SilverViewModel::class.java)
 		
+		// Tell the binding about the ViewModel
+		binding.viewModel = silverViewModel
+		
+		// Tell the binding about the activity
+		binding.activity = requireActivity()
+		
 		// Observe the subscriptionSkuDetailsListLiveData
 		silverViewModel.subscriptionSkuDetailsListLiveData.observe(viewLifecycleOwner,
 		                                                           Observer { list ->
@@ -64,6 +71,55 @@ class SilverFragment: Fragment() {
 		
 		// Return the inflated layout
 		return binding.root
+		
+	}
+	
+	override fun onResume() {
+		
+		Timber.d("onResume: called")
+		
+		super.onResume()
+		
+		// If the loadingSpinner is visible, start the loading animation again
+		if (binding.loadingSpinner.visibility == View.VISIBLE) {
+			
+			// Start loading animation again
+			startLoadingAnimation()
+			
+		}
+		
+	}
+	
+	override fun onStop() {
+		
+		Timber.d("onStop: called")
+		
+		super.onStop()
+		
+		// Stop the loading animation
+		stopLoadingAnimation()
+		
+	}
+	
+	/**
+	 * Starts the loading animation on the ImageView's drawable.
+	 */
+	private fun startLoadingAnimation() {
+		
+		Timber.d("startLoadingAnimation: called")
+		
+		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).start()
+		
+	}
+	
+	/**
+	 * Stops the loading animation on the ImageView's drawable.
+	 */
+	private fun stopLoadingAnimation() {
+		
+		Timber.d("stopLoadingAnimation: called")
+		
+		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).stop()
 		
 	}
 	
@@ -90,18 +146,15 @@ class SilverFragment: Fragment() {
 	
 	/**
 	 * Enables the silverContent visibility and
-	 * disables the loadingFragment and errorFragment
+	 * disables the loadingSpinner and errorFragment
 	 * visibility.
 	 */
 	private fun showSilverContent() {
 		
 		Timber.d("showSilverContent: called")
 		
-		// Disable the loadingFragment visibility
-		binding.loadingFragment.visibility = View.GONE
-		
-		// Disable the errorFragment visibility
-		binding.errorFragment.visibility = View.GONE
+		// Disable the loadingSpinner visibility
+		binding.loadingSpinner.visibility = View.GONE
 		
 		// Enable the silverContent visibility
 		binding.silverContent.visibility = View.VISIBLE
@@ -109,42 +162,36 @@ class SilverFragment: Fragment() {
 	}
 	
 	/**
-	 * Enables the loadingFragment visibility and
+	 * Enables the loadingSpinner visibility and
 	 * disables the errorFragment and silverContent
 	 * visibility.
 	 */
-	private fun showLoadingFragment() {
+	private fun showLoadingSpinner() {
 		
-		Timber.d("showLoadingFragment: called")
-		
-		// Disable the errorFragment visibility
-		binding.errorFragment.visibility = View.GONE
+		Timber.d("showLoadingSpinner: called")
 		
 		// Disable the silverContent visibility
 		binding.silverContent.visibility = View.GONE
 		
-		// Enable the loadingFragment visibility
-		binding.loadingFragment.visibility = View.VISIBLE
+		// Enable the loadingSpinner visibility
+		binding.loadingSpinner.visibility = View.VISIBLE
 		
 	}
 	
 	/**
 	 * Enables the errorFragment visibility and
-	 * disables the loadingFragment and silverContent
+	 * disables the loadingSpinner and silverContent
 	 * visibility.
 	 */
 	private fun showErrorFragment() {
 		
 		Timber.d("showErrorFragment: called")
 		
-		// Disable the loadingFragment visibility
-		binding.loadingFragment.visibility = View.GONE
+		// Disable the loadingSpinner visibility
+		binding.loadingSpinner.visibility = View.GONE
 		
 		// Disable the silverContent visibility
 		binding.silverContent.visibility = View.GONE
-		
-		// Enable the errorFragment visibility
-		binding.errorFragment.visibility = View.VISIBLE
 		
 	}
 	

@@ -246,6 +246,12 @@ class BillingRepository private constructor(private val application: Application
 				
 				Timber.d("onBillingSetupFinished but billing is not available on this device")
 				
+				RetryPolicies.connectionRetryPolicy {
+					
+					connectToGooglePlayBillingService()
+					
+				}
+				
 			}
 			
 			else -> {
@@ -286,6 +292,7 @@ class BillingRepository private constructor(private val application: Application
 	
 	/**
 	 * Called to notify that a consume operation has finished.
+	 * For now, I don't have anything to consume, since subscriptions do not get consumed.
 	 *
 	 * @param billingResult The response code from [BillingResult] set to report the result of
 	 * consume operation.
@@ -304,7 +311,7 @@ class BillingRepository private constructor(private val application: Application
 				
 				purchaseToken?.apply {
 					
-					//					saveToLocalDatabase(this)
+					//										saveToLocalDatabase(this)
 					
 				}
 				
@@ -553,7 +560,7 @@ class BillingRepository private constructor(private val application: Application
 		augmentedSkuDetails: AugmentedSkuDetails
 	) = launchBillingFlow(
 		activity,
-		com.android.billingclient.api.SkuDetails(augmentedSkuDetails.originalJson)
+		SkuDetails(augmentedSkuDetails.originalJson)
 	)
 	
 	fun launchBillingFlow(
@@ -567,7 +574,7 @@ class BillingRepository private constructor(private val application: Application
 		
 		// TODO:  launchBillingFlow: setOldSku() needs a >purchaseToken<!!!
 		
-		val purchaseParameters = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).setOldSku(oldSku).build()
+		val purchaseParameters = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build()
 		
 		RetryPolicies.taskExecutionRetryPolicy(
 			playStoreBillingClient,
