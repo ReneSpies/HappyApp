@@ -113,4 +113,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-beta01'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    kapt "android.arch.persistence.room:compiler:1.1.1"
 }

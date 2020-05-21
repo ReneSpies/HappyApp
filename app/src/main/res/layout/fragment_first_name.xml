@@ -37,8 +37,8 @@
 				android:hint="@string/first_name_with_star"
 				android:imeActionId="1"
 				android:imeOptions="actionNext"
-				android:text="@={viewModel.firstName}"
 				android:inputType="textCapSentences|textAutoCorrect"
+				android:text="@={viewModel.firstName}"
 				/>
 		</com.google.android.material.textfield.TextInputLayout>
 		
@@ -47,8 +47,8 @@
 			style="@style/Widget.HappyApp.TextButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/next"
 			android:onClick="@{() -> viewModel.onNextButtonClicked()}"
+			android:text="@string/next"
 			app:layout_constraintEnd_toEndOf="@id/guideline_end"
 			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toBottomOf="@id/first_name_field_layout"

@@ -35,10 +35,10 @@
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
 				android:hint="@string/family_name_with_star"
-				android:text="@={viewModel.familyName}"
 				android:imeActionId="2"
 				android:imeOptions="actionNext"
 				android:inputType="textCapSentences|textAutoCorrect"
+				android:text="@={viewModel.familyName}"
 				/>
 		</com.google.android.material.textfield.TextInputLayout>
 		
@@ -47,8 +47,8 @@
 			style="@style/Widget.HappyApp.TextButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/next"
 			android:onClick="@{() -> viewModel.onNextButtonClicked()}"
+			android:text="@string/next"
 			app:layout_constraintEnd_toEndOf="@id/guideline_start"
 			app:layout_constraintStart_toStartOf="@id/guideline_end"
 			app:layout_constraintTop_toBottomOf="@id/family_name_field_layout"

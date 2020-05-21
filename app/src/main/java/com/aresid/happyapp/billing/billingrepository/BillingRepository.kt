@@ -120,7 +120,7 @@ class BillingRepository private constructor(private val application: Application
 		
 		Timber.d("defineAndConnectToGooglePlayBillingService: called")
 		
-		playStoreBillingClient = BillingClient.newBuilder(application.applicationContext).setListener(this).build()
+		playStoreBillingClient = BillingClient.newBuilder(application.applicationContext).enablePendingPurchases().setListener(this).build()
 		
 		connectToGooglePlayBillingService()
 		

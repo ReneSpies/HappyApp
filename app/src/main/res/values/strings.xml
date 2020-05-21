@@ -110,4 +110,12 @@
 	<string name="platinum">Platinum</string>
 	<string name="gold">Gold</string>
 	<string name="bronze">Bronze</string>
+	<string name="bronze_subscription_logo">Bronze subscription logo</string>
+	<string name="happyapp_bronze">HappyApp Bronze</string>
+	<string name="happyapp_silver">HappyApp Silver</string>
+	<string name="happyapp_gold">HappyApp Gold</string>
+	<string name="happyapp_platinum">HappyApp Platinum</string>
+	<string name="gold_subscription_logo">Gold subscription logo</string>
+	<string name="platinum_subscription_logo">Platinum subscription logo</string>
+	<string name="silver_subscription_logo">Silver subscription logo</string>
 </resources>

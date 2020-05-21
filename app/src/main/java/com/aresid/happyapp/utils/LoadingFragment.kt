@@ -36,11 +36,19 @@ class LoadingFragment: Fragment() {
 			false
 		)
 		
-		// Start the loading animation
-		startLoadingAnimation()
-		
 		// Return the inflated layout
 		return binding.root
+		
+	}
+	
+	override fun onResume() {
+		
+		Timber.d("onResume: called")
+		
+		super.onResume()
+		
+		// Start the loading animation again
+		startLoadingAnimation()
 		
 	}
 	

@@ -2,10 +2,10 @@ package com.aresid.happyapp.subscribe.viewpager2
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.aresid.happyapp.subscribe.bronze.BronzeContainerFragment
-import com.aresid.happyapp.subscribe.gold.GoldContainerFragment
-import com.aresid.happyapp.subscribe.platinum.PlatinumContainerFragment
-import com.aresid.happyapp.subscribe.silver.SilverContainerFragment
+import com.aresid.happyapp.subscribe.bronze.BronzeFragment
+import com.aresid.happyapp.subscribe.gold.GoldFragment
+import com.aresid.happyapp.subscribe.platinum.PlatinumFragment
+import com.aresid.happyapp.subscribe.silver.SilverFragment
 
 /**
  *    Created on: 16.05.20
@@ -19,10 +19,10 @@ class SubscriptionStateAdapter(
 ): FragmentStateAdapter(fragment) {
 	
 	private val fragments = arrayListOf(
-		BronzeContainerFragment(),
-		SilverContainerFragment(),
-		GoldContainerFragment(),
-		PlatinumContainerFragment()
+		BronzeFragment(),
+		SilverFragment(),
+		GoldFragment(),
+		PlatinumFragment()
 	)
 	
 	override fun getItemCount(): Int = fragments.size

@@ -2,9 +2,11 @@ package com.aresid.happyapp.utils
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Paint
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.aresid.happyapp.R
 import com.google.android.material.snackbar.Snackbar
@@ -83,9 +85,20 @@ object Util {
 		).setBackgroundTint(
 			ContextCompat.getColor(
 				context!!,
-				R.color.black
+				android.R.color.black
 			)
 		).show()
+	}
+	
+	/**
+	 * Extension function for TextView to underline the TextView.
+	 */
+	fun TextView.underline() {
+		
+		Timber.d("underline: called")
+		
+		paintFlags = paintFlags or Paint.UNDERLINE_TEXT_FLAG
+		
 	}
 	
 	/**

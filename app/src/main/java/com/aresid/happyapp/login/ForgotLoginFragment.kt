@@ -57,14 +57,14 @@ class ForgotLoginFragment: Fragment() {
 					                                                    requireContext(),
 					                                                    binding.sendButton
 				                                                    )
-				                                                    
+				
 				                                                    // Show the success Snackbar
 				                                                    Util.showSnackbar(
 					                                                    binding.emailField,
 					                                                    getString(R.string.email_sent),
 					                                                    requireContext()
 				                                                    )
-				                                                    
+				
 				                                                    // Reset the passwordResetEmailSent LiveData
 				                                                    forgotLoginViewModel.showedSuccessSnackbar()
 				
@@ -135,25 +135,24 @@ class ForgotLoginFragment: Fragment() {
 		                                                      })
 		
 		// Observe the FirebaseAuthInvalidUserException LiveData and show an error message if true
-		forgotLoginViewModel.firebaseAuthInvalidUserException.observe(
-			viewLifecycleOwner,
-			Observer { isError ->
+		forgotLoginViewModel.firebaseAuthInvalidUserException.observe(viewLifecycleOwner,
+		                                                              Observer { isError ->
+			
+			                                                              // If isError, show error message on emailFieldLayout
+			                                                              if (isError) {
 				
-				// If isError, show error message on emailFieldLayout
-				if (isError) {
-					
-					binding.emailFieldLayout.error = getString(R.string.error_email_not_recognized)
-					
-				}
+				                                                              binding.emailFieldLayout.error = getString(R.string.error_email_not_recognized)
 				
-				// Else, reset the error message
-				else {
-					
-					binding.emailFieldLayout.error = null
-					
-				}
+			                                                              }
+			
+			                                                              // Else, reset the error message
+			                                                              else {
 				
-			})
+				                                                              binding.emailFieldLayout.error = null
+				
+			                                                              }
+			
+		                                                              })
 		
 		// Tell the binding about the ViewModel
 		binding.viewModel = forgotLoginViewModel

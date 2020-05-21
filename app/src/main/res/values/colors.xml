@@ -7,5 +7,7 @@
 	<color name="main_fragment_background_color">@android:color/white</color>
 	<color name="rippleColor">@color/white</color>
 	<color name="rippleColorAccent">@color/colorAccent</color>
-	<color name="black">@android:color/black</color>
+	<color name="bronze">#b35c0f</color>
+	<color name="silver">#b5b5b5</color>
+	<color name="platinum">#a3a5b0</color>
 </resources>

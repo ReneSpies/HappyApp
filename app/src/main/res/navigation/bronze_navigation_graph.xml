@@ -29,6 +29,7 @@
 			app:popEnterAnim="@anim/zoom_in"
 			app:popExitAnim="@anim/fade_out"
 			/>
+		<argument android:name="bronzeSubscriptionSkuDetails"/>
 	</fragment>
 	<fragment
 		android:id="@+id/errorFragment"
