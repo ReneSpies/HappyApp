@@ -99,5 +99,14 @@
 		android:name="com.aresid.happyapp.signup.GoogleSignupFragment"
 		android:label="GoogleSignupFragment"
 		tools:layout="@layout/fragment_google_signup"
-		/>
+		>
+		<action
+			android:id="@+id/to_subscribeFragment"
+			app:destination="@id/subscribeFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"
+			/>
+	</fragment>
 </navigation>

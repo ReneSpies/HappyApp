@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentUsernameBinding
 import com.aresid.happyapp.signup.form.SignupFormData
@@ -109,6 +109,27 @@ class UsernameFragment: Fragment() {
 			
 		                                        })
 		
+		// Observe the noInternet LiveData and show feedback to the user if true
+		usernameViewModel.noInternet.observe(
+			viewLifecycleOwner,
+			Observer { noInternet ->
+				
+				// If noInternet, show feedback on the usernameFieldLayout
+				if (noInternet) {
+					
+					binding.usernameFieldLayout.error = getString(R.string.error_no_internet_connection)
+					
+				}
+				
+				// Else, reset the error
+				else {
+					
+					binding.usernameFieldLayout.error = null
+					
+				}
+				
+			})
+		
 		// Return the inflated layout
 		return binding.root
 		
@@ -122,7 +143,7 @@ class UsernameFragment: Fragment() {
 		Timber.d("navigateToEmailFragment: called")
 		
 		// Navigate to the EmailFragment
-		NavHostFragment.findNavController(this).navigate(UsernameFragmentDirections.toEmailFragment())
+		findNavController(this).navigate(UsernameFragmentDirections.toEmailFragment())
 		
 	}
 	

@@ -65,6 +65,63 @@ object Util {
 	}
 	
 	/**
+	 * Checks if the String is >= 6.
+	 */
+	fun String.isGreaterOrEqualToSix(): Boolean {
+		
+		Timber.d("isGreaterThanSix: called")
+		
+		return length >= 6
+		
+	}
+	
+	/**
+	 * Checks if the String contains a capital letter.
+	 */
+	fun String.containsCapitalLetter(): Boolean {
+		
+		Timber.d("containsCapitalLetter: called")
+		
+		for (character in this) {
+			
+			// This comparison is necessary because otherwise, you would return false,
+			// if the first character is not uppercase
+			if (character.isUpperCase()) {
+				
+				return true
+				
+			}
+			
+		}
+		
+		return false
+		
+	}
+	
+	/**
+	 * Checks if the String contains a number.
+	 */
+	fun String.containsNumber(): Boolean {
+		
+		Timber.d("containsNumber: called")
+		
+		for (character in this) {
+			
+			// This comparison is necessary because otherwise, you would return false,
+			// if the first character is not a digit
+			if (character.isDigit()) {
+				
+				return true
+				
+			}
+			
+		}
+		
+		return false
+		
+	}
+	
+	/**
 	 * Shows a standard Snackbar with the length long and accent color background.
 	 *
 	 * @param snackbarView The view to find a parent from.

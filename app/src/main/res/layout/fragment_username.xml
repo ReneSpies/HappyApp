@@ -47,7 +47,7 @@
 			style="@style/Widget.HappyApp.TextButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:onClick="@{() -> viewModel.onNextButtonClicked()}"
+			android:onClick="@{(view) -> viewModel.onNextButtonClicked(view)}"
 			android:text="@string/next"
 			app:layout_constraintEnd_toEndOf="@id/guideline_end"
 			app:layout_constraintStart_toStartOf="@id/guideline_start"

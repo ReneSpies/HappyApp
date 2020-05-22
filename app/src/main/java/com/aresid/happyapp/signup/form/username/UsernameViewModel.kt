@@ -1,11 +1,13 @@
 package com.aresid.happyapp.signup.form.username
 
+import android.view.View
+import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.utils.ButtonUtil
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import timber.log.Timber
 
 /**
@@ -35,6 +37,11 @@ class UsernameViewModel: ViewModel() {
 	val usernameTaken: LiveData<Boolean>
 		get() = _usernameTaken
 	
+	// LiveData for when there is no internet connection
+	private val _noInternet = MutableLiveData<Boolean>()
+	val noInternet: LiveData<Boolean>
+		get() = _noInternet
+	
 	private val firestore: FirebaseFirestore
 		get() = FirebaseFirestore.getInstance()
 	
@@ -54,6 +61,9 @@ class UsernameViewModel: ViewModel() {
 		// usernameTaken LiveData
 		_usernameTaken.value = false
 		
+		// noInternet LiveData
+		_noInternet.value = false
+		
 	}
 	
 	/**
@@ -61,9 +71,12 @@ class UsernameViewModel: ViewModel() {
 	 * Checks if the username is already taken on the server and sets the usernameTaken LiveData if true.
 	 * If false, sets the usernameOk LiveData.
 	 */
-	fun onNextButtonClicked() {
+	fun onNextButtonClicked(view: View) {
 		
 		Timber.d("onNextButtonClicked: called")
+		
+		// Cast the view to Button, since XML expression do not allow casting themselves
+		val button = view as Button
 		
 		// Reset all exceptions
 		resetAllExceptions()
@@ -79,37 +92,47 @@ class UsernameViewModel: ViewModel() {
 		}
 		
 		// Check if username is already registered in the Firestore
-		checkIfUsernameIsTaken()
+		checkIfUsernameIsTaken(button)
 		
 	}
 	
-	private fun checkIfUsernameIsTaken() {
+	private fun checkIfUsernameIsTaken(button: Button) {
 		
 		Timber.d("checkIfUsernameIsTaken: called")
+		
+		// Start the loading animation and disable the button
+		ButtonUtil.setAndStartLoadingButtonAnimationWithDisable(
+			button,
+			true
+		)
 		
 		// Check if the username is already registered in the Firestore
 		firestore.collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).whereEqualTo(
 			Keys.FirestoreFieldKeys.KEY_COLUMN_USERNAME,
 			username.value
-		).get().addOnSuccessListener { snapshot: QuerySnapshot ->
-			
+		).get().addOnSuccessListener { document ->
+
 			Timber.d("great success checking if the username is already registered in the Firestore")
 			
-			Timber.d("snapshot is empty = ${snapshot.isEmpty}")
+			// Remove the loading animation and enable the button again
+			ButtonUtil.removeLoadingButtonAnimationWithEnable(
+				button,
+				true
+			)
 			
-			Timber.d("snapshot size = ${snapshot.size()}")
-			
-			Timber.d("snapshot documents = ${snapshot.documents}")
-			
-			Timber.d("snapshot query = ${snapshot.query}")
-			
-			Timber.d("username = ${username.value}")
-			
-			// If snapshot is empty, the username is available
-			if (snapshot.isEmpty) {
-				
+			// If snapshot is empty and not from cache, the username is available
+			if (document.isEmpty && !document.metadata.isFromCache) {
+
 				// Set the usernameOk LiveData to tell the fragment it can navigate and notify the SignupFormData about the username
 				_usernameOk.value = true
+
+			}
+			
+			// Else, if the metadata isFromCache, there is no internet connection available
+			else if (document.metadata.isFromCache) {
+				
+				// Set the noInternet LiveData
+				_noInternet.value = true
 				
 			}
 			
@@ -120,12 +143,18 @@ class UsernameViewModel: ViewModel() {
 				_usernameTaken.value = true
 				
 			}
-			
+
 		}.addOnFailureListener { e ->
 			
 			Timber.d("failure checking if the username is already registered in the Firestore")
 			
 			Timber.e(e)
+			
+			// Remove the loading animation and enable the button again
+			ButtonUtil.removeLoadingButtonAnimationWithEnable(
+				button,
+				true
+			)
 			
 			// TODO:  checkIfUsernameIsTaken: exception test
 			
@@ -157,6 +186,9 @@ class UsernameViewModel: ViewModel() {
 		
 		// Reset the usernameTaken LiveData
 		_usernameTaken.value = false
+		
+		// Reset the noInternet LiveData
+		_noInternet.value = false
 		
 	}
 	

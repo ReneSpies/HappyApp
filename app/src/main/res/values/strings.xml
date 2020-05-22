@@ -81,7 +81,7 @@
 	<string name="error_please_confirm">Please confirm</string>
 	<string name="error_password_must_be_6_long">I need to be longer than 6 characters of your choice</string>
 	<string name="error_email_or_password_incorrect">Email or password incorrect</string>
-	<string name="no_internet_connection">No internet connection</string>
+	<string name="error_no_internet_connection">No internet connection</string>
 	<string name="retry">Retry</string>
 	
 	<!-- Subscription IDs -->
@@ -118,4 +118,5 @@
 	<string name="gold_subscription_logo">Gold subscription logo</string>
 	<string name="platinum_subscription_logo">Platinum subscription logo</string>
 	<string name="silver_subscription_logo">Silver subscription logo</string>
+	<string name="error_password_rules">Password does not meet the requirements.\nMust be at least 6 characters.\nMust contain one capital letter.\nMust contain one number.</string>
 </resources>

@@ -6,7 +6,11 @@
 	>
 	
 	<data>
-	
+		
+		<variable
+			name="viewModel"
+			type="com.aresid.happyapp.signup.form.email.EmailViewModel"
+			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +34,7 @@
 				android:id="@+id/email_field"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
+				android:text="@={viewModel.email}"
 				android:hint="@string/email_with_star"
 				android:imeActionId="4"
 				android:imeOptions="actionNext"
@@ -43,6 +48,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/next"
+			android:onClick="@{() -> viewModel.onNextButtonClicked()}"
 			app:layout_constraintEnd_toEndOf="@id/guideline_end"
 			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toBottomOf="@+id/email_field_layout"

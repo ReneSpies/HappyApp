@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentGoogleSignupBinding
 import com.aresid.happyapp.keys.Keys
@@ -51,10 +53,19 @@ class GoogleSignupFragment: Fragment() {
 		// Define the ViewModel object
 		googleSignupViewModel = ViewModelProvider(this).get(GoogleSignupViewModel::class.java)
 		
-		// TODO:  onCreateView: do code here
-		
-		// Listener for the Google button which simple starts the signup flow
-		binding.googleSignupButton.setOnClickListener { startSignupFlow() }
+		// Observe the firebaseUser LiveData and navigate to the SubscribeFragment, if not null
+		googleSignupViewModel.firebaseUser.observe(
+			viewLifecycleOwner,
+			Observer { firebaseUser ->
+				
+				// If the firebaseUser is not null, navigate to the SubscribeFragment
+				if (firebaseUser != null) {
+					
+					navigateToSubscribeFragment()
+					
+				}
+				
+			})
 		
 		// Configure GoogleSignInClient
 		configureGoogleSignInClient()
@@ -62,8 +73,19 @@ class GoogleSignupFragment: Fragment() {
 		// Tell the binding about the ViewModel
 		binding.viewModel = googleSignupViewModel
 		
+		// Listener for the Google button which simple starts the signup flow
+		binding.googleSignupButton.setOnClickListener { startSignupFlow() }
+		
 		// Return the inflated layout to create it
 		return binding.root
+		
+	}
+	
+	private fun navigateToSubscribeFragment() {
+		
+		Timber.d("navigateToSubscribeFragment: called")
+		
+		findNavController(this).navigate(GoogleSignupFragmentDirections.toSubscribeFragment())
 		
 	}
 	
