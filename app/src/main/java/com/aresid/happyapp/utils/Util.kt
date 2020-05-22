@@ -3,6 +3,11 @@ package com.aresid.happyapp.utils
 import android.app.Activity
 import android.content.Context
 import android.graphics.Paint
+import android.text.Selection
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -118,6 +123,51 @@ object Util {
 		}
 		
 		return false
+		
+	}
+	
+	fun TextView.makeLinks(vararg links: Pair<String, View.OnClickListener>) {
+		
+		Timber.d("makeLinks: called")
+		
+		val spannableString = SpannableString(text)
+		
+		for (link in links) {
+			
+			val clickableSpan = object: ClickableSpan() {
+				
+				override fun onClick(widget: View) {
+					
+					Selection.setSelection(
+						(widget as TextView).text as Spannable,
+						0
+					)
+					
+					widget.invalidate()
+					
+					link.second.onClick(widget)
+					
+				}
+				
+			}
+			
+			val startIndexOfLink = text.toString().indexOf(link.first)
+			
+			spannableString.setSpan(
+				clickableSpan,
+				startIndexOfLink,
+				startIndexOfLink + link.first.length,
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+			)
+			
+		}
+		
+		movementMethod = LinkMovementMethod.getInstance()
+		
+		setText(
+			spannableString,
+			TextView.BufferType.SPANNABLE
+		)
 		
 	}
 	

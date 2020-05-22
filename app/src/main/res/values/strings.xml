@@ -119,4 +119,7 @@
 	<string name="platinum_subscription_logo">Platinum subscription logo</string>
 	<string name="silver_subscription_logo">Silver subscription logo</string>
 	<string name="error_password_rules">Password does not meet the requirements.\nMust be at least 6 characters.\nMust contain one capital letter.\nMust contain one number.</string>
+	<string name="legalities_info">Note: By clicking %1s, you accept our %2s and %3s.</string>
+	<string name="privacy_policy">Privacy Policy</string>
+	<string name="terms_and_conditions">Terms and Conditions</string>
 </resources>

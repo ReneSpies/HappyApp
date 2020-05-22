@@ -6,7 +6,11 @@
 	>
 	
 	<data>
-	
+		
+		<variable
+			name="viewModel"
+			type="com.aresid.happyapp.signup.form.dateofbirth.DateOfBirthViewModel"
+			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -15,37 +19,42 @@
 		tools:context=".signup.form.dateofbirth.DateOfBirthFragment"
 		>
 		
-		<com.google.android.material.textfield.TextInputLayout
-			android:id="@+id/date_of_birth_field_layout"
-			style="@style/Widget.HappyApp.TextInputLayout"
-			android:layout_width="match_parent"
+		<DatePicker
+			android:id="@+id/date_picker"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			app:errorEnabled="true"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			>
-			
-			<com.google.android.material.textfield.TextInputEditText
-				android:id="@+id/date_of_birth_field"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:hint="@string/date_of_birth_with_star"
-				android:imeActionId="6"
-				android:imeOptions="actionDone"
-				android:inputType="date"
-				/>
-		</com.google.android.material.textfield.TextInputLayout>
+			android:calendarViewShown="false"
+			android:datePickerMode="spinner"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toTopOf="@id/guideline_top"
+			/>
+		
+		<TextView
+			android:id="@+id/legalities_info_text"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="@string/legalities_info"
+			android:textAlignment="center"
+			android:textSize="16sp"
+			app:layout_constraintBottom_toTopOf="@id/subscribe_button"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toBottomOf="@id/date_picker"
+			/>
 		
 		<com.google.android.material.button.MaterialButton
-			android:id="@+id/next_button"
+			android:id="@+id/subscribe_button"
 			style="@style/Widget.HappyApp.ContainedButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin_medium"
+			android:onClick="@{(view) -> viewModel.onSubscribeButtonClicked(view)}"
 			android:text="@string/subscribe"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@id/date_of_birth_field_layout"
+			app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toBottomOf="@id/legalities_info_text"
 			/>
 		
 		<androidx.constraintlayout.widget.Guideline

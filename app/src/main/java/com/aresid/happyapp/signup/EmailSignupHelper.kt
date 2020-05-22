@@ -71,7 +71,7 @@ class EmailSignupHelper internal constructor(
 		mUsernameField = parent.findViewById(R.id.username_field)
 		mEmailField = parent.findViewById(R.id.email_field)
 		mPasswordField = parent.findViewById(R.id.password_field)
-		mDateOfBirthField = parent.findViewById(R.id.date_of_birth_field)
+		//		mDateOfBirthField = parent.findViewById(R.id.date_of_birth_field)
 	}
 	
 	/**
@@ -86,7 +86,7 @@ class EmailSignupHelper internal constructor(
 		mUsernameFieldLayout = parent.findViewById(R.id.username_field_layout)
 		mEmailFieldLayout = parent.findViewById(R.id.email_field_layout)
 		mPasswordFieldLayout = parent.findViewById(R.id.password_field_layout)
-		mDateOfBirthFieldLayout = parent.findViewById(R.id.date_of_birth_field_layout)
+		//		mDateOfBirthFieldLayout = parent.findViewById(R.id.date_of_birth_field_layout)
 	} // Define the field text strings
 	
 	// Define the Bundle which will carry the information
