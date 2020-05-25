@@ -20,6 +20,7 @@ class HappyApplication: Application() {
 		
 		super.onCreate()
 		
+		// Initialize Timber for logging
 		Timber.plant(Timber.DebugTree())
 		
 	}

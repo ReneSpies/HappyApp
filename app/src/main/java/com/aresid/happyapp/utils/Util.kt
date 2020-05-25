@@ -1,14 +1,12 @@
 package com.aresid.happyapp.utils
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.Paint
 import android.text.Selection
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -16,6 +14,7 @@ import androidx.core.content.ContextCompat
 import com.aresid.happyapp.R
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
+import java.util.*
 
 /**
  * Created on: 18/04/2020
@@ -34,10 +33,8 @@ object Util {
 	 * @return Empty String or Object#toString().
 	 */
 	fun getString(objectToTransform: Any?): String {
-		Log.d(
-			TAG,
-			"getString: called"
-		)
+		
+		Timber.d("getString: called")
 		
 		// If the object is null, return empty String, else do .toString()
 		return objectToTransform?.toString() ?: ""
@@ -48,22 +45,21 @@ object Util {
 	 *
 	 * @param snackbarView The view to find a parent from.
 	 * @param errorMessage The text to show. Can be formatted text.
-	 * @param context      The Context to use ContextCompat#getColor.
 	 */
 	fun showErrorSnackbar(
-		snackbarView: View?,
-		errorMessage: String?,
-		context: Context?
+		snackbarView: View,
+		errorMessage: String
 	) {
+		
 		Timber.d("showErrorSnackbar: called")
 		
 		Snackbar.make(
-			snackbarView!!,
-			errorMessage!!,
+			snackbarView,
+			errorMessage,
 			Snackbar.LENGTH_LONG
 		).setBackgroundTint(
 			ContextCompat.getColor(
-				context!!,
+				snackbarView.context,
 				R.color.design_default_color_error
 			)
 		).show()
@@ -172,6 +168,21 @@ object Util {
 	}
 	
 	/**
+	 * Calendar extension function to calculate
+	 * whether the Date in the Calendar is past
+	 * 18 years from the time in milliseconds [now].
+	 */
+	fun Calendar.isOlderThan18(now: Long): Boolean {
+		
+		Timber.d("isOlderThan18: called")
+		
+		val eighteenYearsMillis = 568_025_136_000 / 1
+		
+		return (now - timeInMillis) >= eighteenYearsMillis
+		
+	}
+	
+	/**
 	 * Shows a standard Snackbar with the length long and accent color background.
 	 *
 	 * @param snackbarView The view to find a parent from.
@@ -179,19 +190,18 @@ object Util {
 	 * @param context      The Context to use ContextCompat#getColor.
 	 */
 	fun showSnackbar(
-		snackbarView: View?,
-		message: String?,
-		context: Context?
+		snackbarView: View,
+		message: String
 	) {
 		Timber.d("showSnackbar: called")
 		
 		Snackbar.make(
-			snackbarView!!,
-			message!!,
+			snackbarView,
+			message,
 			Snackbar.LENGTH_LONG
 		).setBackgroundTint(
 			ContextCompat.getColor(
-				context!!,
+				snackbarView.context,
 				android.R.color.black
 			)
 		).show()
@@ -212,14 +222,13 @@ object Util {
 	 * Uses the InputMethodManager to hide the soft keyboard.
 	 */
 	fun hideKeyboard(
-		context: Context,
 		view: View
 	) {
 		
 		Timber.d("hideKeyboard: called")
 		
 		// Define an InputMethodManager object from the context
-		val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+		val inputMethodManager = view.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
 		
 		// Hide the soft keyboard using InputMethodManager
 		inputMethodManager.hideSoftInputFromWindow(

@@ -1198,8 +1198,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 			// Retrieve the creation date from the internet
 			// It calls the callback addTimeToFirestoreEntry
 			RetrieveInternetTime(
-				this,
-				user.uid
 			).execute(getString(R.string.google_time_server_url))
 			// Acknowledge the purchase if it hasn't already been acknowledged
 			if (!purchase!!.isAcknowledged) {

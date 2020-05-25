@@ -53,16 +53,12 @@ class ForgotLoginFragment: Fragment() {
 			                                                    if (isSent) {
 				
 				                                                    // Hide the soft keyboard
-				                                                    Util.hideKeyboard(
-					                                                    requireContext(),
-					                                                    binding.sendButton
-				                                                    )
+				                                                    Util.hideKeyboard(binding.sendButton)
 				
 				                                                    // Show the success Snackbar
 				                                                    Util.showSnackbar(
 					                                                    binding.emailField,
-					                                                    getString(R.string.email_sent),
-					                                                    requireContext()
+					                                                    getString(R.string.email_sent)
 				                                                    )
 				
 				                                                    // Reset the passwordResetEmailSent LiveData

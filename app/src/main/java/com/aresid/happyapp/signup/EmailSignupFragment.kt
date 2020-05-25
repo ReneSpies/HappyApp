@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import com.aresid.happyapp.R
-import com.aresid.happyapp.signup.EmailSignupHelper.SignupCheckerListener
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import com.aresid.happyapp.databinding.FragmentEmailSignupBinding
 import timber.log.Timber
 
 /**
@@ -17,66 +17,60 @@ import timber.log.Timber
  * Author: René Spies
  * Copyright: © 2020 ARES ID
  */
-class EmailSignupFragment: Fragment(), SignupCheckerListener {
+class EmailSignupFragment: Fragment() {
 	
-	private var mNavController: NavController? = null
-	private var mEmailSignupHelper: EmailSignupHelper? = null
+	// Binding for the layout
+	private lateinit var binding: FragmentEmailSignupBinding
+	
+	// Corresponding ViewModel
+	private val emailSignupViewModel: EmailSignupViewModel by activityViewModels()
+	
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View? {
+		
 		Timber.d("onCreateView: called")
 		
-		// Inflate the layout
-		return inflater.inflate(
-			R.layout.fragment_email_signup,
+		// Define the binding and inflate the layout
+		binding = FragmentEmailSignupBinding.inflate(
+			inflater,
 			container,
 			false
 		)
+		
+		// Observe the navigateToSubscribeFragment LiveData and navigate, if true
+		emailSignupViewModel.navigateToSubscribeFragment.observe(
+			viewLifecycleOwner,
+			Observer { navigate ->
+				
+				Timber.d("navigate = $navigate")
+				
+				// If navigate, navigate and reset the LiveData
+				if (navigate) {
+					
+					// Navigate
+					navigateToSubscribeFragment()
+					
+					// Reset the LiveData
+					emailSignupViewModel.navigated()
+					
+				}
+				
+			})
+		
+		// Return the inflated layout
+		return binding.root
+		
 	}
 	
-	override fun onViewCreated(
-		view: View,
-		savedInstanceState: Bundle?
-	) {
-		Timber.d("onViewCreated: called")
-		super.onViewCreated(
-			view,
-			savedInstanceState
-		)
+	private fun navigateToSubscribeFragment() {
 		
-		/* Use this class to reference the views */
+		Timber.d("navigateToSubscribeFragment: called")
 		
-		// Define NavController
-		mNavController = Navigation.findNavController(view)
+		// Navigate to the SubscribeFragment
+		findNavController(this).navigate(EmailSignupFragmentDirections.toSubscribeFragment())
 		
-		// Define the EmailSignupHelper
-		mEmailSignupHelper = EmailSignupHelper(
-			this,
-			view
-		)
-	}
-	
-	/**
-	 * Is called when everything is ok with the signup forms input.
-	 */
-	override fun inputIsOk() {
-		Timber.d("inputIsOk: called")
-		
-		// Get signup forms input as bundle and pass it to the subscribe fragment
-		
-		// Define the Bundle
-		val arguments = mEmailSignupHelper?.inputBundle
-		
-		// Navigate to the subscription fragment and pass the bundle
-		mNavController!!.navigate(
-			EmailSignupFragmentDirections.toSubscribeFragment()
-		)
-	}
-	
-	init {
-		Timber.d("EmailSignupFragment: called")
-		// Required public empty constructor
 	}
 }

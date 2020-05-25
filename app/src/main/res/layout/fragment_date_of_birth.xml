@@ -28,6 +28,9 @@
 			app:layout_constraintEnd_toEndOf="@id/guideline_end"
 			app:layout_constraintStart_toStartOf="@id/guideline_start"
 			app:layout_constraintTop_toTopOf="@id/guideline_top"
+			android:day="@={viewModel.day}"
+			android:month="@={viewModel.month}"
+			android:year="@={viewModel.year}"
 			/>
 		
 		<TextView

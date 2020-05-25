@@ -79,20 +79,22 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			
 			                                    Timber.d("firebaseUser = $firebaseUser")
 			
-			                                    // Check if the User is not null and log the user in
-			                                    if (firebaseUser != null) {
+			                                    // Reload the firebaseUser
+			                                    firebaseUser.reload().addOnSuccessListener {
 				
-				                                    // Hide the soft keyboard
-				                                    Util.hideKeyboard(
-					                                    requireContext(),
-					                                    binding.loginButton
-				                                    )
-				
-				                                    // Navigate to MainFragment
-				                                    navigateToMainFragment()
+				                                    // Check if the User is not null and log the user in
+				                                    if (firebaseUser != null) {
+					
+					                                    // Hide the soft keyboard
+					                                    Util.hideKeyboard(binding.loginButton)
+					
+					                                    // Navigate to MainFragment
+					                                    navigateToMainFragment()
+					
+				                                    }
 				
 			                                    }
-			
+			                                    
 		                                    })
 		
 		// Observe the LiveData for the FirebaseAuthInvalidUserException and show the appropriate error

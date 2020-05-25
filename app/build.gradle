@@ -37,6 +37,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -60,7 +63,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment:$navigation_version"
     implementation "androidx.navigation:navigation-ui:$navigation_version"
 
-    // Commons-net used to get the online time from the Google server todo: needed?
+    // Commons-net used to get the online time from the Google server
     implementation "commons-net:commons-net:$commons_net_version"
 
     // Coordinator layout
@@ -71,7 +74,7 @@ dependencies {
 
     // Firebase
     implementation 'com.google.firebase:firebase-auth:19.3.1'
-    implementation 'com.google.firebase:firebase-core:17.4.1'
+    implementation 'com.google.firebase:firebase-core:17.4.2'
     implementation 'com.google.firebase:firebase-firestore:21.4.3'
 
     // Material Design
@@ -106,11 +109,13 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutines"
 
+    // Fragment KTX
+    implementation 'androidx.fragment:fragment-ktx:1.2.4'
 
     testImplementation 'junit:junit:4.13'
 
-    androidTestImplementation 'androidx.test:runner:1.3.0-beta01'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-beta01'
+    androidTestImplementation 'androidx.test:runner:1.3.0-beta02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-beta02'
 
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     kapt "android.arch.persistence.room:compiler:1.1.1"
