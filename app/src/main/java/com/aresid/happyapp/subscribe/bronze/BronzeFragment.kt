@@ -1,15 +1,19 @@
 package com.aresid.happyapp.subscribe.bronze
 
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.billing.billingrepository.localdatabase.AugmentedSkuDetails
 import com.aresid.happyapp.databinding.FragmentBronzeBinding
+import com.aresid.happyapp.subscribe.SubscribeViewModel
+import com.aresid.happyapp.utils.Util.disableLoading
+import com.aresid.happyapp.utils.Util.enableLoading
 import com.aresid.happyapp.utils.Util.underline
 import timber.log.Timber
 
@@ -27,6 +31,9 @@ class BronzeFragment: Fragment() {
 	
 	// Corresponding ViewModel
 	private lateinit var bronzeViewModel: BronzeViewModel
+	
+	// SubscribeViewModel
+	private val subscribeViewModel: SubscribeViewModel by activityViewModels()
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -52,22 +59,70 @@ class BronzeFragment: Fragment() {
 		// Tell the binding about the Activity
 		binding.activity = requireActivity()
 		
-		// Observe the subscriptionSkuDetailsListLiveData
-		bronzeViewModel.subscriptionSkuDetailsListLiveData.observe(
-			viewLifecycleOwner,
-			Observer { list ->
+		// Observe the toggleLoadingScreen LiveData
+		bronzeViewModel.toggleLoadingScreen.observe(viewLifecycleOwner,
+		                                            Observer { status ->
+			
+			                                            when (status) {
 				
-				if (list.isNotEmpty()) {
-					
-					// Take the SkuDetails and populate the View with its information
-					populateBronzeContent(bronzeViewModel.getSubscriptionSkuDetails()!!)
-					
-					// Show the bronzeContent in the layout
-					showBronzeContent()
-					
-				}
+				                                            LoadingStatus.INIT -> {
+				                                            }
 				
-			})
+				                                            LoadingStatus.IDLE -> {
+					
+					                                            populateBronzeContent(bronzeViewModel.getSubscriptionSkuDetails()!!)
+					
+					                                            showContent()
+					
+				                                            }
+				
+				                                            LoadingStatus.LOADING -> showLoadingSpinner()
+				
+				                                            LoadingStatus.SUCCESS -> {
+					
+					                                            subscribeViewModel.navigateToMainFragment.value = true
+					
+				                                            }
+				
+				                                            LoadingStatus.ERROR_USER_DELETED -> {
+				                                            }
+				
+				                                            LoadingStatus.ERROR_NO_INTERNET -> {
+				                                            }
+				
+				                                            LoadingStatus.ERROR_NOT_SUBSCRIBED -> {
+				                                            }
+				
+				                                            LoadingStatus.ERROR_CARD_DECLINED -> {
+					
+					                                            // Google already shows an error saying the card has been declined
+					
+					                                            // Show the content again
+					                                            showContent()
+					
+				                                            }
+				
+			                                            }
+			
+		                                            })
+		
+		// Observe the subscriptionSkuDetailsList LiveData
+		bronzeViewModel.subscriptionSkuDetailsList.observe(viewLifecycleOwner,
+		                                                   Observer { list ->
+			
+			                                                   if (list.isNotEmpty()) {
+				
+				                                                   Timber.d("list is not empty")
+				
+				                                                   // Take the SkuDetails and populate the View with its information
+				                                                   populateBronzeContent(bronzeViewModel.getSubscriptionSkuDetails()!!)
+				
+				                                                   // Show the bronzeContent in the layout
+				                                                   showContent()
+				
+			                                                   }
+			
+		                                                   })
 		
 		// Return the inflated layout
 		return binding.root
@@ -84,7 +139,7 @@ class BronzeFragment: Fragment() {
 		if (binding.loadingSpinner.visibility == View.VISIBLE) {
 			
 			// Start loading animation again
-			startLoadingAnimation()
+			binding.loadingSpinner.enableLoading()
 			
 		}
 		
@@ -97,29 +152,7 @@ class BronzeFragment: Fragment() {
 		super.onStop()
 		
 		// Stop the loading animation
-		stopLoadingAnimation()
-		
-	}
-	
-	/**
-	 * Starts the loading animation on the ImageView's drawable.
-	 */
-	private fun startLoadingAnimation() {
-		
-		Timber.d("startLoadingAnimation: called")
-		
-		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).start()
-		
-	}
-	
-	/**
-	 * Stops the loading animation on the ImageView's drawable.
-	 */
-	private fun stopLoadingAnimation() {
-		
-		Timber.d("stopLoadingAnimation: called")
-		
-		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).stop()
+		binding.loadingSpinner.disableLoading()
 		
 	}
 	
@@ -149,12 +182,15 @@ class BronzeFragment: Fragment() {
 	 * disables the loadingSpinner and errorFragment
 	 * visibility.
 	 */
-	private fun showBronzeContent() {
+	private fun showContent() {
 		
 		Timber.d("showBronzeContent: called")
 		
 		// Disable the loadingSpinner visibility
 		binding.loadingSpinner.visibility = View.GONE
+		
+		// Stop the loading animation
+		binding.loadingSpinner.disableLoading()
 		
 		// Enable the bronzeContent visibility
 		binding.bronzeContent.visibility = View.VISIBLE
@@ -173,25 +209,11 @@ class BronzeFragment: Fragment() {
 		// Disable the bronzeContent visibility
 		binding.bronzeContent.visibility = View.GONE
 		
+		// Start the loading animation
+		binding.loadingSpinner.enableLoading()
+		
 		// Enable the loadingSpinner visibility
 		binding.loadingSpinner.visibility = View.VISIBLE
-		
-	}
-	
-	/**
-	 * Enables the errorFragment visibility and
-	 * disables the loadingSpinner and bronzeContent
-	 * visibility.
-	 */
-	private fun showErrorFragment() {
-		
-		Timber.d("showErrorFragment: called")
-		
-		// Disable the loadingSpinner visibility
-		binding.loadingSpinner.visibility = View.GONE
-		
-		// Disable the bronzeContent visibility
-		binding.bronzeContent.visibility = View.GONE
 		
 	}
 	

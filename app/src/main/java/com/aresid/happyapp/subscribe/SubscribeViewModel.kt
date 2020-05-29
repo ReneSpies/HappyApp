@@ -1,5 +1,6 @@
 package com.aresid.happyapp.subscribe
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import timber.log.Timber
 
@@ -12,9 +13,26 @@ import timber.log.Timber
 
 class SubscribeViewModel: ViewModel() {
 	
+	// LiveData to navigate to the MainFragment
+	val navigateToMainFragment = MutableLiveData<Boolean>()
+	
 	init {
 		
 		Timber.d("init: called")
+		
+		// Init navigateToMainFragment LiveData
+		navigateToMainFragment.value = false
+		
+	}
+	
+	/**
+	 * Resets the [navigateToMainFragment] LiveData.
+	 */
+	fun navigated() {
+		
+		Timber.d("navigated: called")
+		
+		navigateToMainFragment.value = false
 		
 	}
 	

@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentSubscribeBinding
 import com.aresid.happyapp.subscribe.viewpager2.SubscriptionStateAdapter
@@ -25,7 +27,7 @@ class SubscribeFragment: Fragment() {
 	private lateinit var binding: FragmentSubscribeBinding
 	
 	// ViewModel
-	private lateinit var subscribeFragmentViewModel: SubscribeViewModel
+	private val subscribeFragmentViewModel: SubscribeViewModel by activityViewModels()
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -42,14 +44,38 @@ class SubscribeFragment: Fragment() {
 			false
 		)
 		
-		// Define the ViewModel
-		subscribeFragmentViewModel = ViewModelProvider(this).get(SubscribeViewModel::class.java)
-		
 		// Init ViewPager2 and it's TabLayout
 		initViewPager2AndTabLayout()
 		
+		// Observe the navigateToMainFragment LiveData
+		subscribeFragmentViewModel.navigateToMainFragment.observe(
+			viewLifecycleOwner,
+			Observer { navigate ->
+				
+				// If navigate, navigate
+				if (navigate) {
+					
+					// Navigate
+					navigateToMainFragment()
+					
+					// Reset the LiveData
+					subscribeFragmentViewModel.navigated()
+					
+				}
+				
+			})
+		
 		// Return the inflated layout
 		return binding.root
+		
+	}
+	
+	private fun navigateToMainFragment() {
+		
+		Timber.d("navigateToMainFragment: called")
+		
+		// Navigate to MainFragment
+		findNavController(this).navigate(SubscribeFragmentDirections.toMainFragment())
 		
 	}
 	

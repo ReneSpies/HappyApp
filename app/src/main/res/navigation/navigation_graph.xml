@@ -87,7 +87,16 @@
 		android:name="com.aresid.happyapp.subscribe.SubscribeFragment"
 		android:label="SubscribeFragment"
 		tools:layout="@layout/fragment_subscribe"
-		/>
+		>
+		<action
+			android:id="@+id/to_mainFragment"
+			app:destination="@id/mainFragment"
+			app:enterAnim="@anim/slide_in_from_right"
+			app:exitAnim="@anim/slide_out_to_left"
+			app:popEnterAnim="@anim/slide_in_from_left"
+			app:popExitAnim="@anim/slide_out_to_right"
+			/>
+	</fragment>
 	<fragment
 		android:id="@+id/forgotLoginFragment"
 		android:name="com.aresid.happyapp.login.ForgotLoginFragment"

@@ -4,9 +4,16 @@ import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.billing.billingrepository.BillingRepository
 import com.aresid.happyapp.billing.billingrepository.localdatabase.AugmentedSkuDetails
+import com.aresid.happyapp.exceptions.CardDeclinedException
 import com.aresid.happyapp.keys.Keys
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 /**
@@ -24,6 +31,14 @@ class GoldViewModel(application: Application): AndroidViewModel(application) {
 	// BillingRepository
 	private val billingRepository: BillingRepository
 	
+	// IO CoroutineScope
+	private val mIOScope = CoroutineScope(Dispatchers.IO)
+	
+	// LiveData to toggle the loading screen
+	private val _toggleLoadingScreen = MutableLiveData<LoadingStatus>()
+	val toggleLoadingScreen: LiveData<LoadingStatus>
+		get() = _toggleLoadingScreen
+	
 	init {
 		
 		Timber.d("init: called")
@@ -39,7 +54,25 @@ class GoldViewModel(application: Application): AndroidViewModel(application) {
 		*/
 		
 		// Define the SkuDetails LiveData
-		subscriptionSkuDetailsListLiveData = billingRepository.subscriptionSkuDetailsListLiveData
+		subscriptionSkuDetailsListLiveData = billingRepository.subscriptionSkuDetailsList
+		
+		// Init toggleLoadingScreen LiveData
+		_toggleLoadingScreen.value = LoadingStatus.INIT
+		
+	}
+	
+	/**
+	 * Sets the toggleLoadingScreen LiveData's inside the Main context.
+	 */
+	private suspend fun setToggleLoadingScreenValue(status: LoadingStatus) {
+		
+		Timber.d("setToggleLoadingScreenValue: called")
+		
+		withContext(Dispatchers.Main) {
+			
+			_toggleLoadingScreen.value = status
+			
+		}
 		
 	}
 	
@@ -71,10 +104,38 @@ class GoldViewModel(application: Application): AndroidViewModel(application) {
 		
 		Timber.d("onCheckoutButtonClicked: called")
 		
-		billingRepository.launchBillingFlow(
-			activity,
-			getSubscriptionSkuDetails()!!
-		)
+		mIOScope.launch {
+			
+			try {
+				
+				setToggleLoadingScreenValue(LoadingStatus.LOADING)
+				
+				// Wrap this call inside the withContext to wait for its value
+				withContext(coroutineContext) {
+					
+					billingRepository.launchBillingFlow(
+						activity,
+						getSubscriptionSkuDetails()!!
+					)
+					
+				}
+				
+				setToggleLoadingScreenValue(LoadingStatus.SUCCESS)
+				
+			}
+			catch (e: Exception) {
+				
+				Timber.e(e)
+				
+				when (e) {
+					
+					is CardDeclinedException -> setToggleLoadingScreenValue(LoadingStatus.ERROR_CARD_DECLINED)
+					
+				}
+				
+			}
+			
+		}
 		
 	}
 	

@@ -17,60 +17,82 @@
 		android:layout_height="match_parent"
 		>
 		
-		<TextView
+		<ImageView
+			android:id="@+id/loading_spinner"
+			android:layout_width="96dp"
+			android:layout_height="96dp"
+			android:contentDescription="@string/loading"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			/>
+		
+		<androidx.constraintlayout.widget.ConstraintLayout
+			android:id="@+id/content"
 			android:layout_width="0dp"
-			android:layout_height="wrap_content"
-			android:text="@string/sign_up_with_google_and_subscribe_to_happyapp"
-			android:textAlignment="center"
-			android:textAppearance="?attr/textAppearanceHeadline5"
-			app:layout_constraintEnd_toEndOf="@id/guideline_end"
-			app:layout_constraintStart_toStartOf="@id/guideline_start"
-			app:layout_constraintTop_toTopOf="@id/guideline_top"
-			/>
-		
-		<androidx.appcompat.widget.AppCompatImageButton
-			android:id="@+id/google_signup_button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:background="@drawable/round_button_background"
-			android:src="@drawable/ic_google_favicon_24dp"
-			app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-			app:layout_constraintEnd_toEndOf="@id/guideline_end"
-			app:layout_constraintStart_toStartOf="@id/guideline_start"
-			app:layout_constraintTop_toTopOf="@id/guideline_top"
-			/>
-		
-		<androidx.constraintlayout.widget.Guideline
-			android:id="@+id/guideline_top"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			app:layout_constraintGuide_begin="@dimen/margin_small"
-			/>
-		
-		<androidx.constraintlayout.widget.Guideline
-			android:id="@+id/guideline_end"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			app:layout_constraintGuide_end="@dimen/margin_medium"
-			/>
-		
-		<androidx.constraintlayout.widget.Guideline
-			android:id="@+id/guideline_bottom"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="horizontal"
-			app:layout_constraintGuide_end="@dimen/margin_small"
-			/>
-		
-		<androidx.constraintlayout.widget.Guideline
-			android:id="@+id/guideline_start"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:orientation="vertical"
-			app:layout_constraintGuide_begin="@dimen/margin_medium"
-			/>
-	
+			android:layout_height="0dp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			>
+			
+			<TextView
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:text="@string/sign_up_with_google_and_subscribe_to_happyapp"
+				android:textAlignment="center"
+				android:textAppearance="?attr/textAppearanceHeadline5"
+				app:layout_constraintEnd_toEndOf="@id/guideline_end"
+				app:layout_constraintStart_toStartOf="@id/guideline_start"
+				app:layout_constraintTop_toTopOf="@id/guideline_top"
+				/>
+			
+			<androidx.appcompat.widget.AppCompatImageButton
+				android:id="@+id/google_signup_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:background="@drawable/round_button_background"
+				android:src="@drawable/ic_google_favicon_24dp"
+				app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+				app:layout_constraintEnd_toEndOf="@id/guideline_end"
+				app:layout_constraintStart_toStartOf="@id/guideline_start"
+				app:layout_constraintTop_toTopOf="@id/guideline_top"
+				/>
+			
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/guideline_top"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				app:layout_constraintGuide_begin="@dimen/margin_small"
+				/>
+			
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/guideline_end"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:orientation="vertical"
+				app:layout_constraintGuide_end="@dimen/margin_medium"
+				/>
+			
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/guideline_bottom"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				app:layout_constraintGuide_end="@dimen/margin_small"
+				/>
+			
+			<androidx.constraintlayout.widget.Guideline
+				android:id="@+id/guideline_start"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:orientation="vertical"
+				app:layout_constraintGuide_begin="@dimen/margin_medium"
+				/>
+		</androidx.constraintlayout.widget.ConstraintLayout>
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

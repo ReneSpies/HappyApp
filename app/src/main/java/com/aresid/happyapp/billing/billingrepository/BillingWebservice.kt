@@ -1,7 +1,16 @@
 package com.aresid.happyapp.billing.billingrepository
 
 import com.android.billingclient.api.Purchase
+import com.aresid.happyapp.keys.Keys
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import timber.log.Timber
+import kotlin.coroutines.coroutineContext
 
 /**
  *    Created on: 18.05.20
@@ -18,47 +27,77 @@ class BillingWebservice {
 	/**
 	 * Get purchases from the server.
 	 */
-	fun getPurchases(): Any {
+	suspend fun getPurchases(uid: String): DocumentSnapshot {
 		
 		Timber.d("getPurchases: called")
 		
-		return Any() //TODO("not implemented")
+		return withContext(coroutineContext) {
+			
+			Firebase.firestore.collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).document(uid).get().await()
+			
+		}
+		
+	}
+	
+	private suspend fun savePurchaseInFirestore(
+		uid: String,
+		purchase: Purchase
+	) {
+		
+		Timber.d("savePurchaseInFirestore: called")
+		
+		// Create a map for the purchase to save it to the firestore
+		val purchaseMap = withContext(
+			Dispatchers.Main
+		) {
+			
+			mapOf(
+				Keys.FirestoreFieldKeys.KEY_COLUMN_SUBSCRIPTION_VARIANT to purchase
+			)
+			
+		}
+		
+		// Save the subscription to the Firestore referencing the users uid
+		Firebase.firestore.collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).document(uid).set(
+			purchaseMap,
+			SetOptions.merge()
+		).await()
 		
 	}
 	
 	/**
 	 * Update the server with a new Purchase.
 	 */
-	fun updateServer(purchases: Set<Purchase>) {
+	suspend fun updateServer(
+		uid: String,
+		purchases: Set<Purchase>
+	) {
 		
 		Timber.d("updateServer: called")
 		
-		//TODO("not implemented")
-		
-	}
-	
-	fun onConsumeResponse(
-		purchaseToken: String?,
-		responseCode: Int
-	) {
-		
-		Timber.d("onConsumeResponse: called")
-		
-		//TODO("not implemented")
+		purchases.forEach { purchase ->
+			
+			savePurchaseInFirestore(
+				uid,
+				purchase
+			)
+			
+		}
 		
 	}
 	
 	companion object {
 		
+		private var INSTANCE: BillingWebservice? = null
+		
 		/**
 		 * Creates a new BillingWebservice object.
 		 */
-		fun create(): BillingWebservice {
+		fun getInstance(): BillingWebservice = INSTANCE ?: synchronized(this) {
 			
-			Timber.d("create: called")
+			Timber.d("getInstance: called")
 			
-			//TODO("not implemented")
-			return BillingWebservice()
+			INSTANCE ?: BillingWebservice().also { INSTANCE = it }
 			
 		}
 	}

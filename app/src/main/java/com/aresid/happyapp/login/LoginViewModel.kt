@@ -5,12 +5,16 @@ import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.aresid.happyapp.LoadingStatus
+import com.aresid.happyapp.billing.billingrepository.BillingWebservice
+import com.aresid.happyapp.keys.Keys
 import com.aresid.happyapp.utils.ButtonUtil
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 /**
@@ -35,12 +39,6 @@ class LoginViewModel: ViewModel() {
 	val emailOrPasswordIsEmpty: LiveData<Boolean>
 		get() = _emailOrPasswordIsEmpty
 	
-	// LiveData for the FirebaseUser object
-	// Used to navigate to the MainFragment in the LoginFragment if the user is not null
-	private val _firebaseUser = MutableLiveData<FirebaseUser>()
-	val firebaseUser: LiveData<FirebaseUser>
-		get() = _firebaseUser
-	
 	// LiveData for the FirebaseAuthInvalidUserException, meaning the is not recognized
 	private val _firebaseAuthInvalidUserException = MutableLiveData<Boolean>()
 	val firebaseAuthInvalidUserException: LiveData<Boolean>
@@ -55,6 +53,11 @@ class LoginViewModel: ViewModel() {
 	private val _firebaseNetworkException = MutableLiveData<Boolean>()
 	val firebaseNetworkException: LiveData<Boolean>
 		get() = _firebaseNetworkException
+	
+	// LiveData to toggle the loading screen in the LoginFragment
+	private val _toggleLoadingScreen = MutableLiveData<LoadingStatus>()
+	val toggleLoadingScreen: LiveData<LoadingStatus>
+		get() = _toggleLoadingScreen
 	
 	// FirebaseAuth object initiated in init
 	private var mFirebaseAuth: FirebaseAuth
@@ -75,9 +78,6 @@ class LoginViewModel: ViewModel() {
 		// Init the FirebaseAuth object
 		mFirebaseAuth = FirebaseAuth.getInstance()
 		
-		// Init the FirebaseUser LiveData
-		_firebaseUser.value = mFirebaseAuth.currentUser
-		
 		// Init the FirebaseAuthInvalidUserException LiveData
 		_firebaseAuthInvalidUserException.value = false
 		
@@ -86,6 +86,94 @@ class LoginViewModel: ViewModel() {
 		
 		// Init the FirebaseNetworkException LiveData
 		_firebaseNetworkException.value = false
+		
+		// toggleLoadingScreen LiveData
+		_toggleLoadingScreen.value = LoadingStatus.IDLE
+		
+		// Verify the FirebaseUser
+		verifyFirebaseUser()
+		
+	}
+	
+	/**
+	 * Checks if the FirebaseUser is not null and if so,
+	 * reloads the user, checks for errors and sets the
+	 * appropriate value to [_toggleLoadingScreen].
+	 */
+	private fun verifyFirebaseUser() {
+		
+		Timber.d("verifyFirebaseUser: called")
+		
+		val firebaseUser = mFirebaseAuth.currentUser
+		
+		// If firebaseUser not null, set the toggleLoadingScreen value to LOADING
+		// and reload the firebase user
+		if (firebaseUser != null) {
+			
+			_toggleLoadingScreen.value = LoadingStatus.LOADING
+			
+			CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
+				
+				try {
+					
+					// Reload the FirebaseUser to check if the account got deleted
+					firebaseUser.reload().await()
+					
+					// FirebaseUser reloading successful, now check the Firestore
+					val userDocument = BillingWebservice.getInstance().getPurchases(firebaseUser.uid)
+					
+					// FirebaseUser is ok, send him through
+					withContext(Dispatchers.Main) {
+						
+						// If the userDocument is from cache, show a no internet error
+						if (userDocument.metadata.isFromCache) {
+							
+							_toggleLoadingScreen.value = LoadingStatus.ERROR_NO_INTERNET
+							
+						}
+						
+						val subscription = userDocument.get(Keys.FirestoreFieldKeys.KEY_COLUMN_SUBSCRIPTION_VARIANT)
+						
+						// If the subscription is not null, send the user to MainFragment
+						if (subscription != null) {
+							
+							_toggleLoadingScreen.value = LoadingStatus.SUCCESS
+							
+						}
+						
+						// Else, send the user to SubscribeFragment
+						else {
+							
+							_toggleLoadingScreen.value = LoadingStatus.ERROR_NOT_SUBSCRIBED
+							
+						}
+						
+					}
+					
+				}
+				catch (e: Exception) {
+					
+					Timber.w("failure reloading firebase user")
+					
+					Timber.e(e)
+					
+					withContext(Dispatchers.Main) {
+						
+						when (e) {
+							
+							is FirebaseNetworkException -> _toggleLoadingScreen.value = LoadingStatus.ERROR_NO_INTERNET
+							
+							is FirebaseAuthInvalidUserException -> _toggleLoadingScreen.value = LoadingStatus.ERROR_USER_DELETED
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+		}
 		
 	}
 	
@@ -161,12 +249,11 @@ class LoginViewModel: ViewModel() {
 		mFirebaseAuth.signInWithEmailAndPassword(
 			email.value!!,
 			password.value!!
-		).addOnSuccessListener { authResult ->
+		).addOnSuccessListener {
 			
 			Timber.d("great success authenticating user with email and password")
 			
-			// Set the new FirebaseUser
-			_firebaseUser.value = authResult.user
+			verifyFirebaseUser()
 			
 			// Reset the buttons loading animation and enable it again
 			ButtonUtil.removeLoadingButtonAnimationWithEnable(
@@ -199,6 +286,18 @@ class LoginViewModel: ViewModel() {
 			}
 			
 		}
+		
+	}
+	
+	/**
+	 * Called from the [LoginFragment] to reset the LiveData.
+	 */
+	fun navigated() {
+		
+		Timber.d("navigatedToMainFragment: called")
+		
+		// Reset the LiveData
+		_toggleLoadingScreen.value = LoadingStatus.IDLE
 		
 	}
 	

@@ -10,9 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentGoogleSignupBinding
 import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.utils.Util.disableLoading
+import com.aresid.happyapp.utils.Util.enableLoading
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -54,14 +57,37 @@ class GoogleSignupFragment: Fragment() {
 		googleSignupViewModel = ViewModelProvider(this).get(GoogleSignupViewModel::class.java)
 		
 		// Observe the firebaseUser LiveData and navigate to the SubscribeFragment, if not null
-		googleSignupViewModel.firebaseUser.observe(
+		googleSignupViewModel.toggleLoadingScreen.observe(
 			viewLifecycleOwner,
-			Observer { firebaseUser ->
+			Observer { status ->
 				
-				// If the firebaseUser is not null, navigate to the SubscribeFragment
-				if (firebaseUser != null) {
+				when (status) {
 					
-					navigateToSubscribeFragment()
+					LoadingStatus.INIT -> {
+					}
+					
+					LoadingStatus.IDLE -> showContent()
+					
+					LoadingStatus.LOADING -> showLoading()
+					
+					LoadingStatus.SUCCESS -> {
+						
+						// Navigate
+						navigateToSubscribeFragment()
+						
+						// Reset the LiveData
+						googleSignupViewModel.navigated()
+						
+					}
+					
+					LoadingStatus.ERROR_USER_DELETED -> {
+					}
+					
+					LoadingStatus.ERROR_NO_INTERNET -> {
+					}
+					
+					LoadingStatus.ERROR_NOT_SUBSCRIBED -> {
+					}
 					
 				}
 				
@@ -78,6 +104,39 @@ class GoogleSignupFragment: Fragment() {
 		
 		// Return the inflated layout to create it
 		return binding.root
+		
+	}
+	
+	/**
+	 * Disables the loading screen, stops its animation and shows the content.
+	 */
+	private fun showContent() {
+		
+		Timber.d("showContent: called")
+		
+		// Disable the loadingSpinner
+		binding.loadingSpinner.visibility = View.INVISIBLE
+		
+		// Disable the loading animation
+		binding.loadingSpinner.disableLoading()
+		
+		// Enable the content
+		binding.content.visibility = View.VISIBLE
+		
+	}
+	
+	private fun showLoading() {
+		
+		Timber.d("showLoading: called")
+		
+		// Disable the content
+		binding.content.visibility = View.GONE
+		
+		// Enable the loading animation
+		binding.loadingSpinner.enableLoading()
+		
+		// Enable the loadingScreen
+		binding.loadingSpinner.visibility = View.VISIBLE
 		
 	}
 	
@@ -143,9 +202,6 @@ class GoogleSignupFragment: Fragment() {
 			resultCode,
 			data
 		)
-		
-		Timber.d("result code = $resultCode")
-		Timber.d("request code = $requestCode")
 		
 		// Result is OK and the Google Signup
 		if (requestCode == Keys.RequestCodes.REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {

@@ -51,7 +51,6 @@ class Keys {
 		
 		// Keys
 		// Collections
-		const val KEY_COLLECTION_SUBSCRIPTION = "subscription"
 		const val KEY_COLLECTION_USERS = "users"
 		
 		// Columns

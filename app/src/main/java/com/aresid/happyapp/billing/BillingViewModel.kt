@@ -6,10 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.aresid.happyapp.billing.billingrepository.BillingRepository
 import com.aresid.happyapp.billing.billingrepository.localdatabase.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import timber.log.Timber
 
 /**
@@ -36,6 +33,8 @@ class BillingViewModel(application: Application): AndroidViewModel(application) 
 	val platinumSubscriptionLiveData: LiveData<PlatinumSubscription>
 	val subscriptionsSkuDetailsListLiveData: LiveData<List<AugmentedSkuDetails>>
 	
+	private val mIOScope = CoroutineScope(Dispatchers.IO)
+	
 	private val viewModelScope = CoroutineScope(Job() + Dispatchers.Main)
 	private val repository: BillingRepository
 	
@@ -45,21 +44,49 @@ class BillingViewModel(application: Application): AndroidViewModel(application) 
 		
 		repository = BillingRepository.getInstance(application)
 		
-		repository.startDataSourceConnections()
+		mIOScope.launch {
+			
+			try {
+				
+				repository.startDataSourceConnections()
+				
+			}
+			catch (e: Exception) {
+				
+				Timber.e(e)
+				
+			}
+			
+		}
 		
-		bronzeSubscriptionLiveData = repository.bronzeSubscriptionLiveData
+		bronzeSubscriptionLiveData = repository.bronzeSubscription
 		silverSubscriptionLiveData = repository.silverSubscriptionLiveData
 		goldSubscriptionLiveData = repository.goldSubscriptionLiveData
 		platinumSubscriptionLiveData = repository.platinumSubscriptionLiveData
 		
-		subscriptionsSkuDetailsListLiveData = repository.subscriptionSkuDetailsListLiveData
+		subscriptionsSkuDetailsListLiveData = repository.subscriptionSkuDetailsList
 		
 	}
 	
 	/**
 	 * Force refresh.
 	 */
-	fun queryPurchases() = repository.queryPurchasesAsync()
+	fun queryPurchases() = mIOScope.launch {
+		
+		Timber.d("queryPurchases: called")
+		
+		try {
+			
+			repository.queryPurchasesAsync()
+			
+		}
+		catch (e: java.lang.Exception) {
+			
+			Timber.e(e)
+			
+		}
+		
+	}
 	
 	override fun onCleared() {
 		Timber.d("onCleared: called")
@@ -72,7 +99,7 @@ class BillingViewModel(application: Application): AndroidViewModel(application) 
 	fun makePurchase(
 		activity: Activity,
 		augmentedSkuDetails: AugmentedSkuDetails
-	) {
+	) = mIOScope.launch {
 		
 		Timber.d("makePurchase: called")
 		

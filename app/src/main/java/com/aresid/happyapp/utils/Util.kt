@@ -2,6 +2,7 @@ package com.aresid.happyapp.utils
 
 import android.app.Activity
 import android.graphics.Paint
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.text.Selection
 import android.text.Spannable
 import android.text.SpannableString
@@ -9,8 +10,10 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.android.billingclient.api.BillingClient
 import com.aresid.happyapp.R
 import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
@@ -187,7 +190,6 @@ object Util {
 	 *
 	 * @param snackbarView The view to find a parent from.
 	 * @param message      The text to show. Can be formatted text.
-	 * @param context      The Context to use ContextCompat#getColor.
 	 */
 	fun showSnackbar(
 		snackbarView: View,
@@ -205,6 +207,65 @@ object Util {
 				android.R.color.black
 			)
 		).show()
+	}
+	
+	/**
+	 * ImageView extension method to disable the drawables loading animation.
+	 * Catches an error, if the drawable is not of type [AnimatedVectorDrawable].
+	 */
+	fun ImageView.disableLoading() {
+		
+		Timber.d("disableLoading: called")
+		
+		try {
+			
+			// Stop the animation
+			(drawable as AnimatedVectorDrawable).stop()
+			
+		}
+		catch (e: Exception) {
+			
+			Timber.e(e)
+			
+		}
+		
+	}
+	
+	/**
+	 * Sets the loadingSpinner [R.drawable.animated_loading_circle_red_black]
+	 * as the image drawable and then starts the animation.
+	 * Catches errors and prints them.
+	 */
+	fun ImageView.enableLoading() {
+		
+		Timber.d("enableLoading: called")
+		
+		try {
+			
+			// Set the drawable
+			setImageDrawable(context.getDrawable(R.drawable.animated_loading_circle_red_black))
+			
+			// Start the animation
+			(drawable as AnimatedVectorDrawable).start()
+			
+		}
+		catch (e: Exception) {
+			
+			Timber.e(e)
+			
+		}
+		
+	}
+	
+	/**
+	 * Extension function for Int to determine if the responseCode is OK or not.
+	 */
+	fun Int.isSuccess(): Boolean {
+		
+		Timber.d("isSuccess: called")
+		
+		return this == BillingClient.BillingResponseCode.OK
+		
 	}
 	
 	/**

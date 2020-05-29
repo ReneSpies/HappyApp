@@ -156,7 +156,10 @@ class UsernameViewModel: ViewModel() {
 				true
 			)
 			
-			// TODO:  checkIfUsernameIsTaken: exception test
+			// TODO:  checkIfUsernameIsTaken: Check what
+			//  exceptions can happen here,
+			//  no internet connection is not triggered,
+			//  it simply loads the data from the cache (low priority)
 			
 		}
 		

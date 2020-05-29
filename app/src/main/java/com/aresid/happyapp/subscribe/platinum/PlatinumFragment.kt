@@ -1,15 +1,19 @@
 package com.aresid.happyapp.subscribe.platinum
 
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.billing.billingrepository.localdatabase.AugmentedSkuDetails
 import com.aresid.happyapp.databinding.FragmentPlatinumBinding
+import com.aresid.happyapp.subscribe.SubscribeViewModel
+import com.aresid.happyapp.utils.Util.disableLoading
+import com.aresid.happyapp.utils.Util.enableLoading
 import com.aresid.happyapp.utils.Util.underline
 import timber.log.Timber
 
@@ -27,6 +31,9 @@ class PlatinumFragment: Fragment() {
 	
 	// Corresponding ViewModel
 	private lateinit var platinumViewModel: PlatinumViewModel
+	
+	// SubscribeViewModel
+	private val subscribeViewModel: SubscribeViewModel by activityViewModels()
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -64,10 +71,57 @@ class PlatinumFragment: Fragment() {
 				                                                             populatePlatinumContent(platinumViewModel.getSubscriptionSkuDetails()!!)
 				
 				                                                             // Show the goldContent
-				                                                             showPlatinumContent()
+				                                                             showContent()
 				
 			                                                             }
 		                                                             })
+		
+		// Observe the toggleLoadingScreen LiveData
+		platinumViewModel.toggleLoadingScreen.observe(viewLifecycleOwner,
+		                                              Observer { status ->
+			
+			                                              when (status) {
+				
+				                                              LoadingStatus.INIT -> {
+				                                              }
+				
+				                                              LoadingStatus.IDLE -> {
+					
+					                                              populatePlatinumContent(platinumViewModel.getSubscriptionSkuDetails()!!)
+					
+					                                              showContent()
+					
+				                                              }
+				
+				                                              LoadingStatus.LOADING -> showLoadingSpinner()
+				
+				                                              LoadingStatus.SUCCESS -> {
+					
+					                                              subscribeViewModel.navigateToMainFragment.value = true
+					
+				                                              }
+				
+				                                              LoadingStatus.ERROR_USER_DELETED -> {
+				                                              }
+				
+				                                              LoadingStatus.ERROR_NO_INTERNET -> {
+				                                              }
+				
+				                                              LoadingStatus.ERROR_NOT_SUBSCRIBED -> {
+				                                              }
+				
+				                                              LoadingStatus.ERROR_CARD_DECLINED -> {
+					
+					                                              // Google already shows an error saying the card has been declined
+					
+					                                              // Show the content again
+					                                              showContent()
+					
+				                                              }
+				
+			                                              }
+			
+		                                              })
 		
 		// Return the inflated layout
 		return binding.root
@@ -84,7 +138,7 @@ class PlatinumFragment: Fragment() {
 		if (binding.loadingSpinner.visibility == View.VISIBLE) {
 			
 			// Start loading animation again
-			startLoadingAnimation()
+			binding.loadingSpinner.enableLoading()
 			
 		}
 		
@@ -97,29 +151,7 @@ class PlatinumFragment: Fragment() {
 		super.onStop()
 		
 		// Stop the loading animation
-		stopLoadingAnimation()
-		
-	}
-	
-	/**
-	 * Starts the loading animation on the ImageView's drawable.
-	 */
-	private fun startLoadingAnimation() {
-		
-		Timber.d("startLoadingAnimation: called")
-		
-		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).start()
-		
-	}
-	
-	/**
-	 * Stops the loading animation on the ImageView's drawable.
-	 */
-	private fun stopLoadingAnimation() {
-		
-		Timber.d("stopLoadingAnimation: called")
-		
-		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).stop()
+		binding.loadingSpinner.enableLoading()
 		
 	}
 	
@@ -149,12 +181,15 @@ class PlatinumFragment: Fragment() {
 	 * disables the loadingSpinner and errorFragment
 	 * visibility.
 	 */
-	private fun showPlatinumContent() {
+	private fun showContent() {
 		
 		Timber.d("showPlatinumContent: called")
 		
 		// Disable the loadingFragment visibility
 		binding.loadingSpinner.visibility = View.GONE
+		
+		// Disable the loading animation
+		binding.loadingSpinner.disableLoading()
 		
 		// Enable the platinumContent visibility
 		binding.platinumContent.visibility = View.VISIBLE
@@ -173,25 +208,11 @@ class PlatinumFragment: Fragment() {
 		// Disable the platinumContent visibility
 		binding.platinumContent.visibility = View.GONE
 		
+		// Enable the loading animation
+		binding.loadingSpinner.enableLoading()
+		
 		// Enable the loadingSpinner visibility
 		binding.loadingSpinner.visibility = View.VISIBLE
-		
-	}
-	
-	/**
-	 * Enables the errorFragment visibility and
-	 * disables the loadingSpinner and platinumContent
-	 * visibility.
-	 */
-	private fun showErrorFragment() {
-		
-		Timber.d("showErrorFragment: called")
-		
-		// Disable the loadingSpinner visibility
-		binding.loadingSpinner.visibility = View.GONE
-		
-		// Disable the platinumContent visibility
-		binding.platinumContent.visibility = View.GONE
 		
 	}
 	

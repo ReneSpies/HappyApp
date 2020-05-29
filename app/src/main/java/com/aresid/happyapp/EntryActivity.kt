@@ -13,7 +13,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.android.billingclient.api.*
 import com.aresid.happyapp.RetrieveInternetTime.OnInternetTimeInteractionListener
 import com.aresid.happyapp.SubsPagerFinalAdapter.OnFinalAdapterInteractionListener
-import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -76,9 +75,6 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 			TAG,
 			"loadGifInto: called"
 		)
-		for (holder in gifHolders) {
-			Glide.with(this).load(resources.getDrawable(R.drawable.loading_animation)).into(holder)
-		}
 	}
 	
 	private fun establishBillingClientConnection() {
@@ -783,10 +779,9 @@ class EntryActivity: AppCompatActivity(), View.OnClickListener, OnInternetTimeIn
 			child.isEnabled = true
 			if (child is TextInputLayout) {
 				// If it is an TextInputLayout it resets the errors
-				val textInputLayout = child
-				textInputLayout.error = null
+				child.error = null
 				// If the TextInputLayout has an TextInputEditText set its text to null
-				textInputLayout.editText!!.text = null
+				child.editText!!.text = null
 			}
 			else if (child is CheckBox) {
 				child.isChecked = false

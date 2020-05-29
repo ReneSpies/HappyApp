@@ -1,15 +1,19 @@
 package com.aresid.happyapp.subscribe.silver
 
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.billing.billingrepository.localdatabase.AugmentedSkuDetails
 import com.aresid.happyapp.databinding.FragmentSilverBinding
+import com.aresid.happyapp.subscribe.SubscribeViewModel
+import com.aresid.happyapp.utils.Util.disableLoading
+import com.aresid.happyapp.utils.Util.enableLoading
 import com.aresid.happyapp.utils.Util.underline
 import timber.log.Timber
 
@@ -27,6 +31,9 @@ class SilverFragment: Fragment() {
 	
 	// Corresponding ViewModel
 	private lateinit var silverViewModel: SilverViewModel
+	
+	// SubscribeViewModel
+	private val subscribeViewModel: SubscribeViewModel by activityViewModels()
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -52,21 +59,70 @@ class SilverFragment: Fragment() {
 		// Tell the binding about the activity
 		binding.activity = requireActivity()
 		
+		// Observe the toggleLoadingScreen LiveData
+		silverViewModel.toggleLoadingScreen.observe(viewLifecycleOwner,
+		                                            Observer { status ->
+			
+			                                            when (status) {
+				
+				                                            LoadingStatus.INIT -> {
+				                                            }
+				
+				                                            LoadingStatus.IDLE -> {
+					
+					                                            populateSilverContent(silverViewModel.getSubscriptionSkuDetails()!!)
+					
+					                                            showContent()
+					
+				                                            }
+				
+				                                            LoadingStatus.LOADING -> showLoadingSpinner()
+				
+				                                            LoadingStatus.SUCCESS -> {
+					
+					                                            subscribeViewModel.navigateToMainFragment.value = true
+					
+				                                            }
+				
+				                                            LoadingStatus.ERROR_USER_DELETED -> {
+				                                            }
+				
+				                                            LoadingStatus.ERROR_NO_INTERNET -> {
+					
+				                                            }
+				
+				                                            LoadingStatus.ERROR_NOT_SUBSCRIBED -> {
+				                                            }
+				
+				                                            LoadingStatus.ERROR_CARD_DECLINED -> {
+					
+					                                            // Google already shows an error saying the card has been declined
+					
+					                                            // Show the content again
+					                                            showContent()
+					
+				                                            }
+				
+			                                            }
+			
+		                                            })
+		
 		// Observe the subscriptionSkuDetailsListLiveData
-		silverViewModel.subscriptionSkuDetailsListLiveData.observe(viewLifecycleOwner,
-		                                                           Observer { list ->
-			
-			                                                           Timber.d("subscriptionSkuDetailsListLiveData observer called")
-			
-			                                                           if (list.isNotEmpty()) {
+		silverViewModel.subscriptionSkuDetailsListLiveData.observe(
+			viewLifecycleOwner,
+			Observer { list ->
 				
-				                                                           // Take the SkuDetails and populate the View with its information
-				                                                           populateSilverContent(silverViewModel.getSubscriptionSkuDetails()!!)
+				Timber.d("subscriptionSkuDetailsListLiveData observer called")
 				
-				                                                           // Show the goldContent
-				                                                           showSilverContent()
-				
-			                                                           }
+				if (list.isNotEmpty()) {
+					
+					// Take the SkuDetails and populate the View with its information
+					populateSilverContent(silverViewModel.getSubscriptionSkuDetails()!!)
+					
+					// Show the goldContent
+					showContent()
+					
+				}
 		                                                           })
 		
 		// Return the inflated layout
@@ -84,7 +140,7 @@ class SilverFragment: Fragment() {
 		if (binding.loadingSpinner.visibility == View.VISIBLE) {
 			
 			// Start loading animation again
-			startLoadingAnimation()
+			binding.loadingSpinner.enableLoading()
 			
 		}
 		
@@ -97,29 +153,7 @@ class SilverFragment: Fragment() {
 		super.onStop()
 		
 		// Stop the loading animation
-		stopLoadingAnimation()
-		
-	}
-	
-	/**
-	 * Starts the loading animation on the ImageView's drawable.
-	 */
-	private fun startLoadingAnimation() {
-		
-		Timber.d("startLoadingAnimation: called")
-		
-		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).start()
-		
-	}
-	
-	/**
-	 * Stops the loading animation on the ImageView's drawable.
-	 */
-	private fun stopLoadingAnimation() {
-		
-		Timber.d("stopLoadingAnimation: called")
-		
-		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).stop()
+		binding.loadingSpinner.enableLoading()
 		
 	}
 	
@@ -149,12 +183,15 @@ class SilverFragment: Fragment() {
 	 * disables the loadingSpinner and errorFragment
 	 * visibility.
 	 */
-	private fun showSilverContent() {
+	private fun showContent() {
 		
 		Timber.d("showSilverContent: called")
 		
 		// Disable the loadingSpinner visibility
 		binding.loadingSpinner.visibility = View.GONE
+		
+		// Disable the loading animation
+		binding.loadingSpinner.disableLoading()
 		
 		// Enable the silverContent visibility
 		binding.silverContent.visibility = View.VISIBLE
@@ -173,25 +210,11 @@ class SilverFragment: Fragment() {
 		// Disable the silverContent visibility
 		binding.silverContent.visibility = View.GONE
 		
+		// Enable the loading animation
+		binding.loadingSpinner.enableLoading()
+		
 		// Enable the loadingSpinner visibility
 		binding.loadingSpinner.visibility = View.VISIBLE
-		
-	}
-	
-	/**
-	 * Enables the errorFragment visibility and
-	 * disables the loadingSpinner and silverContent
-	 * visibility.
-	 */
-	private fun showErrorFragment() {
-		
-		Timber.d("showErrorFragment: called")
-		
-		// Disable the loadingSpinner visibility
-		binding.loadingSpinner.visibility = View.GONE
-		
-		// Disable the silverContent visibility
-		binding.silverContent.visibility = View.GONE
 		
 	}
 	

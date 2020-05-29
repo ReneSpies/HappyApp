@@ -4,11 +4,11 @@ import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.aresid.happyapp.LoadingStatus
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import timber.log.Timber
 
@@ -21,17 +21,17 @@ import timber.log.Timber
 
 class GoogleSignupViewModel: ViewModel() {
 	
-	// LiveData for the FirebaseUser
-	private val _firebaseUser = MutableLiveData<FirebaseUser>()
-	val firebaseUser: LiveData<FirebaseUser>
-		get() = _firebaseUser
+	// LiveData to control the loadingScreen visibility
+	private val _toggleLoadingScreen = MutableLiveData<LoadingStatus>()
+	val toggleLoadingScreen: LiveData<LoadingStatus>
+		get() = _toggleLoadingScreen
 	
 	init {
 		
 		Timber.d("init: called")
 		
-		// Init the FirebaseUser LiveData
-		_firebaseUser.value = null
+		// Init the toggleLoadingScreen LiveData
+		_toggleLoadingScreen.value = LoadingStatus.INIT
 		
 	}
 	
@@ -41,6 +41,9 @@ class GoogleSignupViewModel: ViewModel() {
 	fun processGoogleSignup(data: Intent?) {
 		
 		Timber.d("processGoogleSignup: called")
+		
+		// Set the LiveData to LOADING
+		_toggleLoadingScreen.value = LoadingStatus.LOADING
 		
 		// Define the task from GoogleSignIn
 		val task = GoogleSignIn.getSignedInAccountFromIntent(data)
@@ -64,9 +67,21 @@ class GoogleSignupViewModel: ViewModel() {
 			
 			Timber.e(e)
 			
-			// TODO:  onActivityResult: show feedback
+			// TODO:  onActivityResult: show feedback (low priority)
 			
 		}
+		
+	}
+	
+	/**
+	 * Called from the [GoogleSignupFragment] to reset the LiveData.
+	 */
+	fun navigated() {
+		
+		Timber.d("navigated: called")
+		
+		// Reset the LiveData
+		_toggleLoadingScreen.value = LoadingStatus.IDLE
 		
 	}
 	
@@ -82,8 +97,18 @@ class GoogleSignupViewModel: ViewModel() {
 			
 			Timber.d("great success signing up with credential")
 			
-			// Update the LiveData with the new FirebaseUser
-			_firebaseUser.value = it.user
+			if (it.user != null) {
+				
+				_toggleLoadingScreen.value = LoadingStatus.SUCCESS
+				
+				// If the email is not verified, send a verification email
+				if (!it.user!!.isEmailVerified) {
+					
+					it.user!!.sendEmailVerification()
+					
+				}
+				
+			}
 			
 		}.addOnFailureListener { e ->
 			

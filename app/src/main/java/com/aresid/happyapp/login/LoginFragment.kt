@@ -1,5 +1,6 @@
 package com.aresid.happyapp.login
 
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment.findNavController
+import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentLoginBinding
 import com.aresid.happyapp.utils.Util
@@ -73,29 +75,87 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			
 		                                              })
 		
-		// Observe the LiveData of the firebaseUser and if the user is not null, navigate to the MainFragment
-		loginViewModel.firebaseUser.observe(viewLifecycleOwner,
-		                                    Observer { firebaseUser ->
-			
-			                                    Timber.d("firebaseUser = $firebaseUser")
-			
-			                                    // Reload the firebaseUser
-			                                    firebaseUser.reload().addOnSuccessListener {
+		// Observe the toggleLoadingScreen LiveData to control the loading screen
+		// and decide where to send the user next
+		loginViewModel.toggleLoadingScreen.observe(
+			viewLifecycleOwner,
+			Observer { status ->
 				
-				                                    // Check if the User is not null and log the user in
-				                                    if (firebaseUser != null) {
+				// If status is IDLE, show the content and stop the animation
+				when (status) {
 					
-					                                    // Hide the soft keyboard
-					                                    Util.hideKeyboard(binding.loginButton)
+					LoadingStatus.IDLE -> {
+						
+						// Show the content and stop the animation
+						showContentStopLoadingAnimation()
+						
+					}
 					
-					                                    // Navigate to MainFragment
-					                                    navigateToMainFragment()
+					// Else, if the status is LOADING, show the loading screen
+					LoadingStatus.LOADING -> {
+						
+						// Show the loading screen
+						showLoading()
+						
+					}
 					
-				                                    }
+					// Else, if the status is SUCCESS, bring the user to the MainFragment
+					// and reset the LiveData value
+					LoadingStatus.SUCCESS -> {
+						
+						// Navigate to MainFragment
+						navigateToMainFragment()
+						
+						// Reset the LiveData
+						loginViewModel.navigated()
+						
+					}
+					
+					// Else, if the status is ERROR_NO_INTERNET,
+					// show the content again and an error to the user
+					LoadingStatus.ERROR_NO_INTERNET -> {
+						
+						// Show the content
+						showContentStopLoadingAnimation()
+						
+						// Show an error
+						Util.showErrorSnackbar(
+							binding.loadingSpinner,
+							getString(R.string.error_no_internet_connection)
+						)
+						
+					}
+					
+					// Else, if the status is ERROR_USER_DELETED,
+					// show the content again and an error to the user
+					LoadingStatus.ERROR_USER_DELETED -> {
+						
+						// Show content again
+						showContentStopLoadingAnimation()
+						
+						// Show an error
+						Util.showErrorSnackbar(
+							binding.loadingSpinner,
+							getString(R.string.error_account_disabled_or_deleted)
+						)
+						
+					}
+					
+					LoadingStatus.ERROR_NOT_SUBSCRIBED -> {
+						
+						// Navigate to the SubscribeFragment
+						navigateToSubscribeFragment()
+						
+						// Reset the LiveData
+						loginViewModel.navigated()
+						
+					}
+					
+					LoadingStatus.INIT -> {
+					}
+				}
 				
-			                                    }
-			                                    
-		                                    })
+			})
 		
 		// Observe the LiveData for the FirebaseAuthInvalidUserException and show the appropriate error
 		loginViewModel.firebaseAuthInvalidUserException.observe(viewLifecycleOwner,
@@ -164,6 +224,92 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		
 		// Return the inflated layout
 		return binding.root
+		
+	}
+	
+	override fun onResume() {
+		
+		Timber.d("onResume: called")
+		
+		super.onResume()
+		
+		// If the loadingSpinner is visible, start its loading animation
+		if (binding.loadingSpinner.visibility == View.VISIBLE) {
+			
+			startLoadingAnimation()
+			
+		}
+		
+	}
+	
+	override fun onStop() {
+		
+		Timber.d("onStop: called")
+		
+		super.onStop()
+		
+		// Stop the loading animation to save resources
+		stopLoadingAnimation()
+		
+	}
+	
+	/**
+	 * Stops the loadingSpinner's animation.
+	 */
+	private fun stopLoadingAnimation() {
+		
+		Timber.d("stopLoadingAnimation: called")
+		
+		// Casts the loadingSpinner's drawable to AnimatedVectorDrawable and stops its animation
+		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).stop()
+		
+	}
+	
+	/**
+	 * Starts the loadingSpinner's animation.
+	 */
+	private fun startLoadingAnimation() {
+		
+		Timber.d("startLoadingAnimation: called")
+		
+		// Casts the loadingSpinner's drawable to AnimatedVectorDrawable and starts its animation
+		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).start()
+		
+	}
+	
+	/**
+	 * Hides the loading spinner, stops its animation and shows the content.
+	 */
+	private fun showContentStopLoadingAnimation() {
+		
+		Timber.d("showContent: called")
+		
+		// Hide the loading spinner
+		binding.loadingSpinner.visibility = View.GONE
+		
+		// Stop the animation
+		stopLoadingAnimation()
+		
+		// Show the content
+		binding.loginContent.visibility = View.VISIBLE
+		
+	}
+	
+	/**
+	 * Hides the content, starts the loading spinner animation and shows the loading spinner itself.
+	 */
+	private fun showLoading() {
+		
+		Timber.d("showLoading: called")
+		
+		// Hide the content
+		binding.loginContent.visibility = View.GONE
+		
+		// Start the loading animation
+		startLoadingAnimation()
+		
+		// Show the loading spinner
+		binding.loadingSpinner.visibility = View.VISIBLE
 		
 	}
 	

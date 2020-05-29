@@ -7,11 +7,17 @@ import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import com.android.billingclient.api.*
 import com.aresid.happyapp.billing.billingrepository.localdatabase.*
+import com.aresid.happyapp.exceptions.CardDeclinedException
 import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.utils.Util.isSuccess
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import timber.log.Timber
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.coroutines.*
 import kotlin.math.pow
 
 /**
@@ -25,7 +31,7 @@ import kotlin.math.pow
  * The BillingRepository will handle absolutely everything billing-related,
  * so that the rest of the app doesn't have to.
  */
-class BillingRepository private constructor(private val application: Application): PurchasesUpdatedListener, BillingClientStateListener, ConsumeResponseListener, SkuDetailsResponseListener {
+class BillingRepository private constructor(private val application: Application) {
 	
 	// BillingClient
 	private lateinit var playStoreBillingClient: BillingClient
@@ -36,7 +42,7 @@ class BillingRepository private constructor(private val application: Application
 	// LocalBillingDatabase
 	private lateinit var localCacheBillingClient: LocalBillingDatabase
 	
-	val subscriptionSkuDetailsListLiveData: LiveData<List<AugmentedSkuDetails>> by lazy {
+	val subscriptionSkuDetailsList: LiveData<List<AugmentedSkuDetails>> by lazy {
 		
 		if (!::localCacheBillingClient.isInitialized) {
 			
@@ -48,7 +54,7 @@ class BillingRepository private constructor(private val application: Application
 		
 	}
 	
-	val bronzeSubscriptionLiveData: LiveData<BronzeSubscription> by lazy {
+	val bronzeSubscription: LiveData<BronzeSubscription> by lazy {
 		
 		if (!::localCacheBillingClient.isInitialized) {
 			
@@ -93,18 +99,28 @@ class BillingRepository private constructor(private val application: Application
 		
 	}
 	
-	fun startDataSourceConnections() {
+	// A channel to make the launchBillingFlow fit into coroutines
+	private val mPurchaseChannel: Channel<Purchase.PurchasesResult> = Channel(Channel.UNLIMITED)
+	
+	/**
+	 * Calls [defineAndConnectToGooglePlayBillingService],
+	 * defines the [secureServerBillingClient] and [localCacheBillingClient].
+	 */
+	suspend fun startDataSourceConnections() {
 		
 		Timber.d("startDataSourceConnections: called")
 		
 		defineAndConnectToGooglePlayBillingService()
 		
-		secureServerBillingClient = BillingWebservice.create()
+		secureServerBillingClient = BillingWebservice.getInstance()
 		
 		localCacheBillingClient = LocalBillingDatabase.getInstance(application)
 		
 	}
 	
+	/**
+	 * Ends the connection on the [playStoreBillingClient].
+	 */
 	fun endDataSourceConnections() {
 		
 		Timber.d("endDataSourceConnections: called")
@@ -116,29 +132,125 @@ class BillingRepository private constructor(private val application: Application
 		
 	}
 	
-	private fun defineAndConnectToGooglePlayBillingService() {
+	/**
+	 * Defines the [playStoreBillingClient], puts the result
+	 * from [PurchasesUpdatedListener] into the [mPurchaseChannel]
+	 * and calls [connectToGooglePlayBillingService].
+	 */
+	private suspend fun defineAndConnectToGooglePlayBillingService() {
 		
 		Timber.d("defineAndConnectToGooglePlayBillingService: called")
 		
-		playStoreBillingClient = BillingClient.newBuilder(application.applicationContext).enablePendingPurchases().setListener(this).build()
+		playStoreBillingClient = BillingClient.newBuilder(application.applicationContext).enablePendingPurchases().setListener { responseCode, purchases ->
+			
+			// Put the result into the mPurchaseChannel
+			mPurchaseChannel.offer(
+				Purchase.PurchasesResult(
+					responseCode,
+					purchases
+				)
+			)
+			
+		}.build()
 		
 		connectToGooglePlayBillingService()
 		
 	}
 	
-	private fun connectToGooglePlayBillingService(): Boolean {
+	/**
+	 * When the responseCode is OK, calls [RetryPolicies.resetConnectionRetryPolicyCounter],
+	 * [querySubscriptionSkuDetailsAsync] and [queryPurchasesAsync].
+	 * When the responseCode is BILLING_UNAVAILABLE
+	 * or anything else, throws and Exception.
+	 */
+	private suspend fun processBillingResult(billingResult: BillingResult?) {
 		
-		Timber.d("connectToGooglePlayBillingService: called")
+		Timber.d("processBillingResult: called")
 		
-		if (!playStoreBillingClient.isReady) {
+		when (billingResult?.responseCode) {
 			
-			playStoreBillingClient.startConnection(this)
+			BillingClient.BillingResponseCode.OK -> {
+				
+				Timber.d("onBillingSetupFinished success")
+				
+				// Reset the retry counter in the RetryPolicies
+				RetryPolicies.resetConnectionRetryPolicyCounter()
+				
+				// Query for subscription SkuDetails
+				querySubscriptionSkuDetailsAsync(Keys.HappyAppSkus.SUBSCRIPTION_SKUS)
+				
+				//				queryPurchasesAsync()
+				
+			}
 			
-			return true
+			BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
+				
+				Timber.d("onBillingSetupFinished but subscriptions are not available on this device")
+				
+				// Throw an exception to show feedback
+				throw Exception("Subscriptions are not available on this device")
+				
+			}
+			
+			else -> {
+				
+				Timber.d("onBillingSetupFinished with failure response code: ${billingResult?.responseCode}")
+				
+				throw Exception("Response code = ${billingResult?.responseCode}")
+				
+			}
 			
 		}
 		
-		return false
+	}
+	
+	/**
+	 * Suspends the call to [BillingClientStateListener], uses
+	 * the [RetryPolicies.connectionRetryPolicy] when the
+	 * onBillingServiceDisconnected listener callback is called,
+	 * and calls [processBillingResult] in onBillingSetupFinished.
+	 */
+	suspend fun connectToGooglePlayBillingService() {
+		
+		Timber.d("connectToGooglePlayBillingService: called")
+		
+		val billingResult = suspendCoroutine<BillingResult?> { continuation ->
+			
+			// If the billingClient is not already ready, start the connection
+			if (!playStoreBillingClient.isReady) {
+				
+				// Start the connection and wait for its result in the listener
+				playStoreBillingClient.startConnection(object: BillingClientStateListener {
+					
+					override fun onBillingServiceDisconnected() {
+						
+						Timber.d("onBillingServiceDisconnected: called")
+						
+						// Retry to connect using the RetryPolicies
+						RetryPolicies.connectionRetryPolicy {
+							
+							connectToGooglePlayBillingService()
+							
+						}
+						
+					}
+					
+					override fun onBillingSetupFinished(billingResult: BillingResult?) {
+						
+						Timber.d("onBillingSetupFinished: called")
+						
+						// Process the result
+						continuation.resume(billingResult)
+						
+					}
+					
+				})
+				
+			}
+			
+		}
+		
+		processBillingResult(billingResult)
 		
 	}
 	
@@ -153,211 +265,68 @@ class BillingRepository private constructor(private val application: Application
 		fun getInstance(application: Application): BillingRepository = INSTANCE ?: synchronized(this) {
 			INSTANCE ?: BillingRepository(application).also { INSTANCE = it }
 		}
-	}
-	
-	/**
-	 * Implement this method to get notifications for purchases updates. Both
-	 * purchases initiated by your app and the ones initiated by Play Store
-	 * will be reported here.
-	 *
-	 * @param billingResult The result of the update.
-	 * @param purchases List of updated purchases if present.
-	 */
-	override fun onPurchasesUpdated(
-		billingResult: BillingResult?,
-		purchases: MutableList<Purchase>?
-	) {
-		
-		Timber.d("onPurchasesUpdated: called")
-		
-		when (billingResult?.responseCode) {
-			
-			BillingClient.BillingResponseCode.OK -> {
-				
-				purchases?.apply {
-					
-					processPurchases(toSet())
-					
-				}
-				
-			}
-			
-			BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
-				
-				Timber.d("Item already owned")
-				
-				queryPurchasesAsync()
-				
-			}
-			
-			BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
-				
-				Timber.e(
-					"Your app's configuration is incorrect. Review in the Google PlayConsole. Possible causes of this error include: APK is not signed with release key; SKU productId mismatch."
-				)
-				
-			}
-			
-			else -> Timber.w("BillingResponseCode = ${billingResult?.responseCode}")
-			
-		}
 		
 	}
 	
-	/**
-	 * Called to notify that connection to billing service was lost.
-	 * Note: This does not remove billing service connection itself - this
-	 * binding to the service will remain active, and you will receive a call to
-	 * [onBillingSetupFinished] when billing service is running again and setup is complete.
-	 */
-	override fun onBillingServiceDisconnected() {
-		
-		Timber.d("onBillingServiceDisconnected: called")
-		
-		RetryPolicies.connectionRetryPolicy { connectToGooglePlayBillingService() }
-		
-	}
-	
-	/**
-	 * Called to notify that setup is complete.
-	 *
-	 * @param billingResult The response code from [BillingResult] which returns the status of
-	 * the setup process.
-	 */
-	override fun onBillingSetupFinished(billingResult: BillingResult?) {
-		
-		Timber.d("onBillingSetupFinished: called")
-		
-		when (billingResult?.responseCode) {
-			
-			BillingClient.BillingResponseCode.OK -> {
-				
-				Timber.d("onBillingSetupFinished success")
-				
-				RetryPolicies.resetConnectionRetryPolicyCounter()
-				
-				querySubscriptionSkuDetailsAsync(Keys.HappyAppSkus.SUBSCRIPTION_SKUS)
-				
-				queryPurchasesAsync()
-				
-			}
-			
-			BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
-				
-				Timber.d("onBillingSetupFinished but billing is not available on this device")
-				
-				RetryPolicies.connectionRetryPolicy {
-					
-					connectToGooglePlayBillingService()
-					
-				}
-				
-			}
-			
-			else -> {
-				
-				Timber.d("onBillingSetupFinished with failure response code: ${billingResult?.responseCode}")
-				
-			}
-			
-		}
-		
-	}
-	
-	private fun querySubscriptionSkuDetailsAsync(
+	private suspend fun querySubscriptionSkuDetailsAsync(
 		skuList: List<String>
 	) {
 		
 		Timber.d("querySubscriptionSkuDetailsAsync: called")
 		
-		val parameter = SkuDetailsParams.newBuilder()
+		val parameterBuilder = SkuDetailsParams.newBuilder()
 		
-		parameter.setSkusList(skuList).setType(BillingClient.SkuType.SUBS)
+		parameterBuilder.setSkusList(skuList).setType(BillingClient.SkuType.SUBS)
 		
 		RetryPolicies.taskExecutionRetryPolicy(
+			this,
 			playStoreBillingClient,
-			this
+			coroutineContext
 		) {
 			
 			Timber.d("querySkuDetailsAsync for ${BillingClient.SkuType.SUBS}")
 			
-			playStoreBillingClient.querySkuDetailsAsync(
-				parameter.build(),
-				this
-			)
-			
-		}
-		
-	}
-	
-	/**
-	 * Called to notify that a consume operation has finished.
-	 * For now, I don't have anything to consume, since subscriptions do not get consumed.
-	 *
-	 * @param billingResult The response code from [BillingResult] set to report the result of
-	 * consume operation.
-	 * @param purchaseToken The purchase token that was consumed.
-	 */
-	override fun onConsumeResponse(
-		billingResult: BillingResult?,
-		purchaseToken: String?
-	) {
-		
-		Timber.d("onConsumeResponse: called")
-		
-		when (billingResult?.responseCode) {
-			
-			BillingClient.BillingResponseCode.OK -> {
+			val skuDetails = suspendCoroutine<List<SkuDetails>> { continuation ->
 				
-				purchaseToken?.apply {
+				playStoreBillingClient.querySkuDetailsAsync(
+					parameterBuilder.build()
+				) { billingResult, skuDetails ->
 					
-					//										saveToLocalDatabase(this)
+					if (billingResult.responseCode.isSuccess()) {
+						
+						continuation.resume(
+							skuDetails
+						)
+						
+					}
+					else {
+						
+						continuation.resumeWithException(Exception("Response code = ${billingResult.responseCode}"))
+						
+					}
 					
 				}
 				
-				secureServerBillingClient.onConsumeResponse(
-					purchaseToken,
-					billingResult.responseCode
-				)
-				
 			}
 			
-			else -> Timber.w("Error consuming purchase with token $purchaseToken. Response code = ${billingResult?.responseCode}.")
+			processSkuDetails(skuDetails)
 			
 		}
 		
 	}
 	
-	/**
-	 * Called to notify that a fetch SKU details operation has finished.
-	 *
-	 * @param billingResult Response code of the update.
-	 * @param skuDetailsList List of SKU details.
-	 */
-	override fun onSkuDetailsResponse(
-		billingResult: BillingResult?,
-		skuDetailsList: MutableList<SkuDetails>?
+	private fun processSkuDetails(
+		skuDetails: List<SkuDetails>
 	) {
 		
-		Timber.d("onSkuDetailsResponse: called")
+		Timber.d("processSkuDetails: called")
 		
-		if (billingResult?.responseCode == BillingClient.BillingResponseCode.OK) {
-			
-			Timber.d("SkuDetails queried with success, list = $skuDetailsList")
-			
-		}
-		else {
-			
-			Timber.d("SkuDetails queried with failure, code = ${billingResult?.responseCode}")
-			
-		}
-		
-		if (skuDetailsList.orEmpty().isNotEmpty()) {
+		if (skuDetails.isNotEmpty()) {
 			
 			val scope = CoroutineScope(Job() + Dispatchers.IO)
 			scope.launch {
 				
-				skuDetailsList?.forEach {
+				skuDetails.forEach {
 					
 					localCacheBillingClient.augmentedSkuDetailDao().insertOrUpdate(it)
 					
@@ -369,11 +338,11 @@ class BillingRepository private constructor(private val application: Application
 		
 	}
 	
-	fun queryPurchasesAsync() {
+	suspend fun queryPurchasesAsync() {
 		
 		Timber.d("queryPurchasesAsync: called")
 		
-		fun task() {
+		suspend fun task() {
 			
 			Timber.d("task: called")
 			
@@ -393,13 +362,20 @@ class BillingRepository private constructor(private val application: Application
 				
 			}
 			
-			processPurchases(purchasesResult)
+			// Get the uid from the current user to save it in the Firestore
+			val uid = FirebaseAuth.getInstance().currentUser!!.uid
+			
+			processPurchases(
+				uid,
+				purchasesResult
+			)
 			
 		}
 		
 		RetryPolicies.taskExecutionRetryPolicy(
+			this,
 			playStoreBillingClient,
-			this
+			coroutineContext
 		) {
 			
 			task()
@@ -408,25 +384,68 @@ class BillingRepository private constructor(private val application: Application
 		
 	}
 	
-	private fun processPurchases(purchaseResult: Set<Purchase>) = CoroutineScope(Job() + Dispatchers.IO).launch {
+	/**
+	 * Acknowledges the purchase using its [purchaseToken].
+	 */
+	private suspend fun acknowledgePurchase(purchaseToken: String) {
 		
-		val cachedPurchases = localCacheBillingClient.purchaseDao().getPurchases()
+		Timber.d("acknowledgePurchase: called")
 		
+		// Define a AcknowledgePurchaseParamsBuilder
+		val acknowledgePurchaseParamsBuilder = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchaseToken)
+		
+		// Acknowledge the purchase
+		playStoreBillingClient.acknowledgePurchase(acknowledgePurchaseParamsBuilder.build())
+		
+	}
+	
+	/**
+	 * Processes all new purchases which are not yet cached.
+	 */
+	private suspend fun processPurchases(
+		uid: String,
+		purchaseResult: Set<Purchase>
+	) {
+		
+		Timber.d("processPurchases: called")
+		
+		// Get all cached purchases
+		val cachedPurchases = withContext(Dispatchers.IO) {
+			localCacheBillingClient.purchaseDao().getPurchases()
+		}
+		
+		// Define a new HashSet for all valid and not cached purchases
 		val newBatch = HashSet<Purchase>(purchaseResult.size)
 		
+		// Iterate through all purchases
 		purchaseResult.forEach { purchase ->
 			
+			// If the signature is valid and the purchase is not already cached, add it to the newBatch
 			if (isSignatureValid(purchase) && !cachedPurchases.any { it.purchase == purchase }) {
 				
+				// Add it to newBatch
 				newBatch.add(purchase)
+				
+				// If the purchase is purchased, acknowledge it
+				if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+					
+					// Acknowledge the purchase
+					acknowledgePurchase(purchase.purchaseToken)
+					
+				}
 				
 			}
 			
 		}
 		
+		// If the newBatch is not empty, send the purchase to the server and the cache
 		if (newBatch.isNotEmpty()) {
 			
-			sendPurchasesToServer(newBatch)
+			// Send to server
+			sendPurchasesToServer(
+				uid,
+				newBatch
+			)
 			
 			// We still care about purchaseResult in case an old purchase
 			// has not been consumed yet
@@ -436,9 +455,11 @@ class BillingRepository private constructor(private val application: Application
 			)
 			
 		}
+		
+		// Else, if the newBatch is empty, query purchases from server if possible
 		else if (Throttle.isLastInvocationTimeStale(application)) {
 			
-			queryPurchasesFromSecureServer()
+			queryPurchasesFromSecureServer(uid)
 			
 		}
 		
@@ -472,23 +493,31 @@ class BillingRepository private constructor(private val application: Application
 		
 	}
 	
-	private fun sendPurchasesToServer(purchases: Set<Purchase>) {
+	private suspend fun sendPurchasesToServer(
+		uid: String,
+		purchases: Set<Purchase>
+	) {
 		
 		Timber.d("sendPurchasesToServer: called")
 		
-		// TODO:  sendPurchasesToServer:
+		BillingWebservice.getInstance().updateServer(
+			uid,
+			purchases
+		)
 		
 	}
 	
-	private fun queryPurchasesFromSecureServer() {
+	/**
+	 * Queries the purchases from the secure server, saves them
+	 * to the cache and refreshes the [Throttle].
+	 */
+	private fun queryPurchasesFromSecureServer(uid: String) {
 		
 		Timber.d("queryPurchasesFromSecureServer: called")
 		
 		fun getPurchasesFromSecureServerToLocalDatabase() {
 			
 			Timber.d("getPurchasesFromSecureServerToLocalDatabase: called")
-			
-			// TODO:  getPurchasesFromSecureServerToLocalDatabase:
 			
 		}
 		
@@ -555,7 +584,7 @@ class BillingRepository private constructor(private val application: Application
 		
 	}
 	
-	fun launchBillingFlow(
+	suspend fun launchBillingFlow(
 		activity: Activity,
 		augmentedSkuDetails: AugmentedSkuDetails
 	) = launchBillingFlow(
@@ -563,27 +592,84 @@ class BillingRepository private constructor(private val application: Application
 		SkuDetails(augmentedSkuDetails.originalJson)
 	)
 	
-	fun launchBillingFlow(
+	private suspend fun launchBillingFlow(
 		activity: Activity,
 		skuDetails: SkuDetails
 	) {
 		
 		Timber.d("launchBillingFlow: called")
 		
-		val oldSku: String? = getOldSku(skuDetails.sku)
-		
 		// TODO:  launchBillingFlow: setOldSku() needs a >purchaseToken<!!!
 		
 		val purchaseParameters = BillingFlowParams.newBuilder().setSkuDetails(skuDetails).build()
 		
 		RetryPolicies.taskExecutionRetryPolicy(
+			this,
 			playStoreBillingClient,
-			this
+			coroutineContext
 		) {
+			
 			playStoreBillingClient.launchBillingFlow(
 				activity,
 				purchaseParameters
 			)
+			
+			// This is the result from onPurchasesUpdated
+			val purchasesResult = mPurchaseChannel.receive()
+			
+			// Process the purchases the user made
+			processPurchasesResult(purchasesResult)
+			
+		}
+		
+	}
+	
+	/**
+	 * Splits the [purchasesResult] into two values, billingResult
+	 * and a List of purchases. It checks if the responseCode is OK
+	 * and if so, calls [processPurchases] and if not, throws and
+	 * Exception.
+	 */
+	private suspend fun processPurchasesResult(purchasesResult: Purchase.PurchasesResult) {
+		
+		Timber.d("processPurchasesResult: called")
+		
+		// Split the purchasesResult into a billingResult and a List of purchases
+		val billingResult = purchasesResult.billingResult
+		val purchases = purchasesResult.purchasesList
+		
+		// When the responseCode is OK, process the purchases,
+		// when ITEM_ALREADY_OWNED, query the purchases again,
+		// else, throw an Exception.
+		when (billingResult.responseCode) {
+			
+			BillingClient.BillingResponseCode.OK -> {
+				
+				val uid = FirebaseAuth.getInstance().currentUser!!.uid
+				
+				purchases.apply {
+					
+					processPurchases(
+						uid,
+						toSet()
+					)
+					
+				}
+				
+			}
+			
+			BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
+				
+				Timber.d("Item already owned")
+				
+				queryPurchasesAsync()
+				
+			}
+			
+			BillingClient.BillingResponseCode.ERROR -> throw CardDeclinedException()
+			
+			else -> throw Exception("Response code = ${billingResult.responseCode}")
+			
 		}
 		
 	}
@@ -598,7 +684,7 @@ class BillingRepository private constructor(private val application: Application
 			
 			Keys.HappyAppSkus.BRONZE_SUBSCRIPTION -> {
 				
-				bronzeSubscriptionLiveData.value.apply {
+				bronzeSubscription.value.apply {
 					
 					result = Keys.HappyAppSkus.BRONZE_SUBSCRIPTION
 					
@@ -671,11 +757,11 @@ class BillingRepository private constructor(private val application: Application
 		 * independent of the RetryPolicies. And so the Retry Policy exists only to help and never
 		 * to hurt.
 		 */
-		fun connectionRetryPolicy(block: () -> Unit) {
+		fun connectionRetryPolicy(block: suspend () -> Unit) {
 			
 			Timber.d("connectionRetryPolicy: called")
 			
-			// Launch the coroutine
+			// Launch the coroutine to wait for a specific delay
 			val scope = CoroutineScope(Job() + Dispatchers.Main)
 			scope.launch {
 				
@@ -695,7 +781,16 @@ class BillingRepository private constructor(private val application: Application
 					block()
 					
 				}
+				
+				// Else, throw an exception
+				else {
+					
+					throw FirebaseNetworkException("Retry count reached")
+					
+				}
+				
 			}
+			
 		}
 		
 		/**
@@ -704,15 +799,16 @@ class BillingRepository private constructor(private val application: Application
 		 * the actual task.
 		 */
 		fun taskExecutionRetryPolicy(
+			billingRepository: BillingRepository,
 			billingClient: BillingClient,
-			listener: BillingRepository,
-			task: () -> Unit
+			coroutineContext: CoroutineContext,
+			task: suspend () -> Unit
 		) {
 			
 			Timber.d("taskExecutionRetryPolicy: called")
 			
 			// Launch the coroutine
-			val scope = CoroutineScope(Job() + Dispatchers.Main)
+			val scope = CoroutineScope(coroutineContext)
 			scope.launch {
 				
 				// If the billingClient is not ready, wait some seconds and restart the connection
@@ -721,7 +817,7 @@ class BillingRepository private constructor(private val application: Application
 					Timber.d("billing not ready")
 					
 					// Restart the connection
-					billingClient.startConnection(listener)
+					billingRepository.connectToGooglePlayBillingService()
 					
 					// Delay the scope
 					delay(taskDelay)
