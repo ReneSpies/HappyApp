@@ -153,6 +153,9 @@ class LoginFragment: Fragment(), View.OnClickListener {
 					
 					LoadingStatus.INIT -> {
 					}
+					
+					else -> {
+					}
 				}
 				
 			})
@@ -352,9 +355,6 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		binding.googleSignupButton.setOnClickListener(this)
 		binding.forgotLoginButton.setOnClickListener(this)
 		
-		// Subscribe Button click listener. temporarily
-		binding.subscribeButton.setOnClickListener(this)
-		
 	}
 	
 	override fun onClick(v: View) {
@@ -366,7 +366,6 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			R.id.email_signup_button -> navigateToEmailSignupFragment()
 			R.id.google_signup_button -> onGoogleSignupButtonClicked()
 			R.id.forgot_login_button -> navigateToForgotLoginFragment()
-			R.id.subscribe_button -> navigateToSubscribeFragment()
 			
 		}
 		

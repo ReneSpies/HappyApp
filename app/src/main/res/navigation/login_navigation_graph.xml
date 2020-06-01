@@ -77,12 +77,6 @@
 			/>
 	</fragment>
 	<fragment
-		android:id="@+id/loadingFragment"
-		android:name="com.aresid.happyapp.utils.LoadingFragment"
-		android:label="LoadingFragment"
-		tools:layout="@layout/fragment_loading"
-		/>
-	<fragment
 		android:id="@+id/subscribeFragment"
 		android:name="com.aresid.happyapp.subscribe.SubscribeFragment"
 		android:label="SubscribeFragment"

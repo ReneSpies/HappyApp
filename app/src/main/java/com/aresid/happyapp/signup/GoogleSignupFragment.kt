@@ -89,6 +89,8 @@ class GoogleSignupFragment: Fragment() {
 					LoadingStatus.ERROR_NOT_SUBSCRIBED -> {
 					}
 					
+					else -> {
+					}
 				}
 				
 			})
