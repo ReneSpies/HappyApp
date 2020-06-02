@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.billing.billingrepository.localdatabase.AugmentedSkuDetails
 import com.aresid.happyapp.databinding.FragmentSilverBinding
 import com.aresid.happyapp.subscribe.SubscribeViewModel
+import com.aresid.happyapp.utils.LoadingStatus
 import com.aresid.happyapp.utils.Util.disableLoading
 import com.aresid.happyapp.utils.Util.enableLoading
 import com.aresid.happyapp.utils.Util.underline

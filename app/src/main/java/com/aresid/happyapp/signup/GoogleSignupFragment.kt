@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
-import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentGoogleSignupBinding
 import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.utils.LoadingStatus
 import com.aresid.happyapp.utils.Util.disableLoading
 import com.aresid.happyapp.utils.Util.enableLoading
 import com.google.android.gms.auth.api.signin.GoogleSignIn

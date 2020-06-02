@@ -5,10 +5,10 @@ import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.billing.billingrepository.BillingWebservice
 import com.aresid.happyapp.keys.Keys
 import com.aresid.happyapp.utils.ButtonUtil
+import com.aresid.happyapp.utils.LoadingStatus
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException

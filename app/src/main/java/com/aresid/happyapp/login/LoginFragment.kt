@@ -10,9 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment.findNavController
-import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentLoginBinding
+import com.aresid.happyapp.utils.LoadingStatus
 import com.aresid.happyapp.utils.Util
 import timber.log.Timber
 

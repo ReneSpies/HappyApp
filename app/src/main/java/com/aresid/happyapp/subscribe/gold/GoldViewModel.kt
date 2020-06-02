@@ -5,11 +5,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.aresid.happyapp.LoadingStatus
 import com.aresid.happyapp.billing.billingrepository.BillingRepository
 import com.aresid.happyapp.billing.billingrepository.localdatabase.AugmentedSkuDetails
 import com.aresid.happyapp.exceptions.CardDeclinedException
 import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.utils.LoadingStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

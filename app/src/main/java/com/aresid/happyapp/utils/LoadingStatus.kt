@@ -1,4 +1,4 @@
-package com.aresid.happyapp
+package com.aresid.happyapp.utils
 
 /**
  *    Created on: 27.05.20

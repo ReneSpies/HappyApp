@@ -1,7 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/main_navigation_graph"
+	app:startDestination="@id/nav_lobby"
 	>
-
+	
+	<fragment
+		android:id="@id/nav_lobby"
+		android:name="com.aresid.happyapp.main.LobbyFragment"
+		android:label="LobbyFragment"
+		tools:layout="@layout/fragment_lobby"
+		/>
+	<fragment
+		android:id="@id/nav_account"
+		android:name="com.aresid.happyapp.main.AccountFragment"
+		android:label="AccountFragment"
+		/>
+	<fragment
+		android:id="@id/nav_contact"
+		android:name="com.aresid.happyapp.main.ContactFragment"
+		android:label="ContactFragment"
+		/>
+	<fragment
+		android:id="@id/nav_favorites"
+		android:name="com.aresid.happyapp.main.FavoritesFragment"
+		android:label="FavoritesFragment"
+		/>
+	<fragment
+		android:id="@id/nav_search"
+		android:name="com.aresid.happyapp.main.SearchFragment"
+		android:label="SearchFragment"
+		/>
+	<fragment
+		android:id="@id/nav_settings"
+		android:name="com.aresid.happyapp.main.SettingsFragment"
+		android:label="SettingsFragment"
+		/>
+	<fragment
+		android:id="@id/nav_ad"
+		android:name="com.aresid.happyapp.main.AdFragment"
+		android:label="AdFragment"
+		/>
 </navigation>

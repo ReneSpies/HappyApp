@@ -6,7 +6,6 @@
 	android:layout_height="wrap_content"
 	android:background="@drawable/side_nav_bar"
 	android:gravity="bottom"
-	android:onClick="onNavHeaderClick"
 	android:orientation="vertical"
 	android:theme="@style/ThemeOverlay.MaterialComponents.Dark"
 	>
