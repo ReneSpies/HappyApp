@@ -4,37 +4,48 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	tools:showIn="navigation_view"
 	>
-	
-	<group>
-		<item
-			android:id="@+id/nav_lobby"
-			android:title="@string/home"
-			/>
-		<item
-			android:id="@+id/nav_search"
-			android:title="@string/search"
-			/>
-		<item
-			android:id="@+id/nav_favorites"
-			android:title="@string/favorites"
-			/>
-		<item
-			android:id="@+id/nav_ad"
-			android:title="@string/submit_an_ad"
-			/>
-	</group>
+	<item
+		android:id="@+id/nav_lobby"
+		android:checkable="true"
+		android:icon="@drawable/ic_home_24"
+		android:title="@string/home"
+		/>
+	<item
+		android:id="@+id/nav_search"
+		android:checkable="true"
+		android:icon="@drawable/ic_search_24"
+		android:title="@string/search"
+		/>
+	<item
+		android:id="@+id/nav_favorites"
+		android:checkable="true"
+		android:icon="@drawable/ic_favorite_24"
+		android:title="@string/favorites"
+		/>
+	<item
+		android:id="@+id/nav_ad"
+		android:checkable="true"
+		android:icon="@drawable/ic_queue_24"
+		android:title="@string/submit_an_ad"
+		/>
 	<item android:title="@string/settings">
 		<menu>
 			<item
 				android:id="@+id/nav_settings"
+				android:checkable="true"
+				android:icon="@drawable/ic_settings_24"
 				android:title="@string/general"
 				/>
 			<item
 				android:id="@+id/nav_account"
+				android:checkable="true"
+				android:icon="@drawable/ic_account_box_24"
 				android:title="@string/account"
 				/>
 			<item
 				android:id="@+id/nav_contact"
+				android:checkable="true"
+				android:icon="@drawable/ic_contact_support_24"
 				android:title="@string/contact"
 				/>
 		</menu>

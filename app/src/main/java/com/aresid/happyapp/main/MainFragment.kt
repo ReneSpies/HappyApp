@@ -62,7 +62,7 @@ class MainFragment: Fragment() {
 			R.id.nav_settings,
 			R.id.nav_account,
 			R.id.nav_contact
-		).build()
+		).setOpenableLayout(binding.drawerLayout).build()
 		
 		// Setup the toolbar with NavController
 		NavigationUI.setupWithNavController(

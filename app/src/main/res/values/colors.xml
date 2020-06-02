@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<color name="color_primary">#DB2323</color>
-	<color name="colorPrimaryDark">#991818</color>
-	<color name="colorAccent">#FF6666</color>
-	<color name="white">#fff</color>
-	<color name="main_fragment_background_color">@android:color/white</color>
-	<color name="rippleColor">@color/white</color>
-	<color name="rippleColorAccent">@color/colorAccent</color>
-	<color name="bronze">#b35c0f</color>
-	<color name="silver">#b5b5b5</color>
-	<color name="gold">#b3840f</color>
-	<color name="platinum">#a3a5b0</color>
+	<color name="primaryColor">#DB2323</color>
+	<color name="primaryLightColor">#ff5f4d</color>
+	<color name="primaryDarkColor">#991818</color>
+	<color name="secondaryColor">#FF6666</color>
+	<color name="secondaryLightColor">#ff9994</color>
+	<color name="secondaryDarkColor">#c6323c</color>
+	<color name="primaryTextColor">@android:color/white</color>
+	<color name="secondaryTextColor">@android:color/black</color>
+	<color name="mainFragmentBackgroundColor">@android:color/white</color>
+	<color name="ripplePrimaryColor">@android:color/white</color>
+	<color name="rippleSecondaryColor">@color/secondaryColor</color>
+	<color name="bronzeColor">#b35c0f</color>
+	<color name="silverColor">#b5b5b5</color>
+	<color name="goldColor">#b3840f</color>
+	<color name="platinumColor">#a3a5b0</color>
 </resources>

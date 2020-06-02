@@ -2,24 +2,16 @@
 	
 	<style name="Theme.HappyApp"
 	       parent="Theme.MaterialComponents.Light.NoActionBar">
-		<item name="colorPrimary">@color/color_primary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
-		<item name="rippleColor">@color/rippleColor</item>
+		<item name="colorPrimary">@color/primaryColor</item>
+		<item name="colorPrimaryDark">@color/primaryDarkColor</item>
+		<item name="colorAccent">@color/secondaryColor</item>
+		<item name="rippleColor">@color/ripplePrimaryColor</item>
 		<item name="android:fontFamily">@font/lato_regular</item>
+		<item name="drawerArrowStyle">@style/Widget.HappyApp.DrawerIconStyle</item>
 	</style>
 	
 	<style name="Theme.HappyApp.Launcher">
 		<item name="android:windowBackground">@drawable/launch_screen</item>
-	</style>
-	
-	<style name="Widget.HappyApp.Seperator.TextView"
-	       parent="Widget.AppCompat.TextView">
-		<item name="android:textAlignment">center</item>
-		<item name="android:layout_marginTop">.13dp</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_width">match_parent</item>
-		<item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
 	</style>
 	
 	<style name="Widget.HappyApp.TextInputLayout"
@@ -34,7 +26,7 @@
 	       parent="Widget.MaterialComponents.Button">
 		<item name="cornerRadius">30dp</item>
 		<item name="android:textSize">@dimen/button_text_size_medium</item>
-		<item name="backgroundTint">@color/color_primary</item>
+		<item name="backgroundTint">@color/primaryColor</item>
 		<item name="rippleColor">@android:color/white</item>
 		<item name="drawableTint">@android:color/white</item>
 		<item name="android:stateListAnimator">@null</item>
@@ -46,7 +38,7 @@
 	<style name="Widget.HappyApp.TextButton"
 	       parent="Widget.MaterialComponents.Button.TextButton">
 		<item name="cornerRadius">25.13dp</item>
-		<item name="rippleColor">@color/rippleColorAccent</item>
+		<item name="rippleColor">@color/rippleSecondaryColor</item>
 		<item name="android:textSize">@dimen/button_text_size_medium</item>
 		<item name="android:textColor">?attr/colorOnSurface</item>
 		<item name="textAllCaps">false</item>
@@ -55,17 +47,28 @@
 	<style name="Widget.HappyApp.OutlinedButton"
 	       parent="Widget.MaterialComponents.Button.OutlinedButton">
 		<item name="cornerRadius">25.13dp</item>
-		<item name="rippleColor">@color/rippleColorAccent</item>
+		<item name="rippleColor">@color/rippleSecondaryColor</item>
 		<item name="android:textSize">@dimen/button_text_size_medium</item>
 		<item name="textAllCaps">false</item>
 		<item name="strokeWidth">1.13dp</item>
-		<item name="strokeColor">@color/color_primary</item>
+		<item name="strokeColor">@color/primaryColor</item>
 		<item name="android:textColor">?attr/colorOnSurface</item>
 	</style>
 	
 	<style name="Theme.HappyApp.Fragment">
-		<item name="background">@color/main_fragment_background_color</item>
+		<item name="background">@color/mainFragmentBackgroundColor</item>
 		<item name="elevation">4dp</item>
+	</style>
+	
+	<style name="Widget.HappyApp.Toolbar"
+	       parent="Widget.MaterialComponents.Toolbar">
+		<item name="android:background">@color/primaryColor</item>
+		<item name="titleTextColor">@color/primaryTextColor</item>
+	</style>
+	
+	<style name="Widget.HappyApp.DrawerIconStyle"
+	       parent="Widget.AppCompat.DrawerArrowToggle">
+		<item name="color">@android:color/white</item>
 	</style>
 
 </resources>

@@ -97,7 +97,7 @@
 					android:layout_marginTop="@dimen/margin_large"
 					android:textAlignment="center"
 					android:textAppearance="?attr/textAppearanceHeadline5"
-					android:textColor="@color/bronze"
+					android:textColor="@color/bronzeColor"
 					android:textStyle="bold"
 					app:layout_constraintEnd_toEndOf="@id/guideline_end"
 					app:layout_constraintStart_toStartOf="@id/guideline_start"

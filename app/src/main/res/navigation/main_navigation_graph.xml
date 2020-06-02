@@ -17,30 +17,36 @@
 		android:id="@id/nav_account"
 		android:name="com.aresid.happyapp.main.AccountFragment"
 		android:label="AccountFragment"
+		tools:layout="@layout/fragment_account"
 		/>
 	<fragment
 		android:id="@id/nav_contact"
 		android:name="com.aresid.happyapp.main.ContactFragment"
 		android:label="ContactFragment"
+		tools:layout="@layout/fragment_contact"
 		/>
 	<fragment
 		android:id="@id/nav_favorites"
 		android:name="com.aresid.happyapp.main.FavoritesFragment"
 		android:label="FavoritesFragment"
+		tools:layout="@layout/fragment_favorites"
 		/>
 	<fragment
 		android:id="@id/nav_search"
 		android:name="com.aresid.happyapp.main.SearchFragment"
 		android:label="SearchFragment"
+		tools:layout="@layout/fragment_search"
 		/>
 	<fragment
 		android:id="@id/nav_settings"
 		android:name="com.aresid.happyapp.main.SettingsFragment"
 		android:label="SettingsFragment"
+		tools:layout="@layout/fragment_settings"
 		/>
 	<fragment
 		android:id="@id/nav_ad"
 		android:name="com.aresid.happyapp.main.AdFragment"
 		android:label="AdFragment"
+		tools:layout="@layout/fragment_ad"
 		/>
 </navigation>
