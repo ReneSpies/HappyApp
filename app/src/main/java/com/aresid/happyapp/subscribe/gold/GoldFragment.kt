@@ -107,21 +107,20 @@ class GoldFragment: Fragment() {
 		                                          })
 		
 		// Observe the subscriptionSkuDetailsListLiveData
-		goldViewModel.subscriptionSkuDetailsListLiveData.observe(
-			viewLifecycleOwner,
-			Observer { list ->
+		goldViewModel.subscriptionSkuDetailsListLiveData.observe(viewLifecycleOwner,
+		                                                         Observer { list ->
+			
+			                                                         Timber.d("subscriptionSkuDetailsListLiveData observer called")
+			
+			                                                         if (list.isNotEmpty()) {
 				
-				Timber.d("subscriptionSkuDetailsListLiveData observer called")
+				                                                         // Take the SkuDetails and populate the View with its information
+				                                                         populateGoldContent(goldViewModel.getSubscriptionSkuDetails()!!)
 				
-				if (list.isNotEmpty()) {
-					
-					// Take the SkuDetails and populate the View with its information
-					populateGoldContent(goldViewModel.getSubscriptionSkuDetails()!!)
-					
-					// Show the goldContent
-					showContent()
-					
-				}
+				                                                         // Show the goldContent
+				                                                         showContent()
+				
+			                                                         }
 		                                                         })
 		
 		// Return the inflated layout

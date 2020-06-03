@@ -229,6 +229,9 @@ class DateOfBirthViewModel: ViewModel() {
 				true
 			)
 			
+			// Send the user a verification email
+			it.user?.sendEmailVerification()
+			
 			// Save the user's data in the Firestore
 			saveUserDataInFirestore(it.user!!.uid)
 			

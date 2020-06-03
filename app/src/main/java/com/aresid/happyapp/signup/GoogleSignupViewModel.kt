@@ -101,12 +101,8 @@ class GoogleSignupViewModel: ViewModel() {
 				
 				_toggleLoadingScreen.value = LoadingStatus.SUCCESS
 				
-				// If the email is not verified, send a verification email
-				if (!it.user!!.isEmailVerified) {
-					
-					it.user!!.sendEmailVerification()
-					
-				}
+				// Send a verification email
+				it.user!!.sendEmailVerification()
 				
 			}
 			

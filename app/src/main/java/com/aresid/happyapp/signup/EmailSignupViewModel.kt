@@ -35,12 +35,8 @@ class EmailSignupViewModel: ViewModel() {
 		
 		Timber.d("navigateToSubscribeFragment: called")
 		
-		Timber.d("navigateToSubscribeFragment = ${_navigateToSubscribeFragment.value}")
-		
 		// Set the navigateToSubscribeFragment LiveData
 		_navigateToSubscribeFragment.value = true
-		
-		Timber.d("navigateToSubscribeFragment = ${_navigateToSubscribeFragment.value}")
 		
 	}
 	
