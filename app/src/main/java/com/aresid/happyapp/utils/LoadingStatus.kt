@@ -17,6 +17,8 @@ enum class LoadingStatus {
 	
 	SUCCESS,
 	
+	FAILURE,
+	
 	ERROR_USER_DELETED,
 	
 	ERROR_NO_INTERNET,

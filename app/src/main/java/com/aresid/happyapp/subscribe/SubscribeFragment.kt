@@ -12,6 +12,7 @@ import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentSubscribeBinding
 import com.aresid.happyapp.subscribe.viewpager2.SubscriptionStateAdapter
 import com.aresid.happyapp.subscribe.viewpager2.ZoomOutPageTransformer
+import com.aresid.happyapp.utils.LoadingStatus
 import com.google.android.material.tabs.TabLayoutMediator
 import timber.log.Timber
 
@@ -48,18 +49,42 @@ class SubscribeFragment: Fragment() {
 		initViewPager2AndTabLayout()
 		
 		// Observe the navigateToMainFragment LiveData
-		subscribeFragmentViewModel.navigateToMainFragment.observe(
-			viewLifecycleOwner,
-			Observer { navigate ->
+		subscribeFragmentViewModel.navigateToMainFragment.observe(viewLifecycleOwner,
+		                                                          Observer { navigate ->
+			
+			                                                          // If navigate, navigate
+			                                                          if (navigate) {
 				
-				// If navigate, navigate
-				if (navigate) {
+				                                                          // Navigate
+				                                                          navigateToMainFragment()
+				
+				                                                          // Reset the LiveData
+				                                                          subscribeFragmentViewModel.navigated()
+				
+			                                                          }
+			
+		                                                          })
+		
+		// Observe the toggleLoading LiveData
+		subscribeFragmentViewModel.toggleLoading.observe(
+			viewLifecycleOwner,
+			Observer { status ->
+				
+				when (status) {
 					
-					// Navigate
-					navigateToMainFragment()
+					LoadingStatus.IDLE -> showContent()
 					
-					// Reset the LiveData
-					subscribeFragmentViewModel.navigated()
+					LoadingStatus.LOADING -> showLoading()
+					
+					LoadingStatus.SUCCESS -> {
+						
+						navigateToMainFragment()
+						
+						subscribeFragmentViewModel.navigated()
+						
+					}
+					
+					LoadingStatus.FAILURE -> showContent()
 					
 				}
 				
@@ -67,6 +92,33 @@ class SubscribeFragment: Fragment() {
 		
 		// Return the inflated layout
 		return binding.root
+		
+	}
+	
+	private fun showLoading() {
+		
+		Timber.d("showLoading: called")
+		
+		// Disable the content
+		binding.content.visibility = View.GONE
+		
+		// Show the loading screen
+		binding.loading.visibility = View.VISIBLE
+		
+	}
+	
+	private fun showContent() {
+		
+		Timber.d("showContent: called")
+		
+		// Hide the loading screen
+		binding.loading.visibility = View.GONE
+		
+		// Show the content
+		binding.content.visibility = View.VISIBLE
+		
+		Timber.d("loading visibility = ${binding.loading.visibility}") // Prints 8 for View.GONE
+		Timber.d("content visibility = ${binding.content.visibility}") // Prints 0 for View.VISIBLE
 		
 	}
 	

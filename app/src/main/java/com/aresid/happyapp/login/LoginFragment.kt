@@ -1,6 +1,5 @@
 package com.aresid.happyapp.login
 
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +22,7 @@ import timber.log.Timber
  * Copyright: © 2020 ARES ID
  */
 
-class LoginFragment: Fragment(), View.OnClickListener {
+class LoginFragment: Fragment() {
 	
 	// Declare LoginViewModel
 	private lateinit var loginViewModel: LoginViewModel
@@ -52,15 +51,19 @@ class LoginFragment: Fragment(), View.OnClickListener {
 			false
 		)
 		
+		// Tell the layout about this fragment to use its methods
+		binding.fragment = this
+		
 		// Define the NavController object
 		mNavController = findNavController(this)
 		
 		// Observe the LiveData of emailOrPasswordIsEmpty and show an error to the user
-		loginViewModel.emailOrPasswordIsEmpty.observe(viewLifecycleOwner,
-		                                              Observer { isEmpty ->
-			
-			                                              // If the LiveData is true, show an error to the user
-			                                              if (isEmpty) {
+		loginViewModel.emailOrPasswordIsEmpty.observe(
+			viewLifecycleOwner,
+			Observer { isEmpty ->
+				
+				// If the LiveData is true, show an error to the user
+				if (isEmpty) {
 				
 				                                              binding.emailFieldLayout.error = getString(R.string.error_email_or_password_empty)
 				
@@ -87,7 +90,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 					LoadingStatus.IDLE -> {
 						
 						// Show the content and stop the animation
-						showContentStopLoadingAnimation()
+						showContent()
 						
 					}
 					
@@ -116,11 +119,11 @@ class LoginFragment: Fragment(), View.OnClickListener {
 					LoadingStatus.ERROR_NO_INTERNET -> {
 						
 						// Show the content
-						showContentStopLoadingAnimation()
+						showContent()
 						
 						// Show an error
 						Util.showErrorSnackbar(
-							binding.loadingSpinner,
+							binding.progressBar,
 							getString(R.string.error_no_internet_connection)
 						)
 						
@@ -131,11 +134,11 @@ class LoginFragment: Fragment(), View.OnClickListener {
 					LoadingStatus.ERROR_USER_DELETED -> {
 						
 						// Show content again
-						showContentStopLoadingAnimation()
+						showContent()
 						
 						// Show an error
 						Util.showErrorSnackbar(
-							binding.loadingSpinner,
+							binding.progressBar,
 							getString(R.string.error_account_disabled_or_deleted)
 						)
 						
@@ -230,71 +233,18 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		
 	}
 	
-	override fun onResume() {
-		
-		Timber.d("onResume: called")
-		
-		super.onResume()
-		
-		// If the loadingSpinner is visible, start its loading animation
-		if (binding.loadingSpinner.visibility == View.VISIBLE) {
-			
-			startLoadingAnimation()
-			
-		}
-		
-	}
-	
-	override fun onStop() {
-		
-		Timber.d("onStop: called")
-		
-		super.onStop()
-		
-		// Stop the loading animation to save resources
-		stopLoadingAnimation()
-		
-	}
-	
-	/**
-	 * Stops the loadingSpinner's animation.
-	 */
-	private fun stopLoadingAnimation() {
-		
-		Timber.d("stopLoadingAnimation: called")
-		
-		// Casts the loadingSpinner's drawable to AnimatedVectorDrawable and stops its animation
-		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).stop()
-		
-	}
-	
-	/**
-	 * Starts the loadingSpinner's animation.
-	 */
-	private fun startLoadingAnimation() {
-		
-		Timber.d("startLoadingAnimation: called")
-		
-		// Casts the loadingSpinner's drawable to AnimatedVectorDrawable and starts its animation
-		(binding.loadingSpinner.drawable as AnimatedVectorDrawable).start()
-		
-	}
-	
 	/**
 	 * Hides the loading spinner, stops its animation and shows the content.
 	 */
-	private fun showContentStopLoadingAnimation() {
+	private fun showContent() {
 		
 		Timber.d("showContent: called")
 		
 		// Hide the loading spinner
-		binding.loadingSpinner.visibility = View.GONE
-		
-		// Stop the animation
-		stopLoadingAnimation()
+		binding.loading.visibility = View.GONE
 		
 		// Show the content
-		binding.loginContent.visibility = View.VISIBLE
+		binding.content.visibility = View.VISIBLE
 		
 	}
 	
@@ -306,20 +256,17 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		Timber.d("showLoading: called")
 		
 		// Hide the content
-		binding.loginContent.visibility = View.GONE
-		
-		// Start the loading animation
-		startLoadingAnimation()
+		binding.content.visibility = View.GONE
 		
 		// Show the loading spinner
-		binding.loadingSpinner.visibility = View.VISIBLE
+		binding.loading.visibility = View.VISIBLE
 		
 	}
 	
 	/**
 	 * Uses the NavController object to navigate to the ForgotLoginFragment using LoginFragmentDirections.
 	 */
-	private fun navigateToForgotLoginFragment() {
+	fun navigateToForgotLoginFragment() {
 		
 		Timber.d("navigateToForgotLoginFragment: called")
 		
@@ -340,38 +287,10 @@ class LoginFragment: Fragment(), View.OnClickListener {
 		
 	}
 	
-	override fun onViewCreated(
-		view: View,
-		savedInstanceState: Bundle?
-	) {
-		Timber.d("onViewCreated: called")
-		super.onViewCreated(
-			view,
-			savedInstanceState
-		)
-		
-		// Set onClickListeners
-		binding.emailSignupButton.setOnClickListener(this)
-		binding.googleSignupButton.setOnClickListener(this)
-		binding.forgotLoginButton.setOnClickListener(this)
-		
-	}
-	
-	override fun onClick(v: View) {
-		
-		Timber.d("onClick: called")
-		
-		when (v.id) {
-			
-			R.id.email_signup_button -> navigateToEmailSignupFragment()
-			R.id.google_signup_button -> onGoogleSignupButtonClicked()
-			R.id.forgot_login_button -> navigateToForgotLoginFragment()
-			
-		}
-		
-	}
-	
-	private fun navigateToSubscribeFragment() {
+	/**
+	 * Uses the NavController to navigate to the SubscribeFragment.
+	 */
+	fun navigateToSubscribeFragment() {
 		
 		Timber.d("navigateToSubscribeFragment: called")
 		
@@ -382,7 +301,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 	/**
 	 * Uses the NavController object to navigate to the EmailSignupFragment using LoginFragmentDirections.
 	 */
-	private fun navigateToEmailSignupFragment() {
+	fun navigateToEmailSignupFragment() {
 		
 		Timber.d("showEmailSignupFragment: called")
 		
@@ -394,7 +313,7 @@ class LoginFragment: Fragment(), View.OnClickListener {
 	/**
 	 * Uses the NavController object to navigate to the SubscribeFragment using LoginFragmentDirections.
 	 */
-	private fun onGoogleSignupButtonClicked() {
+	fun navigateToGoogleSignupFragment() {
 		
 		Timber.d("onGoogleSignupButtonClicked: called")
 		

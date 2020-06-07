@@ -11,9 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.aresid.happyapp.billing.billingrepository.localdatabase.AugmentedSkuDetails
 import com.aresid.happyapp.databinding.FragmentGoldBinding
 import com.aresid.happyapp.subscribe.SubscribeViewModel
-import com.aresid.happyapp.utils.LoadingStatus
-import com.aresid.happyapp.utils.Util.disableLoading
-import com.aresid.happyapp.utils.Util.enableLoading
 import com.aresid.happyapp.utils.Util.underline
 import timber.log.Timber
 
@@ -63,46 +60,7 @@ class GoldFragment: Fragment() {
 		goldViewModel.toggleLoadingScreen.observe(viewLifecycleOwner,
 		                                          Observer { status ->
 			
-			                                          when (status) {
-				
-				                                          LoadingStatus.INIT -> {
-				                                          }
-				
-				                                          LoadingStatus.IDLE -> {
-					
-					                                          populateGoldContent(goldViewModel.getSubscriptionSkuDetails()!!)
-					
-					                                          showContent()
-					
-				                                          }
-				
-				                                          LoadingStatus.LOADING -> showLoadingSpinner()
-				
-				                                          LoadingStatus.SUCCESS -> {
-					
-					                                          subscribeViewModel.navigateToMainFragment.value = true
-					
-				                                          }
-				
-				                                          LoadingStatus.ERROR_USER_DELETED -> {
-				                                          }
-				
-				                                          LoadingStatus.ERROR_NO_INTERNET -> {
-				                                          }
-				
-				                                          LoadingStatus.ERROR_NOT_SUBSCRIBED -> {
-				                                          }
-				
-				                                          LoadingStatus.ERROR_CARD_DECLINED -> {
-					
-					                                          // Google already shows an error saying the card has been declined
-					
-					                                          // Show the content again
-					                                          showContent()
-					
-				                                          }
-				
-			                                          }
+			                                          subscribeViewModel.toggleLoading.value = status
 			
 		                                          })
 		
@@ -115,7 +73,7 @@ class GoldFragment: Fragment() {
 			                                                         if (list.isNotEmpty()) {
 				
 				                                                         // Take the SkuDetails and populate the View with its information
-				                                                         populateGoldContent(goldViewModel.getSubscriptionSkuDetails()!!)
+				                                                         populateContent(goldViewModel.getSubscriptionSkuDetails()!!)
 				
 				                                                         // Show the goldContent
 				                                                         showContent()
@@ -128,38 +86,11 @@ class GoldFragment: Fragment() {
 		
 	}
 	
-	override fun onResume() {
-		
-		Timber.d("onResume: called")
-		
-		super.onResume()
-		
-		// If the loadingSpinner is visible, start the loading animation again
-		if (binding.loadingSpinner.visibility == View.VISIBLE) {
-			
-			// Start loading animation again
-			binding.loadingSpinner.enableLoading()
-			
-		}
-		
-	}
-	
-	override fun onStop() {
-		
-		Timber.d("onStop: called")
-		
-		super.onStop()
-		
-		// Stop the loading animation
-		binding.loadingSpinner.disableLoading()
-		
-	}
-	
 	/**
 	 * Unpacks the information in the [augmentedSkuDetails] and puts it into the layout.
 	 * Also underlines the priceText.
 	 */
-	private fun populateGoldContent(augmentedSkuDetails: AugmentedSkuDetails) {
+	private fun populateContent(augmentedSkuDetails: AugmentedSkuDetails) {
 		
 		Timber.d("populateGoldContent: called")
 		
@@ -186,33 +117,10 @@ class GoldFragment: Fragment() {
 		Timber.d("showGoldContent: called")
 		
 		// Disable the loadingSpinner visibility
-		binding.loadingSpinner.visibility = View.GONE
-		
-		// Disable the loading animation
-		binding.loadingSpinner.disableLoading()
+		binding.loading.visibility = View.GONE
 		
 		// Enable the goldContent visibility
-		binding.goldContent.visibility = View.VISIBLE
-		
-	}
-	
-	/**
-	 * Enables the loadingSpinner visibility and
-	 * disables the errorFragment and goldContent
-	 * visibility.
-	 */
-	private fun showLoadingSpinner() {
-		
-		Timber.d("showLoadingSpinner: called")
-		
-		// Disable the goldContent visibility
-		binding.goldContent.visibility = View.GONE
-		
-		// Enable the loading animation
-		binding.loadingSpinner.enableLoading()
-		
-		// Enable the loadingSpinner visibility
-		binding.loadingSpinner.visibility = View.VISIBLE
+		binding.content.visibility = View.VISIBLE
 		
 	}
 	

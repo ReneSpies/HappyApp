@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.aresid.happyapp.billing.billingrepository.BillingRepository
 import com.aresid.happyapp.billing.billingrepository.localdatabase.AugmentedSkuDetails
-import com.aresid.happyapp.exceptions.CardDeclinedException
 import com.aresid.happyapp.keys.Keys
 import com.aresid.happyapp.utils.LoadingStatus
 import kotlinx.coroutines.CoroutineScope
@@ -127,11 +126,7 @@ class PlatinumViewModel(application: Application): AndroidViewModel(application)
 				
 				Timber.e(e)
 				
-				when (e) {
-					
-					is CardDeclinedException -> setToggleLoadingScreenValue(LoadingStatus.ERROR_CARD_DECLINED)
-					
-				}
+				setToggleLoadingScreenValue(LoadingStatus.FAILURE)
 				
 			}
 			

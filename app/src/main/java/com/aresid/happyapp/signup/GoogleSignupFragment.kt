@@ -117,10 +117,10 @@ class GoogleSignupFragment: Fragment() {
 		Timber.d("showContent: called")
 		
 		// Disable the loadingSpinner
-		binding.loadingSpinner.visibility = View.INVISIBLE
+		binding.progressBar.visibility = View.INVISIBLE
 		
 		// Disable the loading animation
-		binding.loadingSpinner.disableLoading()
+		binding.progressBar.disableLoading()
 		
 		// Enable the content
 		binding.content.visibility = View.VISIBLE
@@ -135,10 +135,10 @@ class GoogleSignupFragment: Fragment() {
 		binding.content.visibility = View.GONE
 		
 		// Enable the loading animation
-		binding.loadingSpinner.enableLoading()
+		binding.progressBar.enableLoading()
 		
 		// Enable the loadingScreen
-		binding.loadingSpinner.visibility = View.VISIBLE
+		binding.progressBar.visibility = View.VISIBLE
 		
 	}
 	

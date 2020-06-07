@@ -11,6 +11,11 @@
 			name="loginViewModel"
 			type="com.aresid.happyapp.login.LoginViewModel"
 			/>
+		
+		<variable
+			name="fragment"
+			type="com.aresid.happyapp.login.LoginFragment"
+			/>
 	</data>
 	
 	<androidx.constraintlayout.widget.ConstraintLayout
@@ -19,188 +24,195 @@
 		tools:context=".login.LoginFragment"
 		>
 		
-		<ImageView
-			android:id="@+id/loading_spinner"
+		<ProgressBar
+			android:id="@+id/progress_bar"
 			android:layout_width="96dp"
 			android:layout_height="96dp"
 			android:contentDescription="@string/loading"
-			android:src="@drawable/animated_loading_circle_red_black"
-			android:visibility="gone"
+			android:indeterminateDrawable="@drawable/animated_loading_circle_red_black"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
 			app:layout_constraintTop_toTopOf="parent"
 			/>
 		
-		<androidx.constraintlayout.widget.ConstraintLayout
-			android:id="@+id/login_content"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
+		<ImageView
+			android:id="@+id/app_logo"
+			android:layout_width="200dp"
+			android:layout_height="200dp"
+			android:layout_marginTop="4dp"
+			android:contentDescription="@string/happy_app_logo"
+			android:src="@drawable/happyapp_logo_144"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toTopOf="@id/guideline_top"
+			/>
+		
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/email_field_layout"
+			style="@style/Widget.HappyApp.TextInputLayout"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			app:errorEnabled="true"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toBottomOf="@+id/app_logo"
 			>
 			
-			<ImageView
-				android:id="@+id/app_logo"
-				android:layout_width="200dp"
-				android:layout_height="200dp"
-				android:layout_marginTop="4dp"
-				android:contentDescription="@string/happy_app_logo"
-				android:src="@drawable/happyapp_logo_144"
-				app:layout_constraintEnd_toEndOf="@id/guideline_end"
-				app:layout_constraintStart_toStartOf="@id/guideline_start"
-				app:layout_constraintTop_toTopOf="@id/guideline_top"
-				/>
-			
-			<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/email_field_layout"
-				style="@style/Widget.HappyApp.TextInputLayout"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				app:errorEnabled="true"
-				app:layout_constraintEnd_toEndOf="@id/guideline_end"
-				app:layout_constraintStart_toStartOf="@id/guideline_start"
-				app:layout_constraintTop_toBottomOf="@+id/app_logo"
-				>
-				
-				<com.google.android.material.textfield.TextInputEditText
-					android:id="@+id/email_field"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:hint="@string/email"
-					android:inputType="textEmailAddress"
-					android:maxLines="1"
-					android:singleLine="true"
-					android:text="@={loginViewModel.email}"
-					/>
-			</com.google.android.material.textfield.TextInputLayout>
-			
-			<com.google.android.material.textfield.TextInputLayout
-				android:id="@+id/password_field_layout"
-				style="@style/Widget.HappyApp.TextInputLayout"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				app:errorEnabled="true"
-				app:layout_constraintEnd_toEndOf="@id/guideline_end"
-				app:layout_constraintStart_toStartOf="@id/guideline_start"
-				app:layout_constraintTop_toBottomOf="@+id/email_field_layout"
-				app:passwordToggleEnabled="true"
-				>
-				
-				<com.google.android.material.textfield.TextInputEditText
-					android:id="@+id/password_field"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:hint="@string/password"
-					android:imeActionId="6"
-					android:imeActionLabel="@string/common_signin_button_text"
-					android:imeOptions="actionUnspecified"
-					android:inputType="textPassword"
-					android:maxLines="1"
-					android:singleLine="true"
-					android:text="@={loginViewModel.password}"
-					/>
-			</com.google.android.material.textfield.TextInputLayout>
-			
-			<com.google.android.material.button.MaterialButton
-				android:id="@+id/login_button"
-				style="@style/Widget.HappyApp.ContainedButton"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:onClick="@{(view) -> loginViewModel.onLoginButtonClicked(view)}"
-				android:text="@string/log_in"
-				app:layout_constraintEnd_toEndOf="@id/guideline_end"
-				app:layout_constraintStart_toStartOf="@id/guideline_start"
-				app:layout_constraintTop_toBottomOf="@+id/password_field_layout"
-				/>
-			
-			<com.google.android.material.button.MaterialButton
-				android:id="@+id/forgot_login_button"
-				style="@style/Widget.HappyApp.TextButton"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="13.13dp"
-				android:text="@string/forgot_my_login"
-				android:textSize="@dimen/button_text_size_small"
-				app:layout_constraintEnd_toEndOf="@id/guideline_end"
-				app:layout_constraintStart_toStartOf="@id/guideline_start"
-				app:layout_constraintTop_toBottomOf="@+id/login_button"
-				/>
-			
-			<TextView
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="13dp"
-				android:text="@string/sign_up_using_these_colon"
-				android:textAlignment="center"
-				app:layout_constraintBottom_toTopOf="@+id/signup_button_container"
-				app:layout_constraintEnd_toEndOf="@id/guideline_end"
-				app:layout_constraintStart_toStartOf="@id/guideline_start"
-				/>
-			
-			<LinearLayout
-				android:id="@+id/signup_button_container"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:orientation="horizontal"
-				app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-				app:layout_constraintEnd_toEndOf="@id/guideline_end"
-				app:layout_constraintStart_toStartOf="@id/guideline_start"
-				>
-				
-				<androidx.appcompat.widget.AppCompatImageButton
-					android:id="@+id/email_signup_button"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginEnd="6.5dp"
-					android:background="@drawable/round_button_background"
-					android:src="@drawable/ic_email_24dp"
-					/>
-				
-				<androidx.appcompat.widget.AppCompatImageButton
-					android:id="@+id/google_signup_button"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="6.5dp"
-					android:background="@drawable/round_button_background"
-					android:src="@drawable/ic_google_favicon_24dp"
-					/>
-			</LinearLayout>
-			
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guideline_top"
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/email_field"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				app:layout_constraintGuide_begin="@dimen/margin_small"
+				android:hint="@string/email"
+				android:inputType="textEmailAddress"
+				android:maxLines="1"
+				android:singleLine="true"
+				android:text="@={loginViewModel.email}"
 				/>
+		</com.google.android.material.textfield.TextInputLayout>
+		
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/password_field_layout"
+			style="@style/Widget.HappyApp.TextInputLayout"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			app:errorEnabled="true"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toBottomOf="@+id/email_field_layout"
+			app:passwordToggleEnabled="true"
+			>
 			
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guideline_end"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:orientation="vertical"
-				app:layout_constraintGuide_end="@dimen/margin_medium"
-				/>
-			
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guideline_bottom"
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/password_field"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				app:layout_constraintGuide_end="@dimen/margin_small"
+				android:hint="@string/password"
+				android:imeActionId="6"
+				android:imeActionLabel="@string/common_signin_button_text"
+				android:imeOptions="actionUnspecified"
+				android:inputType="textPassword"
+				android:maxLines="1"
+				android:singleLine="true"
+				android:text="@={loginViewModel.password}"
+				/>
+		</com.google.android.material.textfield.TextInputLayout>
+		
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/login_button"
+			style="@style/Widget.HappyApp.ContainedButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:onClick="@{(view) -> loginViewModel.onLoginButtonClicked(view)}"
+			android:text="@string/log_in"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toBottomOf="@+id/password_field_layout"
+			/>
+		
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/forgot_login_button"
+			style="@style/Widget.HappyApp.TextButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="13.13dp"
+			android:onClick="@{() -> fragment.navigateToForgotLoginFragment()}"
+			android:text="@string/forgot_my_login"
+			android:textSize="@dimen/button_text_size_small"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			app:layout_constraintTop_toBottomOf="@+id/login_button"
+			/>
+		
+		<TextView
+			android:id="@+id/signup_headline"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="13dp"
+			android:text="@string/sign_up_using_these_colon"
+			android:textAlignment="center"
+			app:layout_constraintBottom_toTopOf="@+id/signup_button_container"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			/>
+		
+		<LinearLayout
+			android:id="@+id/signup_button_container"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:orientation="horizontal"
+			app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+			app:layout_constraintEnd_toEndOf="@id/guideline_end"
+			app:layout_constraintStart_toStartOf="@id/guideline_start"
+			>
+			
+			<androidx.appcompat.widget.AppCompatImageButton
+				android:id="@+id/email_signup_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="6.5dp"
+				android:background="@drawable/round_button_background"
+				android:onClick="@{() -> fragment.navigateToEmailSignupFragment()}"
+				android:src="@drawable/ic_email_24dp"
 				/>
 			
-			<androidx.constraintlayout.widget.Guideline
-				android:id="@+id/guideline_start"
+			<androidx.appcompat.widget.AppCompatImageButton
+				android:id="@+id/google_signup_button"
 				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:orientation="vertical"
-				app:layout_constraintGuide_begin="@dimen/margin_medium"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="6.5dp"
+				android:background="@drawable/round_button_background"
+				android:onClick="@{() -> fragment.navigateToGoogleSignupFragment()}"
+				android:src="@drawable/ic_google_favicon_24dp"
 				/>
-		</androidx.constraintlayout.widget.ConstraintLayout>
+		</LinearLayout>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_top"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_begin="@dimen/margin_small"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_end"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_end="@dimen/margin_medium"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_bottom"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			app:layout_constraintGuide_end="@dimen/margin_small"
+			/>
+		
+		<androidx.constraintlayout.widget.Guideline
+			android:id="@+id/guideline_start"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			app:layout_constraintGuide_begin="@dimen/margin_medium"
+			/>
+		
+		<androidx.constraintlayout.widget.Group
+			android:id="@+id/loading"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			app:constraint_referenced_ids="progress_bar"
+			/>
+		
+		<androidx.constraintlayout.widget.Group
+			android:id="@+id/content"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			app:constraint_referenced_ids="signup_headline,app_logo,email_field_layout,signup_button_container,forgot_login_button,login_button,password_field_layout"
+			/>
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
