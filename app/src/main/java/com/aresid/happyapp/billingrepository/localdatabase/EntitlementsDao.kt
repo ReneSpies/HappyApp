@@ -1,4 +1,4 @@
-package com.aresid.happyapp.billing.billingrepository.localdatabase
+package com.aresid.happyapp.billingrepository.localdatabase
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

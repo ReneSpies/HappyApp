@@ -1,4 +1,4 @@
-package com.aresid.happyapp.billing.billingrepository.localdatabase
+package com.aresid.happyapp.billingrepository.localdatabase
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
@@ -45,7 +45,8 @@ interface AugmentedSkuDetailDao {
 			price,
 			title,
 			description,
-			originalJson
+			originalJson,
+			priceAmountMicros
 		)
 		
 		// Inserts the new AugmentedSkuDetails object into the augmented_sku_details_table
@@ -92,7 +93,8 @@ interface AugmentedSkuDetailDao {
 					null,
 					null,
 					null,
-					null
+					null,
+					0 // TODO: Might be an error source here. I use this field to sort the subscriptions in the ViewPager2 and 0 would put this in the first place!
 				)
 			)
 			

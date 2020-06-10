@@ -1,4 +1,4 @@
-package com.aresid.happyapp.billing.billingrepository
+package com.aresid.happyapp.billingrepository
 
 import android.app.Activity
 import android.app.Application
@@ -6,7 +6,7 @@ import android.content.Context
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import com.android.billingclient.api.*
-import com.aresid.happyapp.billing.billingrepository.localdatabase.*
+import com.aresid.happyapp.billingrepository.localdatabase.*
 import com.aresid.happyapp.exceptions.CardDeclinedException
 import com.aresid.happyapp.keys.Keys
 import com.aresid.happyapp.utils.Util.isSuccess

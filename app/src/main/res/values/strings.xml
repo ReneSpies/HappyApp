@@ -125,4 +125,5 @@
 	<string name="error_not_18">You must be 18 or older to register an account for our services.</string>
 	<string name="account">Account</string>
 	<string name="general">General</string>
+	<string name="subscription_logo">Subscription logo</string>
 </resources>

@@ -46,19 +46,19 @@
 			/>
 		
 		<androidx.constraintlayout.widget.Group
-			android:id="@+id/loading"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
-			android:visibility="gone"
-			app:constraint_referenced_ids="progress_bar"
-			/>
-		
-		<androidx.constraintlayout.widget.Group
 			android:id="@+id/content"
 			android:layout_width="0dp"
 			android:layout_height="0dp"
 			android:visibility="visible"
 			app:constraint_referenced_ids="view_pager_2,tab_layout"
+			/>
+		
+		<androidx.constraintlayout.widget.Group
+			android:id="@+id/loading"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			android:visibility="gone"
+			app:constraint_referenced_ids="progress_bar"
 			/>
 	</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

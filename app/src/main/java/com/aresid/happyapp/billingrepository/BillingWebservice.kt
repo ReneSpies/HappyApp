@@ -1,4 +1,4 @@
-package com.aresid.happyapp.billing.billingrepository
+package com.aresid.happyapp.billingrepository
 
 import com.android.billingclient.api.Purchase
 import com.aresid.happyapp.keys.Keys

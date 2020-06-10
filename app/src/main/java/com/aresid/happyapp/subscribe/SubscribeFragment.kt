@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.lifecycle.ViewModelProvider
 import com.aresid.happyapp.R
+import com.aresid.happyapp.billingrepository.localdatabase.AugmentedSkuDetails
 import com.aresid.happyapp.databinding.FragmentSubscribeBinding
-import com.aresid.happyapp.subscribe.viewpager2.SubscriptionStateAdapter
+import com.aresid.happyapp.subscribe.viewpager2.SubscriptionViewPagerAdapter
 import com.aresid.happyapp.subscribe.viewpager2.ZoomOutPageTransformer
-import com.aresid.happyapp.utils.LoadingStatus
+import com.aresid.happyapp.utils.Util
 import com.google.android.material.tabs.TabLayoutMediator
 import timber.log.Timber
 
@@ -25,10 +25,10 @@ import timber.log.Timber
 class SubscribeFragment: Fragment() {
 	
 	// Binding for the layout
-	private lateinit var binding: FragmentSubscribeBinding
+	private lateinit var mBinding: FragmentSubscribeBinding
 	
-	// ViewModel
-	private val subscribeFragmentViewModel: SubscribeViewModel by activityViewModels()
+	// Corresponding ViewModel
+	private lateinit var mSubscribeViewModel: SubscribeViewModel
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -39,124 +39,137 @@ class SubscribeFragment: Fragment() {
 		Timber.d("onCreateView: called")
 		
 		// Define the binding
-		binding = FragmentSubscribeBinding.inflate(
+		mBinding = FragmentSubscribeBinding.inflate(
 			inflater,
 			container,
 			false
 		)
 		
-		// Init ViewPager2 and it's TabLayout
-		initViewPager2AndTabLayout()
+		// Define the ViewModel
+		mSubscribeViewModel = ViewModelProvider(this).get(SubscribeViewModel::class.java)
 		
-		// Observe the navigateToMainFragment LiveData
-		subscribeFragmentViewModel.navigateToMainFragment.observe(viewLifecycleOwner,
-		                                                          Observer { navigate ->
+		// Observe the subscriptionSkuDetailsList LiveData to populate the content
+		mSubscribeViewModel.subscriptionSkuDetailsList.observe(viewLifecycleOwner,
+		                                                       Observer { subscriptions ->
 			
-			                                                          // If navigate, navigate
-			                                                          if (navigate) {
+			                                                       if (subscriptions != null) {
 				
-				                                                          // Navigate
-				                                                          navigateToMainFragment()
+				                                                       // Init ViewPager2 and it's TabLayout
+				                                                       initViewPager2AndTabLayout(subscriptions.sortedBy {
+					
+					                                                       it.priceMicros
+					
+				                                                       })
 				
-				                                                          // Reset the LiveData
-				                                                          subscribeFragmentViewModel.navigated()
-				
-			                                                          }
+			                                                       }
 			
-		                                                          })
+		                                                       })
 		
-		// Observe the toggleLoading LiveData
-		subscribeFragmentViewModel.toggleLoading.observe(
-			viewLifecycleOwner,
-			Observer { status ->
+		// Observe the toggleLoading LiveData to toggle the loading screen
+		mSubscribeViewModel.toggleLoading.observe(viewLifecycleOwner,
+		                                          Observer { status ->
+			
+			                                          when (status) {
 				
-				when (status) {
-					
-					LoadingStatus.IDLE -> showContent()
-					
-					LoadingStatus.LOADING -> showLoading()
-					
-					LoadingStatus.SUCCESS -> {
-						
-						navigateToMainFragment()
-						
-						subscribeFragmentViewModel.navigated()
-						
-					}
-					
-					LoadingStatus.FAILURE -> showContent()
-					
-				}
+				                                          SubscribeLoadingStatus.INIT -> {
+				                                          }
 				
-			})
+				                                          SubscribeLoadingStatus.IDLE -> showContent()
+				
+				                                          SubscribeLoadingStatus.LOADING -> showLoading()
+				
+				                                          SubscribeLoadingStatus.SUCCESS -> TODO("Navigate to MainFragment")
+				
+				                                          SubscribeLoadingStatus.FAILURE -> showContent()
+				
+				                                          SubscribeLoadingStatus.ERROR_NO_INTERNET -> {
+					
+					                                          // Show an error snackbar
+					                                          Util.showErrorSnackbar(
+						                                          mBinding.content,
+						                                          getString(R.string.error_no_internet_connection)
+					                                          )
+					
+					                                          // Show the content
+					                                          showContent()
+					
+				                                          }
+				
+				                                          else -> {
+				                                          }
+				
+			                                          }
+			
+		                                          })
 		
 		// Return the inflated layout
-		return binding.root
+		return mBinding.root
 		
 	}
 	
+	/**
+	 * Hides the content Group and shows the loading Group.
+	 */
 	private fun showLoading() {
 		
 		Timber.d("showLoading: called")
 		
-		// Disable the content
-		binding.content.visibility = View.GONE
+		// Hide the content
+		mBinding.content.visibility = View.GONE
 		
-		// Show the loading screen
-		binding.loading.visibility = View.VISIBLE
+		// Show the loading
+		mBinding.loading.visibility = View.VISIBLE
 		
 	}
 	
+	/**
+	 * Hides the loading Group and shows the content Group.
+	 */
 	private fun showContent() {
 		
 		Timber.d("showContent: called")
 		
-		// Hide the loading screen
-		binding.loading.visibility = View.GONE
+		// Hide the loading
+		mBinding.loading.visibility = View.GONE
 		
 		// Show the content
-		binding.content.visibility = View.VISIBLE
-		
-		Timber.d("loading visibility = ${binding.loading.visibility}") // Prints 8 for View.GONE
-		Timber.d("content visibility = ${binding.content.visibility}") // Prints 0 for View.VISIBLE
-		
-	}
-	
-	private fun navigateToMainFragment() {
-		
-		Timber.d("navigateToMainFragment: called")
-		
-		// Navigate to MainFragment
-		findNavController(this).navigate(SubscribeFragmentDirections.toMainFragment())
+		mBinding.content.visibility = View.VISIBLE
 		
 	}
 	
 	/**
 	 * Initializes the ViewPager2 and bounds the TabLayout to it.
 	 */
-	private fun initViewPager2AndTabLayout() {
+	private fun initViewPager2AndTabLayout(subscriptions: List<AugmentedSkuDetails>) {
 		
 		Timber.d("initViewPager2AndTabLayout: called")
 		
 		// Define the subscriptionStateAdapter object
-		val subscriptionStateAdapter = SubscriptionStateAdapter(this)
+		val subscriptionStateAdapter = SubscriptionViewPagerAdapter(subscriptions) { position ->
+			
+			// Pass the position through to the SubscribeViewModel
+			mSubscribeViewModel.onCheckoutButtonClicked(
+				position,
+				subscriptions,
+				requireActivity()
+			)
+			
+		}
 		
 		// Define the ViewPager2 from the layout file
-		val viewPager2 = binding.viewPager2
+		val viewPager2 = mBinding.viewPager2
 		
 		// Set the adapter
 		viewPager2.adapter = subscriptionStateAdapter
 		
 		// Define the TabLayout from the layout file
-		val tabLayout = binding.tabLayout
+		val tabLayout = mBinding.tabLayout
 		
 		// Initialize the TabLayout and bind it to the ViewPager2
 		TabLayoutMediator(
 			tabLayout,
 			viewPager2
 		) { tab, position ->
-			
-			Timber.d("TabLayoutMediator lambda")
 			
 			// Name the Tabs
 			tab.text = when (position) {

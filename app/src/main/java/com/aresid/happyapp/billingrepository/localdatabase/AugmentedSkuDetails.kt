@@ -1,4 +1,4 @@
-package com.aresid.happyapp.billing.billingrepository.localdatabase
+package com.aresid.happyapp.billingrepository.localdatabase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -22,5 +22,6 @@ data class AugmentedSkuDetails(
 	val price: String?,
 	val title: String?,
 	val description: String?,
-	val originalJson: String?
+	val originalJson: String?,
+	val priceMicros: Long
 )

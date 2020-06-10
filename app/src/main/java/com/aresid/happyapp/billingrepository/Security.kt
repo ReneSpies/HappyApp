@@ -1,4 +1,4 @@
-package com.aresid.happyapp.billing.billingrepository
+package com.aresid.happyapp.billingrepository
 
 import android.text.TextUtils
 import android.util.Base64

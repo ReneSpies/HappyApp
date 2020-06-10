@@ -6,16 +6,7 @@
 	>
 	
 	<data>
-		
-		<variable
-			name="viewModel"
-			type="com.aresid.happyapp.subscribe.silver.SilverViewModel"
-			/>
-		
-		<variable
-			name="activity"
-			type="android.app.Activity"
-			/>
+	
 	</data>
 	
 	<androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -31,29 +22,15 @@
 			android:elevation="8dp"
 			>
 			
-			<ProgressBar
-				android:id="@+id/progress_bar"
-				android:layout_width="96dp"
-				android:layout_height="96dp"
-				android:layout_gravity="center"
-				android:contentDescription="@string/loading"
-				android:indeterminateDrawable="@drawable/animated_loading_circle_red_black"
-				app:layout_constraintBottom_toBottomOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toTopOf="parent"
-				/>
-			
 			<ImageView
 				android:id="@+id/logo"
 				android:layout_width="200dp"
 				android:layout_height="200dp"
-				android:layout_marginTop="@dimen/margin_medium"
-				android:contentDescription="@string/bronze_subscription_logo"
-				android:src="@drawable/silver_logo"
+				android:contentDescription="@string/subscription_logo"
 				app:layout_constraintEnd_toEndOf="@id/guideline_end"
 				app:layout_constraintStart_toStartOf="@id/guideline_start"
 				app:layout_constraintTop_toTopOf="@id/guideline_top"
+				tools:src="@drawable/gold_logo"
 				/>
 			
 			<TextView
@@ -61,12 +38,12 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/margin_large"
-				android:text="@string/happyapp_silver"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"
 				app:layout_constraintEnd_toEndOf="@id/guideline_end"
 				app:layout_constraintStart_toStartOf="@id/guideline_start"
 				app:layout_constraintTop_toBottomOf="@id/logo"
+				tools:text="@string/happyapp_gold"
 				/>
 			
 			<TextView
@@ -78,7 +55,7 @@
 				android:textAppearance="?attr/textAppearanceHeadline6"
 				app:layout_constraintEnd_toEndOf="@id/guideline_end"
 				app:layout_constraintStart_toStartOf="@id/guideline_start"
-				app:layout_constraintTop_toBottomOf="@+id/title_text"
+				app:layout_constraintTop_toBottomOf="@id/title_text"
 				tools:text="Here goes the description"
 				/>
 			
@@ -89,21 +66,18 @@
 				android:layout_marginTop="@dimen/margin_large"
 				android:textAlignment="center"
 				android:textAppearance="?attr/textAppearanceHeadline5"
-				android:textColor="@color/silverColor"
 				android:textStyle="bold"
 				app:layout_constraintEnd_toEndOf="@id/guideline_end"
 				app:layout_constraintStart_toStartOf="@id/guideline_start"
-				app:layout_constraintTop_toBottomOf="@+id/description_text"
-				tools:text="Here goes the price tag"
+				app:layout_constraintTop_toBottomOf="@id/description_text"
+				tools:text="Here goes the price"
 				/>
 			
 			<com.google.android.material.button.MaterialButton
-				android:id="@+id/purchase_button"
+				android:id="@+id/checkout_button"
 				style="@style/Widget.HappyApp.ContainedButton"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/margin_medium"
-				android:onClick="@{() -> viewModel.onCheckoutButtonClicked(activity)}"
 				android:text="@string/check_this_out"
 				app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
 				app:layout_constraintEnd_toEndOf="@id/guideline_end"
@@ -141,22 +115,7 @@
 				android:orientation="vertical"
 				app:layout_constraintGuide_begin="@dimen/margin_medium"
 				/>
-			
-			<androidx.constraintlayout.widget.Group
-				android:id="@+id/loading"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:visibility="visible"
-				app:constraint_referenced_ids="progress_bar"
-				/>
-			
-			<androidx.constraintlayout.widget.Group
-				android:id="@+id/content"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:visibility="gone"
-				app:constraint_referenced_ids="logo,title_text,description_text,price_text,purchase_button"
-				/>
+		
 		</androidx.constraintlayout.widget.ConstraintLayout>
 	</androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

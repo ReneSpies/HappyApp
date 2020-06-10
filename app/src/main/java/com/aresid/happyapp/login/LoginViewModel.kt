@@ -5,7 +5,7 @@ import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aresid.happyapp.billing.billingrepository.BillingWebservice
+import com.aresid.happyapp.billingrepository.BillingWebservice
 import com.aresid.happyapp.keys.Keys
 import com.aresid.happyapp.utils.ButtonUtil
 import com.aresid.happyapp.utils.LoadingStatus
