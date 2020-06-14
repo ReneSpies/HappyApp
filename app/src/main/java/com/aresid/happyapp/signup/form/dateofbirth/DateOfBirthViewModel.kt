@@ -5,7 +5,7 @@ import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.keys.FirestoreKeys
 import com.aresid.happyapp.signup.form.SignupFormData
 import com.aresid.happyapp.utils.ButtonUtil
 import com.aresid.happyapp.utils.NTPDate
@@ -284,15 +284,15 @@ class DateOfBirthViewModel: ViewModel() {
 		
 		// Define a HashMap containing the information to put into the Firestore
 		val data = hashMapOf(
-			Keys.FirestoreFieldKeys.KEY_COLUMN_DATE_OF_CREATION to calendar.time.toString(),
-			Keys.FirestoreFieldKeys.KEY_COLUMN_DATE_OF_BIRTH to mDateOfBirth.time.toString(),
-			Keys.FirestoreFieldKeys.KEY_COLUMN_USERNAME to SignupFormData.getInstance().username,
-			Keys.FirestoreFieldKeys.KEY_COLUMN_EMAIL to SignupFormData.getInstance().email,
-			Keys.FirestoreFieldKeys.KEY_COLUMN_FIRST_NAME to SignupFormData.getInstance().firstName,
-			Keys.FirestoreFieldKeys.KEY_COLUMN_FAMILY_NAME to SignupFormData.getInstance().familyName
+			FirestoreKeys.Collection.Column.DATE_OF_CREATION to calendar.time.toString(),
+			FirestoreKeys.Collection.Column.DATE_OF_BIRTH to mDateOfBirth.time.toString(),
+			FirestoreKeys.Collection.Column.USERNAME to SignupFormData.getInstance().username,
+			FirestoreKeys.Collection.Column.EMAIL to SignupFormData.getInstance().email,
+			FirestoreKeys.Collection.Column.FIRST_NAME to SignupFormData.getInstance().firstName,
+			FirestoreKeys.Collection.Column.FAMILY_NAME to SignupFormData.getInstance().familyName
 		)
 		
-		FirebaseFirestore.getInstance().collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).document(uid).set(data).addOnSuccessListener {
+		FirebaseFirestore.getInstance().collection(FirestoreKeys.Collection.USERS).document(uid).set(data).addOnSuccessListener {
 			
 			Timber.d("great success adding the user's data to the firestore")
 			

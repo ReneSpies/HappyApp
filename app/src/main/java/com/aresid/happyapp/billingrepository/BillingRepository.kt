@@ -6,9 +6,9 @@ import android.content.Context
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import com.android.billingclient.api.*
-import com.aresid.happyapp.billingrepository.localdatabase.*
+import com.aresid.happyapp.databases.billingdatabase.*
 import com.aresid.happyapp.exceptions.CardDeclinedException
-import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.keys.HappyAppSkus
 import com.aresid.happyapp.utils.Util.isSuccess
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
@@ -177,7 +177,7 @@ class BillingRepository private constructor(private val application: Application
 				RetryPolicies.resetConnectionRetryPolicyCounter()
 				
 				// Query for subscription SkuDetails
-				querySubscriptionSkuDetailsAsync(Keys.HappyAppSkus.SUBSCRIPTION_SKUS)
+				querySubscriptionSkuDetailsAsync(HappyAppSkus.SUBSCRIPTION_SKUS)
 				
 				//				queryPurchasesAsync()
 				
@@ -541,7 +541,7 @@ class BillingRepository private constructor(private val application: Application
 				
 				when (purchase.sku) {
 					
-					Keys.HappyAppSkus.BRONZE_SUBSCRIPTION -> {
+					HappyAppSkus.BRONZE_SUBSCRIPTION -> {
 						
 						val bronzeSubscription = BronzeSubscription(true)
 						
@@ -552,7 +552,7 @@ class BillingRepository private constructor(private val application: Application
 							bronzeSubscription.mayPurchase()
 						)
 						
-						Keys.HappyAppSkus.SUBSCRIPTION_SKUS.forEach { otherSku ->
+						HappyAppSkus.SUBSCRIPTION_SKUS.forEach { otherSku ->
 							
 							if (otherSku != purchase.sku) {
 								
@@ -682,41 +682,41 @@ class BillingRepository private constructor(private val application: Application
 		
 		when (sku) {
 			
-			Keys.HappyAppSkus.BRONZE_SUBSCRIPTION -> {
+			HappyAppSkus.BRONZE_SUBSCRIPTION -> {
 				
 				bronzeSubscription.value.apply {
 					
-					result = Keys.HappyAppSkus.BRONZE_SUBSCRIPTION
+					result = HappyAppSkus.BRONZE_SUBSCRIPTION
 					
 				}
 				
 			}
 			
-			Keys.HappyAppSkus.SILVER_SUBSCRIPTION -> {
+			HappyAppSkus.SILVER_SUBSCRIPTION -> {
 				
 				silverSubscriptionLiveData.value.apply {
 					
-					result = Keys.HappyAppSkus.SILVER_SUBSCRIPTION
+					result = HappyAppSkus.SILVER_SUBSCRIPTION
 					
 				}
 				
 			}
 			
-			Keys.HappyAppSkus.GOLD_SUBSCRIPTION -> {
+			HappyAppSkus.GOLD_SUBSCRIPTION -> {
 				
 				goldSubscriptionLiveData.value.apply {
 					
-					result = Keys.HappyAppSkus.GOLD_SUBSCRIPTION
+					result = HappyAppSkus.GOLD_SUBSCRIPTION
 					
 				}
 				
 			}
 			
-			Keys.HappyAppSkus.PLATINUM_SUBSCRIPTION -> {
+			HappyAppSkus.PLATINUM_SUBSCRIPTION -> {
 				
 				platinumSubscriptionLiveData.value.apply {
 					
-					result = Keys.HappyAppSkus.PLATINUM_SUBSCRIPTION
+					result = HappyAppSkus.PLATINUM_SUBSCRIPTION
 					
 				}
 				

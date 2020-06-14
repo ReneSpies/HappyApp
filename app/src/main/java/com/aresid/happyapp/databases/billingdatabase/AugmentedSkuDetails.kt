@@ -1,4 +1,4 @@
-package com.aresid.happyapp.billingrepository.localdatabase
+package com.aresid.happyapp.databases.billingdatabase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

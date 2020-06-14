@@ -1,7 +1,8 @@
-package com.aresid.happyapp.billingrepository.localdatabase
+package com.aresid.happyapp.databases.billingdatabase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.aresid.happyapp.keys.DatabaseKeys
 
 /**
  *    Created on: 18.05.20
@@ -24,7 +25,7 @@ abstract class Entitlement {
 	
 }
 
-@Entity(tableName = "bronze_subscription_table")
+@Entity(tableName = DatabaseKeys.Table.BRONZE_SUBSCRIPTION)
 data class BronzeSubscription(val entitled: Boolean): Entitlement() {
 	
 	// Returns the opposite of entitled. Entitled means, the user has already bought the subscription
@@ -32,7 +33,7 @@ data class BronzeSubscription(val entitled: Boolean): Entitlement() {
 	
 }
 
-@Entity(tableName = "silver_subscription_table")
+@Entity(tableName = DatabaseKeys.Table.SILVER_SUBSCRIPTION)
 data class SilverSubscription(val entitled: Boolean): Entitlement() {
 	
 	// Returns the opposite of entitled. Entitled means, the user has already bought the subscription
@@ -40,7 +41,7 @@ data class SilverSubscription(val entitled: Boolean): Entitlement() {
 	
 }
 
-@Entity(tableName = "gold_subscription_table")
+@Entity(tableName = DatabaseKeys.Table.GOLD_SUBSCRIPTION)
 data class GoldSubscription(val entitled: Boolean): Entitlement() {
 	
 	// Returns the opposite of entitled. Entitled means, the user has already bought the subscription
@@ -48,7 +49,7 @@ data class GoldSubscription(val entitled: Boolean): Entitlement() {
 	
 }
 
-@Entity(tableName = "platinum_subscription_table")
+@Entity(tableName = DatabaseKeys.Table.PLATINUM_SUBSCRIPTION)
 data class PlatinumSubscription(val entitled: Boolean): Entitlement() {
 	
 	// Returns the opposite of entitled. Entitled means, the user has already bought the subscription

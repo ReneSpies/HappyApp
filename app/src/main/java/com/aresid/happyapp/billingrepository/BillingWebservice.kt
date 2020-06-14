@@ -1,7 +1,7 @@
 package com.aresid.happyapp.billingrepository
 
 import com.android.billingclient.api.Purchase
-import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.keys.FirestoreKeys
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
@@ -33,7 +33,7 @@ class BillingWebservice {
 		
 		return withContext(coroutineContext) {
 			
-			Firebase.firestore.collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).document(uid).get().await()
+			Firebase.firestore.collection(FirestoreKeys.Collection.USERS).document(uid).get().await()
 			
 		}
 		
@@ -52,13 +52,13 @@ class BillingWebservice {
 		) {
 			
 			mapOf(
-				Keys.FirestoreFieldKeys.KEY_COLUMN_SUBSCRIPTION_VARIANT to purchase
+				FirestoreKeys.Collection.Column.SUBSCRIPTION_VARIANT to purchase
 			)
 			
 		}
 		
 		// Save the subscription to the Firestore referencing the users uid
-		Firebase.firestore.collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).document(uid).set(
+		Firebase.firestore.collection(FirestoreKeys.Collection.USERS).document(uid).set(
 			purchaseMap,
 			SetOptions.merge()
 		).await()

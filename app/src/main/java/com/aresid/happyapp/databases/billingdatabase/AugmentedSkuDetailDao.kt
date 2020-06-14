@@ -1,4 +1,4 @@
-package com.aresid.happyapp.billingrepository.localdatabase
+package com.aresid.happyapp.databases.billingdatabase
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
@@ -96,6 +96,7 @@ interface AugmentedSkuDetailDao {
 					null,
 					0 // TODO: Might be an error source here. I use this field to sort the subscriptions in the ViewPager2 and 0 would put this in the first place!
 				)
+			
 			)
 			
 		}

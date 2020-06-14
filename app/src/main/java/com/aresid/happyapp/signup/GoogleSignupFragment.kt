@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.aresid.happyapp.R
 import com.aresid.happyapp.databinding.FragmentGoogleSignupBinding
-import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.keys.REQUEST_CODE_GOOGLE_SIGN_IN
 import com.aresid.happyapp.utils.LoadingStatus
 import com.aresid.happyapp.utils.Util.disableLoading
 import com.aresid.happyapp.utils.Util.enableLoading
@@ -186,7 +186,7 @@ class GoogleSignupFragment: Fragment() {
 		// Start the activity for result
 		startActivityForResult(
 			signInIntent,
-			Keys.RequestCodes.REQUEST_CODE_GOOGLE_SIGN_IN
+			REQUEST_CODE_GOOGLE_SIGN_IN
 		)
 		
 	}
@@ -206,7 +206,7 @@ class GoogleSignupFragment: Fragment() {
 		)
 		
 		// Result is OK and the Google Signup
-		if (requestCode == Keys.RequestCodes.REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {
+		if (requestCode == REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {
 			
 			Timber.d("google sign in & result ok")
 			

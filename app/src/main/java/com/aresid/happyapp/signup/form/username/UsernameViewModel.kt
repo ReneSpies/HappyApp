@@ -5,7 +5,7 @@ import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.keys.FirestoreKeys
 import com.aresid.happyapp.utils.ButtonUtil
 import com.google.firebase.firestore.FirebaseFirestore
 import timber.log.Timber
@@ -107,11 +107,11 @@ class UsernameViewModel: ViewModel() {
 		)
 		
 		// Check if the username is already registered in the Firestore
-		firestore.collection(Keys.FirestoreFieldKeys.KEY_COLLECTION_USERS).whereEqualTo(
-			Keys.FirestoreFieldKeys.KEY_COLUMN_USERNAME,
+		firestore.collection(FirestoreKeys.Collection.USERS).whereEqualTo(
+			FirestoreKeys.Collection.Column.USERNAME,
 			username.value
 		).get().addOnSuccessListener { document ->
-
+			
 			Timber.d("great success checking if the username is already registered in the Firestore")
 			
 			// Remove the loading animation and enable the button again

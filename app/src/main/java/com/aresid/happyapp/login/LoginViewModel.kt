@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.aresid.happyapp.billingrepository.BillingWebservice
-import com.aresid.happyapp.keys.Keys
+import com.aresid.happyapp.keys.FirestoreKeys
 import com.aresid.happyapp.utils.ButtonUtil
 import com.aresid.happyapp.utils.LoadingStatus
 import com.google.firebase.FirebaseNetworkException
@@ -132,7 +132,7 @@ class LoginViewModel: ViewModel() {
 							
 						}
 						
-						val subscription = userDocument.get(Keys.FirestoreFieldKeys.KEY_COLUMN_SUBSCRIPTION_VARIANT)
+						val subscription = userDocument.get(FirestoreKeys.Collection.Column.SUBSCRIPTION_VARIANT)
 						
 						// If the subscription is not null, send the user to MainFragment
 						if (subscription != null) {
