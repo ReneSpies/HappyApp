@@ -6,7 +6,7 @@ import android.content.Context
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import com.android.billingclient.api.*
-import com.aresid.happyapp.databases.billingdatabase.*
+import com.aresid.happyapp.database.billingdatabase.*
 import com.aresid.happyapp.exceptions.CardDeclinedException
 import com.aresid.happyapp.keys.HappyAppSkus
 import com.aresid.happyapp.utils.Util.isSuccess

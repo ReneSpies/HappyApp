@@ -1,4 +1,4 @@
-package com.aresid.happyapp.databases.billingdatabase
+package com.aresid.happyapp.database.billingdatabase
 
 import android.content.Context
 import androidx.room.Database

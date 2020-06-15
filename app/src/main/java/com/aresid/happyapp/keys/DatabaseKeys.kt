@@ -13,7 +13,7 @@ object DatabaseKeys {
 		
 		/* Following the ARES ID naming convention for Database names, PascalCase is used */
 		
-		const val USER_DATA = "UserData"
+		const val DATABASE_NAME = "UserData"
 		
 	}
 	
@@ -29,6 +29,7 @@ object DatabaseKeys {
 				
 				/* Following the ARES ID naming convention for Database columns, snake_case is used */
 				
+				const val UID = "uid" // Primary key
 				const val FAMILY_NAME = "family_name"
 				const val FIRST_NAME = "first_name"
 				const val EMAIL = "email"
@@ -49,7 +50,7 @@ object DatabaseKeys {
 				
 				/* Following the ARES ID naming convention for Database columns, snake_case is used */
 				
-				const val SKU = "sku"
+				const val SKU = "sku" // Primary key
 				const val TITLE = "title"
 				const val DESCRIPTION = "description"
 				const val PRICE = "price"
@@ -68,7 +69,7 @@ object DatabaseKeys {
 				
 				/* Following the ARES ID naming convention for Database columns, snake_case is used */
 				
-				const val UID = "uid"
+				const val UID = "uid" // Primary key
 				const val TYPE = "type"
 				const val PURCHASES_COUNT = "purchases_count"
 				const val LOCATION = "location"
@@ -87,9 +88,10 @@ object DatabaseKeys {
 				
 				/* Following the ARES ID naming convention for Database columns, snake_case is used */
 				
-				const val ORDER_ID = "order_id"
+				const val ORDER_ID = "order_id" // Primary key
+				const val SELLER_UID = "seller_uid"
+				const val BUYER_UID = "buyer_uid"
 				const val DATE = "date"
-				const val INVOLVED_PARTIES_UID = "involved_parties_uid"
 				const val PRICE = "price"
 				const val LOCATION = "location"
 				
@@ -105,7 +107,7 @@ object DatabaseKeys {
 				
 				/* Following the ARES ID naming convention for Database columns, snake_case is used */
 				
-				const val ID = "id"
+				const val UID = "uid"
 				const val START_DATE = "start_date"
 				const val END_DATE = "end_date"
 				

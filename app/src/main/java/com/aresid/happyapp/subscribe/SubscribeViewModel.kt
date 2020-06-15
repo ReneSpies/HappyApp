@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.aresid.happyapp.billingrepository.BillingRepository
-import com.aresid.happyapp.databases.billingdatabase.AugmentedSkuDetails
+import com.aresid.happyapp.database.billingdatabase.AugmentedSkuDetails
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.aresid.happyapp.R
-import com.aresid.happyapp.databases.billingdatabase.AugmentedSkuDetails
+import com.aresid.happyapp.database.billingdatabase.AugmentedSkuDetails
 import com.aresid.happyapp.databinding.FragmentSubscribeBinding
 import com.aresid.happyapp.subscribe.viewpager2.SubscriptionViewPagerAdapter
 import com.aresid.happyapp.subscribe.viewpager2.ZoomOutPageTransformer

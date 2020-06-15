@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.aresid.happyapp.R
-import com.aresid.happyapp.databases.billingdatabase.AugmentedSkuDetails
+import com.aresid.happyapp.database.billingdatabase.AugmentedSkuDetails
 import com.aresid.happyapp.databinding.SubscribeItemViewPagerBinding
 import com.aresid.happyapp.utils.Util.underline
 import timber.log.Timber
