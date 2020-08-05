@@ -5,13 +5,17 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     signingConfigs {
         release {
-            storeFile file('/home/rene/Documents/Keystores/HappyApp/happyapp_keystore.jks')
-            storePassword 'q<1ZS$i0.Lk4-Qf9rN6:8,Pc'
-            keyAlias = 'happyapp_release_key'
-            keyPassword 'q<1ZS$i0.Lk4-Qf9rN6:8,Pc'
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias = keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
     }
     compileSdkVersion 29
